@@ -1,0 +1,33 @@
+/* packages/ui/src/components/markdown.css */
+
+/* 闪烁光标样式 */
+.blinking-cursor {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #999;
+    margin-left: 4px;
+    padding-left: 2px;
+    vertical-align: middle;
+    position: relative;
+    top: -0.05em;
+    animation: blink 0.8s infinite alternate;
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.4;
+    }
+}
+
+pre::-webkit-scrollbar {
+    height: 6px;
+    /* 更细的横向滚动条 */
+}

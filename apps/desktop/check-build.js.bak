@@ -1,0 +1,124 @@
+#!/usr/bin/env node
+
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// 在 ES 模块中获取 __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+console.log('======= 开始文件系统检查 =======');
+
+// 检查关键目录
+const directories = [
+    { name: '项目根目录', path: __dirname },
+    { name: 'dist 目录', path: path.join(__dirname, 'dist') },
+    { name: 'renderer 目录', path: path.join(__dirname, 'dist/renderer') },
+    { name: 'electron 目录', path: path.join(__dirname, 'electron') }
+];
+
+directories.forEach(dir => {
+    if (fs.existsSync(dir.path)) {
+        console.log(`✅ ${dir.name}存在: ${dir.path}`);
+        try {
+            const stats = fs.statSync(dir.path);
+            if (stats.isDirectory()) {
+                const files = fs.readdirSync(dir.path);
+                console.log(`   包含 ${files.length} 个文件/目录:`);
+                files.forEach(file => {
+                    const fullPath = path.join(dir.path, file);
+                    const isDir = fs.statSync(fullPath).isDirectory();
+                    console.log(`   - ${file}${isDir ? '/' : ''}`);
+                });
+            } else {
+                console.log(`❌ ${dir.path} 不是一个目录`);
+            }
+        } catch (err) {
+            console.error(`❌ 读取目录 ${dir.path} 时出错:`, err.message);
+        }
+    } else {
+        console.error(`❌ ${dir.name}不存在: ${dir.path}`);
+    }
+    console.log('');
+});
+
+// 检查关键文件
+const files = [
+    { name: 'package.json', path: path.join(__dirname, 'package.json') },
+    { name: 'vite.config.ts', path: path.join(__dirname, 'vite.config.ts') },
+    { name: 'index.html', path: path.join(__dirname, 'index.html') },
+    { name: '编译后的 index.html', path: path.join(__dirname, 'dist/renderer/index.html') },
+    { name: 'main.ts', path: path.join(__dirname, 'electron/main.ts') },
+    { name: '编译后的 main.js', path: path.join(__dirname, 'dist/main.js') },
+    { name: 'preload.ts', path: path.join(__dirname, 'electron/preload.ts') },
+    { name: '编译后的 preload.js', path: path.join(__dirname, 'dist/preload.js') }
+];
+
+files.forEach(file => {
+    if (fs.existsSync(file.path)) {
+        console.log(`✅ ${file.name}存在: ${file.path}`);
+        try {
+            const stats = fs.statSync(file.path);
+            console.log(`   文件大小: ${(stats.size / 1024).toFixed(2)} KB`);
+            console.log(`   修改时间: ${stats.mtime}`);
+            
+            // 对于某些文件，显示文件内容的一部分
+            if (file.path.endsWith('.json') || file.path.endsWith('.html')) {
+                const content = fs.readFileSync(file.path, 'utf8');
+                console.log(`   文件内容预览 (前200字符):`);
+                console.log(`   ${content.substring(0, 200).replace(/\n/g, '\n   ')}...`);
+            }
+        } catch (err) {
+            console.error(`❌ 读取文件 ${file.path} 时出错:`, err.message);
+        }
+    } else {
+        console.error(`❌ ${file.name}不存在: ${file.path}`);
+    }
+    console.log('');
+});
+
+// 递归查找 index.html 文件
+function findFiles(directory, pattern, level = 0, maxLevel = 3) {
+    if (level > maxLevel) return [];
+    
+    let results = [];
+    try {
+        const files = fs.readdirSync(directory);
+        
+        for (const file of files) {
+            const fullPath = path.join(directory, file);
+            
+            try {
+                const stat = fs.statSync(fullPath);
+                
+                if (stat.isDirectory()) {
+                    // 递归搜索子目录
+                    results = results.concat(findFiles(fullPath, pattern, level + 1, maxLevel));
+                } else if (file.match(pattern)) {
+                    results.push(fullPath);
+                }
+            } catch (err) {
+                // 忽略无法访问的文件
+            }
+        }
+    } catch (err) {
+        // 忽略无法访问的目录
+    }
+    
+    return results;
+}
+
+console.log('======= 查找所有 index.html 文件 =======');
+const htmlFiles = findFiles(__dirname, /index\.html$/);
+
+if (htmlFiles.length > 0) {
+    console.log(`找到 ${htmlFiles.length} 个 index.html 文件:`);
+    htmlFiles.forEach(file => {
+        console.log(` - ${file}`);
+    });
+} else {
+    console.log('未找到任何 index.html 文件');
+}
+
+console.log('\n======= 文件系统检查完成 =======');

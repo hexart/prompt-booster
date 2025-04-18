@@ -1,0 +1,60 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "useDefineForClassFields": true,
+        "lib": [
+            "ESNext",
+            "DOM",
+            "DOM.Iterable"
+        ],
+        "module": "ESNext",
+        "skipLibCheck": true,
+        "moduleResolution": "bundler",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "noEmit": true,
+        "jsx": "react-jsx",
+        "strict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "baseUrl": ".",
+        "paths": {
+            "@prompt-booster/core/*": [
+                "packages/core/src/*"
+            ],
+            "@prompt-booster/core": [
+                "packages/core/src"
+            ],
+            "@prompt-booster/api/*": [
+                "packages/api/src/*"
+            ],
+            "@prompt-booster/api": [
+                "packages/api/src"
+            ],
+            "@prompt-booster/ui/*": [
+                "packages/ui/src/*"
+            ],
+            "@prompt-booster/ui": [
+                "packages/ui/src"
+            ],
+            "@prompt-booster/web/*": [
+                "packages/web/src/*"
+            ],
+            "@prompt-booster/web": [
+                "packages/web/src"
+            ]
+        }
+    },
+    "include": [
+        "./**/*.ts",
+        "./**/*.tsx"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "**/dist"
+    ]
+}

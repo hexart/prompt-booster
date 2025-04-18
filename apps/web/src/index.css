@@ -1,0 +1,143 @@
+/* apps/web/src/index.css */
+@import 'tailwindcss';
+@config "../tailwind.config.js";
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .logo-animation {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* 1. 淡入缩放效果 */
+@keyframes menuScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* 2. 从右侧滑入效果 */
+@keyframes menuSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* 3. 弹跳效果 */
+@keyframes menuBounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(-10px);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.05) translateY(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* 4. 渐变边框效果 */
+@keyframes menuBorderGlow {
+  0% {
+    box-shadow: 0 0 0 1px rgba(59, 130, 246, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+  }
+}
+.menu-container-animation {
+  animation: menuScaleIn 0.25s ease-out forwards;
+  transform-origin: top right;
+}
+
+.menu-slide-animation {
+  animation: menuSlideIn 0.3s ease-out forwards;
+}
+
+.menu-bounce-animation {
+  animation: menuBounceIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  transform-origin: top right;
+}
+
+.menu-glow-animation {
+  animation: menuBorderGlow 0.5s ease-out forwards;
+}
+.menu-item-animation {
+  animation: slideIn 0.8s ease-out forwards;
+}
+
+/* 以上是app.css的内容 */
+@layer base {
+
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    @apply border-gray-200;
+  }
+}
+
+html {
+  @apply min-h-screen transition-colors duration-300 antialiased;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+}
+
+textarea {
+  @apply resize-none rounded-md;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* 全局背景设置 */
+:root {
+  @apply bg-gray-100 text-black;
+}
+
+/* 暗色模式背景 */
+:root.dark body {
+  @apply bg-gray-900 text-gray-100;
+}
+
+/* 亮色主题 */
+@layer components {}
+
+/* 添加暗色主题支持 */
+:root[data-theme="dark"] {}

@@ -1,0 +1,317 @@
+// apps/web/src/components/ModelSettings.tsx
+import React from 'react';
+import { type StandardModelType } from '@prompt-booster/core/model/models/config';
+import { useModelStore } from '@prompt-booster/core/model/store/modelStore';
+import { Dialog, ListCard, toast } from '@prompt-booster/ui';
+import { useModal } from '@prompt-booster/ui';
+import { ListPlus, Power, Link2, FileCog, Trash2 } from 'lucide-react';
+import { useModelConnection, useModelData, useModelEdit } from '../modelhooks/model-hooks';
+import { ModelModal } from './ModelModal';
+import { disableApiClientLogs } from '@prompt-booster/api/utils/connection';
+import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
+
+// 在应用初始化时禁用 API 客户端日志
+disableApiClientLogs();
+// 确认删除对话框组件
+const ConfirmDialog: React.FC<{
+    isOpen: boolean;
+    onClose: () => void;
+    title: string;
+    message: string;
+    confirmText?: string;
+    cancelText?: string;
+    onConfirm: () => void;
+    danger?: boolean;
+}> = ({
+    isOpen,
+    onClose,
+    title,
+    message,
+    confirmText = '确认',
+    cancelText = '取消',
+    onConfirm,
+    danger = false
+}) => {
+        return (
+            <Dialog
+                isOpen={isOpen}
+                onClose={onClose}
+                maxWidth="max-w-md"
+                title={title}
+                footer={
+                    <div className="flex justify-end gap-3">
+                        <button
+                            onClick={onClose}
+                            className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                        >
+                            {cancelText}
+                        </button>
+                        <button
+                            onClick={onConfirm}
+                            className={`px-4 py-2 text-white rounded transition-colors ${danger
+                                ? "bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700"
+                                : "bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700"
+                                }`}
+                        >
+                            {confirmText}
+                        </button>
+                    </div>
+                }
+            >
+                <div className="text-gray-700 dark:text-gray-300">
+                    {message}
+                </div>
+            </Dialog>
+        );
+    };
+
+// 主组件
+export const ModelSettings: React.FC = () => {
+    const {
+        getCustomInterface,
+    } = useModelStore();
+
+    // 使用自定义钩子
+    const { testConnection, isTestingConnection } = useModelConnection();
+    const { allModels, toggleModelStatus, deleteModel, setActiveModel } = useModelData();
+    const { saveModel } = useModelEdit();
+
+    // 模态窗口状态
+    const modalState = useModal<{
+        editData: any;
+        selectedModelId: string | null;
+        isAddingCustom: boolean;
+        isNewInterface: boolean;
+    }>();
+
+    const confirmDeleteModal = useModal<{
+        interfaceId: string;
+        interfaceName: string;
+    }>();
+
+    // 处理编辑标准模型
+    const handleEditStandardModel = (modelType: StandardModelType) => {
+        const model = allModels.find(m => m.id === modelType && m.isStandard);
+        if (!model) return;
+
+        modalState.openModal({
+            editData: model.config,
+            selectedModelId: modelType,
+            isAddingCustom: false,
+            isNewInterface: false
+        });
+
+        setActiveModel(modelType);
+    };
+
+    // 处理编辑自定义接口
+    const handleEditCustomModel = (id: string) => {
+        const customInterface = getCustomInterface(id);
+
+        if (customInterface) {
+            modalState.openModal({
+                editData: {
+                    ...customInterface,
+                    id: id
+                },
+                selectedModelId: id,
+                isAddingCustom: true,
+                isNewInterface: false
+            });
+
+            setActiveModel(id);
+        } else {
+            toast.error('找不到要编辑的接口');
+        }
+    };
+
+    // 处理编辑模型
+    const handleEditModel = (id: string, isStandard: boolean) => {
+        if (isStandard) {
+            handleEditStandardModel(id as StandardModelType);
+        } else {
+            handleEditCustomModel(id);
+        }
+    };
+
+    // 打开添加自定义接口弹窗
+    const handleOpenAddCustomModal = () => {
+        // 创建一个空的自定义接口数据
+        const newCustomInterface = {
+            id: '',
+            name: '',
+            providerName: '',
+            apiKey: '',
+            baseUrl: '',
+            model: '',
+            endpoint: '/v1/chat/completions',
+            enabled: false
+        };
+
+        modalState.openModal({
+            editData: newCustomInterface,
+            selectedModelId: null,
+            isAddingCustom: true,
+            isNewInterface: true
+        });
+    };
+
+    // 处理保存模型
+    const handleSaveModel = async (data: any, modelId: string | null) => {
+        try {
+            await saveModel(
+                data,
+                modelId,
+                modalState.data?.isAddingCustom || false,
+                modalState.data?.isNewInterface || false
+            );
+            modalState.closeModal();
+        } catch (error) {
+            console.error('保存失败:', error);
+        }
+    };
+
+    // 处理删除自定义接口
+    const handleDeleteCustomInterface = (id: string) => {
+        const interfaceToDelete = getCustomInterface(id);
+        if (interfaceToDelete) {
+            confirmDeleteModal.openModal({
+                interfaceId: id,
+                interfaceName: interfaceToDelete.name || id
+            });
+        } else {
+            toast.error('找不到要删除的接口');
+        }
+    };
+
+    // 确认删除
+    const handleConfirmDelete = () => {
+        if (confirmDeleteModal.data) {
+            deleteModel(confirmDeleteModal.data.interfaceId);
+            confirmDeleteModal.closeModal();
+        }
+    };
+
+    return (
+        <div className="flex flex-col h-full p-4 border rounded-lg shadow-2xs bg-gray-50 border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+            <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-semibold text-gray-500 dark:text-white">AI模型设置</h2>
+                <Tooltip text='添加自定义接口'>
+                <button
+                    onClick={handleOpenAddCustomModal}
+                    className="bg-blue-500 text-white px-3 py-2 rounded-md text-sm hover:bg-blue-600 transition-colors dark:bg-blue-600 dark:hover:bg-blue-700 inline-flex items-center gap-1"
+                >
+                    <ListPlus size={17} />
+                    添加
+                </button>
+                </Tooltip>
+            </div>
+
+            {/* 模型列表 */}
+            <div className='flex-col h-full overflow-y-scroll pb-3'>
+                {allModels.map((model) => (
+                    <ListCard
+                        key={model.id}
+                        title={model.name}
+                        description={model.isStandard ? '内置模型' : `自定义模型`}
+                        className="border rounded-lg p-4 mb-2 last:mb-0 shadow-2xs hover:shadow-md transition-all duration-300 bg-white border-gray-200 dark:bg-gray-700 dark:border-gray-600"
+                        renderTitle={(title) => (
+                            <h3 className="font-semibold text-lg truncate w-full text-gray-500 dark:text-white">{title}</h3>
+                        )}
+                        renderDescription={(desc) => (
+                            <div className="text-sm text-gray-500 dark:text-gray-300 mt-1 truncate">{desc}</div>
+                        )}
+                        actions={(
+                            <div className="flex items-center">
+                                <button
+                                    onClick={() => toggleModelStatus(model.id, model.isStandard, !model.isEnabled)}
+                                    className={`mr-2 px-3 py-2 rounded-md text-sm whitespace-nowrap transition-colors inline-flex items-center gap-1 ${model.isEnabled
+                                        ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+                                        : "bg-gray-300 text-gray-600 dark:bg-gray-600 dark:text-gray-300"
+                                        }`}
+                                >
+                                    {model.isEnabled ? (
+                                        <Power size={16} />
+                                    ) : (
+                                        <Power size={16} />
+                                    )}
+                                    <span className="hidden md:inline whitespace-nowrap">{model.isEnabled ? '已启用' : '已禁用'}</span>
+                                </button>
+
+                                <button
+                                    onClick={() => testConnection(model)}
+                                    className="mr-2 px-3 py-2 rounded-md text-sm transition-colors inline-flex items-center gap-1 bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-800"
+                                    disabled={isTestingConnection(model.id)}
+                                >
+                                    <div className="w-4 h-4 flex items-center justify-center">
+                                        {!isTestingConnection(model.id) ? (
+                                            <Link2 />
+                                        ) : (
+                                            <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"></circle>
+                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            </svg>
+                                        )}
+                                    </div>
+                                    <span className="hidden md:inline whitespace-nowrap">测试连接</span>
+                                </button>
+
+                                <button
+                                    onClick={() => handleEditModel(model.id, model.isStandard)}
+                                    className={`${!model.isStandard ? "mr-2" : ""} px-3 py-2 rounded-md text-sm transition-colors inline-flex items-center gap-1 bg-blue-100 text-blue-800 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-300 dark:hover:bg-blue-800`}
+                                >
+                                    <FileCog size={16} />
+                                    <span className="hidden md:inline whitespace-nowrap">编辑</span>
+                                </button>
+
+                                {!model.isStandard && (
+                                    <button
+                                        onClick={() => handleDeleteCustomInterface(model.id)}
+                                        className="px-3 py-2 rounded-md text-sm transition-colors inline-flex items-center gap-1 bg-red-100 text-red-800 hover:bg-red-200 dark:bg-red-900 dark:text-red-300 dark:hover:bg-red-800"
+                                    >
+                                        <Trash2 size={16} />
+                                        <span className="hidden md:inline whitespace-nowrap">删除</span>
+                                    </button>
+                                )}
+                            </div>
+                        )}
+                    />
+                ))}
+
+                {/* 空状态显示 */}
+                {allModels.length === 0 && (
+                    <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                        暂无模型配置，请点击"添加自定义接口"按钮创建
+                    </div>
+                )}
+            </div>
+
+            {/* 编辑模型弹窗 */}
+            {(modalState.isOpen || modalState.isClosing) && modalState.data && (
+                <ModelModal
+                    isOpen={modalState.isOpen}
+                    onClose={modalState.closeModal}
+                    modelType={modalState.data.selectedModelId || '新接口'}
+                    initialData={modalState.data.editData}
+                    onSave={handleSaveModel}
+                    isCustom={modalState.data.isAddingCustom}
+                    isNewInterface={modalState.data.isNewInterface}
+                    modelId={modalState.data.selectedModelId}
+                />
+            )}
+
+            {/* 删除确认弹窗 */}
+            {(confirmDeleteModal.isOpen || confirmDeleteModal.isClosing) && confirmDeleteModal.data && (
+                <ConfirmDialog
+                    isOpen={confirmDeleteModal.isOpen}
+                    onClose={confirmDeleteModal.closeModal}
+                    title="删除确认"
+                    message={`确定要删除接口 "${confirmDeleteModal.data.interfaceName}" 吗？`}
+                    confirmText="删除"
+                    onConfirm={handleConfirmDelete}
+                    danger={true}
+                />
+            )}
+        </div>
+    );
+};

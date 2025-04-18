@@ -1,0 +1,53 @@
+{
+  "name": "prompt-booster",
+  "version": "0.2.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "clean": "turbo run clean",
+    "clean:all": "rm -rf node_modules packages/*/node_modules apps/*/node_modules packages/*/dist apps/*/dist .turbo packages/*/.turbo apps/*/.turbo",
+    "install:all": "pnpm install",
+    "build": "pnpm build:packages && pnpm build:apps",
+    "build:packages": "turbo run build --filter=@prompt-booster/api --filter=@prompt-booster/core --filter=@prompt-booster/ui",
+    "build:apps": "turbo run build --filter=web",
+    "dev": "turbo run build --filter=@prompt-booster/api --filter=@prompt-booster/core --filter=@prompt-booster/ui && turbo run dev --filter=web",
+    "start:dev": "turbo run dev",
+    "desktop:dev": "cd apps/desktop && pnpm run electron:dev",
+    "desktop:build": "cd apps/desktop && pnpm run electron:build",
+    "desktop:build:mac": "cd apps/desktop && pnpm run electron:build:mac"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.16",
+    "@types/node": "^22.13.11",
+    "@types/react": "^19.1.0",
+    "@typescript-eslint/eslint-plugin": "^8.28.0",
+    "@typescript-eslint/parser": "^8.28.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.23.0",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "prettier": "latest",
+    "turbo": "^2.4.4",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.5",
+    "vite-plugin-dts": "^4.5.3",
+    "vite-tsconfig-paths": "^5.1.4"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "packageManager": "pnpm@10.8.1",
+  "pnpm": {
+    "overrides": {
+      "axios": "1.6.2",
+      "@humanwhocodes/config-array": "^0.14.0",
+      "@humanwhocodes/object-schema": "^2.0.4"
+    }
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
+  }
+}

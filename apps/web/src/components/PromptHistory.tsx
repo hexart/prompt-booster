@@ -1,0 +1,321 @@
+import React, { useState, useMemo } from 'react';
+import { Dialog } from '@prompt-booster/ui/components/Dialog';
+import { usePromptGroup } from '@prompt-booster/core/prompt/hooks/usePrompt';
+import { PromptGroup } from '@prompt-booster/core/prompt/models/prompt';
+import { usePromptHistory } from '@prompt-booster/core/prompt/hooks/usePromptHistory';
+import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
+import { Trash2Icon, ChevronsUpDownIcon, ChevronsDownUpIcon, RotateCcwIcon } from 'lucide-react';
+
+interface PromptHistoryProps {
+    onNavigateToEditor?: () => void;
+}
+
+export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor }) => {
+    // 使用提示词组钩子
+    const {
+        getAllGroups,
+        getGroupVersions,
+        deleteGroup,
+    } = usePromptGroup();
+
+    // 使用新的历史记录钩子
+    const {
+        expandedGroupId,
+        selectedVersions,
+        toggleExpand,
+        handleSelectVersion,
+        loadGroup,
+        loadVersion
+    } = usePromptHistory();
+
+    // 获取所有组
+    const groups = useMemo(() => {
+        return getAllGroups().sort((a, b) => b.updatedAt - a.updatedAt);
+    }, [getAllGroups]);
+
+    // 获取当前显示的版本
+    const getSelectedVersion = (groupId: string, defaultVersion: number) => {
+        return selectedVersions[groupId] || defaultVersion;
+    };
+
+    // 添加一个状态来区分删除类型
+    const [_deleteType, setDeleteType] = useState<'group'>('group');
+
+    // 删除对话框相关状态和函数
+    const [isClearDialogOpen, setIsClearDialogOpen] = useState(false);
+    const [deleteDialogInfo, setDeleteDialogInfo] = useState<{ isOpen: boolean; groupId: string }>({
+        isOpen: false,
+        groupId: ''
+    });
+
+    if (groups.length === 0) {
+        return (
+            <div className="p-4 border rounded-lg shadow-2xs bg-gray-50 border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                <h2 className="text-xl font-semibold text-gray-500 dark:text-white">历史记录</h2>
+                <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+                    <p>暂无优化历史记录</p>
+                    <p className="text-sm mt-2">优化提示词后将在此处显示历史记录</p>
+                </div>
+            </div>
+        );
+    }
+
+    const formatTimestamp = (timestamp: number): string => {
+        const date = new Date(timestamp);
+        return date.toLocaleString();
+    };
+
+    const truncateText = (text: string, maxLength: number = 120): string => {
+        if (text.length <= maxLength) return text;
+        return text.substring(0, maxLength) + '...';
+    };
+
+    const handleClearHistoryClick = () => {
+        setIsClearDialogOpen(true);
+    };
+
+    const confirmClearHistory = () => {
+        // 逐个删除所有组
+        groups.forEach(group => {
+            deleteGroup(group.id);
+        });
+        setIsClearDialogOpen(false);
+    };
+
+    const cancelClearHistory = () => {
+        setIsClearDialogOpen(false);
+    };
+
+    const handleDeleteGroup = (groupId: string) => {
+        setDeleteType('group');
+        setDeleteDialogInfo({
+            isOpen: true,
+            groupId
+        });
+    };
+
+    // 确认删除
+    const confirmDeleteHistoryItem = () => {
+        const groupId = deleteDialogInfo.groupId;
+        deleteGroup(groupId);
+        setDeleteDialogInfo({
+            isOpen: false,
+            groupId: ''
+        });
+    };
+
+    const cancelDeleteHistoryItem = () => {
+        setDeleteDialogInfo({
+            isOpen: false,
+            groupId: ''
+        });
+    };
+
+    const handleLoadGroup = (group: PromptGroup) => {
+        loadGroup(group, onNavigateToEditor);
+    };
+
+    return (
+        <div className="flex flex-col h-full p-4 border rounded-lg shadow-2xs bg-gray-50 border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+            <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-semibold text-gray-600 dark:text-white">历史记录 ({groups.length})</h2>
+                <div>
+                    <button
+                        onClick={handleClearHistoryClick}
+                        className="px-3 py-2 flex items-center gap-1 text-sm bg-red-500 text-white rounded-md hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700"
+                    >
+                        <Trash2Icon size={15} />
+                        清空
+                    </button>
+                </div>
+            </div>
+            <div className="space-y-2 max-h-[1200px] overflow-y-auto pb-2">
+                {groups.map((group) => {
+                    // 获取该组的所有版本
+                    const versions = getGroupVersions(group.id);
+                    // 获取最新版本
+                    const latestVersion = versions.find(v => v.number === group.currentVersionNumber) || versions[versions.length - 1];
+
+                    if (!latestVersion) return null; // 防止空版本
+
+                    return (
+                        <div key={group.id} className="border rounded-lg p-3 shadow-2xs hover:shadow-md bg-white border-gray-200 dark:bg-gray-700 dark:border-gray-600">
+                            <div className="flex justify-between items-center mb-2">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                                        {formatTimestamp(group.updatedAt)}
+                                    </span>
+                                    {versions.length > 1 && (
+                                        <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full dark:bg-blue-900 dark:text-blue-300">
+                                            {versions.length}个版本
+                                        </span>
+                                    )}
+                                </div>
+                                <div className="flex space-x-2 items-center">
+                                    <button
+                                        onClick={() => toggleExpand(group.id)}
+                                        className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-800/50 px-3 py-2 rounded-md transition-colors"
+                                    >
+                                        {expandedGroupId === group.id ? <ChevronsDownUpIcon size={15} /> : <ChevronsUpDownIcon size={15} />}
+                                        <span className="hidden md:block">{expandedGroupId === group.id ? '收起' : '展开'}</span>
+                                    </button>
+
+                                    <button
+                                        onClick={() => handleLoadGroup(group)}
+                                        className="flex items-center gap-1 text-sm text-blue-500 hover:text-blue-700 bg-gray-50 hover:bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:hover:text-blue-300 dark:hover:bg-blue-900/30 px-3 py-2 rounded-md transition-colors"
+                                    >
+                                        <RotateCcwIcon size={15} />
+                                        <span className="hidden md:block">加载</span>
+                                    </button>
+
+                                    <button
+                                        onClick={() => handleDeleteGroup(group.id)}
+                                        className="flex items-center gap-1 text-sm text-red-500 hover:text-red-700 bg-gray-50 hover:bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/30 px-3 py-2 rounded-md transition-colors"
+                                    >
+                                        <Trash2Icon size={15} />
+                                        <span className="hidden md:block">删除组</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            {expandedGroupId === group.id && (
+                                <div className="space-y-3">
+
+                                    {/* 获取当前显示版本 */}
+                                    {(() => {
+                                        const displayVersion = versions.find(
+                                            version => version.number === getSelectedVersion(group.id, group.currentVersionNumber)
+                                        ) || latestVersion;
+
+                                        return (
+                                            <>
+                                                <div>
+                                                    <h3 className="text-sm font-medium mb-1 text-gray-600 dark:text-white">原始提示词：</h3>
+                                                    <div className="p-2 max-h-32 overflow-y-scroll bg-gray-100 text-gray-500 rounded-xs text-sm whitespace-pre-wrap dark:bg-gray-800 dark:text-gray-300">
+                                                        {group.originalPrompt}
+                                                    </div>
+                                                </div>
+
+                                                {/* 版本列表 */}
+                                                <div className="flex space-x-2 overflow-y-visible overflow-x-auto py-2 [&::-webkit-scrollbar]:h-1">
+                                                    {versions.map(version => (
+                                                        <Tooltip key={version.id} text={`使用模型：${version.provider ? `${version.provider} - ` : ''}${version.modelName || version.modelId || '未知模型'}`}>
+                                                            <button
+                                                                key={version.id}
+                                                                onClick={() => handleSelectVersion(group.id, version.number)}
+                                                                className={`px-2 py-1 text-xs rounded-full ${version.number === getSelectedVersion(group.id, group.currentVersionNumber)
+                                                                    ? 'bg-blue-500 text-white dark:bg-blue-600'
+                                                                    : 'bg-gray-200 text-gray-700 dark:bg-gray-600 dark:text-gray-300'
+                                                                    }`}
+                                                            >
+                                                                v{version.number}
+                                                            </button>
+                                                        </Tooltip>
+                                                    ))}
+                                                </div>
+
+                                                <div>
+                                                    <h3 className="text-sm font-medium mb-1 text-gray-600 dark:text-white">迭代方向：</h3>
+                                                    <div className="p-2 bg-gray-100 text-blue-600 rounded-xs text-sm whitespace-pre-wrap dark:bg-gray-800/80 dark:text-gray-300">
+                                                        {displayVersion.iterationDirection || "无"}
+                                                    </div>
+                                                </div>
+
+                                                <div>
+                                                    <h3 className="text-sm font-medium mb-1 text-gray-600 dark:text-white">增强后提示词：</h3>
+                                                    <div className="p-2 max-h-[460px] overflow-auto bg-gray-100 text-gray-500 rounded-xs text-sm whitespace-pre-wrap dark:bg-gray-800 dark:text-gray-300">
+                                                        {displayVersion.optimizedPrompt || ''}
+                                                    </div>
+                                                </div>
+
+                                                <div className="mt-3 flex justify-end gap-2">
+                                                    {/* 加载当前版本按钮 */}
+                                                    <button
+                                                        onClick={() => {
+                                                            loadVersion(
+                                                                group.id,
+                                                                getSelectedVersion(group.id, group.currentVersionNumber),
+                                                                onNavigateToEditor
+                                                            );
+                                                        }}
+                                                        className="text-sm text-green-500 hover:text-green-700 bg-gray-50 hover:bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:hover:text-green-300 dark:hover:bg-green-900/30 px-3 py-2 rounded-md transition-colors"
+                                                    >
+                                                        加载此版本
+                                                    </button>
+                                                </div>
+                                            </>
+                                        );
+                                    })()}
+                                </div>
+                            )}
+
+                            {/* 未展开时只显示原始提示词 */}
+                            {expandedGroupId !== group.id && (
+                                <div>
+                                    <div className="text-sm font-medium mb-1 text-gray-600 dark:text-white">原始提示词：</div>
+                                    <div className="truncate p-2 text-sm text-gray-500 dark:text-gray-300">
+                                        {truncateText(group.originalPrompt)}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
+
+            {/* 清空历史确认对话框 */}
+            <Dialog
+                isOpen={isClearDialogOpen}
+                onClose={cancelClearHistory}
+                title="确认清空历史"
+                maxWidth="max-w-md"
+                footer={
+                    <div className="flex justify-end gap-3">
+                        <button
+                            onClick={cancelClearHistory}
+                            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+                        >
+                            取消
+                        </button>
+                        <button
+                            onClick={confirmClearHistory}
+                            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700"
+                        >
+                            确认清空
+                        </button>
+                    </div>
+                }
+            >
+                <p className="text-gray-600 dark:text-gray-300">确定要清空所有历史记录吗？此操作不可撤销。</p>
+            </Dialog>
+
+            {/* 删除提示词组确认对话框 */}
+            <Dialog
+                isOpen={deleteDialogInfo.isOpen}
+                onClose={cancelDeleteHistoryItem}
+                title="确认删除整组提示词"
+                maxWidth="max-w-md"
+                footer={
+                    <div className="flex justify-end gap-3">
+                        <button
+                            onClick={cancelDeleteHistoryItem}
+                            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+                        >
+                            取消
+                        </button>
+                        <button
+                            onClick={confirmDeleteHistoryItem}
+                            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700"
+                        >
+                            确认删除
+                        </button>
+                    </div>
+                }
+            >
+                <p className="text-gray-600 dark:text-gray-300">
+                    确定要删除这组提示词的所有版本吗？此操作不可撤销。
+                </p>
+            </Dialog>
+        </div>
+    );
+};

@@ -1,0 +1,50 @@
+{
+  "type": "module",
+  "name": "@prompt-booster/core",
+  "version": "0.2.0",
+  "main": "./dist/index.cjs.js",
+  "module": "./dist/index.es.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.cjs.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "compilerOptions": {
+    "paths": {
+      "@prompt-booster/api": [
+        "../api/src"
+      ],
+      "@prompt-booster/api/*": [
+        "../api/src/*"
+      ]
+    }
+  },
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch",
+    "lint": "eslint \"src/**/*.ts\"",
+    "clean": "rm -rf .turbo node_modules dist",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@prompt-booster/api": "workspace:*",
+    "uuid": "^9.0.0",
+    "zustand": "^4.4.1"
+  },
+  "peerDependencies": {
+    "react": "^19.1.0"
+  },
+  "devDependencies": {
+    "@types/uuid": "^10.0.0",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.5",
+    "vite-plugin-dts": "^4.5.3",
+    "vitest": "^1.0.0"
+  }
+}
