@@ -20,12 +20,12 @@
     "electron:build:win": "npm run build && node ./build-electron.js && electron-builder --win --config electron-builder.config.js",
     "electron:build:linux": "npm run build && node ./build-electron.js && electron-builder --linux --config electron-builder.config.js",
     "electron:publish": "npm run build && node ./build-electron.js && electron-builder --publish always --config electron-builder.config.js",
-    "postinstall": "electron-builder install-app-deps && node -e \"try{require('electron')}catch(e){process.exit(1)}\" || npm install electron@latest --no-save"
+    "postinstall": "electron-builder install-app-deps || npm install electron@latest --no-save"
   },
   "dependencies": {
-    "@prompt-booster/api": "workspace:*",
-    "@prompt-booster/core": "workspace:*",
-    "@prompt-booster/ui": "workspace:*",
+    "@prompt-booster/api": "file:../../packages/api",
+    "@prompt-booster/core": "file:../../packages/core",
+    "@prompt-booster/ui": "file:../../packages/ui",
     "electron-updater": "^6.1.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"

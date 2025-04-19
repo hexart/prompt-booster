@@ -1,0 +1,11 @@
+node_modules
+.turbo
+dist
+.env
+venv
+.venv
+.DS_Store
+.idea
+.vscode
+.lingma
+release

@@ -17,7 +17,8 @@
     "start:dev": "turbo run dev",
     "desktop:dev": "cd apps/desktop && pnpm run electron:dev",
     "desktop:build": "cd apps/desktop && pnpm run electron:build",
-    "desktop:build:mac": "cd apps/desktop && pnpm run electron:build:mac"
+    "desktop:build:mac": "cd apps/desktop && pnpm run electron:build:mac",
+    "prepare-electron": "cd apps/desktop && pnpm electron-builder install-app-deps"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.16",
@@ -44,7 +45,19 @@
     "overrides": {
       "axios": "1.6.2",
       "@humanwhocodes/config-array": "^0.14.0",
-      "@humanwhocodes/object-schema": "^2.0.4"
+      "@humanwhocodes/object-schema": "^2.0.4",
+      "glob": "^9.3.5",
+      "rimraf": "^5.0.5",
+      "@npmcli/move-file": "^3.0.0",
+      "boolean": "^3.2.0",
+      "inflight": "^1.0.6",
+      "lodash.isequal": "^4.5.0"
+    },
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "electron-builder-squirrel-windows",
+        "dmg-builder"
+      ]
     }
   },
   "dependencies": {
