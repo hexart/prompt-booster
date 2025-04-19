@@ -55,3 +55,15 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+      
+      # 简化后的包可见性设置
+      - name: Make package public
+        run: |
+          # 直接设置包的可见性为公开
+          curl -X PATCH \
+            -H "Authorization: token ${{ secrets.PACKAGE_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -d '{"visibility":"public"}' \
+            "https://api.github.com/user/packages/container/${{ github.event.repository.name }}"
+          
+          echo "Package visibility changed to public"
