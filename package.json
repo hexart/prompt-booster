@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "private": true,
   "workspaces": [
-    "apps/*",
+    "apps/web",
     "packages/*"
   ],
   "scripts": {
@@ -14,7 +14,10 @@
     "build:packages": "turbo run build --filter=@prompt-booster/api --filter=@prompt-booster/core --filter=@prompt-booster/ui",
     "build:apps": "turbo run build --filter=web",
     "dev": "turbo run build --filter=@prompt-booster/api --filter=@prompt-booster/core --filter=@prompt-booster/ui && turbo run dev --filter=web",
-    "start:dev": "turbo run dev"
+    "start:dev": "turbo run dev",
+    "desktop:dev": "cd apps/desktop && npm run dev",
+    "desktop:package": "npm run build && cd apps/desktop && npm run package",
+    "desktop:package:mac": "npm run build && cd apps/desktop && npm run package:mac"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.16",
