@@ -14,11 +14,7 @@
     "build:packages": "turbo run build --filter=@prompt-booster/api --filter=@prompt-booster/core --filter=@prompt-booster/ui",
     "build:apps": "turbo run build --filter=web",
     "dev": "turbo run build --filter=@prompt-booster/api --filter=@prompt-booster/core --filter=@prompt-booster/ui && turbo run dev --filter=web",
-    "start:dev": "turbo run dev",
-    "desktop:dev": "cd apps/desktop && pnpm run electron:dev",
-    "desktop:build": "cd apps/desktop && pnpm run electron:build",
-    "desktop:build:mac": "cd apps/desktop && pnpm run electron:build:mac",
-    "prepare-electron": "cd apps/desktop && pnpm electron-builder install-app-deps"
+    "start:dev": "turbo run dev"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.16",
@@ -52,12 +48,6 @@
       "boolean": "^3.2.0",
       "inflight": "^1.0.6",
       "lodash.isequal": "^4.5.0"
-    },
-    "peerDependencyRules": {
-      "ignoreMissing": [
-        "electron-builder-squirrel-windows",
-        "dmg-builder"
-      ]
     }
   },
   "dependencies": {

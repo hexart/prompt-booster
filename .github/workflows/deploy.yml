@@ -63,6 +63,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            TARGETPLATFORM=${{ matrix.platform }}
       
       # 简化后的包可见性设置
       - name: Make package public
