@@ -8,7 +8,7 @@ import { useMemoryStore } from '@prompt-booster/core/storage/memoryStorage';
 import { createClient } from '@prompt-booster/api/factory';
 import { createStreamHandler } from '@prompt-booster/api/utils/stream';
 import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
-import { RefreshCw, Copy } from 'lucide-react';
+import { RefreshCw, Copy, MinimizeIcon, MaximizeIcon } from 'lucide-react';
 
 export const TestResult: React.FC = () => {
     // 使用memoryStore获取所有需要的状态
@@ -41,6 +41,9 @@ export const TestResult: React.FC = () => {
     const [isTestingOriginal, setIsTestingOriginal] = useState(false);
     const [isTestingOptimized, setIsTestingOptimized] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [isMaximized, setIsMaximized] = useState(false);
+    const [isOriginalMaximized, setIsOriginalMaximized] = useState(false);
+    const [isOptimizedMaximized, setIsOptimizedMaximized] = useState(false);
     const [showMarkdown, setShowMarkdown] = useState(true);
     const [showRequirements, setShowRequirements] = useState(true);
     const [retryCount, setRetryCount] = useState(0);
@@ -277,7 +280,9 @@ export const TestResult: React.FC = () => {
     const renderResponseArea = (
         title: string,
         response: string,
-        isStreaming: boolean
+        isStreaming: boolean,
+        isMaximized: boolean,
+        onToggleMaximize: () => void
     ) => {
         // 添加复制单个结果的函数
         const copyResponse = () => {
@@ -296,16 +301,29 @@ export const TestResult: React.FC = () => {
                     <h2 className="text-xl font-semibold text-gray-600 dark:text-white">{title}</h2>
                     {isStreaming ? (
                         <div className="ml-2 text-blue-500 dark:text-blue-400">
-                            <RefreshCw size={18} className='animate-spin'/>
+                            <RefreshCw size={18} className='animate-spin' />
                         </div>
                     ) : response && (
-                        <button
-                            className="text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1 bg-white dark:bg-gray-700 dark:text-blue-400 dark:hover:text-blue-300 rounded-lg px-3 py-1.5 transition-colors"
-                            onClick={copyResponse}
-                        >
-                            <Copy size={14} />
-                            复制
-                        </button>
+                        <div className='flex gap-2'>
+                            <button
+                                className="text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1 bg-white dark:bg-gray-700 dark:text-blue-400 dark:hover:text-blue-300 rounded-lg px-3 py-1.5 transition-colors"
+                                onClick={copyResponse}
+                            >
+                                <Copy size={14} />
+                                复制
+                            </button>
+                            <button
+                                className="text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1 bg-white dark:bg-gray-700 dark:text-blue-400 dark:hover:text-blue-300 rounded-lg px-3 py-1.5 transition-colors"
+                                onClick={onToggleMaximize}
+                                disabled={!response}
+                            >
+                                {isMaximized ? (
+                                    <MinimizeIcon size={14} />
+                                ) : (
+                                    <MaximizeIcon size={14} />
+                                )}
+                            </button>
+                        </div>
                     )}
                 </div>
                 {/* 内容区域 */}
@@ -332,43 +350,45 @@ export const TestResult: React.FC = () => {
     return (
         <div className="flex flex-col h-full overflow-hidden">
             {/* 用户输入区域 */}
-            <div className="p-4 border rounded-lg shadow-2xs bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700 flex-none">
-                <h2 className="text-xl font-semibold mb-4 text-gray-600 dark:text-white">提示词对比测试</h2>
-                {/* 使用新的DraggableNotice组件 */}
-                {showRequirements && (
-                    <DraggableNotice
-                        items={[
-                            {
-                                text: "需要输入原始提示词",
-                                isNeeded: !originalPrompt?.trim()
-                            },
-                            {
-                                text: "需要先增强提示词",
-                                isNeeded: !optimizedPrompt?.trim() && !isProcessing
-                            },
-                            {
-                                text: "需要输入测试内容",
-                                isNeeded: !userTestPrompt.trim()
-                            }
-                        ]}
-                        onClose={() => setShowRequirements(false)}
-                        className='w-56 backdrop-blur-md bg-white/70 dark:bg-gray-900/70 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700'
+            {!isMaximized && (
+                <div className="p-4 mb-4 border rounded-lg shadow-2xs bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700 flex-none">
+                    <h2 className="text-xl font-semibold mb-4 text-gray-600 dark:text-white">提示词对比测试</h2>
+                    {/* 使用新的DraggableNotice组件 */}
+                    {showRequirements && (
+                        <DraggableNotice
+                            items={[
+                                {
+                                    text: "需要输入原始提示词",
+                                    isNeeded: !originalPrompt?.trim()
+                                },
+                                {
+                                    text: "需要先增强提示词",
+                                    isNeeded: !optimizedPrompt?.trim() && !isProcessing
+                                },
+                                {
+                                    text: "需要输入测试内容",
+                                    isNeeded: !userTestPrompt.trim()
+                                }
+                            ]}
+                            onClose={() => setShowRequirements(false)}
+                            className='w-56 backdrop-blur-md bg-white/70 dark:bg-gray-900/70 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700'
+                        />
+                    )}
+                    {/* textarea区域 */}
+                    <EnhancedTextarea
+                        placeholder="输入测试内容，它将与系统提示词组合进行测试..."
+                        value={userTestPrompt}
+                        onChange={(e) => setUserTestPrompt(e.target.value)}
+                        label="测试输入 (用户提示词)"
+                        labelClassName="text-gray-400 dark:text-gray-300"
+                        rows={4}
+                        showCharCount={true}
+                        disabled={isTestingOriginal || isTestingOptimized}
                     />
-                )}
-                {/* textarea区域 */}
-                <EnhancedTextarea
-                    placeholder="输入测试内容，它将与系统提示词组合进行测试..."
-                    value={userTestPrompt}
-                    onChange={(e) => setUserTestPrompt(e.target.value)}
-                    label="测试输入 (用户提示词)"
-                    labelClassName="text-gray-400 dark:text-gray-300"
-                    rows={4}
-                    showCharCount={true}
-                    disabled={isTestingOriginal || isTestingOptimized}
-                />
-            </div>
+                </div>
+            )}
             {/* 控制面板 */}
-            <div className="flex flex-row justify-between items-end gap-4 my-4">
+            <div className="flex flex-row justify-between items-end gap-4 mb-4">
                 {/* 选择模型菜单区域 */}
                 <div className="w-1/2 min-w-[33%] max-w-[420px]">
                     <label className="block text-sm font-medium mb-2 text-gray-400 dark:text-gray-300">选择模型进行测试</label>
@@ -385,7 +405,7 @@ export const TestResult: React.FC = () => {
                     />
                 </div>
                 {/* 按钮区域 */}
-                <div className="flex items-center justify-end gap-3 flex-shrink min-w-0">
+                <div className="flex items-center justify-end gap-2 flex-shrink min-w-0">
                     {/* Markdown按钮 */}
                     <button
                         type="button"
@@ -417,7 +437,7 @@ export const TestResult: React.FC = () => {
                     {/* 运行对比测试按钮 */}
                     <Tooltip text="运行对比测试">
                         <button
-                            className={`px-4 py-2 rounded-md h-10 min-w-[30%] truncate transition-colors duration-500 ${isTestingOriginal || isTestingOptimized
+                            className={`px-3 py-2 rounded-md h-10 min-w-[30%] truncate transition-colors duration-500 ${isTestingOriginal || isTestingOptimized
                                 ? 'bg-red-500 hover:bg-red-600 text-white dark:bg-red-600 dark:hover:bg-red-700'
                                 : 'bg-blue-500 hover:bg-blue-600 text-white disabled:bg-blue-300 disabled:text-white dark:bg-blue-600 dark:hover:bg-blue-700 dark:disabled:bg-blue-800 dark:disabled:text-blue-300 disabled:cursor-not-allowed'
                                 }`}
@@ -435,6 +455,24 @@ export const TestResult: React.FC = () => {
                             }
                         </button>
                     </Tooltip>
+                    {/* 最大化/还原按钮 */}
+                    <button
+                        className='px-3 py-2 rounded-md h-10 text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1 bg-blue-50 dark:bg-gray-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
+                        onClick={() => setIsMaximized(!isMaximized)}
+                        disabled={!originalResponse && !optimizedResponse}
+                    >
+                        {isMaximized ? (
+                            <>
+                                <MinimizeIcon size={14} />
+                                <span className="hidden md:block">还原</span>
+                            </>
+                        ) : (
+                            <>
+                                <MaximizeIcon size={14} />
+                                <span className="hidden md:block">最大化</span>
+                            </>
+                        )}
+                    </button>
                 </div>
             </div>
             {/* 错误显示 */}
@@ -454,16 +492,37 @@ export const TestResult: React.FC = () => {
                 </div>
             )}
             {/* 测试结果展示 */}
-            <div className="grid grid-cols-1  md:grid-cols-2 gap-4 flex-grow min-h-0 md:overflow-y-hidden">
-                {renderResponseArea(
-                    "原始提示词响应",
-                    originalResponse,
-                    isTestingOriginal
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-grow min-h-0 md:overflow-y-hidden">
+                {/* 当优化响应最大化时，原始响应不显示 */}
+                {!isOptimizedMaximized && (
+                    <div className={isOriginalMaximized ? "col-span-2" : ""}>
+                        {renderResponseArea(
+                            "原始提示词响应",
+                            originalResponse,
+                            isTestingOriginal,
+                            isOriginalMaximized,
+                            () => {
+                                setIsOriginalMaximized(!isOriginalMaximized);
+                                setIsOptimizedMaximized(false);
+                            }
+                        )}
+                    </div>
                 )}
-                {renderResponseArea(
-                    "增强提示词响应",
-                    optimizedResponse,
-                    isTestingOptimized
+
+                {/* 当原始响应最大化时，优化响应不显示 */}
+                {!isOriginalMaximized && (
+                    <div className={isOptimizedMaximized ? "col-span-2" : ""}>
+                        {renderResponseArea(
+                            "增强提示词响应",
+                            optimizedResponse,
+                            isTestingOptimized,
+                            isOptimizedMaximized,
+                            () => {
+                                setIsOptimizedMaximized(!isOptimizedMaximized);
+                                setIsOriginalMaximized(false);
+                            }
+                        )}
+                    </div>
                 )}
             </div>
         </div>
