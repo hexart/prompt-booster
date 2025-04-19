@@ -8,7 +8,7 @@ import { useMemoryStore } from '@prompt-booster/core/storage/memoryStorage';
 import { createClient } from '@prompt-booster/api/factory';
 import { createStreamHandler } from '@prompt-booster/api/utils/stream';
 import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
-import { RefreshCw, Copy, MinimizeIcon, MaximizeIcon } from 'lucide-react';
+import { RefreshCw, Copy, MinimizeIcon, MaximizeIcon, ArrowLeftFromLineIcon, ArrowRightFromLineIcon } from 'lucide-react';
 
 export const TestResult: React.FC = () => {
     // 使用memoryStore获取所有需要的状态
@@ -318,9 +318,27 @@ export const TestResult: React.FC = () => {
                                 disabled={!response}
                             >
                                 {isMaximized ? (
-                                    <MinimizeIcon size={14} />
+                                    <>
+                                        {/* 大屏幕显示左右箭头 */}
+                                        <span className="hidden md:inline">
+                                            {title.includes("原始") ? <ArrowLeftFromLineIcon size={14} /> : <ArrowRightFromLineIcon size={14} />}
+                                        </span>
+                                        {/* 小屏幕显示上下箭头 */}
+                                        <span className="inline md:hidden">
+                                            <MinimizeIcon size={14} />
+                                        </span>
+                                    </>
                                 ) : (
-                                    <MaximizeIcon size={14} />
+                                    <>
+                                        {/* 大屏幕显示左右箭头 */}
+                                        <span className="hidden md:inline">
+                                            {title.includes("原始") ? <ArrowRightFromLineIcon size={14} /> : <ArrowLeftFromLineIcon size={14} />}
+                                        </span>
+                                        {/* 小屏幕显示上下箭头 */}
+                                        <span className="inline md:hidden">
+                                            <MaximizeIcon size={14} />
+                                        </span>
+                                    </>
                                 )}
                             </button>
                         </div>
