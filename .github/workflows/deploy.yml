@@ -1,4 +1,3 @@
-# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 name: Deploy to Production
 
 on:
@@ -6,43 +5,61 @@ on:
     branches: [ main ]
 
 jobs:
-  build-and-push:
+  build-and-deploy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [linux/amd64, linux/arm64]
+
     permissions:
-      contents: read
+      contents: write
       packages: write
+
     steps:
-      - uses: actions/checkout@v3
-      
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
-          
+
       - name: Install pnpm
         run: npm install -g pnpm
-        
-      - name: Install dependencies
+
+      - name: Install root dependencies
         run: pnpm install
-        
-      - name: Build
+
+      - name: Build web & packages
         run: pnpm build
-        
-      # 添加QEMU支持跨平台构建
+
+      # 👉 添加 Electron Desktop 构建（mac 版）
+      - name: Install desktop deps
+        run: cd apps/desktop && npm install
+
+      - name: Build Electron desktop (mac)
+        run: cd apps/desktop && npm run build:mac:universal
+
+      - name: Publish GitHub Release with desktop app
+        run: cd apps/desktop && npx electron-builder --publish always
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # 👉 多平台 Docker 构建
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
-        
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-        
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-        
-      - name: Extract metadata for Docker
+
+      - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v4
         with:
@@ -50,30 +67,26 @@ jobs:
           tags: |
             type=raw,value=latest
             type=sha,format=short
-      
-      # 修改构建步骤，添加platforms参数支持多架构
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
           context: .
           file: ./docker/frontend.Dockerfile
           push: true
-          platforms: linux/amd64,linux/arm64
+          platforms: ${{ matrix.platform }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
             TARGETPLATFORM=${{ matrix.platform }}
-      
-      # 简化后的包可见性设置
-      - name: Make package public
+
+      - name: Make Docker package public
         run: |
-          # 直接设置包的可见性为公开
           curl -X PATCH \
             -H "Authorization: token ${{ secrets.PACKAGE_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
             -d '{"visibility":"public"}' \
             "https://api.github.com/user/packages/container/${{ github.event.repository.name }}"
-          
           echo "Package visibility changed to public"
