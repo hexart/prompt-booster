@@ -1,0 +1,27 @@
+{
+    "appId": "com.hexart.promptbooster",
+    "productName": "Prompt Booster",
+    "directories": {
+        "output": "release"
+    },
+    "files": [
+        {
+            "from": "../web/dist",
+            "to": "web"
+        },
+        "main.js",
+        "preload.js",
+        "package.json"
+    ],
+    "mac": {
+        "target": "dmg"
+    },
+    "win": {
+        "target": [
+            "nsis"
+        ]
+    },
+    "linux": {
+        "target": "AppImage"
+    }
+}

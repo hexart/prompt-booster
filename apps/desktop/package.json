@@ -1,0 +1,25 @@
+{
+  "name": "prompt-booster",
+  "version": "0.2.0",
+  "description": "Prompt Booster Desktop App",
+  "main": "main.js",
+  "scripts": {
+    "dev": "npm run build:web && electron .",
+    "build": "npm run build:web && electron-builder",
+    "build:web": "cd ../web && pnpm build",
+    "build:mac": "npm run build:web && electron-builder --mac",
+    "build:mac:universal": "npm run build:web && electron-builder --mac --universal",
+    "build:win": "npm run build:web && electron-builder --win",
+    "build:linux": "npm run build:web && electron-builder --linux"
+  },
+  "keywords": [
+    "Prompt Booster"
+  ],
+  "author": "Hexart Stuido",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^35.1.5",
+    "electron-builder": "^26.0.12",
+    "vite": "^6.3.2"
+  }
+}
