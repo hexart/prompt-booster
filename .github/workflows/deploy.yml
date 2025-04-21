@@ -34,6 +34,9 @@ jobs:
       - name: Install desktop deps
         run: cd apps/desktop && npm install
 
+      - name: Install optional dmg-license module
+        run: cd apps/desktop && npm install dmg-license
+
       - name: Build Electron desktop (mac)
         run: cd apps/desktop && npm run build:mac:universal
 
