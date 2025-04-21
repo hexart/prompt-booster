@@ -2,6 +2,10 @@
   "name": "prompt-booster",
   "version": "0.2.0",
   "description": "Prompt Booster Desktop App",
+  "private": true,
+  "pnpm": {
+    "excluded": true
+  },
   "main": "main.js",
   "scripts": {
     "dev": "npm run build:web && electron .",
