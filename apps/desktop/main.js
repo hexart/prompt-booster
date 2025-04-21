@@ -1,5 +1,5 @@
 // “模块用于控制应用程序生命周期并创建原生浏览器窗口。”
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, Menu, dialog } = require('electron')
 const path = require('node:path')
 
 let mainWindow;
@@ -12,6 +12,75 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js'),
     }
   });
+
+  const { app, Menu, dialog } = require('electron');
+
+const template = [
+  {
+    label: app.name,
+    submenu: [
+      { role: 'hide', label: '隐藏' },
+      { role: 'hideOthers', label: '隐藏其他' },
+      { role: 'unhide', label: '取消隐藏' },
+      { type: 'separator' },
+      { role: 'quit', label: '退出' }
+    ]
+  },
+  {
+    label: '编辑',
+    submenu: [
+      { role: 'undo', label: '撤销' },
+      { role: 'redo', label: '重做' },
+      { type: 'separator' },
+      { role: 'cut', label: '剪切' },
+      { role: 'copy', label: '复制' },
+      { role: 'paste', label: '粘贴' },
+      { role: 'selectAll', label: '全选' }
+    ]
+  },
+  {
+    label: '视图',
+    submenu: [
+      { role: 'reload', label: '重新加载' },
+      { role: 'toggledevtools', label: '开发者工具' },
+      { type: 'separator' },
+      { role: 'resetZoom', label: '重置缩放' },
+      { role: 'zoomIn', label: '放大' },
+      { role: 'zoomOut', label: '缩小' },
+      { type: 'separator' },
+      { role: 'togglefullscreen', label: '切换全屏' }
+    ]
+  },
+  {
+    label: '窗口',
+    submenu: [
+      { role: 'minimize', label: '最小化' },
+      { role: 'zoom', label: '缩放' },
+      { role: 'close', label: '关闭窗口' }
+    ]
+  },
+  {
+    label: '帮助',
+    submenu: [
+      {
+        label: '关于 Prompt Booster',
+        click: () => {
+          dialog.showMessageBox({
+            type: 'info',
+            title: '关于 Prompt Booster',
+            message: 'Prompt Booster\n版本：0.2.0\n版权所有 © 2025 Hexart Studio\n保留所有权利。',
+            buttons: ['确定']
+          });
+        }
+      }
+    ]
+  }
+];
+
+  
+  // 应用该菜单
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
 
   // 加载 web 项目的 index.html
   const isDev = !app.isPackaged;

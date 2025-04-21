@@ -14,7 +14,8 @@
         "package.json"
     ],
     "mac": {
-        "target": "zip"
+        "target": "dmg",
+        "icon": "build/icon.icns"
     },
     "win": {
         "target": [
