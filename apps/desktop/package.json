@@ -8,7 +8,7 @@
     "dev": "npm run build:web && electron .",
     "build": "npm run build:web && electron-builder",
     "build:web": "cd ../web && pnpm build",
-    "build:mac": "npm run build:web && electron-builder --mac",
+    "build:mac": "npm run build:web && electron-builder --mac --arm64",
     "build:mac:universal": "npm run build:web && electron-builder --mac --universal",
     "build:win": "npm run build:web && electron-builder --win",
     "build:linux": "npm run build:web && electron-builder --linux"

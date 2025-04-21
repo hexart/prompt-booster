@@ -30,21 +30,6 @@ jobs:
       - name: Build web & packages
         run: pnpm build
 
-      # 👉 添加 Electron Desktop 构建（mac 版）
-      - name: Install desktop deps
-        run: cd apps/desktop && npm install
-
-      - name: Install optional dmg-license module
-        run: cd apps/desktop && npm install dmg-license
-
-      - name: Build Electron desktop (mac)
-        run: cd apps/desktop && npm run build:mac:universal
-
-      - name: Publish GitHub Release with desktop app
-        run: cd apps/desktop && npx electron-builder --publish always
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       # 👉 多平台 Docker 构建
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
