@@ -25,7 +25,6 @@
   "dependencies": {
     "@prompt-booster/api": "workspace:*",
     "@prompt-booster/core": "workspace:*",
-    "lucide-react": "^0.488.0",
     "react-markdown": "^10.1.0",
     "react-syntax-highlighter": "^15.6.1",
     "rehype-raw": "^7.0.0",
@@ -34,12 +33,18 @@
     "unist-util-visit": "^5.0.0"
   },
   "peerDependencies": {
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "lucide-react": "^0.488.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-hotkeys-hook": "^5.0.1"
   },
   "devDependencies": {
     "@types/react-dom": "^19.1.0",
     "@types/react-syntax-highlighter": "^15.5.13",
+    "lucide-react": "^0.488.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-hotkeys-hook": "^5.0.1",
     "typescript": "^5.8.2",
     "vite": "^6.2.5",
     "vite-plugin-dts": "^4.5.3",

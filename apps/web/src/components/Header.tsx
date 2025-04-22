@@ -2,7 +2,7 @@
 import React from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { RocketIcon, Columns2Icon, GalleryVerticalEndIcon, CogIcon } from 'lucide-react';
-import { ThemeSwitcher } from '@prompt-booster/ui/components/ThemeSwitcher';
+import ThemeSwitcher from '@prompt-booster/ui/components/ThemeSwitcher';
 import MobileMenu, { TabItem } from './MobileMenu';
 import reactLogo from '../assets/react.svg';
 
@@ -46,7 +46,7 @@ const Header: React.FC<HeaderProps> = ({
     return (
         <>
             <header className={`sticky top-0 w-full z-40 ${isMobileMenuOpen ? 'border-b border-gray-200 dark:border-gray-800' : 'border-b border-gray-200 dark:border-gray-800'} bg-white dark:bg-gray-900 shadow-2xs`}>
-                <div className="w-full max-w-(--breakpoint-2xl) mx-auto px-4 lg:px-6 py-4">
+                <div className="w-full max-w-(--breakpoint-2xl) mx-auto px-4 md:px-6 py-4">
                     <div className="flex justify-between items-center">
                         <div className="flex items-center min-w-24">
                             <img src={reactLogo} alt="React Logo" className="h-8 w-8 mr-2 logo-animation" />
@@ -55,9 +55,9 @@ const Header: React.FC<HeaderProps> = ({
                             </h1>
                         </div>
 
-                        <div className="hidden md:flex items-center gap-2">
+                        <div className="flex items-center">
                             {/* 桌面端卡片导航 */}
-                            <div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+                            <div className="hidden md:flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1 mr-2">
                                 {tabs.map((tab) => {
                                     const Icon = tab.icon;
                                     return (
@@ -79,15 +79,14 @@ const Header: React.FC<HeaderProps> = ({
                                     );
                                 })}
                             </div>
-                            <ThemeSwitcher />
-                        </div>
-
-                        <div className="md:hidden flex items-center space-x-2">
-                            <ThemeSwitcher />
+                            
+                            {/* 主题切换按钮 - 使用断点控制内部渲染模式 */}
+                            <ThemeSwitcher breakpoint="lg" />
+                            
                             {/* 移动端菜单按钮 */}
                             <button
                                 ref={menuButtonRef}
-                                className="md:hidden p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                                className="md:hidden ml-2 p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                                 aria-label={isMobileMenuOpen ? "关闭菜单" : "打开菜单"}
                                 aria-expanded={isMobileMenuOpen}
