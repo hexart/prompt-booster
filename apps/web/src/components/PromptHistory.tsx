@@ -125,7 +125,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                         className="px-3 py-2 flex items-center gap-1 text-sm bg-red-500 text-white rounded-md hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700"
                     >
                         <Trash2Icon size={15} />
-                        清空
+                        <span className="hidden sm:block">清空</span>
                     </button>
                 </div>
             </div>
@@ -191,7 +191,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                                             <>
                                                 <div>
                                                     <h3 className="text-sm font-medium mb-1 text-gray-600 dark:text-white">原始提示词：</h3>
-                                                    <div className="p-2 max-h-32 overflow-y-scroll bg-gray-100 text-gray-500 rounded-xs text-sm whitespace-pre-wrap dark:bg-gray-800 dark:text-gray-300">
+                                                    <div className="p-2 max-h-32 overflow-y-scroll bg-gray-100 text-gray-500 rounded-md text-sm whitespace-pre-wrap dark:bg-gray-800 dark:text-gray-300">
                                                         {group.originalPrompt}
                                                     </div>
                                                 </div>
@@ -216,14 +216,14 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
 
                                                 <div>
                                                     <h3 className="text-sm font-medium mb-1 text-gray-600 dark:text-white">迭代方向：</h3>
-                                                    <div className="p-2 bg-gray-100 text-blue-600 rounded-xs text-sm whitespace-pre-wrap dark:bg-gray-800/80 dark:text-gray-300">
+                                                    <div className="p-2 bg-gray-100 text-blue-600 rounded-md text-sm whitespace-pre-wrap dark:bg-gray-800/80 dark:text-gray-300">
                                                         {displayVersion.iterationDirection || "无"}
                                                     </div>
                                                 </div>
 
                                                 <div>
                                                     <h3 className="text-sm font-medium mb-1 text-gray-600 dark:text-white">增强后提示词：</h3>
-                                                    <div className="p-2 max-h-[460px] overflow-auto bg-gray-100 text-gray-500 rounded-xs text-sm whitespace-pre-wrap dark:bg-gray-800 dark:text-gray-300">
+                                                    <div className="p-2 max-h-[460px] overflow-auto bg-gray-100 text-gray-500 rounded-md text-sm whitespace-pre-wrap dark:bg-gray-800 dark:text-gray-300">
                                                         {displayVersion.optimizedPrompt || ''}
                                                     </div>
                                                 </div>

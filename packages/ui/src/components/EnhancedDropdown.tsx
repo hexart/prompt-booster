@@ -87,7 +87,7 @@ export const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
 
             {isOpen && (
                 <div 
-                    className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg max-h-[247px] overflow-y-auto"
+                    className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg max-h-[247px] overflow-y-auto"
                     ref={optionsContainerRef}
                 >
                     <ul className="py-1">
@@ -99,7 +99,7 @@ export const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
                                     onChange(option.value);
                                     setIsOpen(false);
                                 }}
-                                className={`px-3 py-3 cursor-pointer text-sm mx-1 rounded mb-1 last:mb-0
+                                className={`px-3 py-3 cursor-pointer text-sm mx-1 rounded-lg mb-1 last:mb-0
                                     ${option.value === value
                                         ? 'bg-blue-100 font-medium text-blue-700 hover:bg-blue-200 dark:bg-blue-800! dark:text-white! dark:hover:bg-blue-700!'
                                         : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'

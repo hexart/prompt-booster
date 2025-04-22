@@ -81,20 +81,21 @@ const Header: React.FC<HeaderProps> = ({
                             </div>
                             
                             {/* 主题切换按钮 - 使用断点控制内部渲染模式 */}
-                            <ThemeSwitcher breakpoint="lg" />
+                            <ThemeSwitcher />
                             
                             {/* 移动端菜单按钮 */}
+                            <div className='md:hidden ml-2 bg-gray-100/60 dark:bg-gray-700/60 backdrop-blur-md p-1 rounded-lg'>
                             <button
                                 ref={menuButtonRef}
-                                className="md:hidden ml-2 p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                                className="p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                                 aria-label={isMobileMenuOpen ? "关闭菜单" : "打开菜单"}
                                 aria-expanded={isMobileMenuOpen}
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
+                                    width="22"
+                                    height="22"
                                     viewBox="0 0 24 24"
                                     fill="none"
                                     stroke="currentColor"
@@ -115,7 +116,7 @@ const Header: React.FC<HeaderProps> = ({
                                         </>
                                     )}
                                 </svg>
-                            </button>
+                            </button></div>
                         </div>
                     </div>
                 </div>

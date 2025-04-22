@@ -28,11 +28,11 @@
     transform: translateY(0);
   }
 }
-/* 1. 淡入缩放效果 */
+/* 移动端菜单淡入缩放效果 */
 @keyframes menuScaleIn {
   from {
     opacity: 0;
-    transform: scale(0.95) translateY(-10px);
+    transform: scale(0.75) translateY(-10px);
   }
   to {
     opacity: 1;
@@ -40,42 +40,6 @@
   }
 }
 
-/* 2. 从右侧滑入效果 */
-@keyframes menuSlideIn {
-  from {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* 3. 弹跳效果 */
-@keyframes menuBounceIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.8) translateY(-10px);
-  }
-  70% {
-    opacity: 1;
-    transform: scale(1.05) translateY(0);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-/* 4. 渐变边框效果 */
-@keyframes menuBorderGlow {
-  0% {
-    box-shadow: 0 0 0 1px rgba(59, 130, 246, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
-  }
-}
 .menu-container-animation {
   animation: menuScaleIn 0.25s ease-out forwards;
   transform-origin: top right;
@@ -127,7 +91,7 @@ button {
 }
 
 /* 全局背景设置 */
-:root {
+:root body {
   @apply bg-gray-100 text-black;
 }
 

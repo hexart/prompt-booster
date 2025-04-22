@@ -8,9 +8,6 @@ import { Tooltip } from './Tooltip';
 // 主题类型
 type ThemeType = 'light' | 'dark' | 'system';
 
-// 断点类型
-type BreakpointType = 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-
 // 样式配置
 const styleConfig = {
     light: {
@@ -63,12 +60,6 @@ const STYLES = {
 
 interface ThemeSwitcherProps {
     /**
-     * 设置在哪个断点下切换为按钮组模式
-     * @default 'lg'
-     */
-    breakpoint?: BreakpointType;
-
-    /**
      * 图标大小
      * @default 19
      */
@@ -82,7 +73,6 @@ interface ThemeSwitcherProps {
 }
 
 const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
-    breakpoint = 'lg',
     iconSize = 19,
     enableHotkeys = true
 }) => {
@@ -198,13 +188,13 @@ const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
 
     return (
         <div className="relative inline-block" ref={dropdownRef}>
-            {/* 大屏幕标准模式 */}
-            <div className={`hidden ${breakpoint}:flex gap-1 ${STYLES.container}`}>
+            {/* 大屏幕按钮组 */}
+            <div className={`hidden lg:flex gap-1 ${STYLES.container}`}>
                 {Object.keys(themeConfig).map(key => renderThemeButton(key as ThemeType))}
             </div>
 
-            {/* 小屏幕下拉菜单模式 */}
-            <div className={`${breakpoint}:hidden`}>
+            {/* 小屏幕菜单 */}
+            <div className="lg:hidden">
                 <div className={STYLES.container}>
                     <Tooltip text={tooltipText} position="left">
                         <button

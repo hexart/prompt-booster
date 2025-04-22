@@ -253,7 +253,7 @@ export const PromptBooster: React.FC = () => {
                                     onClick={handleReset}
                                 >
                                     <ListRestartIcon size={18} />
-                                    <span className="hidden md:block">重置</span>
+                                    <span className="hidden sm:block">重置</span>
                                 </button>
                             </Tooltip>
                         )}

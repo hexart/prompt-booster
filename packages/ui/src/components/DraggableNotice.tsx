@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Info, X } from 'lucide-react';
+import { MessageSquareWarningIcon, XIcon } from 'lucide-react';
 
 interface RequirementItem {
     text: string;
@@ -190,7 +190,7 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
     return (
         <div
             ref={floatingRef}
-            className={`fixed z-50 ${isDragging ? 'cursor-grabbing' : 'cursor-grab'} ${className} 
+            className={`fixed z-10 ${isDragging ? 'cursor-grabbing' : 'cursor-grab'} ${className} 
                     transition-opacity duration-500 ease-in-out ${isClosing ? 'opacity-0' : isVisible ? 'opacity-100' : 'opacity-0'}`}
             style={hasBeenDragged ? {
                 // 如果已经被拖动过，使用绝对像素位置
@@ -206,16 +206,16 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
             onMouseDown={handleMouseDown}
             onTouchStart={handleTouchStart}
         >
-            <div className="flex justify-between items-center p-3 border-b border-gray-200 dark:border-gray-700">
-                <div className="flex items-center gap-2">
-                    <Info size={16} className='text-yellow-500 dark:text-yellow-400'/>
+            <div className="flex justify-between items-center border-b border-gray-200 dark:border-gray-700">
+                <div className="flex items-center p-3 gap-2">
+                    <MessageSquareWarningIcon size={20} className='text-yellow-500 dark:text-yellow-400'/>
                     <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">{title}</h3>
                 </div>
                 <button
                     onClick={handleClose}
-                    className="close-button text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400"
+                    className="close-button p-2 m-1 text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400"
                 >
-                    <X size={16} />
+                    <XIcon size={16} />
                 </button>
             </div>
             <div className="p-3 text-sm space-y-2">

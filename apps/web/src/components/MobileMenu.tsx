@@ -74,7 +74,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
             {/* 菜单内容 - 只有菜单本身接收点击事件 */}
             <nav
                 ref={menuRef}
-                className="absolute top-18 right-4 w-47 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-lg pointer-events-auto menu-container-animation"
+                className="absolute top-18 right-4 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-lg pointer-events-auto menu-container-animation"
                 aria-label="移动端导航菜单"
             >
                 <div className="p-2">

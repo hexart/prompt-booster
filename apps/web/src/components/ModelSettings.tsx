@@ -202,7 +202,7 @@ export const ModelSettings: React.FC = () => {
                     className="bg-blue-500 text-white px-3 py-2 rounded-md text-sm hover:bg-blue-600 transition-colors dark:bg-blue-600 dark:hover:bg-blue-700 inline-flex items-center gap-1"
                 >
                     <ListPlus size={17} />
-                    添加
+                    <span className="hidden sm:block">添加</span>
                 </button>
                 </Tooltip>
             </div>
@@ -231,9 +231,9 @@ export const ModelSettings: React.FC = () => {
                                         }`}
                                 >
                                     {model.isEnabled ? (
-                                        <Power size={16} />
+                                        <Power size={14} />
                                     ) : (
-                                        <Power size={16} />
+                                        <Power size={14} />
                                     )}
                                     <span className="hidden md:inline whitespace-nowrap">{model.isEnabled ? '已启用' : '已禁用'}</span>
                                 </button>
@@ -245,7 +245,7 @@ export const ModelSettings: React.FC = () => {
                                 >
                                     <div className="w-4 h-4 flex items-center justify-center">
                                         {!isTestingConnection(model.id) ? (
-                                            <Link2 />
+                                            <Link2 size={16} />
                                         ) : (
                                             <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"></circle>
@@ -260,7 +260,7 @@ export const ModelSettings: React.FC = () => {
                                     onClick={() => handleEditModel(model.id, model.isStandard)}
                                     className={`${!model.isStandard ? "mr-2" : ""} px-3 py-2 rounded-md text-sm transition-colors inline-flex items-center gap-1 bg-blue-100 text-blue-800 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-300 dark:hover:bg-blue-800`}
                                 >
-                                    <FileCog size={16} />
+                                    <FileCog size={14} />
                                     <span className="hidden md:inline whitespace-nowrap">编辑</span>
                                 </button>
 
@@ -269,7 +269,7 @@ export const ModelSettings: React.FC = () => {
                                         onClick={() => handleDeleteCustomInterface(model.id)}
                                         className="px-3 py-2 rounded-md text-sm transition-colors inline-flex items-center gap-1 bg-red-100 text-red-800 hover:bg-red-200 dark:bg-red-900 dark:text-red-300 dark:hover:bg-red-800"
                                     >
-                                        <Trash2 size={16} />
+                                        <Trash2 size={14} />
                                         <span className="hidden md:inline whitespace-nowrap">删除</span>
                                     </button>
                                 )}
