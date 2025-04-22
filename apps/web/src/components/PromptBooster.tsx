@@ -285,7 +285,7 @@ export const PromptBooster: React.FC = () => {
             {/* 控制栏 */}
             <div className="flex items-end gap-3">
                 <div className="min-w-[26%] inline-block">
-                    <label className="block text-sm font-medium mb-2 text-gray-400 dark:text-gray-300">系统提示词模板</label>
+                    <label className="block text-sm font-medium mb-2 whitespace-nowrap truncate text-gray-400 dark:text-gray-300">系统提示词模板</label>
                     <EnhancedDropdown
                         options={Object.entries(templates as Record<string, Template>)
                             .filter(([_, template]) => template.metadata?.templateType === 'optimize')

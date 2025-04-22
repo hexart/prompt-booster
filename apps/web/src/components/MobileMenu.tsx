@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 // 菜单类型定义
 export type TabItem = {
     id: string;
+    icon: React.ComponentType<any>;
     label: string;
 };
 
@@ -88,6 +89,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
                             style={{ animationDelay: `${index * 200}ms`, opacity: 0 }}
                             aria-current={activeTab === tab.id ? 'page' : undefined}
                         >
+                            {tab.icon && React.createElement(tab.icon, { size: 18 })}
                             <span>{tab.label}</span>
                         </button>
                     ))}

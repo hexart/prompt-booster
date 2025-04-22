@@ -408,8 +408,8 @@ export const TestResult: React.FC = () => {
             {/* 控制面板 */}
             <div className="flex flex-row justify-between items-end gap-4 mb-4">
                 {/* 选择模型菜单区域 */}
-                <div className="w-1/2 min-w-[33%] max-w-[420px]">
-                    <label className="block text-sm font-medium mb-2 text-gray-400 dark:text-gray-300">选择模型进行测试</label>
+                <div className="min-w-[33%]">
+                    <label className="block text-sm font-medium mb-2 whitespace-nowrap truncate text-gray-400 dark:text-gray-300">选择模型进行测试</label>
                     <EnhancedDropdown
                         options={getEnabledModels().map(model => ({
                             value: model.id,
