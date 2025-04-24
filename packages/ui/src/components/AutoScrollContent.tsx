@@ -1,8 +1,10 @@
 // packages/ui/src/components/AutoScrollContent.tsx
 import React, { useEffect, useState, useRef, CSSProperties } from 'react';
 import { useAutoScroll } from '../hooks/useAutoscroll';
-import { ArrowDown } from 'lucide-react';
+import { ArrowDownIcon, CopyIcon, CheckIcon } from 'lucide-react';
 import { Markdown } from './Markdown';
+import { toast } from 'sonner';
+import { Tooltip } from './Tooltip';
 
 /**
  * 自动滚动内容显示组件
@@ -42,6 +44,9 @@ interface AutoScrollContentProps {
 
     // 占位文本，当content为空时显示
     placeholder?: string;
+
+    // 是否显示复制按钮
+    showCopyButton?: boolean;
 }
 
 export const AutoScrollContent: React.FC<AutoScrollContentProps> = ({
@@ -54,6 +59,7 @@ export const AutoScrollContent: React.FC<AutoScrollContentProps> = ({
     allowHtml = false,
     enableMarkdown = true,
     placeholder = '',
+    showCopyButton = true,
 }) => {
     const {
         elementRef,
@@ -120,6 +126,24 @@ export const AutoScrollContent: React.FC<AutoScrollContentProps> = ({
     // 检查内容是否为空
     const isEmpty = !content || content.trim() === '';
 
+    // 拷贝按钮的悬停和拷贝状态
+    const [isHovered, setIsHovered] = useState(false);
+    const [copied, setCopied] = useState(false);
+
+    const handleCopy = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (!content.trim()) return;
+        navigator.clipboard.writeText(content)
+            .then(() => {
+                setCopied(true);
+                toast.success('文本已复制到剪贴板');
+                setTimeout(() => setCopied(false), 2000);
+            })
+            .catch(err => {
+                console.error('无法复制文本: ', err);
+            });
+    };
+
     // 确定按钮形状的类名，使用纯 Tailwind 类名，并自定义弹跳动画速度
     const buttonClassName = `absolute z-10 bottom-4 left-1/2 -translate-x-1/2 bg-blue-500/80 backdrop-blur-xs text-white shadow-md hover:bg-blue-600/80 transition-all duration-600 ease-in-out flex items-center gap-1 animate-bounce motion-reduce:animate-none ${buttonText ? 'px-4 py-2 rounded-full' : 'p-2 rounded-full aspect-square'} [animation-duration:1500ms]`;
 
@@ -127,6 +151,8 @@ export const AutoScrollContent: React.FC<AutoScrollContentProps> = ({
         <div
             className="flex flex-grow relative w-full h-full"
             style={{ flex: '1 1 auto', minHeight: 0 }}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
         >
             <div
                 ref={elementRef}
@@ -162,9 +188,22 @@ export const AutoScrollContent: React.FC<AutoScrollContentProps> = ({
                     onClick={handleScrollToBottom}
                     className={buttonClassName}
                 >
-                    <ArrowDown size={16} />
+                    <ArrowDownIcon size={16} />
                     {buttonText && <span>{buttonText}</span>}
                 </button>
+            )}
+
+            {/* 复制按钮 - 仅在悬停且有内容时显示 */}
+            {showCopyButton && isHovered && content.trim() && !streaming && (
+                <Tooltip text="复制" position="bottom">
+                    <button
+                        className="absolute top-2 right-2 p-2 rounded-md bg-white/80 text-blue-500 hover:bg-blue-50 dark:bg-gray-800/60 dark:text-blue-400 dark:hover:bg-gray-800"
+                        onClick={handleCopy}
+                        title="复制文本"
+                    >
+                        {copied ? <CheckIcon size={16} /> : <CopyIcon size={16} />}
+                    </button>
+                </Tooltip>
             )}
         </div>
     );

@@ -5,7 +5,7 @@ import templates from '@prompt-booster/core/prompt/templates/default-templates.j
 import { Template } from '@prompt-booster/core/prompt/models/template';
 import { analyzePromptQuality, analyzePromptWithLLM } from '@prompt-booster/core/prompt/utils/promptUtils';
 import { toast, EnhancedTextarea, AutoScrollTextarea, EnhancedDropdown } from '@prompt-booster/ui';
-import { ListRestartIcon, StepForwardIcon, ChartBarIcon, CopyIcon, RefreshCwIcon, CopyPlusIcon, MinimizeIcon, MaximizeIcon } from 'lucide-react';
+import { ListRestartIcon, StepForwardIcon, ChartBarIcon, RefreshCwIcon, CopyPlusIcon, MinimizeIcon, MaximizeIcon } from 'lucide-react';
 import { Drawer } from 'vaul';
 import { motion } from 'framer-motion';
 import Confetti from 'react-confetti';
@@ -456,21 +456,6 @@ export const PromptBooster: React.FC = () => {
                         </button>
 
                         <button
-                            className="text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1 bg-blue-50 dark:bg-gray-700 dark:text-blue-400 dark:hover:text-blue-300 rounded-lg transition-colors px-3 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                            onClick={() => {
-                                navigator.clipboard.writeText(optimizedPrompt)
-                                    .then(() => toast.success('已复制增强提示词'))
-                                    .catch(err => {
-                                        console.error('复制失败:', err);
-                                        toast.error('复制失败，请手动复制');
-                                    });
-                            }}
-                            disabled={!optimizedPrompt || isProcessing || !activeGroup}
-                        >
-                            <CopyIcon size={14} />
-                            <span className="hidden md:block">复制</span>
-                        </button>
-                        <button
                             className='text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1 bg-blue-50 dark:bg-gray-700 dark:text-blue-400 dark:hover:text-blue-300 rounded-lg transition-colors px-3 py-2 disabled:opacity-50 disabled:cursor-not-allowed'
                             onClick={() => setIsMaximized(!isMaximized)}
                             disabled={!optimizedPrompt || !activeGroup}
@@ -493,7 +478,7 @@ export const PromptBooster: React.FC = () => {
                 {/* 增强提示词文本域 */}
                 <div className="relative flex-grow flex flex-col">
                     <AutoScrollTextarea
-                        className={`flex-grow p-3 border rounded-md border-gray-200 dark:border-gray-600 focus:outline-hidden focus:ring-2 focus:ring-blue-500 ${!optimizedPrompt && !isProcessing
+                        className={`flex-grow ${!optimizedPrompt && !isProcessing
                             ? "flex justify-center items-center text-center bg-gray-50  text-gray-600 dark:bg-gray-600/30 dark:text-gray-400"
                             : "bg-gray-50 text-gray-600 dark:bg-gray-700 dark:text-white"
                             }`}

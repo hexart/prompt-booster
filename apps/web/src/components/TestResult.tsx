@@ -8,7 +8,7 @@ import { useMemoryStore } from '@prompt-booster/core/storage/memoryStorage';
 import { createClient } from '@prompt-booster/api/factory';
 import { createStreamHandler } from '@prompt-booster/api/utils/stream';
 import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
-import { RefreshCw, Copy, MinimizeIcon, MaximizeIcon, ArrowLeftFromLineIcon, ArrowRightFromLineIcon } from 'lucide-react';
+import { RefreshCw, MinimizeIcon, MaximizeIcon, ArrowLeftFromLineIcon, ArrowRightFromLineIcon } from 'lucide-react';
 
 export const TestResult: React.FC = () => {
     // 使用memoryStore获取所有需要的状态
@@ -284,15 +284,6 @@ export const TestResult: React.FC = () => {
         isMaximized: boolean,
         onToggleMaximize: () => void
     ) => {
-        // 添加复制单个结果的函数
-        const copyResponse = () => {
-            navigator.clipboard.writeText(response)
-                .then(() => toast.success(`已复制${title}`))
-                .catch(err => {
-                    console.error('复制失败:', err);
-                    toast.error('复制失败，请手动复制');
-                });
-        };
 
         return (
             <div className="flex flex-col h-full border rounded p-4 border-gray-200 dark:border-gray-700 overflow-hidden">
@@ -306,14 +297,7 @@ export const TestResult: React.FC = () => {
                     ) : response && (
                         <div className='flex gap-2'>
                             <button
-                                className="text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1 bg-white dark:bg-gray-700 dark:text-blue-400 dark:hover:text-blue-300 rounded-lg px-3 py-1.5 transition-colors"
-                                onClick={copyResponse}
-                            >
-                                <Copy size={14} />
-                                复制
-                            </button>
-                            <button
-                                className="text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1 bg-white dark:bg-gray-700 dark:text-blue-400 dark:hover:text-blue-300 rounded-lg px-3 py-1.5 transition-colors"
+                                className="text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1 bg-white dark:bg-gray-700 dark:text-blue-400 dark:hover:text-blue-300 rounded-lg p-3 transition-colors"
                                 onClick={onToggleMaximize}
                                 disabled={!response}
                             >
@@ -325,7 +309,7 @@ export const TestResult: React.FC = () => {
                                         </span>
                                         {/* 小屏幕显示上下箭头 */}
                                         <span className="inline md:hidden">
-                                            <MinimizeIcon size={14} />
+                                            <MinimizeIcon size={16} />
                                         </span>
                                     </>
                                 ) : (
@@ -336,7 +320,7 @@ export const TestResult: React.FC = () => {
                                         </span>
                                         {/* 小屏幕显示上下箭头 */}
                                         <span className="inline md:hidden">
-                                            <MaximizeIcon size={14} />
+                                            <MaximizeIcon size={16} />
                                         </span>
                                     </>
                                 )}
@@ -513,7 +497,7 @@ export const TestResult: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-grow min-h-0 md:overflow-y-hidden">
                 {/* 当优化响应最大化时，原始响应不显示 */}
                 {!isOptimizedMaximized && (
-                    <div className={isOriginalMaximized ? "col-span-2" : ""}>
+                    <div className={isOriginalMaximized ? "col-span-2" : "min-h-0"}>
                         {renderResponseArea(
                             "原始提示词响应",
                             originalResponse,

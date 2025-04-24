@@ -1,5 +1,7 @@
 import React, { useState, useRef } from 'react';
-import { Copy, Check } from 'lucide-react';
+import { CopyIcon, CheckIcon } from 'lucide-react';
+import { Tooltip } from './Tooltip';
+import { toast } from 'sonner';
 
 interface EnhancedTextareaProps {
     value: string;
@@ -44,6 +46,7 @@ export const EnhancedTextarea: React.FC<EnhancedTextareaProps> = ({
         navigator.clipboard.writeText(value)
             .then(() => {
                 setCopied(true);
+                toast.success('已复制到剪贴板');
                 // 2秒后重置复制状态
                 setTimeout(() => setCopied(false), 2000);
             })
@@ -94,16 +97,15 @@ export const EnhancedTextarea: React.FC<EnhancedTextareaProps> = ({
 
                 {/* 复制按钮 - 仅在悬停且有内容时显示 */}
                 {isHovered && value.trim() && (
-                    <button
-                        className={`absolute top-2 right-2 p-2 rounded-md bg-white/50 bg-opacity-80 
-                ${value.trim() ? 'text-blue-500 hover:bg-blue-50' : 'text-gray-300 cursor-not-allowed'}
-                dark:bg-transparent dark:text-blue-400 dark:hover:bg-gray-500/50`}
-                        onClick={handleCopy}
-                        disabled={!value.trim()}
-                        title={value.trim() ? "复制文本" : "没有可复制的内容"}
-                    >
-                        {copied ? <Check size={16} /> : <Copy size={16} />}
-                    </button>
+                    <Tooltip text="复制" position="bottom">
+                        <button
+                            className="absolute top-2 right-2 p-2 rounded-md bg-white/80 text-blue-500 hover:bg-blue-50 dark:bg-gray-800/60 dark:text-blue-400 dark:hover:bg-gray-800"
+                            onClick={handleCopy}
+                            title="复制文本"
+                        >
+                            {copied ? <CheckIcon size={16} /> : <CopyIcon size={16} />}
+                        </button>
+                    </Tooltip>
                 )}
             </div>
 
