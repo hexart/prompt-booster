@@ -3,11 +3,12 @@ import { useMemoryStore } from '@prompt-booster/core/storage/memoryStorage';
 import { promptGroupService } from '@prompt-booster/core/prompt/services/promptService';
 import templates from '@prompt-booster/core/prompt/templates/default-templates.json';
 import { Template } from '@prompt-booster/core/prompt/models/template';
-import { analyzePromptQuality } from '@prompt-booster/core/prompt/utils/promptUtils';
-import { toast, AutoScrollTextarea, EnhancedDropdown } from '@prompt-booster/ui';
-import { EnhancedTextarea } from '@prompt-booster/ui';
+import { analyzePromptQuality, analyzePromptWithLLM } from '@prompt-booster/core/prompt/utils/promptUtils';
+import { toast, EnhancedTextarea, AutoScrollTextarea, EnhancedDropdown } from '@prompt-booster/ui';
 import { ListRestartIcon, StepForwardIcon, ChartBarIcon, CopyIcon, RefreshCwIcon, CopyPlusIcon, MinimizeIcon, MaximizeIcon } from 'lucide-react';
 import { Drawer } from 'vaul';
+import { motion } from 'framer-motion';
+import Confetti from 'react-confetti';
 import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
 import { IterationDialog } from './IterationDialog';
 import { usePromptGroup } from '@prompt-booster/core/prompt/hooks/usePrompt';
@@ -54,7 +55,15 @@ export const PromptBooster: React.FC = () => {
     // 分析结果状态
     const [analysisResult, setAnalysisResult] = useState<{
         score: number;
-        feedback: Array<{ text: string; isNegative: boolean }>;
+        criteria: {
+            label: string;
+            passed: boolean;
+            feedback: string;
+            suggestion?: string;
+            points: number; // ✅ 添加此字段
+        }[];
+        suggestions?: string[];
+        encouragement?: string;
     } | null>(null);
 
     // 分析抽屉状态
@@ -184,16 +193,65 @@ export const PromptBooster: React.FC = () => {
         }
     };
 
-    // 处理分析操作
-    const handleAnalyze = () => {
-        if (!optimizedPrompt || !optimizedPrompt.trim()) {
-            return;
-        }
+    const [loading, setLoading] = useState(false);
+    // 跟踪是否已使用LLM分析
+    const [hasUsedLLMAnalysis, setHasUsedLLMAnalysis] = useState(false);
 
-        const result = analyzePromptQuality(optimizedPrompt);
-        setAnalysisResult(result);
-        setIsDrawerOpen(true);
+    // 处理基础分析操作(从主界面按钮调用)：使用本地评分
+    const handleAnalyze = async () => {
+        if (!optimizedPrompt || !optimizedPrompt.trim()) return;
+
+        try {
+            setIsDrawerOpen(true);
+            setLoading(true);
+
+            // 使用本地分析方法
+            const result = analyzePromptQuality(optimizedPrompt);
+            setAnalysisResult(result);
+
+            // 重置LLM分析使用状态(每次打开抽屉时重置)
+            setHasUsedLLMAnalysis(false);
+        } catch (err: any) {
+            toast.error(err.message || '提示词分析失败');
+        } finally {
+            setLoading(false);
+        }
     };
+
+    // 新增：处理LLM分析操作(从抽屉内部按钮调用)
+    const handleLLMAnalyze = async () => {
+        if (!optimizedPrompt || !optimizedPrompt.trim()) return;
+
+        try {
+            setLoading(true);
+
+            // 尝试使用LLM分析
+            let result;
+            try {
+                result = await analyzePromptWithLLM(optimizedPrompt);
+                // 标记已使用LLM分析
+                setHasUsedLLMAnalysis(true);
+            } catch (e) {
+                console.warn('[Fallback] LLM 评分失败，尝试使用本地分析:', e);
+                result = analyzePromptQuality(optimizedPrompt);
+                toast.warning('LLM分析失败，已回退到本地分析');
+            }
+
+            setAnalysisResult(result);
+        } catch (err: any) {
+            toast.error(err.message || '提示词分析失败');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // 当抽屉关闭时重置按钮显示状态
+    useEffect(() => {
+        if (!isDrawerOpen) {
+            // 下次打开抽屉时重置LLM分析状态
+            setHasUsedLLMAnalysis(false);
+        }
+    }, [isDrawerOpen]);
 
     // 处理迭代对话框提交
     const handleIterationSubmit = async (templateId: string, direction: string) => {
@@ -379,10 +437,22 @@ export const PromptBooster: React.FC = () => {
                         <button
                             className="text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1 bg-blue-50 dark:bg-gray-700 dark:text-blue-400 dark:hover:text-blue-300 rounded-lg transition-colors px-3 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
                             onClick={handleAnalyze}
-                            disabled={!optimizedPrompt || isProcessing || !activeGroup}
+                            disabled={!optimizedPrompt || isProcessing || !activeGroup || loading}
                         >
-                            <ChartBarIcon size={14} />
-                            <span className="hidden md:block">分析提示词</span>
+                            {loading ? (
+                                <>
+                                    <svg className="animate-spin h-4 w-4 text-blue-500 dark:text-blue-300" viewBox="0 0 24 24" fill="none">
+                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                                    </svg>
+                                    <span className="hidden md:block">分析中...</span>
+                                </>
+                            ) : (
+                                <>
+                                    <ChartBarIcon size={14} />
+                                    <span className="hidden md:block">分析提示词</span>
+                                </>
+                            )}
                         </button>
 
                         <button
@@ -449,39 +519,182 @@ export const PromptBooster: React.FC = () => {
                 {/* 分析结果抽屉 */}
                 <Drawer.Root open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
                     <Drawer.Portal>
-                        <Drawer.Overlay className="fixed inset-0 z-[45] bg-black/40 backdrop-blur-xs" />
-                        <Drawer.Content className="bg-white dark:bg-gray-800 flex flex-col rounded-t-lg fixed bottom-0 left-0 right-0 max-h-[85vh] z-50">
-                            <div className="p-4 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-t-lg border-t dark:border-gray-700 shadow-lg">
+                        <Drawer.Overlay className="fixed inset-0 z-40 bg-black/40 backdrop-blur-xs" />
+                        <Drawer.Content className="bg-white dark:bg-gray-800 flex flex-col rounded-t-lg fixed bottom-0 left-0 right-0 max-h-[85vh] z-40">
+                            <div className="p-3 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-t-lg border-t border-gray-300 dark:border-gray-700 shadow-2xl overflow-y-auto">
+                                {/* 🎉 满分彩带 */}
+                                {analysisResult?.score === 10 && (
+                                    <Confetti
+                                        width={window.innerWidth}
+                                        height={300}
+                                        numberOfPieces={200}
+                                        gravity={0.3}
+                                        recycle={false}
+                                        initialVelocityY={10}
+                                        tweenDuration={5000}
+                                        run={true}
+                                    />
+                                )}
+                                {/* 抽屉把手 */}
                                 <div className="mx-auto w-12 h-1.5 shrink-0 rounded-full bg-gray-300 dark:bg-gray-600 mb-4" />
+                                <div className="max-w-[680px] mx-6 md:mx-auto">
+                                    {/* 主体：加载中骨架 vs 分析结果 */}
+                                    {loading ? (
+                                        <div className="animate-pulse space-y-4">
+                                            <div className="mb-4 flex justify-between items-center">
+                                                {/* 标题骨架 */}
+                                                <Drawer.Title className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/3" />
 
-                                <div className="w-[400px] mx-auto">
-                                    <div className="mb-4">
-                                        <div className="flex justify-between items-center">
-                                            <Drawer.Title className="text-lg font-semibold dark:text-white">增强提示词分析</Drawer.Title>
-                                            {analysisResult && (
-                                                <span className="text-xl font-bold dark:text-white">{analysisResult.score}/10</span>
-                                            )}
-                                        </div>
-                                        <Drawer.Description className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                            查看您的提示词质量评分和改进建议
-                                        </Drawer.Description>
-                                    </div>
+                                                {/* 分数骨架 */}
+                                                <div className="flex justify-center items-center gap-2">
+                                                    <span className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-16" />
+                                                    <span className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-8" />
+                                                </div>
+                                            </div>
+                                            <Drawer.Description className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-full mt-1"></Drawer.Description>
 
-                                    {analysisResult && (
-                                        <div className="p-4 bg-blue-50 dark:bg-blue-900 rounded-lg mb-4">
-                                            <ul className="list-disc pl-5 text-blue-800 dark:text-blue-200">
-                                                {analysisResult.feedback.map((item, index) => (
-                                                    <li
-                                                        key={index}
-                                                        className={item.isNegative ? "text-red-600 font-medium dark:text-red-400 mb-2" : "mb-2"}
-                                                    >
-                                                        {item.text}
-                                                    </li>
+                                            {/* 三条维度骨架 */}
+                                            <div className="p-4 bg-blue-50 dark:bg-blue-900 rounded-lg">
+                                                {[1, 2, 3].map(i => (
+                                                    <div key={i} className="space-y-2 mb-4 last:mb-0">
+                                                        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4" />
+                                                        <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2" />
+                                                    </div>
                                                 ))}
-                                            </ul>
+                                            </div>
+
+                                            {/* 三条综合建议骨架 */}
+                                            <div className="mt-4 p-4 bg-green-50 dark:bg-green-900 rounded-lg">
+                                                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/5 mb-2" />
+                                                {[1, 2, 3].map(i => (
+                                                    <div key={i} className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-full mb-1" />
+                                                ))}
+                                            </div>
                                         </div>
+                                    ) : (
+                                        <>
+                                            {/* 标题和评分 */}
+                                            <div className="mb-4">
+                                                <div className="flex justify-between items-center">
+                                                    <div className="relative inline-flex items-center">
+                                                        <Drawer.Title className="text-lg font-semibold text-gray-600 dark:text-white">
+                                                            增强提示词分析
+                                                        </Drawer.Title>
+                                                        {analysisResult?.score === 10 && (
+                                                            <motion.img
+                                                                src="/medal.png"
+                                                                alt="满分徽章"
+                                                                initial={{ scale: 5.8, opacity: 0, rotate: 15 }}
+                                                                animate={{ scale: 1.5, opacity: 1, rotate: 0 }}
+                                                                transition={{ duration: 0.6, ease: 'easeOut' }}
+                                                                className="absolute -top-2 -right-12 w-10 h-10 pointer-events-none"
+                                                            />
+                                                        )}
+                                                    </div>
+                                                    <span className="text-xl font-bold text-gray-500 dark:text-white">
+                                                        {analysisResult?.score}/10
+                                                    </span>
+                                                </div>
+
+                                                <Drawer.Description className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                                    查看提示词各维度的评估结果和优化建议
+                                                </Drawer.Description>
+
+                                                {/* 鼓励语 ✅ 移到评分下方 */}
+                                                {analysisResult?.encouragement && (
+                                                    <div className="mt-2 text-sm text-green-700 dark:text-green-300 italic">
+                                                        🎉 {analysisResult.encouragement}
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            {/* 分析维度 */}
+                                            {analysisResult?.criteria && (
+                                                <div className="p-4 bg-blue-50 dark:bg-blue-900 rounded-lg mb-4">
+                                                    <ul className="space-y-2 text-sm">
+                                                        {analysisResult.criteria.map((item, i) => (
+                                                            <li key={i} className="flex gap-2 items-start justify-between">
+                                                                <div className="flex items-start gap-2 w-[85%]">
+                                                                    <span className={item.passed ? "text-green-600 dark:text-green-300" : "text-yellow-500"}>
+                                                                        {item.passed ? "✅" : "⚠️"}
+                                                                    </span>
+                                                                    <div>
+                                                                        <div className="font-medium text-blue-800 dark:text-blue-100">
+                                                                            {item.label}
+                                                                        </div>
+                                                                        <div className="text-blue-700 dark:text-blue-300">
+                                                                            {item.feedback}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="text-xs text-gray-400 font-mono">
+                                                                    +{item.points}分
+                                                                </div>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            )}
+
+                                            {/* 迭代建议 */}
+                                            {(analysisResult?.criteria.some(c => !c.passed && c.suggestion)
+                                                || analysisResult?.suggestions?.length) && (
+                                                    <div className="p-4 mt-2 bg-yellow-50 dark:bg-yellow-900 rounded-lg">
+                                                        <div className="flex justify-between items-center mb-2">
+                                                            <h4 className="text-sm font-semibold text-yellow-800 dark:text-yellow-200">迭代建议</h4>
+                                                            <button
+                                                                className="text-sm text-yellow-600 dark:text-yellow-300 hover:underline"
+                                                                onClick={() => {
+                                                                    const criteriaTips = analysisResult.criteria
+                                                                        .filter(c => !c.passed && c.suggestion)
+                                                                        .map(c => c.suggestion!);
+                                                                    const globalTips = analysisResult.suggestions || [];
+                                                                    const allTips = [...criteriaTips, ...globalTips];
+                                                                    navigator.clipboard.writeText(allTips.join('\n'))
+                                                                        .then(() => toast.success('已复制所有迭代建议'))
+                                                                        .catch(() => toast.error('复制失败'));
+                                                                }}
+                                                            >
+                                                                复制全部
+                                                            </button>
+                                                        </div>
+                                                        <ul className="list-disc pl-5 text-yellow-800 dark:text-yellow-200 space-y-1">
+                                                            {[
+                                                                // 先放各维度未通过的建议
+                                                                ...analysisResult.criteria
+                                                                    .filter(c => !c.passed && c.suggestion)
+                                                                    .map(c => c.suggestion!),
+                                                                // 再放全局 suggestions
+                                                                ...(analysisResult.suggestions || [])
+                                                            ].map((tip, i) => (
+                                                                <li key={i} className="text-sm font-medium">{tip}</li>
+                                                            ))}
+                                                        </ul>
+                                                    </div>
+                                                )}
+                                        </>
                                     )}
+                                    <div className="mt-4 flex justify-center">
+                                        {!hasUsedLLMAnalysis && (
+                                            <button
+                                                className="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-md transition"
+                                                onClick={handleLLMAnalyze}
+                                                disabled={loading}
+                                            >
+                                                {loading ? (
+                                                    <span className="flex items-center gap-2">
+                                                        <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                                                        </svg>
+                                                        分析中...
+                                                    </span>
+                                                ) : "使用大模型再次分析"}
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
+
                             </div>
                         </Drawer.Content>
                     </Drawer.Portal>

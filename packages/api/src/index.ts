@@ -3,9 +3,8 @@
  * 包入口文件
  * 导出所有公共API和类型
  */
-
-// 导出客户端错误
-export * from './client/errors';
+// 导出客户端
+export * from './client';
 
 // 导出工厂函数
 export * from './factory';

@@ -83,4 +83,5 @@ export interface LLMCallParams {
     systemMessage: string;
     modelId?: string;
     onData?: (chunk: string) => void;
+    stream?: boolean;
 }

@@ -102,7 +102,7 @@ export class LLMClientImpl implements LLMClient {
      * 发送聊天请求
      * @param request 聊天请求
      * @returns 聊天响应
-     * @deprecated 此方法当前未在项目中使用。请使用 streamChat 方法替代
+     * @description 此方法目前用于提示分析，非流式一次性返回结果
      */
     async chat(request: ChatRequest): Promise<ClientResponse<ChatResponse>> {
         try {

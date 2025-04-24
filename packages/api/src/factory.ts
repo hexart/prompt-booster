@@ -53,6 +53,7 @@ export function createLLMClient(
         [key: string]: any;
     }
 ): LLMClient {
+    provider = provider.toLowerCase();
     // 获取提供商配置
     const providerConfig = PROVIDER_CONFIG[provider] || PROVIDER_CONFIG[LLMProvider.OPENAI];
 

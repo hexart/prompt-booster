@@ -46,7 +46,7 @@ export const IterationDialog: React.FC<IterationDialogProps> = ({
         <Dialog
             isOpen={isOpen}
             onClose={onClose}
-            title="迭代功能提示词"
+            title="提示词迭代"
             maxWidth="max-w-xl"
             footer={
                 <div className="flex justify-end gap-3">
@@ -61,7 +61,7 @@ export const IterationDialog: React.FC<IterationDialogProps> = ({
                         className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700"
                         disabled={!selectedTemplateId || !iterationDirection.trim()}
                     >
-                        确认优化
+                        确认
                     </button>
                 </div>
             }

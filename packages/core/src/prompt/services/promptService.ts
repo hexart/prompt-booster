@@ -17,6 +17,70 @@ import { generateId } from '../../utils';
 import { createStorage, StorageType } from '../../storage';
 import { useMemoryStore } from '../../storage/memoryStorage';
 
+// 导出调用大模型的通用方法，同时给其他对话场景用
+export async function callLLMWithCurrentModel(params: LLMCallParams): Promise<string> {
+    const { userMessage, systemMessage, modelId, onData, stream = true } = params;
+    const modelStore = useModelStore.getState();
+
+    const { activeModel, configs, isCustomInterface, getCustomInterface } = modelStore;
+    const modelKey = modelId || activeModel;
+
+    let provider, apiKey, baseUrl, model, endpoint;
+
+    if (isCustomInterface(modelKey)) {
+        const customInterface = getCustomInterface(modelKey);
+        if (!customInterface) throw new Error('未找到自定义接口配置');
+
+        provider = customInterface.providerName || customInterface.id;
+        apiKey = customInterface.apiKey;
+        baseUrl = customInterface.baseUrl;
+        model = customInterface.model;
+        endpoint = customInterface.endpoint;
+    } else {
+        const modelConfig = configs[modelKey as keyof typeof configs];
+        if (!modelConfig) throw new Error(ERROR_MESSAGES.INVALID_MODEL);
+
+        provider = modelKey;
+        apiKey = modelConfig.apiKey;
+        baseUrl = modelConfig.baseUrl;
+        model = modelConfig.model;
+        endpoint = modelConfig.endpoint;
+    }
+
+    if (!apiKey) throw new Error(ERROR_MESSAGES.NO_API_KEY);
+
+    const client = createClient({
+        provider,
+        apiKey,
+        baseUrl,
+        model,
+        endpoints: {
+            chat: endpoint,
+            models: '/v1/models'
+        }
+    });
+
+    const request = { userMessage, systemMessage, options: { temperature: 0.7 } };
+
+    if (!stream) {
+        const res = await client.chat(request);
+        return res.data?.content || '';
+    }
+
+    let fullResponse = '';
+    const handler: StreamHandler = {
+        onData: (chunk: string) => {
+            fullResponse += chunk;
+            if (onData) onData(chunk);
+        },
+        onComplete: () => { },
+        onError: (error: Error) => { throw error; }
+    };
+
+    await client.streamChat(request, handler);
+    return fullResponse;
+}
+
 /**
  * 提示词组管理服务
  * 整合提示词组和版本的创建、管理和处理功能
@@ -434,6 +498,7 @@ export class PromptGroupService {
      * @param params LLM调用参数
      * @returns 响应内容
      * @private
+     * @deprecated
      */
     private async _callLLM(params: LLMCallParams): Promise<string> {
         const { userMessage, systemMessage, onData } = params;
@@ -559,7 +624,7 @@ export class PromptGroupService {
             let optimizedPrompt = '';
 
             // 调用LLM进行优化
-            await this._callLLM({
+            await callLLMWithCurrentModel({
                 userMessage: originalPrompt,
                 systemMessage: systemPrompt,
                 modelId,
@@ -701,7 +766,7 @@ export class PromptGroupService {
             let optimizedPrompt = '';
 
             // 调用LLM进行迭代
-            await this._callLLM({
+            await callLLMWithCurrentModel({
                 userMessage: iterationPrompt,
                 systemMessage: systemPrompt,
                 modelId,
