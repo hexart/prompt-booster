@@ -8,7 +8,7 @@ import { useMemoryStore } from '@prompt-booster/core/storage/memoryStorage';
 import { createClient } from '@prompt-booster/api/factory';
 import { createStreamHandler } from '@prompt-booster/api/utils/stream';
 import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
-import { RefreshCw, MinimizeIcon, MaximizeIcon, ArrowLeftFromLineIcon, ArrowRightFromLineIcon } from 'lucide-react';
+import { RocketIcon, RefreshCw, MinimizeIcon, MaximizeIcon, ArrowLeftFromLineIcon, ArrowRightFromLineIcon } from 'lucide-react';
 
 export const TestResult: React.FC = () => {
     // 使用memoryStore获取所有需要的状态
@@ -55,6 +55,31 @@ export const TestResult: React.FC = () => {
             localStorage.setItem('testResultModelId', selectedTestModelId);
         }
     }, [selectedTestModelId]);
+
+    // 错误通知发送处理
+    useEffect(() => {
+        if (error) {
+            // 主要错误信息
+            toast.error(`测试错误: ${error}`, {
+                duration: 5000,  // 对于多行内容，保持可见的时间更长
+            });
+            
+            // 解决方案提示（在主要错误之后显示）
+            setTimeout(() => {
+                toast.error(
+                    <>
+                        <p className="font-medium">可能的解决方案:</p>
+                        <ul className="list-disc ml-5 mt-1">
+                            <li>检查您的网络连接</li>
+                            <li>验证您的API密钥和端点配置</li>
+                            <li>API服务可能暂时不可用，请稍后再试</li>
+                        </ul>
+                    </>,
+                    { duration: 8000 }  // 让解决方案显示更长时间
+                );
+            }, 300);  // 短暂延迟，以确保提示信息按顺序出现
+        }
+    }, [error]);
 
     // 清理效果
     useEffect(() => {
@@ -297,31 +322,19 @@ export const TestResult: React.FC = () => {
                     ) : response && (
                         <div className='flex gap-2'>
                             <button
-                                className="text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1 bg-white dark:bg-gray-700 dark:text-blue-400 dark:hover:text-blue-300 rounded-lg p-3 transition-colors"
+                                className="hidden md:flex text-blue-500 hover:text-blue-700 text-sm items-center gap-1 bg-white dark:bg-gray-700 dark:text-blue-400 dark:hover:text-blue-300 rounded-lg p-3 transition-colors"
                                 onClick={onToggleMaximize}
                                 disabled={!response}
                             >
                                 {isMaximized ? (
                                     <>
                                         {/* 大屏幕显示左右箭头 */}
-                                        <span className="hidden md:inline">
-                                            {title.includes("原始") ? <ArrowLeftFromLineIcon size={14} /> : <ArrowRightFromLineIcon size={14} />}
-                                        </span>
-                                        {/* 小屏幕显示上下箭头 */}
-                                        <span className="inline md:hidden">
-                                            <MinimizeIcon size={16} />
-                                        </span>
+                                        {title.includes("原始") ? <ArrowLeftFromLineIcon size={14} /> : <ArrowRightFromLineIcon size={14} />}
                                     </>
                                 ) : (
                                     <>
                                         {/* 大屏幕显示左右箭头 */}
-                                        <span className="hidden md:inline">
-                                            {title.includes("原始") ? <ArrowRightFromLineIcon size={14} /> : <ArrowLeftFromLineIcon size={14} />}
-                                        </span>
-                                        {/* 小屏幕显示上下箭头 */}
-                                        <span className="inline md:hidden">
-                                            <MaximizeIcon size={16} />
-                                        </span>
+                                        {title.includes("原始") ? <ArrowRightFromLineIcon size={14} /> : <ArrowLeftFromLineIcon size={14} />}
                                     </>
                                 )}
                             </button>
@@ -439,7 +452,7 @@ export const TestResult: React.FC = () => {
                     {/* 运行对比测试按钮 */}
                     <Tooltip text="运行对比测试">
                         <button
-                            className={`px-3 py-2 rounded-md h-10 min-w-[30%] truncate transition-colors duration-500 ${isTestingOriginal || isTestingOptimized
+                            className={`flex gap-2 items-center px-3 py-2 rounded-md h-10 min-w-[30%] truncate transition-colors duration-500 ${isTestingOriginal || isTestingOptimized
                                 ? 'bg-red-500 hover:bg-red-600 text-white dark:bg-red-600 dark:hover:bg-red-700'
                                 : 'bg-blue-500 hover:bg-blue-600 text-white disabled:bg-blue-300 disabled:text-white dark:bg-blue-600 dark:hover:bg-blue-700 dark:disabled:bg-blue-800 dark:disabled:text-blue-300 disabled:cursor-not-allowed'
                                 }`}
@@ -451,6 +464,7 @@ export const TestResult: React.FC = () => {
                                 !selectedTestModelId
                             )}
                         >
+                            <RocketIcon size={16} />
                             {isTestingOriginal || isTestingOptimized
                                 ? '停止生成'
                                 : (retryCount > 0 ? `重试中 (${retryCount}/${maxRetries})...` : '运行测试')
@@ -477,22 +491,7 @@ export const TestResult: React.FC = () => {
                     </button>
                 </div>
             </div>
-            {/* 错误显示 */}
-            {error && (
-                // 此错误应该为使用toast.error发送
-                <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg dark:bg-red-900 dark:text-red-300">
-                    <p className="font-medium">测试错误:</p>
-                    <p>{error}</p>
-                    <div className="mt-2 text-sm">
-                        <p>可能的解决方案:</p>
-                        <ul className="list-disc ml-5 mt-1">
-                            <li>检查您的网络连接</li>
-                            <li>验证您的API密钥和端点配置</li>
-                            <li>API服务可能暂时不可用，请稍后再试</li>
-                        </ul>
-                    </div>
-                </div>
-            )}
+
             {/* 测试结果展示 */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-grow min-h-0 md:overflow-y-hidden">
                 {/* 当优化响应最大化时，原始响应不显示 */}

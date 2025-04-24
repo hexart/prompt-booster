@@ -5,7 +5,7 @@ import templates from '@prompt-booster/core/prompt/templates/default-templates.j
 import { Template } from '@prompt-booster/core/prompt/models/template';
 import { analyzePromptQuality, analyzePromptWithLLM } from '@prompt-booster/core/prompt/utils/promptUtils';
 import { toast, EnhancedTextarea, AutoScrollTextarea, EnhancedDropdown } from '@prompt-booster/ui';
-import { ListRestartIcon, StepForwardIcon, ChartBarIcon, RefreshCwIcon, CopyPlusIcon, MinimizeIcon, MaximizeIcon } from 'lucide-react';
+import { RocketIcon, ListRestartIcon, StepForwardIcon, ChartBarIcon, RefreshCwIcon, CopyPlusIcon, MinimizeIcon, MaximizeIcon } from 'lucide-react';
 import { Drawer } from 'vaul';
 import { motion } from 'framer-motion';
 import Confetti from 'react-confetti';
@@ -373,10 +373,11 @@ export const PromptBooster: React.FC = () => {
 
                 <Tooltip text="增强提示词">
                     <button
-                        className="h-10 px-4 py-2 rounded-md truncate transition-colors bg-blue-500 text-white hover:bg-blue-600 disabled:bg-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:disabled:bg-blue-800 dark:disabled:text-blue-200"
+                        className="flex gap-2 items-center h-10 px-4 py-2 rounded-md truncate transition-colors bg-blue-500 text-white hover:bg-blue-600 disabled:bg-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:disabled:bg-blue-800 dark:disabled:text-blue-200"
                         onClick={handleOptimize}
                         disabled={isProcessing || !originalPrompt || !originalPrompt.trim() || !activeModel}
                     >
+                        <RocketIcon size={16} />
                         {isProcessing ? '增强中...' : '开始增强'}
                     </button>
                 </Tooltip>
