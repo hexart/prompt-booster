@@ -663,7 +663,7 @@ export const PromptBooster: React.FC = () => {
                                     <div className="mt-4 flex justify-center">
                                         {!hasUsedLLMAnalysis && (
                                             <button
-                                                className="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-md transition"
+                                                className="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded-md transition"
                                                 onClick={handleLLMAnalyze}
                                                 disabled={loading}
                                             >
@@ -675,7 +675,7 @@ export const PromptBooster: React.FC = () => {
                                                         </svg>
                                                         分析中...
                                                     </span>
-                                                ) : "使用大模型再次分析"}
+                                                ) : "深度分析"}
                                             </button>
                                         )}
                                     </div>

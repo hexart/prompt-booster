@@ -63,7 +63,7 @@ export const TestResult: React.FC = () => {
             toast.error(`测试错误: ${error}`, {
                 duration: 5000,  // 对于多行内容，保持可见的时间更长
             });
-            
+
             // 解决方案提示（在主要错误之后显示）
             setTimeout(() => {
                 toast.error(
@@ -307,12 +307,13 @@ export const TestResult: React.FC = () => {
         response: string,
         isStreaming: boolean,
         isMaximized: boolean,
-        onToggleMaximize: () => void
+        onToggleMaximize: () => void,
+        isOriginal: boolean
     ) => {
 
         return (
             <div className="flex flex-col h-full border rounded p-4 border-gray-200 dark:border-gray-700 overflow-hidden">
-                {/* 标题和复制按钮 */}
+                {/* 标题和扩展按钮 */}
                 <div className="flex justify-between items-center mb-2">
                     <h2 className="text-xl font-semibold text-gray-600 dark:text-white">{title}</h2>
                     {isStreaming ? (
@@ -322,19 +323,19 @@ export const TestResult: React.FC = () => {
                     ) : response && (
                         <div className='flex gap-2'>
                             <button
-                                className="hidden md:flex text-blue-500 hover:text-blue-700 text-sm items-center gap-1 bg-white dark:bg-gray-700 dark:text-blue-400 dark:hover:text-blue-300 rounded-lg p-3 transition-colors"
+                                className="hidden md:flex text-blue-500 hover:text-blue-700 text-sm items-center gap-1 bg-blue-50 dark:bg-gray-700 dark:text-blue-400 dark:hover:text-blue-300 rounded-lg p-3 lg:px-3 lg:py-2 transition-colors"
                                 onClick={onToggleMaximize}
                                 disabled={!response}
                             >
                                 {isMaximized ? (
                                     <>
-                                        {/* 大屏幕显示左右箭头 */}
-                                        {title.includes("原始") ? <ArrowLeftFromLineIcon size={14} /> : <ArrowRightFromLineIcon size={14} />}
+                                        {isOriginal ? <ArrowLeftFromLineIcon size={16} /> : <ArrowRightFromLineIcon size={16} />}
+                                        <span className="hidden lg:inline">收缩</span>
                                     </>
                                 ) : (
                                     <>
-                                        {/* 大屏幕显示左右箭头 */}
-                                        {title.includes("原始") ? <ArrowRightFromLineIcon size={14} /> : <ArrowLeftFromLineIcon size={14} />}
+                                        {isOriginal ? <ArrowRightFromLineIcon size={16} /> : <ArrowLeftFromLineIcon size={16} />}
+                                        <span className="hidden lg:inline">扩展</span>
                                     </>
                                 )}
                             </button>
@@ -348,7 +349,7 @@ export const TestResult: React.FC = () => {
                         streaming={isStreaming}
                         allowHtml={showMarkdown}
                         enableMarkdown={showMarkdown}
-                        className="p-3 border rounded-md max-h-[380px] md:max-h-[100vh] bg-gray-50 border-gray-200 text-gray-600 dark:bg-gray-600/30 dark:border-gray-600 hover:dark:border-gray-500 dark:text-white"
+                        className="p-3 border rounded-md max-h-[380px] md:max-h-[100vh] bg-gray-50 border-gray-200 hover:border-gray-300 text-gray-600 dark:bg-gray-600/30 dark:border-gray-600 hover:dark:border-gray-500 dark:text-white"
                         buttonText=""
                         threshold={8}
                         placeholder={isStreaming ? "正在生成响应..." : "暂无响应内容，请运行测试..."}
@@ -496,7 +497,7 @@ export const TestResult: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-grow min-h-0 md:overflow-y-hidden">
                 {/* 当优化响应最大化时，原始响应不显示 */}
                 {!isOptimizedMaximized && (
-                    <div className={isOriginalMaximized ? "col-span-2" : "min-h-0"}>
+                    <div className={isOriginalMaximized ? "col-span-2 min-h-0" : "min-h-0"}>
                         {renderResponseArea(
                             "原始提示词响应",
                             originalResponse,
@@ -505,14 +506,15 @@ export const TestResult: React.FC = () => {
                             () => {
                                 setIsOriginalMaximized(!isOriginalMaximized);
                                 setIsOptimizedMaximized(false);
-                            }
+                            },
+                            true
                         )}
                     </div>
                 )}
 
                 {/* 当原始响应最大化时，优化响应不显示 */}
                 {!isOriginalMaximized && (
-                    <div className={isOptimizedMaximized ? "col-span-2" : ""}>
+                    <div className={isOptimizedMaximized ? "col-span-2 min-h-0" : "min-h-0"}>
                         {renderResponseArea(
                             "增强提示词响应",
                             optimizedResponse,
@@ -521,7 +523,8 @@ export const TestResult: React.FC = () => {
                             () => {
                                 setIsOptimizedMaximized(!isOptimizedMaximized);
                                 setIsOriginalMaximized(false);
-                            }
+                            },
+                            false
                         )}
                     </div>
                 )}

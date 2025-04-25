@@ -1,7 +1,7 @@
 // packages/ui/src/components/AutoScrollContent.tsx
 import React, { useEffect, useState, useRef, CSSProperties } from 'react';
 import { useAutoScroll } from '../hooks/useAutoscroll';
-import { ArrowDownIcon, CopyIcon, CheckIcon } from 'lucide-react';
+import { ArrowDownIcon, ClipboardIcon, ClipboardCheckIcon } from 'lucide-react';
 import { Markdown } from './Markdown';
 import { toast } from 'sonner';
 import { Tooltip } from './Tooltip';
@@ -136,7 +136,7 @@ export const AutoScrollContent: React.FC<AutoScrollContentProps> = ({
         navigator.clipboard.writeText(content)
             .then(() => {
                 setCopied(true);
-                toast.success('文本已复制到剪贴板');
+                toast.success('已复制到剪贴板');
                 setTimeout(() => setCopied(false), 2000);
             })
             .catch(err => {
@@ -201,7 +201,7 @@ export const AutoScrollContent: React.FC<AutoScrollContentProps> = ({
                         onClick={handleCopy}
                         title="复制文本"
                     >
-                        {copied ? <CheckIcon size={16} /> : <CopyIcon size={16} />}
+                        {copied ? <ClipboardCheckIcon size={16} /> : <ClipboardIcon size={16} />}
                     </button>
                 </Tooltip>
             )}

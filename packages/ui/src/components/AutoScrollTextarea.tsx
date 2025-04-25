@@ -1,7 +1,7 @@
 // packages/ui/src/components/AutoScrollTextarea.tsx
 import React, { TextareaHTMLAttributes, useState, useEffect, useRef } from 'react';
 import { useAutoScroll } from '../hooks/useAutoscroll';
-import { ArrowDownIcon, CopyIcon, CheckIcon } from 'lucide-react';
+import { ArrowDownIcon, ClipboardIcon, ClipboardCheckIcon } from 'lucide-react';
 import { Tooltip } from './Tooltip';
 import { toast } from 'sonner';
 
@@ -73,7 +73,7 @@ export const AutoScrollTextarea: React.FC<AutoScrollTextareaProps> = ({
             .then(() => {
                 setCopied(true);
                 // 显示提示消息
-                toast.success('文本已复制到剪贴板');
+                toast.success('已复制到剪贴板');
                 // 2秒后重置复制状态
                 setTimeout(() => setCopied(false), 2000);
             })
@@ -193,7 +193,7 @@ export const AutoScrollTextarea: React.FC<AutoScrollTextareaProps> = ({
                         onClick={handleCopy}
                         title="复制文本"
                     >
-                        {copied ? <CheckIcon size={16} /> : <CopyIcon size={16} />}
+                        {copied ? <ClipboardCheckIcon size={16} /> : <ClipboardIcon size={16} />}
                     </button>
                 </Tooltip>
             )}

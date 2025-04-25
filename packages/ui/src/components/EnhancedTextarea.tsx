@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { CopyIcon, CheckIcon } from 'lucide-react';
+import { ClipboardIcon, ClipboardCheckIcon } from 'lucide-react';
 import { Tooltip } from './Tooltip';
 import { toast } from 'sonner';
 
@@ -103,7 +103,7 @@ export const EnhancedTextarea: React.FC<EnhancedTextareaProps> = ({
                             onClick={handleCopy}
                             title="复制文本"
                         >
-                            {copied ? <CheckIcon size={16} /> : <CopyIcon size={16} />}
+                            {copied ? <ClipboardCheckIcon size={16} /> : <ClipboardIcon size={16} />}
                         </button>
                     </Tooltip>
                 )}
