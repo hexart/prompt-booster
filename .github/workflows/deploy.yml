@@ -42,7 +42,7 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v3
         with:
           context: .
           file: ./docker/frontend.Dockerfile
@@ -51,36 +51,3 @@ jobs:
           tags: ghcr.io/${{ github.repository }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-      - name: Cleanup old GHCR package versions
-        env:
-          PACKAGE_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
-        run: |
-          set -e
-
-          # 1) 拉取所有版本
-          resp=$(curl -s -f \
-            -H "Authorization: Bearer $PACKAGE_TOKEN" \
-            -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/user/packages/container/${{ github.repository }}/versions?per_page=100")
-
-          # 2) 只在返回数组时排序并筛选
-          old_ids=$(echo "$resp" | jq -r '
-            if type=="array" then
-              sort_by(.created_at) | .[0:-1] | .[].id
-            else
-              empty
-            end
-          ')
-
-          if [ -n "$old_ids" ]; then
-            echo "Deleting old package versions: $old_ids"
-            for id in $old_ids; do
-              curl -s -f -X DELETE \
-                -H "Authorization: Bearer $PACKAGE_TOKEN" \
-                -H "Accept: application/vnd.github.v3+json" \
-                "https://api.github.com/user/packages/container/${{ github.repository }}/versions/$id"
-            done
-          else
-            echo "No old versions to delete."
-          fi
