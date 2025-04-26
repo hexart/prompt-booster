@@ -6,6 +6,6 @@ docker pull ghcr.io/hexart/prompt-booster:latest \
 && docker run -d \
     --name prompt-booster \
     --restart always \
-    -p 3000:3000 \
+    -p 8080:80 \
     ghcr.io/hexart/prompt-booster:latest
 ```
