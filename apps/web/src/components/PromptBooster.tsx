@@ -493,13 +493,13 @@ export const PromptBooster: React.FC = () => {
                     />
                     {isEditMode && editablePrompt !== optimizedPrompt && !isProcessing && (
                         <Tooltip text='另存新版本' position='top'>
-                        <button
-                            onClick={handleSaveUserModification}
-                            className="absolute animate-pulse mt-40 bottom-4 right-4 text-sm bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-md shadow-sm flex items-center gap-1 transition-colors dark:bg-green-600 dark:hover:bg-green-700"
-                        >
-                            <CopyPlusIcon size={14} />
-                            <span className="hidden md:block">另存</span>
-                        </button>
+                            <button
+                                onClick={handleSaveUserModification}
+                                className="absolute animate-pulse mt-40 bottom-4 right-4 text-sm bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-md shadow-sm flex items-center gap-1 transition-colors dark:bg-green-600 dark:hover:bg-green-700"
+                            >
+                                <CopyPlusIcon size={14} />
+                                <span className="hidden md:block">另存</span>
+                            </button>
                         </Tooltip>
                     )}
                 </div>
@@ -509,7 +509,7 @@ export const PromptBooster: React.FC = () => {
                     <Drawer.Portal>
                         <Drawer.Overlay className="fixed inset-0 z-40 bg-white/40 dark:bg-black/40 backdrop-blur-xs" />
                         <Drawer.Content className="bg-white dark:bg-gray-800/60 border-t border-gray-300 dark:border-gray-700 backdrop-blur-md flex flex-col rounded-t-2xl drop-shadow-[0_-15px_15px_rgba(0,0,0,0.15)] fixed bottom-0 left-0 right-0 max-h-[85vh] z-40">
-                            <div className="p-3  overflow-y-auto">
+                            <div className="p-3 overflow-y-auto">
                                 {/* 🎉 满分彩带 */}
                                 {analysisResult?.score === 10 && (
                                     <Confetti
