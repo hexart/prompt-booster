@@ -433,21 +433,8 @@ export const TestResult: React.FC = () => {
                         aria-pressed={showMarkdown}
                         title={showMarkdown ? "Markdown格式已开启" : "Markdown格式已关闭"}
                     >
-                        <svg
-                            width="24"
-                            height="16"
-                            viewBox="0 0 208 128"
-                        >
-                            <path
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="10"
-                                d="M15,5h178c5.523,0,10,4.477,10,10v98c0,5.523-4.477,10-10,10H15c-5.523,0-10-4.477-10-10V15C5,9.477,9.477,5,15,5z"
-                            />
-                            <path
-                                fill="currentColor"
-                                d="M30,98V30h20l20,25l20-25h20v68H90V59L70,84L50,59v39H30z M155,98l-30-33h20V30h20v35h20L155,98z"
-                            />
+                        <svg aria-hidden="true" focusable="false" viewBox="0 0 16 16" width="22" height="22" fill="currentColor" display="inline-block">
+                            <path d="M14.85 3c.63 0 1.15.52 1.14 1.15v7.7c0 .63-.51 1.15-1.15 1.15H1.15C.52 13 0 12.48 0 11.84V4.15C0 3.52.52 3 1.15 3ZM9 11V5H7L5.5 7 4 5H2v6h2V8l1.5 1.92L7 8v3Zm2.99.5L14.5 8H13V5h-2v3H9.5Z"></path>
                         </svg>
                     </button>
                     {/* 运行对比测试按钮 */}
@@ -455,7 +442,7 @@ export const TestResult: React.FC = () => {
                         <button
                             className={`flex gap-2 items-center px-3 py-2 rounded-md h-10 min-w-[30%] truncate transition-colors duration-500 ${isTestingOriginal || isTestingOptimized
                                 ? 'bg-red-500 hover:bg-red-600 text-white dark:bg-red-600 dark:hover:bg-red-700'
-                                : 'bg-blue-500 hover:bg-blue-600 text-white disabled:bg-blue-300 disabled:text-white dark:bg-blue-600 dark:hover:bg-blue-700 dark:disabled:bg-blue-800 dark:disabled:text-blue-300 disabled:cursor-not-allowed'
+                                : 'bg-blue-500 hover:bg-blue-600 text-white disabled:bg-blue-300 disabled:text-white dark:bg-blue-600 dark:hover:bg-blue-700 dark:disabled:bg-blue-800 dark:disabled:text-blue-300'
                                 }`}
                             onClick={isTestingOriginal || isTestingOptimized ? stopStreaming : runComparisonTest}
                             disabled={!isTestingOriginal && !isTestingOptimized && (
@@ -474,7 +461,7 @@ export const TestResult: React.FC = () => {
                     </Tooltip>
                     {/* 最大化/还原按钮 */}
                     <button
-                        className='px-3 py-2 rounded-md h-10 text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1 bg-blue-50 dark:bg-gray-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
+                        className='px-3 py-2 rounded-md h-10 text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1 bg-blue-50 dark:bg-gray-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors disabled:opacity-50'
                         onClick={() => setIsMaximized(!isMaximized)}
                         disabled={!originalResponse && !optimizedResponse}
                     >

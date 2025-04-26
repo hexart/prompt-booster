@@ -55,13 +55,13 @@ export const Dialog: React.FC<DialogProps> = ({
     return (
         <DialogContext.Provider value={{ containerRef }}>
             <div
-                className={`fixed inset-0 bg-black/30 backdrop-blur-xs flex overflow-y-auto z-50 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`}
+                className={`fixed inset-0 bg-white/40 dark:bg-black/40 backdrop-blur-xs flex overflow-y-auto z-50 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`}
                 ref={containerRef}
                 style={{
                     // 移除align-items: center，改为顶部对齐并添加padding
                     alignItems: 'flex-start',
                     justifyContent: 'center',
-                    padding: '0' // 上下添加padding，确保有滚动空间
+                    padding: '40px 0' // 上下添加padding，确保有滚动空间
                 }}
                 onTransitionEnd={() => {
                     if (!isOpen) {

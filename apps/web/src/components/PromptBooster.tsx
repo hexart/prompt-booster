@@ -427,7 +427,7 @@ export const PromptBooster: React.FC = () => {
                     {/* 按钮区域 */}
                     <div className="flex-shrink-0 flex gap-2">
                         <button
-                            className="text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1 bg-blue-50 dark:bg-gray-700 dark:text-blue-400 dark:hover:text-blue-300 rounded-lg transition-colors px-3 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1 bg-blue-50 dark:bg-gray-700 dark:text-blue-400 dark:hover:text-blue-300 rounded-lg transition-colors px-3 py-2 disabled:opacity-50"
                             onClick={() => setIsIterationDialogOpen(true)}
                             disabled={!optimizedPrompt || isProcessing || !activeGroup}
                         >
@@ -436,7 +436,7 @@ export const PromptBooster: React.FC = () => {
                         </button>
 
                         <button
-                            className="text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1 bg-blue-50 dark:bg-gray-700 dark:text-blue-400 dark:hover:text-blue-300 rounded-lg transition-colors px-3 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1 bg-blue-50 dark:bg-gray-700 dark:text-blue-400 dark:hover:text-blue-300 rounded-lg transition-colors px-3 py-2 disabled:opacity-50"
                             onClick={handleAnalyze}
                             disabled={!optimizedPrompt || isProcessing || !activeGroup || loading}
                         >
@@ -457,7 +457,7 @@ export const PromptBooster: React.FC = () => {
                         </button>
 
                         <button
-                            className='text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1 bg-blue-50 dark:bg-gray-700 dark:text-blue-400 dark:hover:text-blue-300 rounded-lg transition-colors px-3 py-2 disabled:opacity-50 disabled:cursor-not-allowed'
+                            className='text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1 bg-blue-50 dark:bg-gray-700 dark:text-blue-400 dark:hover:text-blue-300 rounded-lg transition-colors px-3 py-2 disabled:opacity-50'
                             onClick={() => setIsMaximized(!isMaximized)}
                             disabled={!optimizedPrompt || !activeGroup}
                         >
@@ -479,8 +479,8 @@ export const PromptBooster: React.FC = () => {
                 {/* 增强提示词文本域 */}
                 <div className="relative flex-grow flex flex-col">
                     <AutoScrollTextarea
-                        className={`flex-grow ${!optimizedPrompt && !isProcessing
-                            ? "flex justify-center items-center text-center bg-gray-50  text-gray-600 dark:bg-gray-600/30 dark:text-gray-400"
+                        className={`flex-grow rounded-lg border border-gray-200 hover:border-gray-300 dark:border-gray-600 dark:hover:border-gray-500 ${!optimizedPrompt && !isProcessing
+                            ? "flex justify-center items-center text-center bg-gray-50 text-gray-600 dark:bg-gray-600/30 dark:text-gray-400"
                             : "bg-gray-50 text-gray-600 dark:bg-gray-700 dark:text-white"
                             }`}
                         value={isEditMode ? editablePrompt : optimizedPrompt}
@@ -492,22 +492,24 @@ export const PromptBooster: React.FC = () => {
                         centerPlaceholder={!isProcessing && !optimizedPrompt}
                     />
                     {isEditMode && editablePrompt !== optimizedPrompt && !isProcessing && (
+                        <Tooltip text='另存新版本' position='top'>
                         <button
                             onClick={handleSaveUserModification}
-                            className="absolute mt-40 bottom-4 right-4 text-sm bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-md shadow-sm flex items-center gap-1 transition-colors dark:bg-green-600 dark:hover:bg-green-700"
+                            className="absolute animate-pulse mt-40 bottom-4 right-4 text-sm bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-md shadow-sm flex items-center gap-1 transition-colors dark:bg-green-600 dark:hover:bg-green-700"
                         >
                             <CopyPlusIcon size={14} />
-                            保存为新版本
+                            <span className="hidden md:block">另存</span>
                         </button>
+                        </Tooltip>
                     )}
                 </div>
 
                 {/* 分析结果抽屉 */}
                 <Drawer.Root open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
                     <Drawer.Portal>
-                        <Drawer.Overlay className="fixed inset-0 z-40 bg-black/40 backdrop-blur-xs" />
-                        <Drawer.Content className="bg-white dark:bg-gray-800 flex flex-col rounded-t-lg fixed bottom-0 left-0 right-0 max-h-[85vh] z-40">
-                            <div className="p-3 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-t-lg border-t border-gray-300 dark:border-gray-700 shadow-2xl overflow-y-auto">
+                        <Drawer.Overlay className="fixed inset-0 z-40 bg-white/40 dark:bg-black/40 backdrop-blur-xs" />
+                        <Drawer.Content className="bg-white dark:bg-gray-800/60 border-t border-gray-300 dark:border-gray-700 backdrop-blur-md flex flex-col rounded-t-2xl drop-shadow-[0_-15px_15px_rgba(0,0,0,0.15)] fixed bottom-0 left-0 right-0 max-h-[85vh] z-40">
+                            <div className="p-3  overflow-y-auto">
                                 {/* 🎉 满分彩带 */}
                                 {analysisResult?.score === 10 && (
                                     <Confetti
@@ -663,7 +665,7 @@ export const PromptBooster: React.FC = () => {
                                     <div className="mt-4 flex justify-center">
                                         {!hasUsedLLMAnalysis && (
                                             <button
-                                                className="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white rounded-md transition"
+                                                className="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 dark:disabled:bg-blue-800 dark:disabled:text-blue-400 text-white rounded-md transition"
                                                 onClick={handleLLMAnalyze}
                                                 disabled={loading}
                                             >

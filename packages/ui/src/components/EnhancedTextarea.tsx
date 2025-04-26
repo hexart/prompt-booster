@@ -101,7 +101,6 @@ export const EnhancedTextarea: React.FC<EnhancedTextareaProps> = ({
                         <button
                             className="absolute top-2 right-2 p-2 rounded-md bg-white/80 text-blue-500 hover:bg-blue-50 dark:bg-gray-800/60 dark:text-blue-400 dark:hover:bg-gray-800"
                             onClick={handleCopy}
-                            title="复制文本"
                         >
                             {copied ? <ClipboardCheckIcon size={16} /> : <ClipboardIcon size={16} />}
                         </button>

@@ -8,7 +8,6 @@ import { PromptHistory } from './components/PromptHistory';
 import Header, { TabType } from './components/Header';
 import { ThemeProvider } from '@prompt-booster/ui/components/ThemeContext';
 import { Toaster } from '@prompt-booster/ui';
-import './scrollbar.css'
 
 function App() {
   const [activeTab, setActiveTab] = useState<TabType>('booster');

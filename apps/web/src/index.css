@@ -90,6 +90,10 @@ button {
   cursor: pointer;
 }
 
+button:disabled {
+  cursor: not-allowed;
+}
+
 /* 全局背景设置 */
 :root body {
   @apply bg-gray-100 text-black;
