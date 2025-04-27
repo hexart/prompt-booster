@@ -1,6 +1,6 @@
 {
     "appId": "com.hexart.promptbooster",
-    "productName": "Prompt Booster",
+    "productName": "提示词增强",
     "directories": {
         "output": "release"
     },

@@ -189,12 +189,12 @@ const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
     return (
         <div className="relative inline-block" ref={dropdownRef}>
             {/* 大屏幕按钮组 */}
-            <div className={`hidden lg:flex gap-1 ${STYLES.container}`}>
+            <div className={`hidden md:flex gap-1 ${STYLES.container}`}>
                 {Object.keys(themeConfig).map(key => renderThemeButton(key as ThemeType))}
             </div>
 
             {/* 小屏幕菜单 */}
-            <div className="lg:hidden">
+            <div className="md:hidden">
                 <div className={STYLES.container}>
                     <Tooltip text={tooltipText} position="left">
                         <button

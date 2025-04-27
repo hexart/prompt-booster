@@ -21,7 +21,6 @@ export const PromptBooster: React.FC = () => {
         activeGroup,
         activeVersionNumber,
         isProcessing,
-        error,
         getGroupVersions,
         switchVersion,
         enhancePrompt,
@@ -325,18 +324,6 @@ export const PromptBooster: React.FC = () => {
                         rows={5}
                         showCharCount={true}
                     />
-
-                    {error && (
-                        <div className="mt-4 p-3 bg-red-100 text-red-700 rounded-xs flex justify-between items-center dark:bg-red-900 dark:text-red-300">
-                            <span>{error}</span>
-                            <button
-                                onClick={() => {/* 清除错误的逻辑 */ }}
-                                className="text-red-500 hover:text-red-700 dark:text-red-300 dark:hover:text-red-200"
-                            >
-                                ×
-                            </button>
-                        </div>
-                    )}
                 </div>
             )}
 

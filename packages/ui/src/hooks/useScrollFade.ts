@@ -30,7 +30,7 @@ export function useScrollFade(
         selector = 'div[style*="overflow"], div[style*="overflow-y"], textarea, .scrollable'
     } = options;
 
-    const timerRef = useRef<NodeJS.Timeout | null>(null);
+    const timerRef = useRef<number | null>(null);
 
     // 处理单个元素的滚动事件
     const handleElementScroll = (element: HTMLElement) => {
