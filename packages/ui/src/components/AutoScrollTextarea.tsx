@@ -125,14 +125,14 @@ export const AutoScrollTextarea: React.FC<AutoScrollTextareaProps> = ({
         }, 300);
     };
 
-    // 确定按钮形状的类名
-    const buttonClassName = `absolute z-10 bg-blue-500/80 backdrop-blur-xs text-white shadow-md hover:bg-blue-600/80 transition-all duration-600 ease-in-out flex items-center gap-1 bottom-4 left-1/2 -translate-x-1/2 animate-bounce motion-reduce:animate-none ${buttonText ? 'px-4 py-2 rounded-full' : 'p-2 rounded-full aspect-square'}`;
+    // 自动滚动按钮类名
+    const buttonClassName = `absolute z-10 backdrop-blur-xs shadow-md text-white bg-blue-500/80 hover:bg-blue-600/80 transition-all duration-600 ease-in-out flex items-center gap-1 bottom-4 left-1/2 -translate-x-1/2 animate-bounce motion-reduce:animate-none ${buttonText ? 'px-4 py-2 rounded-full' : 'p-2 rounded-full aspect-square'}`;
 
     // 带有悬停状态的textarea类名
     const textareaClassName = `w-full scrollable rounded-md p-3 border outline-none transition-colors duration-200 
     ${isHovered
-            ? 'border-gray-300 dark:border-gray-500'
-            : 'border-gray-200 dark:border-gray-600'
+            ? 'autoscroll-border-hover'
+            : 'autoscroll-border'
         }
     focus:ring-2 focus:ring-blue-500 focus:border-transparent
     ${className}`;
@@ -146,10 +146,10 @@ export const AutoScrollTextarea: React.FC<AutoScrollTextareaProps> = ({
         >
             {showCenteredPlaceholder ? (
                 <div className="relative w-full h-full flex-grow min-h-[380px] md:min-h-0">
-                    {/* 背景textarea，透明但可以接收焦点 */}
+                    {/* 背景textarea */}
                     <textarea
                         ref={elementRef}
-                        className={`w-full h-full absolute inset-0 opacity-0 ${className}`}
+                        className={`w-full h-full absolute inset-0 ${className}`}
                         onChange={handleChange}
                         value={value as string}
                         {...restProps}
@@ -157,7 +157,7 @@ export const AutoScrollTextarea: React.FC<AutoScrollTextareaProps> = ({
 
                     {/* 居中的占位符文本 - 使用Tailwind类名 */}
                     <div
-                        className={`w-full h-full absolute inset-0 flex items-center justify-center text-center italic opacity-60 pointer-events-none ${className}`}
+                        className={`w-full h-full absolute inset-0 flex items-center justify-center text-center italic pointer-events-none autoscroll-placeholder`}
                         style={style}
                     >
                         {placeholder}
@@ -189,7 +189,7 @@ export const AutoScrollTextarea: React.FC<AutoScrollTextareaProps> = ({
             {showCopyButton && isHovered && !isEmpty && (
                 <Tooltip text="复制" position="bottom">
                     <button
-                        className="absolute top-2 right-2 p-2 rounded-md bg-white/80 text-blue-500 hover:bg-blue-50 dark:bg-gray-800/60 dark:text-blue-400 dark:hover:bg-gray-800"
+                        className="absolute top-2 right-2 p-2 rounded-md input-copy-button"
                         onClick={handleCopy}
                     >
                         {copied ? <ClipboardCheckIcon size={16} /> : <ClipboardIcon size={16} />}

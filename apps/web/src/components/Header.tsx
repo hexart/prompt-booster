@@ -45,28 +45,28 @@ const Header: React.FC<HeaderProps> = ({
 
     return (
         <>
-            <header className={`sticky top-0 w-full z-40 ${isMobileMenuOpen ? 'border-b border-gray-200 dark:border-gray-800' : 'border-b border-gray-200 dark:border-gray-800'} bg-white dark:bg-gray-900 shadow-2xs`}>
+            <header className="sticky top-0 w-full z-40 shadow-2xs header">
                 <div className="w-full max-w-(--breakpoint-2xl) mx-auto px-4 md:px-6 py-4">
                     <div className="flex justify-between items-center">
                         <div className="flex items-center min-w-24">
                             <img src={reactLogo} alt="React Logo" className="h-8 w-8 mr-2 logo-animation" />
-                            <h1 className="text-xl sm:text-2xl font-bold whitespace-nowrap truncate text-sky-600 dark:text-gray-300">
+                            <h1 className="text-xl sm:text-2xl font-bold whitespace-nowrap truncate title">
                                 提示词增强器
                             </h1>
                         </div>
 
                         <div className="flex items-center">
                             {/* 桌面端卡片导航 */}
-                            <div className="hidden md:flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1 mr-2">
+                            <div className="hidden md:flex tab-container rounded-lg p-1 mr-2">
                                 {tabs.map((tab) => {
                                     const Icon = tab.icon;
                                     return (
                                         <button
                                             key={tab.id}
                                             onClick={() => setActiveTab(tab.id)}
-                                            className={`py-2 px-4 rounded-md relative transition-all duration-300 flex items-center gap-2 ${activeTab === tab.id
-                                                    ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 font-medium shadow-sm'
-                                                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300'
+                                            className={`py-2 px-4 font-medium rounded-md relative transition-all duration-300 flex items-center gap-2 ${activeTab === tab.id
+                                                    ? 'tab-active shadow-sm'
+                                                    : 'tab-inactive'
                                                 } min-w-0`}
                                             style={{
                                                 transform: activeTab === tab.id ? '' : 'none'
@@ -84,10 +84,10 @@ const Header: React.FC<HeaderProps> = ({
                             <ThemeSwitcher />
                             
                             {/* 移动端菜单按钮 */}
-                            <div className='md:hidden ml-2 bg-gray-100/60 dark:bg-gray-700/60 backdrop-blur-md p-1 rounded-lg'>
+                            <div className='md:hidden ml-2 p-1 rounded-lg mobile-menu-button-container'>
                             <button
                                 ref={menuButtonRef}
-                                className="p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                                className="p-2 rounded-md mobile-menu-button"
                                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                                 aria-label={isMobileMenuOpen ? "关闭菜单" : "打开菜单"}
                                 aria-expanded={isMobileMenuOpen}

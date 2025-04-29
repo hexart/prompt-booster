@@ -168,39 +168,75 @@ export const Markdown: React.FC<MarkdownProps> = ({
                 // 直接返回子元素，不再生成额外的 pre 标签
                 return <>{children}</>;
             },
-            code: ({ node, className, inline, children, ...props }: any) => {
+            code: ({ node, className, children, ...props }: any) => {
+                // 检查是否有语言类名
                 const match = /language-(\w+)/.exec(className || '');
-                return !inline ? (
-                    <div className="relative mb-4 mx-4">
-                        {match && (
-                            <span className="absolute top-0 right-0 z-10 px-2 py-1 text-xs font-mono rounded-bl rounded-tr bg-gray-200 dark:bg-gray-700/80 text-gray-700 dark:text-gray-300">
-                                {match[1]}
-                            </span>
-                        )}
-                        <SyntaxHighlighter
-                            style={isDarkMode ? vscDarkPlus : vs}
-                            language={match ? match[1] : ''}
-                            PreTag="div"
-                            className="p-0 overflow-auto [&::-webkit-scrollbar:horizontal]:h-1 bg-gray-100 dark:bg-gray-800 rounded-md"
-                            customStyle={{
-                                margin: 0,
-                                padding: '1rem',
-                                borderRadius: '0.375rem',
-                                background: isDarkMode ? 'rgb(31, 41, 55)' : 'rgb(243, 244, 246)'
-                            }}
-                            codeTagProps={{
-                                className: 'font-mono text-sm'
-                            }}
-                            {...props}
-                        >
-                            {String(children).replace(/\n$/, '')}
-                        </SyntaxHighlighter>
-                    </div>
-                ) : (
-                    <code className="px-1.5 py-1 bg-gray-100 dark:bg-gray-700 rounded text-sm font-mono" {...props}>
-                        {children}
-                    </code>
-                );
+
+                // 内容检查（可选，作为备用检查）
+                const content = String(children);
+                const hasNewline = content.includes('\n');
+
+                // 如果有语言标记或内容包含换行符，则视为多行代码块
+                const isMultilineCode = !!match || hasNewline;
+
+                if (isMultilineCode) {
+                    if (match && match[1].toLowerCase() === 'markdown') {
+                        // 对markdown代码块使用普通pre/code标签，不使用语法高亮
+                        return (
+                            <div className="relative mb-4 mx-4">
+                                {match && (
+                                    <span className="absolute top-0 right-0 z-10 px-2 py-1 text-xs font-mono rounded-bl rounded-tr markdown-code-lang-tag">
+                                        {match[1]}
+                                    </span>
+                                )}
+                                <pre
+                                    className="p-4 overflow-auto rounded-md font-mono text-sm"
+                                    style={{
+                                        background: isDarkMode ? 'rgb(31, 41, 55)' : 'rgb(243, 244, 246)'
+                                    }}
+                                >
+                                    <code>{content}</code>
+                                </pre>
+                            </div>
+                        );
+                    }
+                    return (
+                        <div className="relative m-4">
+                            {match && (
+                                <span className="absolute top-0 right-0 z-10 px-2 py-1 text-xs font-mono rounded-bl rounded-tr markdown-code-lang-tag">
+                                    {match[1]}
+                                </span>
+                            )}
+                            <SyntaxHighlighter
+                                style={isDarkMode ? vscDarkPlus : vs}
+                                language={match ? match[1] : ''}
+                                PreTag="div"
+                                className="p-0 overflow-auto [&::-webkit-scrollbar:horizontal]:h-1 rounded-md markdown-code-block"
+                                customStyle={{
+                                    margin: 0,
+                                    padding: '1rem',
+                                    borderRadius: '0.375rem',
+                                    background: isDarkMode ? 'rgb(31, 41, 55)' : 'rgb(243, 244, 246)'
+                                }}
+                                codeTagProps={{
+                                    className: 'font-mono text-sm'
+                                }}
+                                wrapLines={true}
+                                wrapLongLines={false}
+                                {...props}
+                            >
+                                {content.replace(/\n$/, '')}
+                            </SyntaxHighlighter>
+                        </div>
+                    );
+                } else {
+                    // 单行代码块
+                    return (
+                        <code className="px-1.5 py-1 bg-gray-100 dark:bg-gray-700 rounded text-sm font-mono" {...props}>
+                            {children}
+                        </code>
+                    );
+                }
             },
 
             // 段落
@@ -210,12 +246,12 @@ export const Markdown: React.FC<MarkdownProps> = ({
 
             // 标题
             h1: ({ children }) => (
-                <h1 className="text-3xl font-semibold mt-6 mb-4 pb-1 border-b border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white leading-tight">
+                <h1 className="text-3xl font-semibold mt-6 mb-4 pb-1 border-b markdown-h1 leading-tight">
                     {children}
                 </h1>
             ),
             h2: ({ children }) => (
-                <h2 className="text-2xl font-semibold mt-6 mb-3 pb-1 border-b border-gray-200 dark:border-gray-500 text-gray-900 dark:text-white leading-tight">
+                <h2 className="text-2xl font-semibold mt-6 mb-3 pb-1 border-b markdown-h2 leading-tight">
                     {children}
                 </h2>
             ),
@@ -273,35 +309,35 @@ export const Markdown: React.FC<MarkdownProps> = ({
 
             // 引用
             blockquote: ({ children }) => (
-                <blockquote className="pl-4 pr-4 italic border-l-4 border-gray-300 dark:border-gray-600 my-4 text-gray-700 dark:text-gray-300">
+                <blockquote className="pl-4 pr-4 italic border-l-4 markdown-table my-4 text-gray-700 dark:text-gray-300">
                     {children}
                 </blockquote>
             ),
 
             // 表格
             table: ({ children }) => (
-                <div className="overflow-x-auto mb-4">
-                    <table className="min-w-full border-collapse border border-gray-300 dark:border-gray-500 rounded-lg">
+                <div className="overflow-x-auto my-4">
+                    <table className="min-w-full border-collapse border markdown-table rounded-lg">
                         {children}
                     </table>
                 </div>
             ),
-            thead: ({ children }) => <thead className="rounded-t bg-gray-100 dark:bg-gray-500">{children}</thead>,
+            thead: ({ children }) => <thead className="rounded-t bg-gray-200/80 dark:bg-gray-600">{children}</thead>,
             tbody: ({ children }) => <tbody>{children}</tbody>,
-            tr: ({ children }) => <tr className="border-b border-gray-300 dark:border-gray-500 even:bg-gray-100 dark:even:bg-gray-800/40">{children}</tr>,
+            tr: ({ children }) => <tr className="border-b markdown-table even:bg-gray-100 dark:even:bg-gray-800/40">{children}</tr>,
             th: ({ children }) => (
-                <th className="px-4 py-2 text-left font-semibold text-gray-900 dark:text-white border-r border-gray-300 dark:border-gray-700 last:border-r-0">
+                <th className="px-4 py-2 text-left font-semibold text-gray-900 dark:text-white border-r markdown-table last:border-r-0">
                     {children}
                 </th>
             ),
             td: ({ children }) => (
-                <td className="px-4 py-2 text-gray-800 dark:text-gray-200 border-r border-gray-300 dark:border-gray-500 last:border-r-0">
+                <td className="px-4 py-2 text-gray-800 dark:text-gray-200 border-r markdown-table last:border-r-0">
                     {children}
                 </td>
             ),
 
             // 水平线
-            hr: () => <hr className="my-6 h-[1px] bg-gray-300 dark:bg-gray-500 border-0" />,
+            hr: () => <hr className="my-6 h-[1px] markdown-hr border-0" />,
 
             // 确保换行正确显示
             br: () => <br />,

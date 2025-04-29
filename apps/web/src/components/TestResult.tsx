@@ -8,7 +8,8 @@ import { useMemoryStore } from '@prompt-booster/core/storage/memoryStorage';
 import { createClient } from '@prompt-booster/api/factory';
 import { createStreamHandler } from '@prompt-booster/api/utils/stream';
 import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
-import { RocketIcon, RefreshCw, MinimizeIcon, MaximizeIcon, ArrowLeftFromLineIcon, ArrowRightFromLineIcon } from 'lucide-react';
+import { RocketIcon, MinimizeIcon, MaximizeIcon, ArrowLeftFromLineIcon, ArrowRightFromLineIcon } from 'lucide-react';
+import LoadingIcon from '@prompt-booster/ui/components/LoadingIcon';
 
 export const TestResult: React.FC = () => {
     // 使用memoryStore获取所有需要的状态
@@ -312,18 +313,18 @@ export const TestResult: React.FC = () => {
     ) => {
 
         return (
-            <div className="flex flex-col h-full border rounded p-4 border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className="flex flex-col h-full border rounded p-4 overflow-hidden secondary-container">
                 {/* 标题和扩展按钮 */}
                 <div className="flex justify-between items-center mb-2">
-                    <h2 className="text-xl font-semibold text-gray-600 dark:text-white">{title}</h2>
+                    <h2 className="text-xl font-semibold title-secondary">{title}</h2>
                     {isStreaming ? (
-                        <div className="ml-2 text-blue-500 dark:text-blue-400">
-                            <RefreshCw size={18} className='animate-spin' />
+                        <div className="ml-2">
+                            <LoadingIcon />
                         </div>
                     ) : response && (
                         <div className='flex gap-2'>
                             <button
-                                className="hidden md:flex text-blue-500 hover:text-blue-700 text-sm items-center gap-1 bg-blue-50 dark:bg-gray-700 dark:text-blue-400 dark:hover:text-blue-300 rounded-lg p-3 lg:px-3 lg:py-2 transition-colors"
+                                className="hidden md:flex text-sm items-center gap-1 rounded-lg p-3 lg:px-3 lg:py-2 button-third"
                                 onClick={onToggleMaximize}
                                 disabled={!response}
                             >
@@ -349,14 +350,14 @@ export const TestResult: React.FC = () => {
                         streaming={isStreaming}
                         allowHtml={showMarkdown}
                         enableMarkdown={showMarkdown}
-                        className="p-3 border rounded-md max-h-[380px] md:max-h-[100vh] bg-gray-50 border-gray-200 hover:border-gray-300 text-gray-600 dark:bg-gray-600/30 dark:border-gray-600 hover:dark:border-gray-500 dark:text-white"
+                        className="p-3 border rounded-md max-h-[380px] md:max-h-[100vh] autoscroll-content"
                         buttonText=""
                         threshold={8}
                         placeholder={isStreaming ? "正在生成响应..." : "暂无响应内容，请运行测试..."}
                     />
                 </div>
 
-                <div className="flex text-sm text-gray-500 dark:text-gray-400 mt-2 justify-end">
+                <div className="flex text-sm mt-2 justify-end input-charactor-counter">
                     {response.length} 字符
                 </div>
             </div>
@@ -364,11 +365,11 @@ export const TestResult: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col h-full overflow-hidden">
+        <div className="flex flex-col h-full">
             {/* 用户输入区域 */}
             {!isMaximized && (
-                <div className="p-4 mb-4 border rounded-lg shadow-2xs bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700 flex-none">
-                    <h2 className="text-xl font-semibold mb-4 text-gray-600 dark:text-white">提示词对比测试</h2>
+                <div className="p-4 mb-4 border rounded-lg shadow-2xs flex-none secondary-container">
+                    <h2 className="text-xl font-semibold mb-4 title-secondary">提示词对比测试</h2>
                     {/* 使用新的DraggableNotice组件 */}
                     {showRequirements && (
                         <DraggableNotice
@@ -387,7 +388,7 @@ export const TestResult: React.FC = () => {
                                 }
                             ]}
                             onClose={() => setShowRequirements(false)}
-                            className='w-56 backdrop-blur-md bg-white/70 dark:bg-gray-900/70 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700'
+                            className='w-56 backdrop-blur-md shadow-lg rounded-lg dragable-notice-container'
                         />
                     )}
                     {/* textarea区域 */}
@@ -396,7 +397,8 @@ export const TestResult: React.FC = () => {
                         value={userTestPrompt}
                         onChange={(e) => setUserTestPrompt(e.target.value)}
                         label="测试输入 (用户提示词)"
-                        labelClassName="text-gray-400 dark:text-gray-300"
+                        labelClassName="input-description"
+                        className='input-textarea'
                         rows={4}
                         showCharCount={true}
                         disabled={isTestingOriginal || isTestingOptimized}
@@ -407,7 +409,7 @@ export const TestResult: React.FC = () => {
             <div className="flex flex-row justify-between items-end gap-4 mb-4">
                 {/* 选择模型菜单区域 */}
                 <div className="min-w-[33%]">
-                    <label className="block text-sm font-medium mb-2 whitespace-nowrap truncate text-gray-400 dark:text-gray-300">选择模型进行测试</label>
+                    <label className="block text-sm font-medium mb-2 whitespace-nowrap truncate input-description">选择模型进行测试</label>
                     <EnhancedDropdown
                         options={getEnabledModels().map(model => ({
                             value: model.id,
@@ -426,9 +428,9 @@ export const TestResult: React.FC = () => {
                     <button
                         type="button"
                         onClick={() => setShowMarkdown(!showMarkdown)}
-                        className={`px-3 py-2 rounded-md border h-10 flex items-center justify-center transition-colors duration-200 ${showMarkdown
-                            ? 'bg-blue-500 hover:bg-blue-600 text-white hover:text-white border-blue-300 hover:border-blue-400 dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-blue-200 dark:hover:text-blue-100 dark:border-blue-800 dark:hover:border-blue-900'
-                            : 'bg-white hover:bg-gray-50 text-gray-400 hover:text-gray-500 border-gray-300 hover:border-gray-400 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-500 dark:hover:text-gray-400 dark:border-gray-600 dark:hover:border-gray-500'
+                        className={`px-3 py-2 rounded-md h-10 flex items-center justify-center transition-colors duration-200 ${showMarkdown
+                            ? 'button-confirm'
+                            : 'button-cancel'
                             }`}
                         aria-pressed={showMarkdown}
                         title={showMarkdown ? "Markdown格式已开启" : "Markdown格式已关闭"}
@@ -440,9 +442,10 @@ export const TestResult: React.FC = () => {
                     {/* 运行对比测试按钮 */}
                     <Tooltip text="运行对比测试">
                         <button
-                            className={`flex gap-2 items-center px-3 py-2 rounded-md h-10 min-w-[30%] truncate transition-colors duration-500 ${isTestingOriginal || isTestingOptimized
-                                ? 'bg-red-500 hover:bg-red-600 text-white dark:bg-red-600 dark:hover:bg-red-700'
-                                : 'bg-blue-500 hover:bg-blue-600 text-white disabled:bg-blue-300 disabled:text-white dark:bg-blue-600 dark:hover:bg-blue-700 dark:disabled:bg-blue-800 dark:disabled:text-blue-300'
+                            className={`flex gap-2 items-center px-3 py-2 rounded-md h-10 min-w-[30%] truncate transition-colors duration-500 button-confirm
+                                ${isTestingOriginal || isTestingOptimized
+                                ? 'cursor-not-allowed opacity-50'
+                                : ''
                                 }`}
                             onClick={isTestingOriginal || isTestingOptimized ? stopStreaming : runComparisonTest}
                             disabled={!isTestingOriginal && !isTestingOptimized && (
@@ -454,14 +457,14 @@ export const TestResult: React.FC = () => {
                         >
                             <RocketIcon size={16} />
                             {isTestingOriginal || isTestingOptimized
-                                ? '停止生成'
+                                ? '生成中...'
                                 : (retryCount > 0 ? `重试中 (${retryCount}/${maxRetries})...` : '运行测试')
                             }
                         </button>
                     </Tooltip>
                     {/* 最大化/还原按钮 */}
                     <button
-                        className='px-3 py-2 rounded-md h-10 text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1 bg-blue-50 dark:bg-gray-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors disabled:opacity-50'
+                        className='px-3 py-2 rounded-md h-10 text-sm flex items-center gap-1 button-third'
                         onClick={() => setIsMaximized(!isMaximized)}
                         disabled={!originalResponse && !optimizedResponse}
                     >

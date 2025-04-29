@@ -161,7 +161,7 @@ export const AutoScrollContent: React.FC<AutoScrollContentProps> = ({
             >
                 {isEmpty && placeholder ? (
                     // 显示占位文本
-                    <div className="w-full h-full flex items-center justify-center text-gray-400 dark:text-gray-500 italic">
+                    <div className="w-full h-full flex items-center justify-center italic autoscroll-placeholder">
                         {placeholder}
                     </div>
                 ) : enableMarkdown ? (
@@ -197,7 +197,7 @@ export const AutoScrollContent: React.FC<AutoScrollContentProps> = ({
             {showCopyButton && isHovered && content.trim() && !streaming && (
                 <Tooltip text="复制" position="bottom">
                     <button
-                        className="absolute top-2 right-2 p-2 rounded-md bg-white/80 text-blue-500 hover:bg-blue-50 dark:bg-gray-800/60 dark:text-blue-400 dark:hover:bg-gray-800"
+                        className="absolute top-2 right-2 p-2 rounded-md input-copy-button"
                         onClick={handleCopy}
                     >
                         {copied ? <ClipboardCheckIcon size={16} /> : <ClipboardIcon size={16} />}

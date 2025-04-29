@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { MessageSquareWarningIcon, XIcon } from 'lucide-react';
 
 interface RequirementItem {
@@ -27,9 +28,35 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
     const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
     const [isClosing, setIsClosing] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
-
+    
     // 用于保存悬浮窗引用
     const floatingRef = useRef<HTMLDivElement>(null);
+    
+    // Portal container reference
+    const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null);
+    
+    // 创建Portal容器
+    useEffect(() => {
+        // 检查是否已经存在id为'draggable-notice-portal'的容器
+        let container = document.getElementById('draggable-notice-portal');
+        
+        // 如果不存在，创建一个新的
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'draggable-notice-portal';
+            document.body.appendChild(container);
+        }
+        
+        setPortalContainer(container);
+        
+        // 清理函数
+        return () => {
+            // 只有当没有其他内容使用该portal时才移除它
+            if (container && container.childNodes.length === 0) {
+                document.body.removeChild(container);
+            }
+        };
+    }, []);
 
     // 组件挂载时添加淡入效果
     useEffect(() => {
@@ -186,11 +213,15 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
 
     // 如果没有需要显示的项目，返回null
     if (filteredItems.length === 0) return null;
+    
+    // 如果portal容器不存在，不渲染
+    if (!portalContainer) return null;
 
-    return (
+    // 使用createPortal将内容渲染到portal容器中
+    return createPortal(
         <div
             ref={floatingRef}
-            className={`fixed z-10 ${isDragging ? 'cursor-grabbing' : 'cursor-grab'} ${className} 
+            className={`fixed z-50 ${isDragging ? 'cursor-grabbing' : 'cursor-grab'} ${className} 
                     transition-opacity duration-500 ease-in-out ${isClosing ? 'opacity-0' : isVisible ? 'opacity-100' : 'opacity-0'}`}
             style={hasBeenDragged ? {
                 // 如果已经被拖动过，使用绝对像素位置
@@ -206,14 +237,14 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
             onMouseDown={handleMouseDown}
             onTouchStart={handleTouchStart}
         >
-            <div className="flex justify-between items-center border-b border-gray-200 dark:border-gray-700">
+            <div className="flex justify-between items-center dragable-notice-header">
                 <div className="flex items-center p-3 gap-2">
-                    <MessageSquareWarningIcon size={20} className='text-yellow-500 dark:text-yellow-400'/>
-                    <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">{title}</h3>
+                    <MessageSquareWarningIcon size={20} className='dragable-notice-header-icon'/>
+                    <h3 className="text-sm font-medium dragable-notice-header-title">{title}</h3>
                 </div>
                 <button
                     onClick={handleClose}
-                    className="close-button p-2 m-1 text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400"
+                    className="close-button p-2 m-1 dragable-notice-header-close"
                 >
                     <XIcon size={16} />
                 </button>
@@ -221,11 +252,12 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
             <div className="p-3 text-sm space-y-2">
                 {filteredItems.map((item, index) => (
                     <div key={index} className="flex items-start gap-2">
-                        <span className="h-2 w-2 rounded-full bg-yellow-400 dark:bg-yellow-500 mt-1.5 flex-shrink-0"></span>
-                        <span className="text-gray-600 dark:text-gray-300">{item.text}</span>
+                        <span className="h-2 w-2 rounded-full mt-1.5 flex-shrink-0 dragable-notice-content-icon"></span>
+                        <span className="dragable-notice-content">{item.text}</span>
                     </div>
                 ))}
             </div>
-        </div>
+        </div>,
+        portalContainer
     );
 };

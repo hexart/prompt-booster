@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { toast } from '../index';
 import { DialogContext } from './Dialog';
+import LoadingIcon from './LoadingIcon';
 import { ChevronDown } from 'lucide-react';
 
 export interface ModelOption {
@@ -273,12 +274,10 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                     disabled={disabled}
                     placeholder={placeholder}
                     className={`
-                        w-full p-2 pr-10 border rounded focus:outline-hidden 
-                        border-gray-300 bg-gray-50 text-gray-600
-                        dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400
+                        w-full p-2 pr-10 border rounded input placeholder-gray-400
                         ${disabled
-                            ? 'bg-gray-100 dark:bg-gray-800 cursor-not-allowed'
-                            : 'hover:border-blue-500 dark:hover:border-blue-400'}
+                            ? 'input-disabled'
+                            : ''}
                     `}
                 />
                 <button
@@ -289,8 +288,8 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                         absolute inset-y-0 right-0 flex items-center justify-center
                         p-3 focus:outline-none
                         ${disabled
-                            ? 'cursor-not-allowed text-gray-400 dark:text-gray-600'
-                            : 'text-gray-500 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400'}
+                            ? 'cursor-not-allowed input-select-button-disabled'
+                            : 'input-select-button'}
                     `}
                 >
                     <ChevronDown size={14} />
@@ -299,7 +298,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
 
             {isOpen && (
                 <div
-                    className="absolute z-100 left-0 right-0 mt-1 p-1 backdrop-blur-md bg-white/80 dark:bg-gray-800/80 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg max-h-60 overflow-y-auto"
+                    className="absolute z-100 left-0 right-0 mt-1 p-1 dropdown-menu space-y-1 backdrop-blur-md rounded-lg shadow-lg max-h-62 overflow-y-auto"
                     style={{
                         top: '100%', // 相对于父组件底部
                         width: '100%'
@@ -307,15 +306,13 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                     ref={optionsContainerRef}
                 >
                     {isLoading ? (
-                        <div className="p-2 text-center text-gray-500 dark:text-gray-400 flex items-center justify-center space-x-2">
-                            <svg className="animate-spin h-4 w-4 text-gray-500 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
+                        // 空白下拉菜单
+                        <div className="p-2 text-center flex items-center justify-center dropdown-null space-x-2">
+                            <LoadingIcon />
                             <span>加载中...</span>
                         </div>
                     ) : filteredOptions.length === 0 ? (
-                        <div className="p-2 text-center text-gray-500 dark:text-gray-400">
+                        <div className="p-2 text-center dropdown-null">
                             {options.length === 0 ? '没有可用的模型' : '没有匹配的模型'}
                         </div>
                     ) : (
@@ -330,13 +327,13 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                                 }}
                                 className={`
                                     p-2 cursor-pointer rounded-md
-                                    ${value === option.id ? 'bg-blue-500 dark:bg-blue-900 hover:bg-blue-400' : 'hover:bg-gray-100 dark:hover:bg-gray-700'}
+                                    ${value === option.id ? 'dropdown-item-active' : 'dropdown-item-inactive'}
                                 `}
                             >
-                                <div className={`${value === option.id ? 'text-white dark:text-white' : 'text-gray-500 dark:text-gray-300'}`}>
+                                <div className={`${value === option.id ? 'dropdown-item-active-title' : 'dropdown-item-inactive-title'}`}>
                                     {option.name}
                                 </div>
-                                <div className={`text-xs ${value === option.id ? 'text-blue-200 dark:text-gray-200' : 'text-gray-400 dark:text-gray-400'}`}>
+                                <div className={`text-xs ${value === option.id ? 'dropdown-item-active-description' : 'dropdown-item-inactive-description'}`}>
                                     {option.id}
                                 </div>
                             </div>

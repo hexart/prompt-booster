@@ -1,4 +1,4 @@
-// packages/ui/src/ThemeContext.tsx
+// packages/ui/src/components/ThemeContext.tsx
 import { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 
 // 定义主题类型
@@ -27,54 +27,73 @@ interface ThemeProviderProps {
     storageKey?: string;
 }
 
-// 使用命名函数声明组件，而不是箭头函数
+// 获取系统主题
+const getSystemTheme = (): 'light' | 'dark' => {
+    if (typeof window === 'undefined') return 'light';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+};
+
+// 应用主题到DOM
+const applyTheme = (theme: 'light' | 'dark') => {
+    if (typeof document === 'undefined') return;
+    
+    const root = document.documentElement;
+    
+    // 移除dark类
+    root.classList.remove('dark');
+    
+    // 只在暗色模式时添加dark类 - 这是关键改变
+    if (theme === 'dark') {
+        root.classList.add('dark');
+    }
+    
+    // 设置data-theme属性
+    root.setAttribute('data-theme', theme);
+    
+    // 设置color-scheme
+    root.style.colorScheme = theme;
+    
+    // 触发主题变更事件
+    window.dispatchEvent(new Event('theme-changed'));
+};
+
 function ThemeProvider({ 
     children, 
     defaultTheme = 'system',
     storageKey = 'theme',
     ...props
 }: ThemeProviderProps) {
-    // 从本地存储中获取初始主题，如果没有则使用传入的 defaultTheme
-    const [theme, setThemeState] = useState<ThemeMode>(
-        () => (localStorage.getItem(storageKey) as ThemeMode) || defaultTheme
-    );
+    // 从本地存储中获取初始主题
+    const [theme, setThemeState] = useState<ThemeMode>(() => {
+        if (typeof window === 'undefined') return defaultTheme;
+        return (localStorage.getItem(storageKey) as ThemeMode) || defaultTheme;
+    });
 
     // 计算当前实际的解析主题
-    const resolvedTheme: 'light' | 'dark' = theme === 'system' 
-        ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-        : theme;
+    const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>(
+        theme === 'system' ? getSystemTheme() : theme
+    );
 
-    // 应用主题类
+    // 更新解析后的主题
     useEffect(() => {
-        if (typeof document === 'undefined') return;
-        
-        const root = document.documentElement;
-        
-        // 移除所有可能的主题类
-        root.classList.remove('light', 'dark');
-        
-        // 设置 data-theme 属性以支持 CSS 变量
-        root.setAttribute('data-theme', resolvedTheme);
-        
-        // 应用主题类
-        root.classList.add(resolvedTheme);
-    }, [theme, resolvedTheme]);
+        const newResolvedTheme = theme === 'system' ? getSystemTheme() : theme;
+        setResolvedTheme(newResolvedTheme);
+    }, [theme]);
+
+    // 应用主题
+    useEffect(() => {
+        applyTheme(resolvedTheme);
+    }, [resolvedTheme]);
 
     // 监听系统主题变化
     useEffect(() => {
-        if (typeof window === 'undefined') return;
+        if (typeof window === 'undefined' || theme !== 'system') return;
         
         const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
         
         const handleChange = () => {
-            if (theme === 'system') {
-                const root = document.documentElement;
-                root.classList.remove('light', 'dark');
-                
-                const systemTheme = mediaQuery.matches ? 'dark' : 'light';
-                root.classList.add(systemTheme);
-                root.setAttribute('data-theme', systemTheme);
-            }
+            const systemTheme = getSystemTheme();
+            setResolvedTheme(systemTheme);
         };
 
         mediaQuery.addEventListener('change', handleChange);

@@ -1,6 +1,7 @@
 // packages/ui/src/components/Dialog.tsx
 import React, { useEffect, useRef, useState } from 'react';
 import { X } from 'lucide-react';
+import { createPortal } from 'react-dom';
 
 export interface DialogProps {
     isOpen: boolean;
@@ -52,16 +53,16 @@ export const Dialog: React.FC<DialogProps> = ({
 
     if (!isOpen && animationState === 'none') return null;
 
-    return (
+    // Dialog内容
+    const dialogContent = (
         <DialogContext.Provider value={{ containerRef }}>
             <div
-                className={`fixed inset-0 bg-white/40 dark:bg-black/40 backdrop-blur-xs flex overflow-y-auto z-50 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`}
+                className={`fixed inset-0 flex overflow-y-auto z-50 transition-opacity duration-300 mask ${isOpen ? 'opacity-100' : 'opacity-0'}`}
                 ref={containerRef}
                 style={{
-                    // 移除align-items: center，改为顶部对齐并添加padding
                     alignItems: 'flex-start',
                     justifyContent: 'center',
-                    padding: '40px 0' // 上下添加padding，确保有滚动空间
+                    padding: '40px 0'
                 }}
                 onTransitionEnd={() => {
                     if (!isOpen) {
@@ -70,9 +71,8 @@ export const Dialog: React.FC<DialogProps> = ({
                 }}
             >
                 <div
-                    className={`p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl shadow-black/30 ${maxWidth} w-full mx-4 my-auto border border-gray-200 dark:border-gray-700 ${className} transition-all duration-300`}
+                    className={`p-6 rounded-2xl shadow-2xl shadow-black/30 dialog ${maxWidth} w-full mx-4 my-auto ${className} transition-all duration-300`}
                     style={{
-                        // 当窗口足够高时，仍然实现垂直居中
                         marginTop: 'auto',
                         marginBottom: 'auto',
                         transform: animationState === 'opening' ? 'translateY(-20px)' :
@@ -84,21 +84,21 @@ export const Dialog: React.FC<DialogProps> = ({
                     {(title || showCloseButton) && (
                         <div className="mb-4 flex justify-between items-center">
                             {title && (
-                                <h2 className="text-xl font-semibold text-gray-600 dark:text-white">
+                                <h2 className="text-xl font-semibold dialog-title">
                                     {title}
                                 </h2>
                             )}
                             {showCloseButton && (
                                 <button
                                     onClick={onClose}
-                                    className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                                    className="dialog-close-button"
                                 >
                                     <X size={20} />
                                 </button>
                             )}
                         </div>
                     )}
-                    <div className="py-6">
+                    <div className="py-6 dialog-content">
                         {children}
                     </div>
                     {/* 对话框 footer 区域 */}
@@ -111,6 +111,9 @@ export const Dialog: React.FC<DialogProps> = ({
             </div>
         </DialogContext.Provider>
     );
+
+    // 使用Portal渲染到body
+    return typeof document === 'object' ? createPortal(dialogContent, document.body) : null;
 };
 
 export default Dialog;

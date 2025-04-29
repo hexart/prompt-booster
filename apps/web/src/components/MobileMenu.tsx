@@ -74,7 +74,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
             {/* 菜单内容 - 只有菜单本身接收点击事件 */}
             <nav
                 ref={menuRef}
-                className="absolute top-18 right-4 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-lg pointer-events-auto menu-container-animation"
+                className="absolute top-18 right-4 overflow-hidden rounded-lg shadow-lg pointer-events-auto mobile-menu-container menu-container-animation"
                 aria-label="移动端导航菜单"
             >
                 <div className="p-2">
@@ -83,8 +83,8 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
                             key={tab.id}
                             onClick={() => handleTabClick(tab.id)}
                             className={`w-full flex items-center space-x-3 px-4 py-3 rounded-md mb-1 last:mb-0 transition-all duration-200 menu-item-animation ${activeTab === tab.id
-                                    ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white'
-                                    : 'hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'
+                                    ? 'mobile-menu-active'
+                                    : 'mobile-menu-inactive'
                                 }`}
                             style={{ animationDelay: `${index * 200}ms`, opacity: 0 }}
                             aria-current={activeTab === tab.id ? 'page' : undefined}

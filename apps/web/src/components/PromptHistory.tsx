@@ -50,9 +50,8 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
 
     if (groups.length === 0) {
         return (
-            <div className="p-4 border rounded-lg shadow-2xs bg-gray-50 border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-                <h2 className="text-xl font-semibold text-gray-500 dark:text-white">历史记录</h2>
-                <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+            <div className="p-4 border rounded-lg shadow-2xs h-full listcard-container">
+                <div className="p-8 text-center h-full items-center listcard-description">
                     <p>暂无优化历史记录</p>
                     <p className="text-sm mt-2">优化提示词后将在此处显示历史记录</p>
                 </div>
@@ -116,13 +115,13 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
     };
 
     return (
-        <div className="flex flex-col h-full p-4 border rounded-lg shadow-2xs bg-gray-50 border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+        <div className="flex flex-col h-full p-4 border rounded-lg secondary-container">
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold text-gray-600 dark:text-white">历史记录 ({groups.length})</h2>
+                <h2 className="text-xl font-semibold title-secondary">历史记录 ({groups.length})</h2>
                 <div>
                     <button
                         onClick={handleClearHistoryClick}
-                        className="px-3 py-2 flex items-center gap-1 text-sm bg-red-500 text-white rounded-md hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700"
+                        className="px-3 py-2 flex items-center gap-1 text-sm rounded-md button-danger"
                     >
                         <Trash2Icon size={15} />
                         <span className="hidden sm:block">清空</span>
@@ -139,14 +138,14 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                     if (!latestVersion) return null; // 防止空版本
 
                     return (
-                        <div key={group.id} className="border rounded-lg p-3 shadow-2xs hover:shadow-md bg-white border-gray-200 dark:bg-gray-700 dark:border-gray-600">
+                        <div key={group.id} className="border rounded-lg p-3 shadow-2xs hover:shadow-md listcard-container">
                             <div className="flex justify-between items-center mb-2">
                                 <div className="flex items-center gap-2">
-                                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                                    <span className="text-sm listcard-description">
                                         {formatTimestamp(group.updatedAt)}
                                     </span>
                                     {versions.length > 1 && (
-                                        <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full dark:bg-blue-900 dark:text-blue-300">
+                                        <span className="px-2 py-0.5 text-xs rounded-full listcard-tag">
                                             {versions.length}个版本
                                         </span>
                                     )}
@@ -154,7 +153,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                                 <div className="flex space-x-2 items-center">
                                     <button
                                         onClick={() => toggleExpand(group.id)}
-                                        className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-800/50 px-3 py-2 rounded-md transition-colors"
+                                        className="flex items-center gap-1 text-sm px-3 py-2 rounded-md button-secondary"
                                     >
                                         {expandedGroupId === group.id ? <ChevronsDownUpIcon size={15} /> : <ChevronsUpDownIcon size={15} />}
                                         <span className="hidden md:block">{expandedGroupId === group.id ? '收起' : '展开'}</span>
@@ -162,7 +161,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
 
                                     <button
                                         onClick={() => handleLoadGroup(group)}
-                                        className="flex items-center gap-1 text-sm text-blue-500 hover:text-blue-700 bg-gray-50 hover:bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:hover:text-blue-300 dark:hover:bg-blue-900/30 px-3 py-2 rounded-md transition-colors"
+                                        className="flex items-center gap-1 text-sm px-3 py-2 rounded-md button-secondary-load"
                                     >
                                         <RotateCcwIcon size={15} />
                                         <span className="hidden md:block">加载</span>
@@ -170,7 +169,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
 
                                     <button
                                         onClick={() => handleDeleteGroup(group.id)}
-                                        className="flex items-center gap-1 text-sm text-red-500 hover:text-red-700 bg-gray-50 hover:bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/30 px-3 py-2 rounded-md transition-colors"
+                                        className="flex items-center gap-1 text-sm px-3 py-2 rounded-md button-secondary-danger"
                                     >
                                         <Trash2Icon size={15} />
                                         <span className="hidden md:block">删除组</span>
@@ -190,8 +189,8 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                                         return (
                                             <>
                                                 <div>
-                                                    <h3 className="text-sm font-medium mb-1 text-gray-600 dark:text-white">原始提示词：</h3>
-                                                    <div className="p-2 max-h-32 overflow-y-scroll bg-gray-100 text-gray-500 rounded-md text-sm whitespace-pre-wrap dark:bg-gray-800 dark:text-gray-300">
+                                                    <h3 className="text-sm font-medium mb-1 listcard-description">原始提示词：</h3>
+                                                    <div className="p-2 max-h-32 overflow-y-scroll rounded-md text-sm whitespace-pre-wrap listcard-prompt-container">
                                                         {group.originalPrompt}
                                                     </div>
                                                 </div>
@@ -203,9 +202,9 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                                                             <button
                                                                 key={version.id}
                                                                 onClick={() => handleSelectVersion(group.id, version.number)}
-                                                                className={`px-2 py-1 text-xs rounded-full ${version.number === getSelectedVersion(group.id, group.currentVersionNumber)
-                                                                    ? 'bg-blue-500 text-white dark:bg-blue-600'
-                                                                    : 'bg-gray-200 text-gray-700 dark:bg-gray-600 dark:text-gray-300'
+                                                                className={`px-2 py-1 text-xs min-w-[32px] rounded-full ${version.number === getSelectedVersion(group.id, group.currentVersionNumber)
+                                                                    ? 'version-tag-active'
+                                                                    : 'version-tag-inactive'
                                                                     }`}
                                                             >
                                                                 v{version.number}
@@ -215,15 +214,15 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                                                 </div>
 
                                                 <div>
-                                                    <h3 className="text-sm font-medium mb-1 text-gray-600 dark:text-white">迭代方向：</h3>
-                                                    <div className="p-2 bg-gray-100 text-blue-600 rounded-md text-sm whitespace-pre-wrap dark:bg-gray-800/80 dark:text-gray-300">
+                                                    <h3 className="text-sm font-medium mb-1 listcard-description">迭代方向：</h3>
+                                                    <div className="p-2 rounded-md text-sm whitespace-pre-wrap iteration-prompt-container">
                                                         {displayVersion.iterationDirection || "无"}
                                                     </div>
                                                 </div>
 
                                                 <div>
-                                                    <h3 className="text-sm font-medium mb-1 text-gray-600 dark:text-white">增强后提示词：</h3>
-                                                    <div className="p-2 max-h-[460px] overflow-auto bg-gray-100 text-gray-500 rounded-md text-sm whitespace-pre-wrap dark:bg-gray-800 dark:text-gray-300">
+                                                    <h3 className="text-sm font-medium mb-1 listcard-description">增强后提示词：</h3>
+                                                    <div className="p-2 max-h-[460px] overflow-auto rounded-md text-sm listcard-prompt-container">
                                                         {displayVersion.optimizedPrompt || ''}
                                                     </div>
                                                 </div>
@@ -238,7 +237,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                                                                 onNavigateToEditor
                                                             );
                                                         }}
-                                                        className="text-sm text-green-500 hover:text-green-700 bg-gray-50 hover:bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:hover:text-green-300 dark:hover:bg-green-900/30 px-3 py-2 rounded-md transition-colors"
+                                                        className="text-sm px-3 py-2 rounded-md button-secondary-load-version"
                                                     >
                                                         加载此版本
                                                     </button>
@@ -252,8 +251,8 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                             {/* 未展开时只显示原始提示词 */}
                             {expandedGroupId !== group.id && (
                                 <div>
-                                    <div className="text-sm font-medium mb-1 text-gray-600 dark:text-white">原始提示词：</div>
-                                    <div className="truncate p-2 text-sm text-gray-500 dark:text-gray-300">
+                                    <div className="text-sm font-medium mb-1 listcard-description">原始提示词：</div>
+                                    <div className="truncate p-2 text-sm listcard-description">
                                         {truncateText(group.originalPrompt)}
                                     </div>
                                 </div>
@@ -273,20 +272,20 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                     <div className="flex justify-end gap-3">
                         <button
                             onClick={cancelClearHistory}
-                            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+                            className="px-4 py-2 rounded-md button-cancel"
                         >
                             取消
                         </button>
                         <button
                             onClick={confirmClearHistory}
-                            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700"
+                            className="px-4 py-2 rounded-md button-danger"
                         >
                             确认清空
                         </button>
                     </div>
                 }
             >
-                <p className="text-gray-600 dark:text-gray-300">确定要清空所有历史记录吗？此操作不可撤销。</p>
+                <p>确定要清空所有历史记录吗？此操作不可撤销。</p>
             </Dialog>
 
             {/* 删除提示词组确认对话框 */}
@@ -299,20 +298,20 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                     <div className="flex justify-end gap-3">
                         <button
                             onClick={cancelDeleteHistoryItem}
-                            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+                            className="px-4 py-2 rounded-md button-cancel"
                         >
                             取消
                         </button>
                         <button
                             onClick={confirmDeleteHistoryItem}
-                            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700"
+                            className="px-4 py-2 rounded-md button-danger"
                         >
                             确认删除
                         </button>
                     </div>
                 }
             >
-                <p className="text-gray-600 dark:text-gray-300">
+                <p>
                     确定要删除这组提示词的所有版本吗？此操作不可撤销。
                 </p>
             </Dialog>

@@ -8,15 +8,18 @@ import { Tooltip } from './Tooltip';
 // 主题类型
 type ThemeType = 'light' | 'dark' | 'system';
 
-// 样式配置
-const styleConfig = {
+// 样式类名
+const THEME_CLASSES = {
+    container: 'theme-container',
+    button: 'theme-button',
+    dropdownContainer: 'theme-dropdown-container',
     light: {
-        active: 'bg-white text-blue-600 shadow-2xs',
-        inactive: 'bg-gray-100 text-gray-500 hover:bg-white dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+        active: 'theme-light-active',
+        inactive: 'theme-light-inactive'
     },
     dark: {
-        active: 'dark:bg-gray-700 text-blue-400 shadow-2xs',
-        inactive: 'bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-600'
+        active: 'theme-dark-active',
+        inactive: 'theme-dark-inactive'
     }
 };
 
@@ -49,13 +52,6 @@ const themeConfig: Record<ThemeType, {
         shortcut: '⌥+S',
         hotkey: 'alt+s'
     }
-};
-
-// 通用样式常量
-const STYLES = {
-    container: 'bg-gray-100/60 dark:bg-gray-700/60 backdrop-blur-md p-1 rounded-lg',
-    button: 'p-[10px] rounded-md transition-all',
-    dropdownContainer: 'absolute right-0 mt-1 rounded-lg shadow-lg z-40 p-1',
 };
 
 interface ThemeSwitcherProps {
@@ -133,8 +129,8 @@ const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
         const isActive = theme === themeType;
 
         return isActive
-            ? styleConfig[styleType].active
-            : styleConfig[styleType].inactive;
+            ? THEME_CLASSES[styleType].active
+            : THEME_CLASSES[styleType].inactive;
     };
 
     // 关闭下拉菜单的点击外部处理
@@ -166,7 +162,7 @@ const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
             <Tooltip text={tooltipText} position={position} key={themeType}>
                 <button
                     onClick={() => handleThemeChange(themeType)}
-                    className={`${STYLES.button} ${getButtonStyle(themeType)}`}
+                    className={`${THEME_CLASSES.button} ${getButtonStyle(themeType)}`}
                     aria-label={label}
                 >
                     <Icon size={iconSize} />
@@ -183,23 +179,23 @@ const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
 
     // 下拉菜单切换按钮样式
     const dropdownButtonStyle = isOpen
-        ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-2xs'
-        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600';
+        ? 'theme-dropdown-active'
+        : 'theme-dropdown-inactive';
 
     return (
         <div className="relative inline-block" ref={dropdownRef}>
             {/* 大屏幕按钮组 */}
-            <div className={`hidden md:flex gap-1 ${STYLES.container}`}>
+            <div className={`hidden md:flex gap-1 ${THEME_CLASSES.container}`}>
                 {Object.keys(themeConfig).map(key => renderThemeButton(key as ThemeType))}
             </div>
 
             {/* 小屏幕菜单 */}
             <div className="md:hidden">
-                <div className={STYLES.container}>
+                <div className={THEME_CLASSES.container}>
                     <Tooltip text={tooltipText} position="left">
                         <button
                             onClick={() => setIsOpen(!isOpen)}
-                            className={`${STYLES.button} ${dropdownButtonStyle}`}
+                            className={`${THEME_CLASSES.button} ${dropdownButtonStyle}`}
                             aria-expanded={isOpen}
                             aria-haspopup="true"
                             aria-label="切换主题"
@@ -211,7 +207,7 @@ const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
 
                 {/* 下拉菜单 */}
                 {isOpen && (
-                    <div className={`${STYLES.dropdownContainer} ${STYLES.container}`}>
+                    <div className={`${THEME_CLASSES.dropdownContainer} ${THEME_CLASSES.container}`}>
                         <div className="flex flex-col gap-1">
                             {Object.keys(themeConfig).map(key =>
                                 renderThemeButton(key as ThemeType, 'left')

@@ -1,5 +1,24 @@
 /* packages/ui/src/components/markdown.css */
-
+@import 'tailwindcss';
+@custom-variant dark (&:where(.dark, .dark *));
+.markdown-code-lang-tag {
+    @apply bg-gray-200 dark:bg-gray-700/80 text-gray-700 dark:text-gray-300;
+}
+.markdown-code-block {
+    @apply bg-gray-100 dark:bg-gray-800;
+}
+.markdown-h1 {
+    @apply border-gray-200 dark:border-gray-500 text-gray-900 dark:text-white;
+}
+.markdown-h2 {
+    @apply border-gray-200 dark:border-gray-500 text-gray-900 dark:text-white;
+}
+.markdown-table {
+    @apply border-gray-300 dark:border-gray-500;
+}
+.markdown-hr {
+    @apply bg-gray-300 dark:bg-gray-500;
+}
 /* 闪烁光标样式 */
 .blinking-cursor {
     display: inline-block;

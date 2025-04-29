@@ -49,6 +49,13 @@ export async function callLLMWithCurrentModel(params: LLMCallParams): Promise<st
 
     if (!apiKey) throw new Error(ERROR_MESSAGES.NO_API_KEY);
 
+    console.log('[LLM🔄Request]', {
+        provider,
+        model,
+        stream,
+        requestLength: userMessage.length + (systemMessage?.length || 0)
+    });
+
     const client = createClient({
         provider,
         apiKey,
@@ -63,8 +70,27 @@ export async function callLLMWithCurrentModel(params: LLMCallParams): Promise<st
     const request = { userMessage, systemMessage, options: { temperature: 0.7 } };
 
     if (!stream) {
-        const res = await client.chat(request);
-        return res.data?.content || '';
+        try {
+            const res = await client.chat(request);
+            // Debug logging
+            console.log('[LLM📥Response]', {
+                status: 'success',
+                responseStructure: Object.keys(res || {}),
+                dataKeys: Object.keys(res?.data || {}),
+                contentLength: res?.data?.content?.length || 0
+            });
+
+            // Check if response exists and has expected structure
+            if (!res || !res.data || !res.data.content) {
+                console.error('[LLM❌EmptyResponse]', 'Response does not contain expected data');
+                return ''; // Return empty string when response is invalid
+            }
+
+            return res.data?.content || '';
+        } catch (error) {
+            console.error('[LLM❌Error]', error);
+            throw error; // Re-throw to be handled by caller
+        }
     }
 
     let fullResponse = '';
@@ -73,8 +99,16 @@ export async function callLLMWithCurrentModel(params: LLMCallParams): Promise<st
             fullResponse += chunk;
             if (onData) onData(chunk);
         },
-        onComplete: () => { },
-        onError: (error: Error) => { throw error; }
+        onComplete: () => {
+            console.log('[LLM📥StreamComplete]', {
+                responseLength: fullResponse.length,
+                firstChars: fullResponse.substring(0, 50) + '...'
+            });
+        },
+        onError: (error: Error) => {
+            console.error('[LLM❌StreamError]', error);
+            throw error;
+        }
     };
 
     await client.streamChat(request, handler);

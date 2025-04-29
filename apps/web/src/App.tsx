@@ -46,7 +46,7 @@ function App() {
         <main className="w-full h-auto md:h-[calc(100vh-126px)] overflow-y-auto md:overflow-hidden max-w-(--breakpoint-2xl) mx-auto p-2 md:px-6 md:py-4">
           <Toaster />
           {/* 内容区域 */}
-          <div className="flex flex-col flex-grow bg-white dark:bg-gray-800 rounded-lg shadow p-4 md:p-6 w-full h-full overflow-hidden">
+          <div className="flex flex-col flex-grow rounded-lg shadow p-4 md:p-6 w-full h-full main-container">
             {activeTab === 'booster' && <PromptBooster />}
             {activeTab === 'test' && <TestResult />}
             {activeTab === 'history' && <PromptHistory onNavigateToEditor={navigateToEditor} />}
@@ -54,9 +54,9 @@ function App() {
           </div>
         </main>
 
-        <footer className="mt-auto border-t border-gray-200 bg-white dark:bg-gray-950/30 dark:border-gray-800">
+        <footer className="mt-auto footer">
           <div className="w-full max-w-(--breakpoint-2xl) mx-auto px-4 sm:px-6 lg:px-8 py-2 md:py-3">
-            <div className="text-center text-gray-500 dark:text-gray-400 text-sm">
+            <div className="text-center text-sm">
               Hexart Studio © 2025 - All rights reserved.
             </div>
           </div>

@@ -1,0 +1,42 @@
+/* 亮色主题 */
+@layer components {
+    /* 主题切换器样式 */
+    .theme-container {
+        @apply bg-gray-100/60 dark:bg-gray-700/60 backdrop-blur-md p-1 rounded-lg;
+    }
+
+    .theme-button {
+        @apply p-[10px] rounded-md transition-all;
+    }
+
+    .theme-dropdown-container {
+        @apply absolute right-0 mt-1 rounded-lg shadow-lg z-40 p-1;
+    }
+
+    /* 亮色主题样式 */
+    .theme-light-active {
+        @apply bg-white text-blue-600 shadow-2xs;
+    }
+
+    .theme-light-inactive {
+        @apply bg-gray-100 text-gray-500 hover:bg-white dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700;
+    }
+
+    /* 暗色主题样式 */
+    .theme-dark-active {
+        @apply dark:bg-gray-700 text-blue-400 shadow-2xs;
+    }
+
+    .theme-dark-inactive {
+        @apply bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-600;
+    }
+
+    /* 下拉菜单样式 */
+    .theme-dropdown-active {
+        @apply bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-2xs;
+    }
+
+    .theme-dropdown-inactive {
+        @apply text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600;
+    }
+}

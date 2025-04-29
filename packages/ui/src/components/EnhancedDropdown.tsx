@@ -52,7 +52,7 @@ export const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
             // 计算需要滚动的位置
             const containerRect = optionsContainerRef.current.getBoundingClientRect();
             const selectedRect = selectedOptionRef.current.getBoundingClientRect();
-            
+
             // 检查选中项是否在可视区域内
             if (selectedRect.top < containerRect.top || selectedRect.bottom > containerRect.bottom) {
                 // 滚动到选中项，使其在可视区域内
@@ -69,25 +69,24 @@ export const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
             <button
                 type="button"
                 onClick={() => !disabled && setIsOpen(!isOpen)}
-                className={`w-full flex items-center justify-between p-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500
+                className={`w-full flex items-center justify-between rounded-lg border input
                     ${disabled
-                        ? 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 cursor-not-allowed'
-                        : 'bg-white dark:bg-gray-700 hover:border-blue-500 dark:hover:border-blue-400 text-gray-900 dark:text-white'
+                        ? 'input-disabled cursor-not-allowed'
+                        : ''
                     } transition-colors`}
                 disabled={disabled}
             >
-                <span className="truncate">
+                <span className="px-3 py-2 truncate">
                     {selectedOption ? selectedOption.label : placeholder}
                 </span>
-                <ChevronDown 
-                    size={16} 
-                    className={`text-gray-500 dark:text-gray-400 transition-transform duration-200 ${isOpen ? 'transform rotate-180' : ''}`}
-                />
+                <button className={`p-2 input-select-button transition-transform duration-200 ${isOpen ? 'transform rotate-180' : ''}`}>
+                    <ChevronDown size={16} />
+                </button>
             </button>
 
             {isOpen && (
-                <div 
-                    className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg max-h-[247px] overflow-y-auto"
+                <div
+                    className="absolute z-40 w-full mt-1 rounded-xl shadow-lg max-h-[247px] overflow-y-auto dropdown-menu backdrop-blur-md"
                     ref={optionsContainerRef}
                 >
                     <ul className="py-1">
@@ -101,8 +100,8 @@ export const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
                                 }}
                                 className={`px-3 py-3 cursor-pointer text-sm mx-1 rounded-lg mb-1 last:mb-0
                                     ${option.value === value
-                                        ? 'bg-blue-100 font-medium text-blue-700 hover:bg-blue-200 dark:bg-blue-800! dark:text-white! dark:hover:bg-blue-700!'
-                                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                                        ? 'dropdown-item-active dropdown-item-active-title'
+                                        : 'dropdown-item-inactive dropdown-item-inactive-title'
                                     }`}
                             >
                                 {option.label}
@@ -110,7 +109,7 @@ export const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
                         ))}
 
                         {options.length === 0 && (
-                            <li className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 italic">没有可选项</li>
+                            <li className="px-3 py-2 text-sm italic dropdown-null">没有可选项</li>
                         )}
                     </ul>
                 </div>

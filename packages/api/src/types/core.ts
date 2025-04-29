@@ -12,7 +12,6 @@ export interface LLMClient {
      * 发送聊天请求
      * @param request 聊天请求参数
      * @returns 聊天响应
-     * @deprecated 此方法当前未在项目中使用。请使用 streamChat 方法替代。
      */
     chat(request: ChatRequest): Promise<ClientResponse<ChatResponse>>;
 

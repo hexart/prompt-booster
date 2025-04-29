@@ -191,6 +191,7 @@ export async function analyzePromptWithLLM(prompt: string): Promise<PromptAnalys
 4. 在顶层提供一个 \`suggestions\` 数组，列出 3～5 条全局优化方向。
 5. 如果分数≥8，可返回一个鼓励性的 \`encouragement\` 字段；否则省略该字段。
 6. **只返回纯 JSON**，不能带任何 Markdown、注释或多余文本。
+7. 禁止使用<think>标签或任何其他XML标签。直接返回JSON。
 
 返回格式严格如下：
 \`\`\`json
@@ -217,13 +218,21 @@ export async function analyzePromptWithLLM(prompt: string): Promise<PromptAnalys
     try {
         // 🧪 debug raw string
         console.log('[LLM📩rawResult]', result);
+        console.log('[LLM📩length]', result ? result.length : 0);
 
+        const withoutThinkTags = removeThinkTags(result);
+        console.log('[LLM📩withoutThink]', withoutThinkTags);
         // 如果大模型使用了 markdown code block（```json），去除它
-        const cleaned = result.trim().replace(/^```json[\s\r\n]*|```$/g, '');
+        const cleaned = withoutThinkTags.trim().replace(/^```json[\s\r\n]*|```$/g, '');
+        console.log('[LLM📩cleaned]', cleaned);
 
         const parsed = JSON.parse(cleaned);
+        console.log('[LLM📩parsed]', parsed);
 
-        const criteria = parsed.criteria || [];
+        // Remove any unexpected fields that could cause typing issues
+        const { Initialization, ...validFields } = parsed;
+
+        const criteria = validFields.criteria || [];
         const pointPerItem = Math.floor(10 / criteria.length);
         const maxScore = pointPerItem * criteria.length;
         const pointsRemaining = 10 - maxScore; // 可能为1～(length - 1)
@@ -234,10 +243,10 @@ export async function analyzePromptWithLLM(prompt: string): Promise<PromptAnalys
         }));
 
         return {
-            ...parsed,
+            ...validFields,
             criteria: enhancedCriteria,
-            suggestions: parsed.suggestions && parsed.suggestions.length > 0
-                ? parsed.suggestions
+            suggestions: validFields.suggestions && validFields.suggestions.length > 0
+                ? validFields.suggestions
                 : enhancedCriteria.filter((c: any) => !c.passed && c.suggestion).map((c: any) => c.suggestion).filter(Boolean)
         };
     } catch (e) {

@@ -36,7 +36,10 @@
     "lucide-react": "^0.488.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-hotkeys-hook": "^5.0.1"
+    "react-hotkeys-hook": "^5.0.1",
+    "@tailwindcss/vite": "^4.1.4",
+    "tailwindcss": "^4.1.4",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@types/react-dom": "^19.1.0",

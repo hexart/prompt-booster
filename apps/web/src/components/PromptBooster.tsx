@@ -5,7 +5,8 @@ import templates from '@prompt-booster/core/prompt/templates/default-templates.j
 import { Template } from '@prompt-booster/core/prompt/models/template';
 import { analyzePromptQuality, analyzePromptWithLLM } from '@prompt-booster/core/prompt/utils/promptUtils';
 import { toast, EnhancedTextarea, AutoScrollTextarea, EnhancedDropdown } from '@prompt-booster/ui';
-import { RocketIcon, ListRestartIcon, StepForwardIcon, ChartBarIcon, RefreshCwIcon, CopyPlusIcon, MinimizeIcon, MaximizeIcon } from 'lucide-react';
+import LoadingIcon from '@prompt-booster/ui/components/LoadingIcon';
+import { RocketIcon, ListRestartIcon, StepForwardIcon, ChartBarIcon, CopyPlusIcon, MinimizeIcon, MaximizeIcon } from 'lucide-react';
 import { Drawer } from 'vaul';
 import { motion } from 'framer-motion';
 import Confetti from 'react-confetti';
@@ -300,13 +301,13 @@ export const PromptBooster: React.FC = () => {
         <div className="grid-cols-1 gap-6 md:min-h-[550px] flex flex-col flex-grow">
             {/* 原始提示词区域 */}
             {!isMaximized && (
-                <div className="p-4 border rounded-lg shadow-2xs bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700 flex-none">
+                <div className="p-4 border rounded-lg shadow-2xs flex-none secondary-container">
                     <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-xl font-semibold text-gray-600 dark:text-white">原始提示词</h2>
+                        <h2 className="text-xl font-semibold title-secondary">原始提示词</h2>
                         {activeGroup && (
                             <Tooltip text="清空并重新开始">
                                 <button
-                                    className="px-3 py-2 text-sm flex items-center gap-1 rounded-md text-white bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700 transition-colors"
+                                    className="px-3 py-2 text-sm flex items-center gap-1 rounded-md button-danger"
                                     onClick={handleReset}
                                 >
                                     <ListRestartIcon size={18} />
@@ -317,12 +318,13 @@ export const PromptBooster: React.FC = () => {
                     </div>
 
                     <EnhancedTextarea
-                        // className=" text-gray-600 bg-gray-50 border-gray-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                         value={originalPrompt || ''}
                         onChange={handleOriginalPromptChange}
                         placeholder="请输入您的提示词..."
+                        className='input-textarea'
                         rows={5}
                         showCharCount={true}
+                        disabled={isProcessing}
                     />
                 </div>
             )}
@@ -330,7 +332,7 @@ export const PromptBooster: React.FC = () => {
             {/* 控制栏 */}
             <div className="flex items-end gap-3">
                 <div className="min-w-[26%] inline-block">
-                    <label className="block text-sm font-medium mb-2 whitespace-nowrap truncate text-gray-400 dark:text-gray-300">系统提示词模板</label>
+                    <label className="block text-sm font-medium mb-2 whitespace-nowrap truncate input-description">系统提示词模板</label>
                     <EnhancedDropdown
                         options={Object.entries(templates as Record<string, Template>)
                             .filter(([_, template]) => template.metadata?.templateType === 'optimize')
@@ -341,11 +343,13 @@ export const PromptBooster: React.FC = () => {
                         value={selectedTemplateId}
                         onChange={setSelectedTemplateId}
                         placeholder="选择系统提示词模板..."
+                        disabled={isProcessing}
+                        className=''
                     />
                 </div>
 
                 <div className="min-w-[33%] grow">
-                    <label className="block text-sm font-medium mb-2 text-gray-400 dark:text-gray-300">模型选择</label>
+                    <label className="block text-sm font-medium mb-2 input-description">模型选择</label>
                     <EnhancedDropdown
                         options={getEnabledModels().map(model => ({
                             value: model.id,
@@ -355,12 +359,17 @@ export const PromptBooster: React.FC = () => {
                         onChange={setActiveModel}
                         placeholder="选择模型..."
                         disabled={isProcessing}
+                        className=''
                     />
                 </div>
 
                 <Tooltip text="增强提示词">
                     <button
-                        className="flex gap-2 items-center h-10 px-4 py-2 rounded-md truncate transition-colors bg-blue-500 text-white hover:bg-blue-600 disabled:bg-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:disabled:bg-blue-800 dark:disabled:text-blue-200"
+                        className={`flex gap-2 items-center h-10 px-4 py-2 rounded-md truncate button-confirm 
+                            ${isProcessing
+                                ? 'cursor-not-allowed opacity-50'
+                                : ''
+                                }`}
                         onClick={handleOptimize}
                         disabled={isProcessing || !originalPrompt || !originalPrompt.trim() || !activeModel}
                     >
@@ -372,12 +381,12 @@ export const PromptBooster: React.FC = () => {
 
             {/* 增强提示词区域 */}
             <div
-                className={`flex flex-col flex-grow md:min-h-0 p-4 border rounded-lg shadow-2xs bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700
+                className={`flex flex-col flex-grow md:min-h-0 p-4 border rounded-lg shadow-2xs secondary-container
                     ${isMaximized ? "min-h-[calc(100vh-260px)]" : "min-h-[calc(100vh-550px)]"
                     }`}>
                 <div className="flex w-full mb-4 gap-2">{/* 父容器 */}
                     <div className="flex-shrink  md:w-fit min-w-[95px] max-w-[150px]">
-                        <h2 className="text-xl font-semibold truncate text-gray-600 dark:text-white">
+                        <h2 className="text-xl font-semibold truncate title-secondary">
                             增强提示词
                         </h2>
                     </div>
@@ -393,8 +402,8 @@ export const PromptBooster: React.FC = () => {
                                             setIsEditMode(false);
                                         }}
                                         className={`flex-none px-2 py-1 text-xs rounded-full min-w-[32px] ${version.number === activeVersionNumber
-                                            ? 'bg-blue-500 text-white dark:bg-blue-600'
-                                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500'
+                                            ? 'version-tag-active'
+                                            : 'version-tag-inactive'
                                             }`}
                                     >
                                         v{version.number}
@@ -406,15 +415,15 @@ export const PromptBooster: React.FC = () => {
 
                     {/* 处理中指示器 */}
                     {isProcessing && (
-                        <div className="flex-shrink-0 flex items-center text-blue-500 dark:text-blue-400">
-                            <RefreshCwIcon size={18} className='animate-spin' />
+                        <div className="flex-shrink-0 mr-4 flex items-center">
+                            <LoadingIcon />
                         </div>
                     )}
 
                     {/* 按钮区域 */}
                     <div className="flex-shrink-0 flex gap-2">
                         <button
-                            className="text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1 bg-blue-50 dark:bg-gray-700 dark:text-blue-400 dark:hover:text-blue-300 rounded-lg transition-colors px-3 py-2 disabled:opacity-50"
+                            className="text-sm flex items-center gap-1 rounded-lg px-3 py-2 button-third"
                             onClick={() => setIsIterationDialogOpen(true)}
                             disabled={!optimizedPrompt || isProcessing || !activeGroup}
                         >
@@ -423,16 +432,13 @@ export const PromptBooster: React.FC = () => {
                         </button>
 
                         <button
-                            className="text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1 bg-blue-50 dark:bg-gray-700 dark:text-blue-400 dark:hover:text-blue-300 rounded-lg transition-colors px-3 py-2 disabled:opacity-50"
+                            className="text-sm flex items-center gap-1 rounded-lg px-3 py-2 button-third"
                             onClick={handleAnalyze}
                             disabled={!optimizedPrompt || isProcessing || !activeGroup || loading}
                         >
                             {loading ? (
                                 <>
-                                    <svg className="animate-spin h-4 w-4 text-blue-500 dark:text-blue-300" viewBox="0 0 24 24" fill="none">
-                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                                    </svg>
+                                    <LoadingIcon />
                                     <span className="hidden md:block">分析中...</span>
                                 </>
                             ) : (
@@ -444,7 +450,7 @@ export const PromptBooster: React.FC = () => {
                         </button>
 
                         <button
-                            className='text-blue-500 hover:text-blue-700 text-sm flex items-center gap-1 bg-blue-50 dark:bg-gray-700 dark:text-blue-400 dark:hover:text-blue-300 rounded-lg transition-colors px-3 py-2 disabled:opacity-50'
+                            className='text-sm flex items-center gap-1 rounded-lg px-3 py-2 button-third'
                             onClick={() => setIsMaximized(!isMaximized)}
                             disabled={!optimizedPrompt || !activeGroup}
                         >
@@ -466,9 +472,10 @@ export const PromptBooster: React.FC = () => {
                 {/* 增强提示词文本域 */}
                 <div className="relative flex-grow flex flex-col">
                     <AutoScrollTextarea
-                        className={`flex-grow rounded-lg border border-gray-200 hover:border-gray-300 dark:border-gray-600 dark:hover:border-gray-500 ${!optimizedPrompt && !isProcessing
-                            ? "flex justify-center items-center text-center bg-gray-50 text-gray-600 dark:bg-gray-600/30 dark:text-gray-400"
-                            : "bg-gray-50 text-gray-600 dark:bg-gray-700 dark:text-white"
+                        className={`flex-grow rounded-lg border autoscroll-content 
+                            ${!optimizedPrompt && !isProcessing
+                            ? "flex justify-center items-center text-center"
+                            : ""
                             }`}
                         value={isEditMode ? editablePrompt : optimizedPrompt}
                         onChange={handleOptimizedPromptChange}
@@ -482,7 +489,7 @@ export const PromptBooster: React.FC = () => {
                         <Tooltip text='另存新版本' position='top'>
                             <button
                                 onClick={handleSaveUserModification}
-                                className="absolute animate-pulse mt-40 bottom-4 right-4 text-sm bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-md shadow-sm flex items-center gap-1 transition-colors dark:bg-green-600 dark:hover:bg-green-700"
+                                className="absolute animate-pulse mt-40 bottom-4 right-4 text-sm px-3 py-2 rounded-md shadow-sm flex items-center gap-1 transition-colors button-save-as"
                             >
                                 <CopyPlusIcon size={14} />
                                 <span className="hidden md:block">另存</span>
@@ -494,8 +501,8 @@ export const PromptBooster: React.FC = () => {
                 {/* 分析结果抽屉 */}
                 <Drawer.Root open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
                     <Drawer.Portal>
-                        <Drawer.Overlay className="fixed inset-0 z-40 bg-white/40 dark:bg-black/40 backdrop-blur-xs" />
-                        <Drawer.Content className="bg-white dark:bg-gray-800/60 border-t border-gray-300 dark:border-gray-700 backdrop-blur-md flex flex-col rounded-t-2xl drop-shadow-[0_-15px_15px_rgba(0,0,0,0.15)] fixed bottom-0 left-0 right-0 max-h-[85vh] z-40">
+                        <Drawer.Overlay className="fixed inset-0 z-40 mask" />
+                        <Drawer.Content className="drawer-content-container backdrop-blur-md flex flex-col rounded-t-2xl drop-shadow-[0_-15px_15px_rgba(0,0,0,0.15)] fixed bottom-0 left-0 right-0 max-h-[85vh] z-40">
                             <div className="p-3 overflow-y-auto">
                                 {/* 🎉 满分彩带 */}
                                 {analysisResult?.score === 10 && (
@@ -511,38 +518,38 @@ export const PromptBooster: React.FC = () => {
                                     />
                                 )}
                                 {/* 抽屉把手 */}
-                                <div className="mx-auto w-12 h-1.5 shrink-0 rounded-full bg-gray-300 dark:bg-gray-600 mb-4" />
+                                <div className="mx-auto w-12 h-1.5 shrink-0 rounded-full drawer-handle mb-4" />
                                 <div className="max-w-[680px] mx-6 md:mx-auto">
                                     {/* 主体：加载中骨架 vs 分析结果 */}
                                     {loading ? (
                                         <div className="animate-pulse space-y-4">
                                             <div className="mb-4 flex justify-between items-center">
                                                 {/* 标题骨架 */}
-                                                <Drawer.Title className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/3" />
+                                                <Drawer.Title className="h-8 drawer-skeleton rounded w-1/3" />
 
                                                 {/* 分数骨架 */}
                                                 <div className="flex justify-center items-center gap-2">
-                                                    <span className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-16" />
-                                                    <span className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-8" />
+                                                    <span className="h-8 drawer-skeleton rounded w-16" />
+                                                    <span className="h-8 drawer-skeleton rounded w-8" />
                                                 </div>
                                             </div>
-                                            <Drawer.Description className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-full mt-1"></Drawer.Description>
+                                            <Drawer.Description className="h-3 drawer-skeleton rounded w-full mt-1"></Drawer.Description>
 
                                             {/* 三条维度骨架 */}
-                                            <div className="p-4 bg-blue-50 dark:bg-blue-900 rounded-lg">
+                                            <div className="p-4 drawer-anlysis-container rounded-lg">
                                                 {[1, 2, 3].map(i => (
                                                     <div key={i} className="space-y-2 mb-4 last:mb-0">
-                                                        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4" />
-                                                        <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2" />
+                                                        <div className="h-4 drawer-skeleton rounded w-3/4" />
+                                                        <div className="h-3 drawer-skeleton rounded w-1/2" />
                                                     </div>
                                                 ))}
                                             </div>
 
                                             {/* 三条综合建议骨架 */}
-                                            <div className="mt-4 p-4 bg-green-50 dark:bg-green-900 rounded-lg">
-                                                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/5 mb-2" />
+                                            <div className="mt-4 p-4 drawer-suggestion-container rounded-lg">
+                                                <div className="h-4 drawer-skeleton rounded w-1/5 mb-2" />
                                                 {[1, 2, 3].map(i => (
-                                                    <div key={i} className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-full mb-1" />
+                                                    <div key={i} className="h-3 drawer-skeleton rounded w-full mb-1" />
                                                 ))}
                                             </div>
                                         </div>
@@ -552,7 +559,7 @@ export const PromptBooster: React.FC = () => {
                                             <div className="mb-4">
                                                 <div className="flex justify-between items-center">
                                                     <div className="relative inline-flex items-center">
-                                                        <Drawer.Title className="text-lg font-semibold text-gray-600 dark:text-white">
+                                                        <Drawer.Title className="text-lg font-semibold drawer-title">
                                                             增强提示词分析
                                                         </Drawer.Title>
                                                         {analysisResult?.score === 10 && (
@@ -566,18 +573,18 @@ export const PromptBooster: React.FC = () => {
                                                             />
                                                         )}
                                                     </div>
-                                                    <span className="text-xl font-bold text-gray-500 dark:text-white">
+                                                    <span className="text-xl font-bold drawer-score">
                                                         {analysisResult?.score}/10
                                                     </span>
                                                 </div>
 
-                                                <Drawer.Description className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                                <Drawer.Description className="text-sm mt-1 drawer-description">
                                                     查看提示词各维度的评估结果和优化建议
                                                 </Drawer.Description>
 
                                                 {/* 鼓励语 ✅ 移到评分下方 */}
                                                 {analysisResult?.encouragement && (
-                                                    <div className="mt-2 text-sm text-green-700 dark:text-green-300 italic">
+                                                    <div className="mt-2 text-sm italic drawer-encouragement">
                                                         🎉 {analysisResult.encouragement}
                                                     </div>
                                                 )}
@@ -585,19 +592,19 @@ export const PromptBooster: React.FC = () => {
 
                                             {/* 分析维度 */}
                                             {analysisResult?.criteria && (
-                                                <div className="p-4 bg-blue-50 dark:bg-blue-900 rounded-lg mb-4">
+                                                <div className="p-4 drawer-analysis-container rounded-lg mb-4">
                                                     <ul className="space-y-2 text-sm">
                                                         {analysisResult.criteria.map((item, i) => (
                                                             <li key={i} className="flex gap-2 items-start justify-between">
                                                                 <div className="flex items-start gap-2 w-[85%]">
-                                                                    <span className={item.passed ? "text-green-600 dark:text-green-300" : "text-yellow-500"}>
+                                                                    <span className={item.passed ? "drawer-analysis-passed" : "drawer-analysis-failed"}>
                                                                         {item.passed ? "✅" : "⚠️"}
                                                                     </span>
                                                                     <div>
-                                                                        <div className="font-medium text-blue-800 dark:text-blue-100">
+                                                                        <div className="font-medium drawer-analysis-label">
                                                                             {item.label}
                                                                         </div>
-                                                                        <div className="text-blue-700 dark:text-blue-300">
+                                                                        <div className="drawer-analysis-feedback">
                                                                             {item.feedback}
                                                                         </div>
                                                                     </div>
@@ -614,11 +621,11 @@ export const PromptBooster: React.FC = () => {
                                             {/* 迭代建议 */}
                                             {(analysisResult?.criteria.some(c => !c.passed && c.suggestion)
                                                 || analysisResult?.suggestions?.length) && (
-                                                    <div className="p-4 mt-2 bg-yellow-50 dark:bg-yellow-900 rounded-lg">
+                                                    <div className="p-4 mt-2 drawer-suggestion-container rounded-lg">
                                                         <div className="flex justify-between items-center mb-2">
-                                                            <h4 className="text-sm font-semibold text-yellow-800 dark:text-yellow-200">迭代建议</h4>
+                                                            <h4 className="text-sm font-semibold drawer-suggestion-title">迭代建议</h4>
                                                             <button
-                                                                className="text-sm text-yellow-600 dark:text-yellow-300 hover:underline"
+                                                                className="text-sm drawer-suggestion-copy hover:underline"
                                                                 onClick={() => {
                                                                     const criteriaTips = analysisResult.criteria
                                                                         .filter(c => !c.passed && c.suggestion)
@@ -633,7 +640,7 @@ export const PromptBooster: React.FC = () => {
                                                                 复制全部
                                                             </button>
                                                         </div>
-                                                        <ul className="list-disc pl-5 text-yellow-800 dark:text-yellow-200 space-y-1">
+                                                        <ul className="list-disc pl-5 drawer-suggestion-title space-y-1">
                                                             {[
                                                                 // 先放各维度未通过的建议
                                                                 ...analysisResult.criteria
@@ -652,16 +659,13 @@ export const PromptBooster: React.FC = () => {
                                     <div className="mt-4 flex justify-center">
                                         {!hasUsedLLMAnalysis && (
                                             <button
-                                                className="px-4 py-2 text-sm bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 dark:disabled:bg-blue-800 dark:disabled:text-blue-400 text-white rounded-md transition"
+                                                className="px-4 py-2 text-sm button-confirm rounded-md transition"
                                                 onClick={handleLLMAnalyze}
                                                 disabled={loading}
                                             >
                                                 {loading ? (
                                                     <span className="flex items-center gap-2">
-                                                        <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
-                                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                                                        </svg>
+                                                        <LoadingIcon />
                                                         分析中...
                                                     </span>
                                                 ) : "深度分析"}
@@ -677,7 +681,7 @@ export const PromptBooster: React.FC = () => {
 
                 {/* 字符数差异 */}
                 <div className="mt-2 flex justify-end">
-                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                    <div className="text-sm input-charactor-counter">
                         改进: {calculateCharDiff()} 字符
                     </div>
                 </div>

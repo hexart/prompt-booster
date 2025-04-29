@@ -1,6 +1,8 @@
 /* apps/web/src/index.css */
 @import 'tailwindcss';
+@custom-variant dark (&:where(.dark, .dark *));
 @config "../tailwind.config.js";
+@import './themeswitcher.css';
 
 @keyframes logo-spin {
   from {
@@ -105,7 +107,267 @@ button:disabled {
 }
 
 /* 亮色主题 */
-@layer components {}
+@layer components {
+  .header {
+    @apply bg-white border-b border-gray-200;
+    .title {
+      @apply text-sky-600
+    }
+    .tab-container {
+      @apply bg-gray-100 dark:bg-gray-800;
+      .tab-active {
+        @apply bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400;
+      }
+      .tab-inactive {
+        @apply text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300;
+      }
+    }
+    .mobile-menu-button-container {
+      @apply bg-gray-100/60 dark:bg-gray-700/60 backdrop-blur-md;
+      .mobile-menu-button {
+        @apply text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800;
+      }
+    }
+  }
+  .mobile-menu-container {
+    @apply border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md;
+  }
+  .mobile-menu-active {
+    @apply bg-gradient-to-r from-blue-500 to-blue-600 text-white;
+  }
+  .mobile-menu-inactive {
+    @apply hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300;
+  }
+  .main-container {
+    @apply bg-white dark:bg-gray-800;
+    .secondary-container {
+      @apply  bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700 drop-shadow-xs;
+    }
+    .title-secondary {
+      @apply text-gray-600 dark:text-gray-300;
+    }
+  }
+  .dragable-notice-container {
+    @apply bg-white/70 dark:bg-gray-900/70 border border-gray-200 dark:border-gray-700;
+    .dragable-notice-header {
+      @apply border-b border-gray-200 dark:border-gray-700;
+      .dragable-notice-header-icon {
+        @apply text-yellow-500 dark:text-yellow-400;
+      }
+      .dragable-notice-header-title {
+        @apply  text-gray-700 dark:text-gray-300;
+      }
+      .dragable-notice-header-close {
+        @apply text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400;
+      }
+    }
+    .dragable-notice-content-icon {
+      @apply bg-yellow-400 dark:bg-yellow-500;
+    }
+    .dragable-notice-content {
+      @apply text-gray-600 dark:text-gray-300;
+    }
+  }
+  .version-tag-active {
+    @apply bg-blue-500 text-white dark:bg-blue-600;
+  }
+  .version-tag-inactive {
+    @apply bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500;
+  }
+  .listcard-container {
+    @apply bg-white border-gray-200 dark:bg-gray-700 dark:border-gray-600;
+    .listcard-title {
+      @apply text-gray-500 dark:text-white;
+    }
+    .listcard-description {
+      @apply text-gray-500 dark:text-gray-300;
+    }
+    .listcard-tag {
+      @apply bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300;
+    }
+    .listcard-prompt-container {
+      @apply bg-gray-100 text-gray-500 whitespace-pre-wrap dark:bg-gray-800 dark:text-gray-300;
+    }
+    .iteration-prompt-container {
+      @apply  bg-gray-100 text-blue-600 dark:bg-gray-800/80 dark:text-blue-300;
+    }
+  }
+  .footer {
+    @apply border-t border-gray-200 bg-white dark:bg-gray-950/30 dark:border-gray-800 text-gray-500 dark:text-gray-400;
+  }
+  .mask {
+    @apply bg-white/40 dark:bg-black/40 backdrop-blur-md z-50;
+    .dialog {
+      @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700;
+    }
+    .dialog-title {
+      @apply text-gray-600 dark:text-white;
+    }
+    .dialog-close-button {
+      @apply text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200;
+    }
+    .dialog-content {
+      @apply text-gray-600 dark:text-gray-300;
+    }
+  }
+  .button-cancel {
+    @apply transition-colors bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600;
+  }
+  .button-confirm {
+    @apply transition-colors bg-blue-500 text-white hover:bg-blue-600 disabled:bg-blue-300 dark:bg-blue-700 dark:hover:bg-blue-600 dark:disabled:bg-blue-800 dark:disabled:text-blue-200;
+  }
+  .button-save-as {
+    @apply bg-green-500 hover:bg-green-600 text-white dark:bg-green-600 dark:hover:bg-green-700;
+  }
+  .button-danger {
+    @apply transition-colors text-white bg-red-500 hover:bg-red-600 dark:bg-red-700 dark:hover:bg-red-600;
+  }
+  .button-secondary {
+    @apply transition-colors bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-800;
+  }
+  .button-secondary-load {
+    @apply transition-colors text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900 dark:text-blue-300 dark:hover:text-blue-300 dark:hover:bg-blue-800;
+  }
+  .button-secondary-load-version {
+    @apply transition-colors text-green-500 hover:text-green-700 bg-gray-50 hover:bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:hover:text-green-300 dark:hover:bg-green-900/30;
+  }
+  .button-secondary-enabled {
+    @apply transition-colors bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 dark:hover:bg-gray-600 dark:hover:text-gray-300;
+  }
+  .button-secondary-disabled {
+    @apply transition-colors bg-gray-300 text-gray-600 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-green-900 dark:hover:text-green-300;
+  }
+  .button-secondary-testlink {
+    @apply transition-colors bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-teal-800 dark:text-gray-300 dark:hover:bg-teal-700;
+  }
+  .button-secondary-edit {
+    @apply transition-colors bg-blue-100 text-blue-800 hover:bg-blue-200 dark:bg-blue-800 dark:text-blue-300 dark:hover:bg-blue-700;
+  }
+  .button-secondary-danger {
+    @apply transition-colors bg-red-100 text-red-800 hover:bg-red-200 dark:bg-red-900 dark:text-red-300 dark:hover:bg-red-800;
+  }
+  .button-third {
+    @apply transition-colors text-blue-500 hover:text-blue-700  bg-blue-50 dark:bg-gray-700 dark:text-blue-400 dark:hover:text-blue-300 disabled:opacity-50;
+  }
+  .input-textarea {
+    @apply focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 border-gray-300 text-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400;
+  }
+  .input-copy-button {
+    @apply bg-white/80 text-blue-500 hover:bg-blue-50 dark:bg-gray-800/60 dark:text-blue-400 dark:hover:bg-gray-800;
+  }
+  .input {
+    @apply focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 border-gray-300 text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400;
+  }
+  .input-disabled {
+    @apply text-gray-500 dark:text-gray-400 bg-gray-200 dark:bg-gray-700/40 cursor-not-allowed;
+  }
+  .input-label {
+    @apply  text-gray-500 dark:text-white;
+  }
+  .input-display-button {
+    @apply text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300;
+  }
+  .input-description {
+    @apply text-gray-500 dark:text-gray-400;
+  }
+  .input-charactor-counter {
+    @apply text-gray-500 dark:text-gray-400;
+  }
+  .input-select-button {
+    @apply text-gray-500 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400;
+  }
+  .input-select-button-disabled {
+    @apply text-gray-400 dark:text-gray-600;
+  }
+  .dropdown-menu {
+    @apply bg-white/80 dark:bg-gray-800/80 border border-gray-300 dark:border-gray-700;
+  }
+  .dropdown-item-active {
+    @apply bg-blue-500 hover:bg-blue-400 dark:bg-blue-900 dark:hover:bg-blue-800;
+  }
+  .dropdown-item-active-title {
+    @apply text-white;
+  }
+  .dropdown-item-active-description {
+    @apply text-blue-200 dark:text-blue-200;
+  }
+  .dropdown-item-inactive {
+    @apply hover:bg-gray-100 dark:hover:bg-gray-700;
+  }
+  .dropdown-item-inactive-title {
+    @apply text-gray-500 dark:text-gray-300;
+  }
+  .dropdown-item-inactive-description {
+    @apply text-gray-400 dark:text-gray-400;
+  }
+  .dropdown-null {
+    @apply text-gray-500 dark:text-gray-400;
+  }
+  .autoscroll-placeholder {
+    @apply bg-gray-50 text-gray-400 dark:bg-gray-600/30 dark:text-gray-500;
+  }
+  .autoscroll-content {
+    @apply bg-gray-50 border-gray-200 hover:border-gray-300 text-gray-600 dark:bg-gray-600/30 dark:border-gray-600 hover:dark:border-gray-500 dark:text-white;
+  }
+  .autoscroll-border {
+    @apply border-gray-200 dark:border-gray-600;
+  }
+  .autoscroll-border-hover {
+    @apply border-gray-300 dark:border-gray-500;
+  }
+  .drawer-content-container {
+    @apply bg-white dark:bg-gray-800/60 border-t border-gray-300 dark:border-gray-700;
+  }
+  .drawer-handle {
+    @apply bg-gray-300 dark:bg-gray-600;
+  }
+  .drawer-title {
+    @apply text-gray-600 dark:text-white;
+  }
+  .drawer-score {
+    @apply text-gray-500 dark:text-white;
+  }
+  .drawer-description {
+    @apply text-gray-500 dark:text-gray-400;
+  }
+  .drawer-encouragement {
+    @apply text-green-700 dark:text-green-300;
+  }
+  .drawer-skeleton {
+    @apply bg-gray-300 dark:bg-gray-600;
+  }
+  .drawer-analysis-container {
+    @apply bg-blue-50 dark:bg-blue-900;
+  }
+  .drawer-analysis-passed {
+    @apply text-green-600 dark:text-green-300;
+  }
+  .drawer-analysis-failed {
+    @apply text-yellow-500 dark:text-yellow-400;
+  }
+  .drawer-analysis-label {
+    @apply text-blue-800 dark:text-blue-100;
+  }
+  .drawer-analysis-feedback {
+    @apply text-blue-700 dark:text-blue-300;
+  }
+  .drawer-suggestion-container {
+    @apply bg-yellow-50 dark:bg-yellow-900;
+  }
+  .drawer-suggestion-title {
+    @apply text-yellow-800 dark:text-yellow-200;
+  }
+  .drawer-suggestion-copy {
+    @apply text-yellow-600 dark:text-yellow-300;
+  }
+}
 
 /* 添加暗色主题支持 */
-:root[data-theme="dark"] {}
+:root[data-theme="dark"] {
+  .header {
+    @apply bg-gray-900 dark:border-gray-800;
+  }
+  .title {
+    @apply text-gray-300
+  }
+}

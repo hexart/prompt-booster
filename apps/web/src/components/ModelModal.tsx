@@ -5,6 +5,7 @@ import { createClient } from '@prompt-booster/api/factory';
 import { validateModelConfig, getDefaultBaseUrl } from '@prompt-booster/core/model/services/modelService';
 import { Dialog, ModelSelector, toast } from '@prompt-booster/ui';
 import { useModelForm } from '../modelhooks/model-hooks';
+import { EyeIcon, EyeClosedIcon } from 'lucide-react';
 
 // 模型编辑弹窗组件
 interface ModelModalProps {
@@ -95,14 +96,14 @@ export const ModelModal: React.FC<ModelModalProps> = ({
                 <div className="flex justify-end gap-3">
                     <button
                         onClick={onClose}
-                        className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                        className="px-4 py-2 rounded transition-colors button-cancel"
                     >
                         取消
                     </button>
                     <button
                         onClick={handleSave}
                         disabled={isSaving || !formData.apiKey}
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors disabled:bg-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:disabled:bg-blue-800 dark:disabled:text-blue-200"
+                        className="px-4 py-2 rounded transition-colors button-confirm"
                     >
                         {isSaving ? '保存中...' : '保存'}
                     </button>
@@ -112,27 +113,27 @@ export const ModelModal: React.FC<ModelModalProps> = ({
             <div className="space-y-4">
                 {isCustom && (
                     <div>
-                        <label className="block text-sm font-medium mb-1 text-gray-500 dark:text-white">供应商名称</label>
+                        <label className="block text-sm font-medium mb-1 input-label">供应商名称</label>
                         <input
                             type="text"
                             name="providerName"
                             value={(formData as CustomInterface).providerName || ''}
                             onChange={handleInputChange}
-                            className="w-full p-2 border rounded focus:outline-hidden focus:ring-2 focus:ring-blue-500 bg-gray-50 border-gray-300 text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                            className="w-full p-2 border rounded input"
                             placeholder="例如: OpenAI"
                         />
                     </div>
                 )}
 
                 <div>
-                    <label className="block text-sm font-medium mb-1 text-gray-500 dark:text-gray-300">API Key</label>
+                    <label className="block text-sm font-medium mb-1 input-laebel">API Key</label>
                     <div className="relative">
                         <input
                             type={isMaskedApiKey ? "text" : "text"}
                             name="apiKey"
                             value={formData.apiKey || ''}
                             onChange={handleInputChange}
-                            className="w-full overflow-hidden truncate p-2 pr-12 border rounded focus:outline-hidden focus:ring-2 focus:ring-blue-500 bg-gray-50 border-gray-300 text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                            className="w-full overflow-hidden truncate p-2 pr-12 border rounded input"
                             placeholder="输入你的API Key"
                         />
                         {originalApiKey && (
@@ -141,49 +142,49 @@ export const ModelModal: React.FC<ModelModalProps> = ({
                                 onMouseDown={() => showApiKey()}
                                 onMouseUp={() => hideApiKey()}
                                 onMouseLeave={() => hideApiKey()}
-                                className="absolute inset-y-0 right-0 px-3 flex items-center text-sm border-gray-300 text-gray-700 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-300"
+                                className="absolute inset-y-0 right-0 px-3 flex items-center text-sm input-display-button"
                             >
-                                {isMaskedApiKey ? '显示' : '隐藏'}
+                                {isMaskedApiKey ? <EyeClosedIcon size={18} /> : <EyeIcon size={18} />}
                             </button>
                         )}
                     </div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    <p className="mt-1 text-xs input-description">
                         {isMaskedApiKey
                             ? "按住显示按钮不松开显示API Key"
-                            : "输入新的API Key或查看完整密钥"}
+                            : "松开鼠标恢复隐藏"}
                     </p>
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium mb-1 text-gray-500 dark:text-gray-300">API基础URL</label>
+                    <label className="block text-sm font-medium mb-1 input-laebel">API基础URL</label>
                     <input
                         type="text"
                         name="baseUrl"
                         value={formData.baseUrl || ''}
                         onChange={handleInputChange}
-                        className="w-full p-2 border rounded focus:outline-hidden focus:ring-2 focus:ring-blue-500 bg-gray-50 border-gray-300 text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        className="w-full p-2 border rounded input"
                         placeholder={isCustom
                             ? "输入API基础URL"
                             : getDefaultBaseUrl(modelType as StandardModelType)}
                     />
                     {!isCustom && (
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        <p className="mt-1 text-xs input-description">
                             默认URL: {getDefaultBaseUrl(modelType as StandardModelType) || "未设置"}
                         </p>
                     )}
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium mb-1 text-gray-500 dark:text-gray-300">API端点路径</label>
+                    <label className="block text-sm font-medium mb-1 input-laebel">API端点路径</label>
                     <input
                         type="text"
                         name="endpoint"
                         value={formData.endpoint || ''}
                         onChange={handleInputChange}
-                        className="w-full p-2 border rounded focus:outline-hidden focus:ring-2 focus:ring-blue-500 bg-gray-50 border-gray-300 text-gray-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        className="w-full p-2 border rounded input"
                         placeholder="/v1/chat/completions"
                     />
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    <p className="mt-1 text-xs input-description">
                         {isCustom
                             ? "端点路径，例如: /v1/chat/completions 或 /api/generate (不包含基础URL)"
                             : "留空将使用默认端点，对于大多数模型是/v1/chat/completions"}
@@ -191,7 +192,7 @@ export const ModelModal: React.FC<ModelModalProps> = ({
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium mb-1 text-gray-500 dark:text-gray-300">模型</label>
+                    <label className="block text-sm font-medium mb-1 input-laebel">模型</label>
                     <ModelSelector
                         value={formData.model || ''}
                         onChange={(value) => {
@@ -249,16 +250,16 @@ export const ModelModal: React.FC<ModelModalProps> = ({
 
                 {isCustom && (
                     <div>
-                        <label className="block text-sm font-medium mb-1 text-gray-500 dark:text-gray-300">接口名称</label>
+                        <label className="block text-sm font-medium mb-1 input-laebel">接口名称</label>
                         <input
                             type="text"
                             name="name"
                             value={formData.name || ''}
                             disabled={true}
-                            className="w-full p-2 border rounded focus:outline-hidden focus:ring-2 focus:ring-blue-500 bg-gray-50 border-gray-300 text-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                            className="w-full p-2 border rounded input input-disabled"
                             placeholder="自动生成的接口名称"
                         />
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="mt-1 text-xs input-description">
                             接口名称自动由供应商名称和模型名称组合生成
                         </p>
                     </div>
@@ -270,9 +271,9 @@ export const ModelModal: React.FC<ModelModalProps> = ({
                         id="enableAfterSave"
                         checked={enableAfterSave}
                         onChange={(e) => setEnableAfterSave(e.target.checked)}
-                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-xs focus:ring-blue-500"
+                        className="w-4 h-4 input"
                     />
-                    <label htmlFor="enableAfterSave" className="ml-2 text-sm font-medium text-gray-500">
+                    <label htmlFor="enableAfterSave" className="ml-2 text-sm font-medium input-laebel">
                         保存后启用模型
                     </label>
                 </div>

@@ -64,7 +64,7 @@ export const EnhancedTextarea: React.FC<EnhancedTextareaProps> = ({
     return (
         <div className="w-full">
             {label && (
-                <label className={`block text-sm font-medium mb-2 text-gray-400 dark:text-gray-300 ${labelClassName}`}>
+                <label className={`block text-sm font-medium mb-2 ${labelClassName}`}>
                     {label}
                 </label>
             )}
@@ -83,23 +83,21 @@ export const EnhancedTextarea: React.FC<EnhancedTextareaProps> = ({
                     maxLength={maxLength}
                     placeholder={placeholder}
                     rows={rows}
-                    className={`w-full p-3 border rounded-md outline-none transition-colors duration-200
-            ${disabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-gray-50'} 
+                    className={`w-full p-3 border rounded-md outline-none transition-colors duration-200 ${className}
+            ${disabled ? 'cursor-not-allowed' : ''} 
             ${readOnly ? 'cursor-default' : ''}
             ${isHovered
-                            ? 'border-gray-300 dark:border-gray-500'
-                            : 'border-gray-200 dark:border-gray-600'
+                            ? 'autoscroll-border-hover'
+                            : 'autoscroll-border'
                         }
-            focus:ring-2 focus:ring-blue-500 focus:border-transparent
-            text-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400
-            ${className}`}
+            `}
                 />
 
                 {/* 复制按钮 - 仅在悬停且有内容时显示 */}
                 {isHovered && value.trim() && (
                     <Tooltip text="复制" position="bottom">
                         <button
-                            className="absolute top-2 right-2 p-2 rounded-md bg-white/80 text-blue-500 hover:bg-blue-50 dark:bg-gray-800/60 dark:text-blue-400 dark:hover:bg-gray-800"
+                            className="absolute top-2 right-2 p-2 rounded-md input-copy-button"
                             onClick={handleCopy}
                         >
                             {copied ? <ClipboardCheckIcon size={16} /> : <ClipboardIcon size={16} />}
@@ -111,7 +109,7 @@ export const EnhancedTextarea: React.FC<EnhancedTextareaProps> = ({
             {/* 字符计数 */}
             {showCharCount && (
                 <div className="mt-2 flex justify-end">
-                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                    <span className="text-sm input-charactor-counter">
                         {maxLength ? `${value.length}/${maxLength}` : `${value.length} 字符`}
                     </span>
                 </div>

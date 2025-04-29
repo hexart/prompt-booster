@@ -3,6 +3,7 @@ import React from 'react';
 import { type StandardModelType } from '@prompt-booster/core/model/models/config';
 import { useModelStore } from '@prompt-booster/core/model/store/modelStore';
 import { Dialog, ListCard, toast } from '@prompt-booster/ui';
+import LoadingIcon from '@prompt-booster/ui/components/LoadingIcon';
 import { useModal } from '@prompt-booster/ui';
 import { ListPlus, Power, Link2, FileCog, Trash2 } from 'lucide-react';
 import { useModelConnection, useModelData, useModelEdit } from '../modelhooks/model-hooks';
@@ -42,15 +43,15 @@ const ConfirmDialog: React.FC<{
                     <div className="flex justify-end gap-3">
                         <button
                             onClick={onClose}
-                            className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                            className="px-4 py-2 rounded button-cancel"
                         >
                             {cancelText}
                         </button>
                         <button
                             onClick={onConfirm}
-                            className={`px-4 py-2 text-white rounded transition-colors ${danger
-                                ? "bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700"
-                                : "bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700"
+                            className={`px-4 py-2 text-white rounded ${danger
+                                ? "button-danger"
+                                : "button-confirm"
                                 }`}
                         >
                             {confirmText}
@@ -58,7 +59,7 @@ const ConfirmDialog: React.FC<{
                     </div>
                 }
             >
-                <div className="text-gray-700 dark:text-gray-300">
+                <div>
                     {message}
                 </div>
             </Dialog>
@@ -193,17 +194,17 @@ export const ModelSettings: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col h-full p-4 border rounded-lg shadow-2xs bg-gray-50 border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+        <div className="flex flex-col h-full p-4 border rounded-lg shadow-2xs secondary-container">
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold text-gray-500 dark:text-white">AI模型设置</h2>
+                <h2 className="text-xl font-semibold title-secondary">AI模型设置</h2>
                 <Tooltip text='添加自定义接口'>
-                <button
-                    onClick={handleOpenAddCustomModal}
-                    className="bg-blue-500 text-white px-3 py-2 rounded-md text-sm hover:bg-blue-600 transition-colors dark:bg-blue-600 dark:hover:bg-blue-700 inline-flex items-center gap-1"
-                >
-                    <ListPlus size={17} />
-                    <span className="hidden sm:block">添加</span>
-                </button>
+                    <button
+                        onClick={handleOpenAddCustomModal}
+                        className="px-3 py-2 rounded-md text-sm inline-flex items-center gap-1 button-confirm"
+                    >
+                        <ListPlus size={17} />
+                        <span className="hidden sm:block">添加</span>
+                    </button>
                 </Tooltip>
             </div>
 
@@ -214,20 +215,20 @@ export const ModelSettings: React.FC = () => {
                         key={model.id}
                         title={model.name}
                         description={model.isStandard ? '内置模型' : `自定义模型`}
-                        className="border rounded-lg p-4 mb-2 last:mb-0 shadow-2xs hover:shadow-md transition-all duration-300 bg-white border-gray-200 dark:bg-gray-700 dark:border-gray-600"
+                        className={`border rounded-lg p-4 mb-2 last:mb-0 shadow-2xs hover:shadow-md transition-all duration-300 listcard-container ${!model.isEnabled ? 'opacity-50' : 'opacity-100'}`}
                         renderTitle={(title) => (
-                            <h3 className="font-semibold text-lg truncate w-full text-gray-500 dark:text-white">{title}</h3>
+                            <h3 className="font-semibold text-lg truncate w-full listcard-title">{title}</h3>
                         )}
                         renderDescription={(desc) => (
-                            <div className="text-sm text-gray-500 dark:text-gray-300 mt-1 truncate">{desc}</div>
+                            <div className="text-sm mt-1 truncate listcard-description">{desc}</div>
                         )}
                         actions={(
                             <div className="flex items-center">
                                 <button
                                     onClick={() => toggleModelStatus(model.id, model.isStandard, !model.isEnabled)}
-                                    className={`mr-2 px-3 py-2 rounded-md text-sm whitespace-nowrap transition-colors inline-flex items-center gap-1 ${model.isEnabled
-                                        ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
-                                        : "bg-gray-300 text-gray-600 dark:bg-gray-600 dark:text-gray-300"
+                                    className={`mr-2 px-3 py-2 rounded-md text-sm whitespace-nowrap inline-flex items-center gap-1 ${model.isEnabled
+                                        ? "button-secondary-enabled"
+                                        : "button-secondary-disabled"
                                         }`}
                                 >
                                     {model.isEnabled ? (
@@ -240,17 +241,14 @@ export const ModelSettings: React.FC = () => {
 
                                 <button
                                     onClick={() => testConnection(model)}
-                                    className="mr-2 px-3 py-2 rounded-md text-sm transition-colors inline-flex items-center gap-1 bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-800"
+                                    className="mr-2 px-3 py-2 rounded-md text-sm inline-flex items-center gap-1 button-secondary-testlink"
                                     disabled={isTestingConnection(model.id)}
                                 >
                                     <div className="w-4 h-4 flex items-center justify-center">
                                         {!isTestingConnection(model.id) ? (
                                             <Link2 size={16} />
                                         ) : (
-                                            <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"></circle>
-                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                            </svg>
+                                            <LoadingIcon />
                                         )}
                                     </div>
                                     <span className="hidden md:inline whitespace-nowrap">测试连接</span>
@@ -258,7 +256,7 @@ export const ModelSettings: React.FC = () => {
 
                                 <button
                                     onClick={() => handleEditModel(model.id, model.isStandard)}
-                                    className={`${!model.isStandard ? "mr-2" : ""} px-3 py-2 rounded-md text-sm transition-colors inline-flex items-center gap-1 bg-blue-100 text-blue-800 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-300 dark:hover:bg-blue-800`}
+                                    className={`${!model.isStandard ? "mr-2" : ""} px-3 py-2 rounded-md text-sm inline-flex items-center gap-1 button-secondary-edit`}
                                 >
                                     <FileCog size={14} />
                                     <span className="hidden md:inline whitespace-nowrap">编辑</span>
@@ -267,7 +265,7 @@ export const ModelSettings: React.FC = () => {
                                 {!model.isStandard && (
                                     <button
                                         onClick={() => handleDeleteCustomInterface(model.id)}
-                                        className="px-3 py-2 rounded-md text-sm transition-colors inline-flex items-center gap-1 bg-red-100 text-red-800 hover:bg-red-200 dark:bg-red-900 dark:text-red-300 dark:hover:bg-red-800"
+                                        className="px-3 py-2 rounded-md text-sm inline-flex items-center gap-1 button-secondary-danger"
                                     >
                                         <Trash2 size={14} />
                                         <span className="hidden md:inline whitespace-nowrap">删除</span>
@@ -280,7 +278,7 @@ export const ModelSettings: React.FC = () => {
 
                 {/* 空状态显示 */}
                 {allModels.length === 0 && (
-                    <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                    <div className="text-center py-8 input-description">
                         暂无模型配置，请点击"添加自定义接口"按钮创建
                     </div>
                 )}
