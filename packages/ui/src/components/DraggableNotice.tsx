@@ -13,6 +13,7 @@ interface DraggableNoticeProps {
     onClose: () => void;
     initialPosition?: { x: string; y: string };
     className?: string;
+    portalTarget?: HTMLElement; // 可选的Portal渲染目标
 }
 
 export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
@@ -20,7 +21,8 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
     title = "需要完成",
     onClose,
     initialPosition = { x: 'auto', y: 'auto' },
-    className = ''
+    className = '',
+    portalTarget
 }) => {
     const [position, setPosition] = useState<{ x: string; y: string }>(initialPosition);
     const [hasBeenDragged, setHasBeenDragged] = useState(false);
@@ -32,32 +34,6 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
     // 用于保存悬浮窗引用
     const floatingRef = useRef<HTMLDivElement>(null);
     
-    // Portal container reference
-    const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null);
-    
-    // 创建Portal容器
-    useEffect(() => {
-        // 检查是否已经存在id为'draggable-notice-portal'的容器
-        let container = document.getElementById('draggable-notice-portal');
-        
-        // 如果不存在，创建一个新的
-        if (!container) {
-            container = document.createElement('div');
-            container.id = 'draggable-notice-portal';
-            document.body.appendChild(container);
-        }
-        
-        setPortalContainer(container);
-        
-        // 清理函数
-        return () => {
-            // 只有当没有其他内容使用该portal时才移除它
-            if (container && container.childNodes.length === 0) {
-                document.body.removeChild(container);
-            }
-        };
-    }, []);
-
     // 组件挂载时添加淡入效果
     useEffect(() => {
         // 初始状态设为不可见
@@ -214,11 +190,8 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
     // 如果没有需要显示的项目，返回null
     if (filteredItems.length === 0) return null;
     
-    // 如果portal容器不存在，不渲染
-    if (!portalContainer) return null;
-
-    // 使用createPortal将内容渲染到portal容器中
-    return createPortal(
+    // 弹窗内容
+    const noticeContent = (
         <div
             ref={floatingRef}
             className={`fixed z-50 ${isDragging ? 'cursor-grabbing' : 'cursor-grab'} ${className} 
@@ -257,7 +230,10 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
                     </div>
                 ))}
             </div>
-        </div>,
-        portalContainer
+        </div>
     );
+
+    return typeof document === 'object' 
+        ? createPortal(noticeContent, portalTarget || document.body) 
+        : null;
 };

@@ -130,13 +130,13 @@ button:disabled {
     }
   }
   .mobile-menu-container {
-    @apply border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md;
+    @apply border border-gray-200 dark:border-gray-800 bg-white/60 dark:bg-gray-900/60 backdrop-blur-md;
   }
   .mobile-menu-active {
     @apply bg-gradient-to-r from-blue-500 to-blue-600 text-white;
   }
   .mobile-menu-inactive {
-    @apply hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300;
+    @apply hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400;
   }
   .main-container {
     @apply bg-white dark:bg-gray-800;
