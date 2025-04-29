@@ -6,7 +6,7 @@ import { Template } from '@prompt-booster/core/prompt/models/template';
 import { analyzePromptQuality, analyzePromptWithLLM } from '@prompt-booster/core/prompt/utils/promptUtils';
 import { toast, EnhancedTextarea, AutoScrollTextarea, EnhancedDropdown } from '@prompt-booster/ui';
 import LoadingIcon from '@prompt-booster/ui/components/LoadingIcon';
-import { RocketIcon, ListRestartIcon, StepForwardIcon, ChartBarIcon, CopyPlusIcon, MinimizeIcon, MaximizeIcon } from 'lucide-react';
+import { RocketIcon, ListRestartIcon, StepForwardIcon, ChartBarIcon, CopyPlusIcon, MinimizeIcon, MaximizeIcon, SquareCheckBigIcon, TriangleAlertIcon } from 'lucide-react';
 import { Drawer } from 'vaul';
 import { motion } from 'framer-motion';
 import Confetti from 'react-confetti';
@@ -536,7 +536,7 @@ export const PromptBooster: React.FC = () => {
                                             <Drawer.Description className="h-3 drawer-skeleton rounded w-full mt-1"></Drawer.Description>
 
                                             {/* 三条维度骨架 */}
-                                            <div className="p-4 drawer-anlysis-container rounded-lg">
+                                            <div className="p-4 drawer-analysis-container rounded-lg">
                                                 {[1, 2, 3].map(i => (
                                                     <div key={i} className="space-y-2 mb-4 last:mb-0">
                                                         <div className="h-4 drawer-skeleton rounded w-3/4" />
@@ -598,7 +598,7 @@ export const PromptBooster: React.FC = () => {
                                                             <li key={i} className="flex gap-2 items-start justify-between">
                                                                 <div className="flex items-start gap-2 w-[85%]">
                                                                     <span className={item.passed ? "drawer-analysis-passed" : "drawer-analysis-failed"}>
-                                                                        {item.passed ? "✅" : "⚠️"}
+                                                                        {item.passed ? <SquareCheckBigIcon size={18} /> : <TriangleAlertIcon size={18} />}
                                                                     </span>
                                                                     <div>
                                                                         <div className="font-medium drawer-analysis-label">
@@ -609,7 +609,7 @@ export const PromptBooster: React.FC = () => {
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div className="text-xs text-gray-400 font-mono">
+                                                                <div className="text-xs whitespace-nowrap text-gray-400 font-mono">
                                                                     +{item.points}分
                                                                 </div>
                                                             </li>
