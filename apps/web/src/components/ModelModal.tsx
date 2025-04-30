@@ -96,14 +96,14 @@ export const ModelModal: React.FC<ModelModalProps> = ({
                 <div className="flex justify-end gap-3">
                     <button
                         onClick={onClose}
-                        className="px-4 py-2 rounded transition-colors button-cancel"
+                        className="px-4 py-2 rounded-md transition-colors button-cancel"
                     >
                         取消
                     </button>
                     <button
                         onClick={handleSave}
                         disabled={isSaving || !formData.apiKey}
-                        className="px-4 py-2 rounded transition-colors button-confirm"
+                        className="px-4 py-2 rounded-md transition-colors button-confirm"
                     >
                         {isSaving ? '保存中...' : '保存'}
                     </button>

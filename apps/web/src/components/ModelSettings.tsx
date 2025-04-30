@@ -43,13 +43,13 @@ const ConfirmDialog: React.FC<{
                     <div className="flex justify-end gap-3">
                         <button
                             onClick={onClose}
-                            className="px-4 py-2 rounded button-cancel"
+                            className="px-4 py-2 rounded-md button-cancel"
                         >
                             {cancelText}
                         </button>
                         <button
                             onClick={onConfirm}
-                            className={`px-4 py-2 text-white rounded ${danger
+                            className={`px-4 py-2 text-white rounded-md ${danger
                                 ? "button-danger"
                                 : "button-confirm"
                                 }`}
