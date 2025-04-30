@@ -4,7 +4,7 @@ import { usePromptGroup } from '@prompt-booster/core/prompt/hooks/usePrompt';
 import { PromptGroup } from '@prompt-booster/core/prompt/models/prompt';
 import { usePromptHistory } from '@prompt-booster/core/prompt/hooks/usePromptHistory';
 import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
-import { Trash2Icon, ChevronsUpDownIcon, ChevronsDownUpIcon, RotateCcwIcon } from 'lucide-react';
+import { Trash2Icon, ChevronsDownIcon, ChevronsUpIcon, RotateCcwIcon } from 'lucide-react';
 
 interface PromptHistoryProps {
     onNavigateToEditor?: () => void;
@@ -155,7 +155,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                                         onClick={() => toggleExpand(group.id)}
                                         className="flex items-center gap-1 text-sm px-3 py-2 rounded-md button-secondary"
                                     >
-                                        {expandedGroupId === group.id ? <ChevronsDownUpIcon size={15} /> : <ChevronsUpDownIcon size={15} />}
+                                        {expandedGroupId === group.id ? <ChevronsUpIcon size={15} /> : <ChevronsDownIcon size={15} />}
                                         <span className="hidden md:block">{expandedGroupId === group.id ? '收起' : '展开'}</span>
                                     </button>
 
@@ -198,7 +198,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                                                 {/* 版本列表 */}
                                                 <div className="flex space-x-2 overflow-y-visible overflow-x-auto py-2 [&::-webkit-scrollbar]:h-1">
                                                     {versions.map(version => (
-                                                        <Tooltip key={version.id} text={`使用模型：${version.provider ? `${version.provider} - ` : ''}${version.modelName || version.modelId || '未知模型'}`}>
+                                                        <Tooltip key={version.id} text={`使用模型：\n${version.provider ? `${version.provider} - ` : ''}${version.modelName || version.modelId || '未知模型'}`}>
                                                             <button
                                                                 key={version.id}
                                                                 onClick={() => handleSelectVersion(group.id, version.number)}

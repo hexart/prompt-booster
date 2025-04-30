@@ -5,6 +5,7 @@ import { RocketIcon, Columns2Icon, GalleryVerticalEndIcon, CogIcon } from 'lucid
 import ThemeSwitcher from '@prompt-booster/ui/components/ThemeSwitcher';
 import MobileMenu, { TabItem } from './MobileMenu';
 import reactLogo from '../assets/react.svg';
+import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
 
 export type TabType = 'booster' | 'test' | 'history' | 'settings';
 
@@ -61,62 +62,63 @@ const Header: React.FC<HeaderProps> = ({
                                 {tabs.map((tab) => {
                                     const Icon = tab.icon;
                                     return (
-                                        <button
-                                            key={tab.id}
-                                            onClick={() => setActiveTab(tab.id)}
-                                            className={`py-2 px-4 font-medium rounded-md relative transition-all duration-300 flex items-center gap-2 ${activeTab === tab.id
+                                        <Tooltip text={tab.shortcut} position='bottom'>
+                                            <button
+                                                key={tab.id}
+                                                onClick={() => setActiveTab(tab.id)}
+                                                className={`py-2 px-4 font-medium rounded-md relative transition-all duration-300 flex items-center gap-2 ${activeTab === tab.id
                                                     ? 'tab-active shadow-sm'
                                                     : 'tab-inactive'
-                                                } min-w-0`}
-                                            style={{
-                                                transform: activeTab === tab.id ? '' : 'none'
-                                            }}
-                                            title={`${tab.shortcut}`}
-                                        >
-                                            <Icon size={18} />
-                                            <span className="truncate overflow-hidden">{tab.label}</span>
-                                        </button>
+                                                    } min-w-0`}
+                                                style={{
+                                                    transform: activeTab === tab.id ? '' : 'none'
+                                                }}
+                                            >
+                                                <Icon size={18} />
+                                                <span className="truncate overflow-hidden">{tab.label}</span>
+                                            </button>
+                                        </Tooltip>
                                     );
                                 })}
                             </div>
-                            
+
                             {/* 主题切换按钮 - 使用断点控制内部渲染模式 */}
                             <ThemeSwitcher />
-                            
+
                             {/* 移动端菜单按钮 */}
                             <div className='md:hidden ml-2 p-1 rounded-lg mobile-menu-button-container'>
-                            <button
-                                ref={menuButtonRef}
-                                className="p-2 rounded-md mobile-menu-button"
-                                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                                aria-label={isMobileMenuOpen ? "关闭菜单" : "打开菜单"}
-                                aria-expanded={isMobileMenuOpen}
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="22"
-                                    height="22"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    className=""
+                                <button
+                                    ref={menuButtonRef}
+                                    className="p-2 rounded-md mobile-menu-button"
+                                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                                    aria-label={isMobileMenuOpen ? "关闭菜单" : "打开菜单"}
+                                    aria-expanded={isMobileMenuOpen}
                                 >
-                                    {isMobileMenuOpen ? (
-                                        <>
-                                            <line x1="18" y1="6" x2="6" y2="18" />
-                                            <line x1="6" y1="6" x2="18" y2="18" />
-                                        </>
-                                    ) : (
-                                        <>
-                                            <line x1="4" y1="8" x2="20" y2="8" />
-                                            <line x1="4" y1="16" x2="20" y2="16" />
-                                        </>
-                                    )}
-                                </svg>
-                            </button></div>
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="22"
+                                        height="22"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        className=""
+                                    >
+                                        {isMobileMenuOpen ? (
+                                            <>
+                                                <line x1="18" y1="6" x2="6" y2="18" />
+                                                <line x1="6" y1="6" x2="18" y2="18" />
+                                            </>
+                                        ) : (
+                                            <>
+                                                <line x1="4" y1="8" x2="20" y2="8" />
+                                                <line x1="4" y1="16" x2="20" y2="16" />
+                                            </>
+                                        )}
+                                    </svg>
+                                </button></div>
                         </div>
                     </div>
                 </div>

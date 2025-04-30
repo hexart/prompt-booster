@@ -4,7 +4,7 @@ import { promptGroupService } from '@prompt-booster/core/prompt/services/promptS
 import templates from '@prompt-booster/core/prompt/templates/default-templates.json';
 import { Template } from '@prompt-booster/core/prompt/models/template';
 import { analyzePromptQuality, analyzePromptWithLLM } from '@prompt-booster/core/prompt/utils/promptUtils';
-import { toast, EnhancedTextarea, AutoScrollTextarea, EnhancedDropdown } from '@prompt-booster/ui';
+import { toast, EnhancedTextarea, AutoScrollTextarea, EnhancedDropdown, Dialog } from '@prompt-booster/ui';
 import LoadingIcon from '@prompt-booster/ui/components/LoadingIcon';
 import { RocketIcon, ListRestartIcon, StepForwardIcon, ChartBarIcon, CopyPlusIcon, MinimizeIcon, MaximizeIcon, SquareCheckBigIcon, TriangleAlertIcon } from 'lucide-react';
 import { Drawer } from 'vaul';
@@ -272,6 +272,12 @@ export const PromptBooster: React.FC = () => {
         }
     };
 
+    // 处理确认重置
+    const handleConfirmReset = () => {
+        handleReset();
+        setIsResetDialogOpen(false);
+    };
+
     // 处理清空并重新开始
     const handleReset = () => {
         resetSession();
@@ -297,6 +303,9 @@ export const PromptBooster: React.FC = () => {
     // 最大化状态声明
     const [isMaximized, setIsMaximized] = useState(false);
 
+    // 重置对话框状态声明
+    const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
+
     return (
         <div className="grid-cols-1 gap-6 md:min-h-[550px] flex flex-col flex-grow">
             {/* 原始提示词区域 */}
@@ -308,7 +317,7 @@ export const PromptBooster: React.FC = () => {
                             <Tooltip text="清空并重新开始">
                                 <button
                                     className="px-3 py-2 text-sm flex items-center gap-1 rounded-md button-danger"
-                                    onClick={handleReset}
+                                    onClick={() => setIsResetDialogOpen(true)}
                                 >
                                     <ListRestartIcon size={18} />
                                     <span className="hidden sm:block">重置</span>
@@ -369,7 +378,7 @@ export const PromptBooster: React.FC = () => {
                             ${isProcessing
                                 ? 'cursor-not-allowed opacity-50'
                                 : ''
-                                }`}
+                            }`}
                         onClick={handleOptimize}
                         disabled={isProcessing || !originalPrompt || !originalPrompt.trim() || !activeModel}
                     >
@@ -474,8 +483,8 @@ export const PromptBooster: React.FC = () => {
                     <AutoScrollTextarea
                         className={`flex-grow rounded-lg border autoscroll-content 
                             ${!optimizedPrompt && !isProcessing
-                            ? "flex justify-center items-center text-center"
-                            : ""
+                                ? "flex justify-center items-center text-center"
+                                : ""
                             }`}
                         value={isEditMode ? editablePrompt : optimizedPrompt}
                         onChange={handleOptimizedPromptChange}
@@ -694,6 +703,32 @@ export const PromptBooster: React.FC = () => {
                 onSubmit={handleIterationSubmit}
                 templates={templates as unknown as Record<string, Template>}
             />
+
+            {/* 重置确认对话框 */}
+            <Dialog
+                isOpen={isResetDialogOpen}
+                onClose={() => setIsResetDialogOpen(false)}
+                title="确认重置"
+                maxWidth="max-w-md"
+                footer={
+                    <div className="flex justify-end gap-3">
+                        <button
+                            className="px-4 py-2 rounded-md button-cancel"
+                            onClick={() => setIsResetDialogOpen(false)}
+                        >
+                            取消
+                        </button>
+                        <button
+                            className="px-4 py-2 rounded-md button-danger"
+                            onClick={handleConfirmReset}
+                        >
+                            确认重置
+                        </button>
+                    </div>
+                }
+            >
+                <p>确定要清空所有内容并重新开始吗？此操作无法撤销。</p>
+            </Dialog>
         </div>
     );
 };

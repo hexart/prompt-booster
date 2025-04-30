@@ -8,7 +8,7 @@ import { useMemoryStore } from '@prompt-booster/core/storage/memoryStorage';
 import { createClient } from '@prompt-booster/api/factory';
 import { createStreamHandler } from '@prompt-booster/api/utils/stream';
 import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
-import { RocketIcon, MinimizeIcon, MaximizeIcon, ArrowLeftFromLineIcon, ArrowRightFromLineIcon } from 'lucide-react';
+import { RocketIcon, MinimizeIcon, MaximizeIcon, ArrowLeftFromLineIcon, ArrowRightFromLineIcon, ArrowDownFromLineIcon, ArrowUpFromLineIcon } from 'lucide-react';
 import LoadingIcon from '@prompt-booster/ui/components/LoadingIcon';
 
 export const TestResult: React.FC = () => {
@@ -324,18 +324,28 @@ export const TestResult: React.FC = () => {
                     ) : response && (
                         <div className='flex gap-2'>
                             <button
-                                className="hidden md:flex text-sm items-center gap-1 rounded-lg p-3 lg:px-3 lg:py-2 button-third"
+                                className="flex text-sm items-center gap-1 rounded-lg p-3 lg:px-3 lg:py-2 button-third"
                                 onClick={onToggleMaximize}
                                 disabled={!response}
                             >
                                 {isMaximized ? (
                                     <>
-                                        {isOriginal ? <ArrowLeftFromLineIcon size={16} /> : <ArrowRightFromLineIcon size={16} />}
+                                        <div className="hidden md:flex">
+                                            {isOriginal ? <ArrowLeftFromLineIcon size={16} /> : <ArrowRightFromLineIcon size={16} />}
+                                        </div>
+                                        <div className="flex md:hidden">
+                                            {isOriginal ? <ArrowUpFromLineIcon size={16} /> : <ArrowDownFromLineIcon size={16} />}
+                                        </div>
                                         <span className="hidden lg:inline">收缩</span>
                                     </>
                                 ) : (
                                     <>
-                                        {isOriginal ? <ArrowRightFromLineIcon size={16} /> : <ArrowLeftFromLineIcon size={16} />}
+                                        <div className="hidden md:flex">
+                                            {isOriginal ? <ArrowRightFromLineIcon size={16} /> : <ArrowLeftFromLineIcon size={16} />}
+                                        </div>
+                                        <div className="flex md:hidden">
+                                            {isOriginal ? <ArrowDownFromLineIcon size={16} /> : <ArrowUpFromLineIcon size={16} />}
+                                        </div>
                                         <span className="hidden lg:inline">扩展</span>
                                     </>
                                 )}
@@ -425,27 +435,28 @@ export const TestResult: React.FC = () => {
                 {/* 按钮区域 */}
                 <div className="flex items-center justify-end gap-2 flex-shrink min-w-0">
                     {/* Markdown按钮 */}
-                    <button
-                        type="button"
-                        onClick={() => setShowMarkdown(!showMarkdown)}
-                        className={`px-3 py-2 rounded-md h-10 flex items-center justify-center transition-colors duration-200 ${showMarkdown
-                            ? 'button-confirm'
-                            : 'button-cancel'
-                            }`}
-                        aria-pressed={showMarkdown}
-                        title={showMarkdown ? "Markdown格式已开启" : "Markdown格式已关闭"}
-                    >
-                        <svg aria-hidden="true" focusable="false" viewBox="0 0 16 16" width="22" height="22" fill="currentColor" display="inline-block">
-                            <path d="M14.85 3c.63 0 1.15.52 1.14 1.15v7.7c0 .63-.51 1.15-1.15 1.15H1.15C.52 13 0 12.48 0 11.84V4.15C0 3.52.52 3 1.15 3ZM9 11V5H7L5.5 7 4 5H2v6h2V8l1.5 1.92L7 8v3Zm2.99.5L14.5 8H13V5h-2v3H9.5Z"></path>
-                        </svg>
-                    </button>
+                    <Tooltip text={`${showMarkdown ? '关闭Markdown渲染' : '开启Markdown渲染'}`} position="top">
+                        <button
+                            type="button"
+                            onClick={() => setShowMarkdown(!showMarkdown)}
+                            className={`px-3 py-2 rounded-md h-10 flex items-center justify-center transition-colors duration-200 ${showMarkdown
+                                ? 'button-confirm'
+                                : 'button-cancel'
+                                }`}
+                            aria-pressed={showMarkdown}
+                        >
+                            <svg aria-hidden="true" focusable="false" viewBox="0 0 16 16" width="22" height="22" fill="currentColor" display="inline-block">
+                                <path d="M14.85 3c.63 0 1.15.52 1.14 1.15v7.7c0 .63-.51 1.15-1.15 1.15H1.15C.52 13 0 12.48 0 11.84V4.15C0 3.52.52 3 1.15 3ZM9 11V5H7L5.5 7 4 5H2v6h2V8l1.5 1.92L7 8v3Zm2.99.5L14.5 8H13V5h-2v3H9.5Z"></path>
+                            </svg>
+                        </button>
+                    </Tooltip>
                     {/* 运行对比测试按钮 */}
                     <Tooltip text="运行对比测试">
                         <button
                             className={`flex gap-2 items-center px-3 py-2 rounded-md h-10 min-w-[30%] truncate transition-colors duration-500 button-confirm
                                 ${isTestingOriginal || isTestingOptimized
-                                ? 'cursor-not-allowed opacity-50'
-                                : ''
+                                    ? 'cursor-not-allowed opacity-50'
+                                    : ''
                                 }`}
                             onClick={isTestingOriginal || isTestingOptimized ? stopStreaming : runComparisonTest}
                             disabled={!isTestingOriginal && !isTestingOptimized && (

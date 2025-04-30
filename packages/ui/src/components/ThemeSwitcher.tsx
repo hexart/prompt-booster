@@ -156,7 +156,7 @@ const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
     // 渲染主题按钮
     const renderThemeButton = (themeType: ThemeType, position: 'bottom' | 'left' = 'bottom') => {
         const { icon: Icon, label, shortcut } = themeConfig[themeType];
-        const tooltipText = enableHotkeys ? `${label} (${shortcut})` : label;
+        const tooltipText = enableHotkeys ? `${label}\n(${shortcut})` : label;
 
         return (
             <Tooltip text={tooltipText} position={position} key={themeType}>

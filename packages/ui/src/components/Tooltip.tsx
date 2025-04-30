@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, cloneElement } from 'react';
+import React, { useState, useRef, useEffect, cloneElement, ReactNode } from 'react';
 import { useTheme } from './ThemeContext';
 import { createPortal } from 'react-dom';
 
@@ -7,6 +7,7 @@ type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
 
 /**
  * Tooltip 组件 props：
+ * @param content - 提示内容，支持字符串或React节点，允许手动换行
  * @param text - 提示文本内容
  * @param position - 提示框位置，支持 'top' | 'bottom' | 'left' | 'right'
  * @param theme - 主题模式，可传 'light' | 'dark' | 'system'
@@ -15,7 +16,8 @@ type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
  * @param duration - 过渡动画持续时间，单位毫秒，支持 0、150、200、300、500、700、1000
  */
 interface TooltipProps {
-    text: string;
+    content?: ReactNode;
+    text?: string;
     position?: TooltipPosition;
     theme?: string;
     shadowClass?: string;
@@ -25,6 +27,7 @@ interface TooltipProps {
 }
 
 export const Tooltip: React.FC<TooltipProps> = ({
+    content,
     text,
     position = 'top',
     theme,
@@ -172,6 +175,9 @@ export const Tooltip: React.FC<TooltipProps> = ({
                         : 'translate(0, -50%)',
     };
 
+    // 处理内容显示
+    const tooltipContent = content || text || '';
+
     return (
         <>
             {trigger}
@@ -180,9 +186,9 @@ export const Tooltip: React.FC<TooltipProps> = ({
                     <div
                         role="tooltip"
                         style={tooltipStyle}
-                        className={`px-2 py-1 text-xs font-medium ${themeClasses} rounded-md ${shadowClass} ${shadowColor} border ${transitionClass} ${durationClass} ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                        className={`px-2 py-1 text-xs text-center font-medium ${themeClasses} rounded-md ${shadowClass} ${shadowColor} whitespace-pre-line border ${transitionClass} ${durationClass} ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
                     >
-                        {text}
+                        {tooltipContent}
                         <div style={arrowInfo.style} className={`absolute w-2 h-2 ${themeClasses} ${arrowInfo.className}`}></div>
                     </div>,
                     portalTarget
