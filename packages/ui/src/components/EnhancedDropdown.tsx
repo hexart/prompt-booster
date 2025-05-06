@@ -79,9 +79,9 @@ export const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
                 <span className="px-3 py-2 truncate">
                     {selectedOption ? selectedOption.label : placeholder}
                 </span>
-                <button className={`p-2 input-select-button transition-transform duration-200 ${isOpen ? 'transform rotate-180' : ''}`}>
+                <div className={`p-2 input-select-button transition-transform duration-200 ${isOpen ? 'transform rotate-180' : ''}`}>
                     <ChevronDown size={16} />
-                </button>
+                </div>
             </button>
 
             {isOpen && (

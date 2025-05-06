@@ -62,9 +62,8 @@ const Header: React.FC<HeaderProps> = ({
                                 {tabs.map((tab) => {
                                     const Icon = tab.icon;
                                     return (
-                                        <Tooltip text={tab.shortcut} position='bottom'>
+                                        <Tooltip key={tab.id} text={tab.shortcut} position='bottom'>
                                             <button
-                                                key={tab.id}
                                                 onClick={() => setActiveTab(tab.id)}
                                                 className={`py-2 px-4 font-medium rounded-md relative transition-all duration-300 flex items-center gap-2 ${activeTab === tab.id
                                                     ? 'tab-active shadow-sm'
