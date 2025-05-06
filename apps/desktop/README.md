@@ -163,20 +163,28 @@
 
 2. 安装依赖：
 
-   ```
-   cd desktopnpm install
+   ```bash
+   cd desktop
+   npm install
    ```
 
 3. 开发模式运行：
 
-   ```
+   ```bash
    npm run dev
    ```
 
 4. 构建应用：
 
-   ```
-   npm run build          # 构建所有平台npm run build:mac      # 构建 macOS ARM64 版本npm run build:mac:universal # 构建 macOS Universal 版本npm run build:win      # 构建 Windows 版本npm run build:linux    # 构建 Linux 版本
+   ```bash
+   npm run build
+   # 构建所有平台npm run build:mac
+   # 构建 macOS ARM64 版本
+   npm run build:mac:universal 
+   # 构建 macOS Universal 版本
+   npm run build:win      
+   # 构建 Windows 版本npm run build:linux    
+   # 构建 Linux 版本
    ```
 
 ### 7.3 项目配置文件

@@ -39,7 +39,7 @@ The core package serves as the foundation, providing:
 - State management with Zustand
 - Storage utilities
 
-[View Core Package Documentation](packages/core/Readme.md)
+[View Core Package Documentation](packages/core/README.md)
 
 ### @prompt-booster/api
 
@@ -51,7 +51,7 @@ A flexible client library for interacting with various LLM services:
 - Error management
 - Authentication strategies
 
-[View API Package Documentation](packages/api/Readme.md)
+[View API Package Documentation](packages/api/README.md)
 
 ### @prompt-booster/ui
 
@@ -63,7 +63,7 @@ A comprehensive UI component library:
 - Markdown rendering with syntax highlighting
 - Auto-scrolling components for streaming content
 
-[View UI Package Documentation](packages/ui/Readme.md)
+[View UI Package Documentation](packages/ui/README.md)
 
 ## Applications
 
@@ -221,8 +221,6 @@ The project is currently in active development. According to the development roa
 - Phase 1 (Foundation) and Phase 2 (Advanced Features and Desktop) are completed
 - Phase 3 (Enhanced Functionality) is currently in progress
 - Phases 4-7 (Backend & Sync, Mobile, WeChat Mini-Program, Refinement and Launch) are planned for future development
-
-[View Full Development Roadmap](docs/development-roadmap.md)
 
 ## Project Documentation
 
