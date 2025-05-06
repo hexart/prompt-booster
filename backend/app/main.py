@@ -2,7 +2,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI(title="Prompt Optimizer API")
+app = FastAPI(title="Prompt Booster API")
 
 # Configure CORS
 app.add_middleware(
@@ -15,7 +15,7 @@ app.add_middleware(
 
 @app.get("/")
 async def root():
-    return {"message": "Welcome to Prompt Optimizer API"}
+    return {"message": "Welcome to Prompt Booster API"}
 
 # Health check endpoint
 @app.get("/health")

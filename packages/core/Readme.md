@@ -1,322 +1,376 @@
-# Prompt Optimizer Core 文档
+1. # @prompt-booster/core
 
-本文档详细说明了Prompt Optimizer应用中Core包的结构、功能和使用方法。Core包提供了应用的核心业务逻辑、状态管理和数据模型，是整个应用的基础。
+   Core package for Prompt Booster providing essential state management, model configurations, prompt optimization services, and utility functions.
 
-## 目录
+   ## Table of Contents
 
-1. [概述](#概述)
-2. [核心模型和接口](#核心模型和接口)
-3. [状态管理](#状态管理)
-4. [工具函数](#工具函数)
-5. [使用示例](#使用示例)
+   1. [Overview](#overview)
+   2. [Architecture](#architecture)
+   3. Core Features
+      - [Model Management](#model-management)
+      - [Prompt Management](#prompt-management)
+      - [Storage Management](#storage-management)
+   4. Key Components
+      - [Configuration](#configuration)
+      - [Model Service](#model-service)
+      - [Prompt Service](#prompt-service)
+      - [Template Service](#template-service)
+   5. [Hooks](#hooks)
+   6. [Utilities](#utilities)
+   7. [Usage Examples](#usage-examples)
 
-## 概述
+   ## Overview
 
-Core包是Prompt Optimizer应用的核心，负责定义数据模型、管理应用状态以及提供通用工具函数。主要功能包括：
+   The `@prompt-booster/core` package serves as the foundation for the Prompt Booster application, providing:
 
-- 提示词状态管理
-- 模型配置管理
-- 历史记录管理
-- 模板管理
-- 通用工具函数
+   - **Model Configuration Management**: Support for multiple AI models (OpenAI, Gemini, DeepSeek, Hunyuan, Siliconflow, Ollama)
+   - **Prompt Management**: Versioned prompt groups, history tracking, and optimization services
+   - **Template System**: Template-based prompt optimization and generation
+   - **State Management**: Zustand-based reactive stores for application state
+   - **Storage Utilities**: Persistent and memory-based storage options
+   - **Core Services**: Interfaces for prompt optimization and AI model communication
 
-Core包采用了模块化的设计，将数据模型、状态管理和工具函数分开，便于维护和扩展。状态管理使用Zustand实现，提供了响应式的状态更新和持久化存储。
+   ## Architecture
 
-## 核心模型和接口
+   The package is organized into several key modules:
 
-### 历史记录模型 (`/models/history.ts`)
+   ```
+   core/
+   ├── config/        # Constants and default configurations
+   ├── model/         # Model configuration and services
+   ├── prompt/        # Prompt management and optimization
+   ├── storage/       # Storage services
+   └── utils/         # Utility functions
+   ```
 
-定义了历史记录相关的数据结构。
+   ## Core Features
 
-**主要接口：**
+   ### Model Management
 
-- `HistoryItem`: 历史记录项
-  ```typescript
-  interface HistoryItem {
-    id: string;
-    timestamp: number;
-    originalPrompt: string;
-    optimizedPrompt: string;
-    reasoning?: string;
-    modelId?: string;
-    tags?: string[];
-    favorite?: boolean;
-  }
-  ```
+   The model management system provides a flexible framework for working with different AI providers:
 
-### 模板模型 (`/models/template.ts`)
+   - **Supported Providers**: OpenAI, Gemini, DeepSeek, Hunyuan, Siliconflow, and Ollama
+   - **Custom Interfaces**: Support for adding and configuring custom API endpoints
+   - **Model Configuration**: API keys, base URLs, model selection, and timeout settings
+   - **Connection Testing**: Test API connections before committing to a model
+   - **Secure Key Management**: API key masking for enhanced security
 
-定义了提示词模板的数据结构。
+   #### Example: Configuring a Model
 
-**主要接口：**
+   ```typescript
+   import { useModelStore } from '@prompt-booster/core';
+   
+   function ModelConfig() {
+     const { configs, updateConfig } = useModelStore();
+     
+     const configureOpenAI = () => {
+       updateConfig('openai', {
+         apiKey: 'your-api-key',
+         model: 'gpt-4-turbo',
+         enabled: true
+       });
+     };
+   }
+   ```
 
-- `Template`: 提示词模板
-  ```typescript
-  interface Template {
-    id: string;
-    name: string;
-    content: string;
-    category: string;
-    description?: string;
-    createdAt: number;
-    updatedAt: number;
-  }
-  ```
+   ### Prompt Management
 
-### 配置模型 (`/models/config.ts`)
+   Prompt management provides comprehensive tools for working with AI prompts:
 
-定义了模型配置相关的数据结构。
+   - **Prompt Groups**: Organize prompts into groups with version history
+   - **Versioning**: Track changes to prompts with sequential versions
+   - **Optimization**: Enhance prompts using AI-driven templates
+   - **Iteration**: Incrementally improve prompts based on feedback
+   - **History**: Browse and recover previous prompt versions
+   - **Analysis**: Analyze prompt quality with AI feedback
 
-**主要接口：**
+   #### Prompt Optimization
 
-- `StandardModelType`: 标准模型类型
-  ```typescript
-  type StandardModelType = 'openai' | 'gemini' | 'deepseek' | 'hunyuan';
-  ```
+   The prompt optimization system uses templates to generate better prompts:
 
-- `ModelConfig`: 模型配置
-  ```typescript
-  interface ModelConfig {
-    apiKey: string;
-    baseUrl?: string;
-    model: string;
-    endpoint?: string;
-  }
-  ```
+   ```typescript
+   import { usePromptGroup } from '@prompt-booster/core';
+   
+   function PromptOptimizer() {
+     const { enhancePrompt } = usePromptGroup();
+     
+     const optimizeMyPrompt = async () => {
+       const result = await enhancePrompt({
+         originalPrompt: "Write a story about a robot",
+         templateId: "default-optimizer"
+       });
+       
+       console.log(result.optimizedPrompt);
+     };
+   }
+   ```
 
-- `CustomInterface`: 自定义接口配置
-  ```typescript
-  interface CustomInterface {
-    id: string;
-    name: string;
-    apiKey: string;
-    baseUrl: string;
-    model: string;
-    endpoint?: string;
-  }
-  ```
+   ### Storage Management
 
-## 状态管理
+   The package offers flexible storage solutions:
 
-### 提示词状态 (`/store/prompt-store.ts`)
+   - **Local Storage**: Persistent browser storage
+   - **Session Storage**: Temporary browser session storage
+   - **Memory Storage**: In-memory storage for ephemeral data
+   - **Zustand Integration**: Seamless integration with Zustand state management
 
-管理提示词相关的状态，包括原始提示词、优化后提示词、历史记录和模板。
+   ## Key Components
 
-**主要功能：**
+   ### Configuration
 
-- `usePromptStore`: 提示词状态管理Hook
-  - 状态：
-    - `originalPrompt`: 原始提示词
-    - `optimizedPrompt`: 优化后提示词
-    - `optimizationReasoning`: 优化理由
-    - `isOptimizing`: 是否正在优化
-    - `optimizationError`: 优化错误信息
-    - `history`: 历史记录
-    - `optimizeTemplates`: 优化模板
-    - `activeTemplateId`: 当前活动模板ID
-  - 方法：
-    - `setOriginalPrompt(prompt)`: 设置原始提示词
-    - `setOptimizedPrompt(prompt)`: 设置优化后提示词
-    - `optimizePrompt()`: 优化提示词
-    - `clearError()`: 清除错误
-    - `loadFromHistory(item)`: 从历史加载
-    - `deleteHistoryItem(id)`: 删除历史项
-    - `clearHistory()`: 清空历史记录
-    - `setActiveTemplate(id)`: 设置活动模板
-    - `addTemplate(name, content)`: 添加模板
-    - `updateTemplate(id, updates)`: 更新模板
-    - `deleteTemplate(id)`: 删除模板
-    - `getActiveTemplate()`: 获取当前活动模板
+   Located in the `config/` directory, the configuration module defines constants and default settings:
 
-### 模型状态 (`/store/model-store.ts`)
+   - **Constants**: API endpoints, model names, storage keys, error messages
+   - **Defaults**: Default model configurations and optimization settings
 
-管理模型配置相关的状态，包括API配置和自定义接口。
+   ### Model Service
 
-**主要功能：**
+   The model service (`model/services/modelService.ts`) provides utilities for:
 
-- `useModelStore`: 模型状态管理Hook
-  - 状态：
-    - `activeModel`: 当前活动模型
-    - `configs`: 模型配置
-    - `customInterfaces`: 自定义接口列表
-  - 方法：
-    - `setActiveModel(model)`: 设置当前活动模型
-    - `updateConfig(model, config)`: 更新模型配置
-    - `addCustomInterface(interface)`: 添加自定义接口
-    - `updateCustomInterface(id, updates)`: 更新自定义接口
-    - `deleteCustomInterface(id)`: 删除自定义接口
-    - `isCustomInterface(model)`: 判断是否为自定义接口
-    - `getCustomInterface(id)`: 获取自定义接口
+   - **Connection Testing**: Verify API credentials and connectivity
+   - **API Key Security**: Mask sensitive API keys for display
+   - **Model Validation**: Validate model configurations
+   - **UI Preparation**: Format model data for display in the UI
 
-## 工具函数
+   ### Prompt Service
 
-### ID生成器 (`/utils/id-generator.ts`)
+   The prompt service (`prompt/services/promptService.ts`) is the core engine for prompt management:
 
-提供生成唯一ID的工具函数。
+   - **LLM Communication**: Generic function for calling AI models
+   - **Prompt Group Management**: Create, update, and delete prompt groups
+   - **Version Control**: Track changes to prompts over time
+   - **Optimization**: Enhance prompts using AI
+   - **Iteration**: Improve prompts based on specific directions
+   - **State Management**: Maintain prompt state across the application
 
-**主要函数：**
+   ### Template Service
 
-- `generateId()`: 生成基本唯一ID
-- `generateNumericId()`: 生成数字ID
-- `generatePrefixedId(prefix)`: 生成带前缀的ID
+   The template service (`prompt/services/templateService.ts`) manages prompt templates:
 
-### 提示词工具 (`/utils/prompt-utils.ts`)
+   - **Template Retrieval**: Get templates by ID or type
+   - **Default Templates**: Built-in templates for common optimization scenarios
+   - **Template Content**: Extract content from templates for use in prompt optimization
 
-提供提示词处理相关的工具函数。
+   ## Hooks
 
-**主要函数：**
+   The package provides several React hooks for state management:
 
-- `removeThinkTags(text)`: 移除文本中的`<think>`标签及内容
-- `cleanOptimizedPrompt(optimizedPrompt)`: 清理优化后提示词
+   ### `useModelStore`
 
-## 使用示例
+   Manages model configuration state:
 
-### 基本状态管理
+   ```typescript
+   const {
+     activeModel,          // Current active model ID
+     configs,              // Model configurations
+     customInterfaces,     // Custom API interfaces
+     setActiveModel,       // Set the active model
+     updateConfig,         // Update a model configuration
+     addCustomInterface,   // Add a new custom interface
+     getEnabledModels      // Get all enabled models
+   } = useModelStore();
+   ```
 
-```typescript
-import { usePromptStore } from '@prompt-booster/core';
+   ### `usePromptGroup`
 
-// 在React组件中使用
-function PromptEditor() {
-  const { 
-    originalPrompt, 
-    setOriginalPrompt, 
-    optimizedPrompt, 
-    isOptimizing, 
-    optimizePrompt 
-  } = usePromptStore();
+   Manages prompt groups and versions:
 
-  const handleOptimize = async () => {
-    if (!originalPrompt.trim()) return;
-    try {
-      await optimizePrompt();
-    } catch (error) {
-      console.error('优化过程中出错:', error);
-    }
-  };
+   ```typescript
+   const {
+     activeGroup,          // Current active prompt group
+     activeVersion,        // Current active version
+     enhancePrompt,        // Enhance a prompt using AI
+     iteratePrompt,        // Iterate on an existing prompt
+     getAllGroups,         // Get all prompt groups
+     getGroupVersions,     // Get versions for a group
+     loadFromHistory       // Load a prompt from history
+   } = usePromptGroup();
+   ```
 
-  return (
-    <div>
-      <textarea 
-        value={originalPrompt}
-        onChange={(e) => setOriginalPrompt(e.target.value)}
-        placeholder="请输入提示词..."
-      />
-      <button 
-        onClick={handleOptimize}
-        disabled={isOptimizing || !originalPrompt.trim()}
-      >
-        {isOptimizing ? '优化中...' : '优化提示词'}
-      </button>
-      {optimizedPrompt && (
-        <div>
-          <h3>优化结果：</h3>
-          <p>{optimizedPrompt}</p>
-        </div>
-      )}
-    </div>
-  );
-}
-```
+   ### `usePromptHistory`
 
-### 使用模型配置
+   Manages prompt history navigation:
 
-```typescript
-import { useModelStore } from '@prompt-booster/core';
+   ```typescript
+   const {
+     expandedGroupId,      // Currently expanded group
+     selectedVersions,     // Selected versions by group
+     toggleExpand,         // Toggle expansion of a group
+     loadGroup,            // Load a prompt group
+     loadVersion           // Load a specific version
+   } = usePromptHistory();
+   ```
 
-// 在React组件中使用
-function ModelSettings() {
-  const { 
-    activeModel, 
-    configs, 
-    setActiveModel, 
-    updateConfig 
-  } = useModelStore();
+   ### `useMemoryStore`
 
-  const handleApiKeyChange = (apiKey) => {
-    updateConfig(activeModel, {
-      ...configs[activeModel],
-      apiKey
-    });
-  };
+   Manages in-memory prompt data:
 
-  return (
-    <div>
-      <select 
-        value={activeModel}
-        onChange={(e) => setActiveModel(e.target.value)}
-      >
-        <option value="openai">OpenAI</option>
-        <option value="gemini">Google Gemini</option>
-        <option value="deepseek">DeepSeek</option>
-        <option value="hunyuan">腾讯混元</option>
-      </select>
-      
-      <input 
-        type="password"
-        value={configs[activeModel]?.apiKey || ''}
-        onChange={(e) => handleApiKeyChange(e.target.value)}
-        placeholder="输入API密钥"
-      />
-    </div>
-  );
-}
-```
+   ```typescript
+   const {
+     originalPrompt,       // Original prompt text
+     optimizedPrompt,      // Optimized prompt text
+     setOriginalPrompt,    // Set original prompt
+     setOptimizedPrompt,   // Set optimized prompt
+     clearAll              // Clear all stored data
+   } = useMemoryStore();
+   ```
 
-### 历史记录管理
+   ## Utilities
 
-```typescript
-import { usePromptStore, HistoryItem } from '@prompt-booster/core';
+   ### ID Generation
 
-// 在React组件中使用
-function PromptHistory() {
-  const { history, loadFromHistory, deleteHistoryItem } = usePromptStore();
+   Utilities for generating unique identifiers:
 
-  return (
-    <div>
-      <h2>历史记录</h2>
-      {history.length === 0 ? (
-        <p>暂无历史记录</p>
-      ) : (
-        <ul>
-          {history.map((item: HistoryItem) => (
-            <li key={item.id}>
-              <div>
-                <strong>原始提示词: </strong> 
-                {item.originalPrompt.substring(0, 50)}...
-              </div>
-              <div>
-                <button onClick={() => loadFromHistory(item)}>
-                  加载
-                </button>
-                <button onClick={() => deleteHistoryItem(item.id)}>
-                  删除
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
-}
-```
+   ```typescript
+   import { generateId, generatePrefixedId } from '@prompt-booster/core';
+   
+   const uniqueId = generateId();                  // e.g., "lq1aef3kj2"
+   const prefixedId = generatePrefixedId('user');  // e.g., "user-lq1aef3kj2"
+   ```
 
-### 使用工具函数
+   ### Prompt Utilities
 
-```typescript
-import { cleanOptimizedPrompt, generateId } from '@prompt-booster/core';
+   Helper functions for working with prompts:
 
-// 清理优化后提示词
-const cleanedPrompt = cleanOptimizedPrompt(optimizedPrompt);
+   ```typescript
+   import { removeThinkTags, analyzePromptQuality } from '@prompt-booster/core';
+   
+   // Remove <think> tags from a prompt
+   const cleanedPrompt = removeThinkTags(originalPrompt);
+   
+   // Analyze prompt quality
+   const analysis = analyzePromptQuality(myPrompt);
+   console.log(`Quality score: ${analysis.score}/10`);
+   ```
 
-// 生成唯一ID
-const uniqueId = generateId();
-```
+   ## Usage Examples
 
-## 注意事项
+   ### Basic Model Configuration
 
-1. Core包依赖于Zustand进行状态管理，确保安装了相关依赖。
-2. 使用usePromptStore和useModelStore时，应在React组件或自定义Hook中调用。
-3. Core包的状态默认会持久化到localStorage，可以通过配置选项修改持久化行为。
-4. 在实际项目中，API调用逻辑应该放在API包中，Core包只负责状态管理和数据模型。
+   ```typescript
+   import { useModelStore } from '@prompt-booster/core';
+   
+   function SetupModels() {
+     const { updateConfig, setActiveModel } = useModelStore();
+     
+     // Configure OpenAI
+     updateConfig('openai', {
+       apiKey: 'sk-your-openai-key',
+       model: 'gpt-4-turbo',
+       enabled: true
+     });
+     
+     // Set OpenAI as active model
+     setActiveModel('openai');
+   }
+   ```
+
+   ### Optimizing a Prompt
+
+   ```typescript
+   import { usePromptGroup, useMemoryStore } from '@prompt-booster/core';
+   
+   async function OptimizePrompt() {
+     const { enhancePrompt } = usePromptGroup();
+     const { setOriginalPrompt, setOptimizedPrompt } = useMemoryStore();
+     
+     const originalPrompt = "Write a story about a robot.";
+     setOriginalPrompt(originalPrompt);
+     
+     try {
+       const result = await enhancePrompt({
+         originalPrompt,
+         templateId: 'default-optimizer'
+       });
+       
+       setOptimizedPrompt(result.optimizedPrompt);
+       console.log("Optimization complete!");
+     } catch (error) {
+       console.error("Optimization failed:", error);
+     }
+   }
+   ```
+
+   ### Working with Prompt History
+
+   ```typescript
+   import { usePromptGroup, usePromptHistory } from '@prompt-booster/core';
+   
+   function PromptHistoryBrowser() {
+     const { getAllGroups, getGroupVersions } = usePromptGroup();
+     const { loadGroup, loadVersion } = usePromptHistory();
+     
+     // Get all prompt groups
+     const groups = getAllGroups();
+     
+     // Load the first group
+     if (groups.length > 0) {
+       // Get all versions for the first group
+       const versions = getGroupVersions(groups[0].id);
+       
+       // Load the latest version
+       loadGroup(groups[0], () => {
+         console.log("Group loaded successfully!");
+       });
+       
+       // Or load a specific version
+       if (versions.length > 1) {
+         loadVersion(groups[0].id, versions[1].number, () => {
+           console.log("Version loaded successfully!");
+         });
+       }
+     }
+   }
+   ```
+
+   ### Analyzing Prompt Quality
+
+   ```typescript
+   import { analyzePromptWithLLM } from '@prompt-booster/core';
+   
+   async function AnalyzePrompt() {
+     const myPrompt = "Write a story about a robot that feels emotions.";
+     
+     try {
+       const analysis = await analyzePromptWithLLM(myPrompt);
+       
+       console.log(`Quality score: ${analysis.score}/10`);
+       console.log("Areas for improvement:");
+       
+       analysis.criteria
+         .filter(c => !c.passed)
+         .forEach(criterion => {
+           console.log(`- ${criterion.label}: ${criterion.feedback}`);
+           if (criterion.suggestion) {
+             console.log(`  Suggestion: ${criterion.suggestion}`);
+           }
+         });
+     } catch (error) {
+       console.error("Analysis failed:", error);
+     }
+   }
+   ```
+
+   ### Custom API Integration
+
+   ```typescript
+   import { useModelStore } from '@prompt-booster/core';
+   
+   function AddCustomModel() {
+     const { addCustomInterface, setActiveModel } = useModelStore();
+     
+     // Add a custom model interface
+     const customId = addCustomInterface({
+       name: "My Custom AI",
+       providerName: "CustomProvider",
+       apiKey: "custom-api-key",
+       baseUrl: "https://api.custom-ai-provider.com",
+       model: "custom-model-v1",
+       timeout: 60000,
+       enabled: true
+     });
+     
+     // Set as active model
+     setActiveModel(customId);
+   }
+   ```

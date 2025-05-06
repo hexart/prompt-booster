@@ -1,333 +1,335 @@
-# Prompt Optimizer - Python Backend Architecture
+1. # Prompt Booster - Backend Architecture
 
-## 1. Overview
+   ## 1. Overview
 
-The backend system for Prompt Optimizer will be implemented in Python and will serve as a centralized data management and authentication system for all frontend platforms (web, mobile, WeChat mini-program, and desktop applications).
+   The Prompt Booster backend is a Python-based service that provides essential functionality to support the web and desktop applications. The backend will focus on four core features:
 
-## 2. Core Components
+   1. User authentication and registration
+   2. User settings management
+   3. Prompt enhancement templates storage
+   4. Prompt history storage and synchronization
 
-### 2.1 Authentication Service
+   ## 2. Technology Stack
 
-The authentication service will handle user identity management across all platforms:
+   ### 2.1 Core Technologies
 
-- **Social Authentication Integration**:
-  - WeChat authentication for Chinese users
-  - Google authentication for international users
-  - Optional: Email/password authentication as fallback
+   - **Python 3.10+**: Main programming language
+   - **FastAPI**: Web framework for building APIs
+   - **SQLAlchemy**: ORM for database interaction
+   - **PostgreSQL**: Primary database
+   - **JWT**: For authentication tokens
+   - **Pydantic**: For data validation
+   - **Alembic**: For database migrations
 
-- **Token Management**:
-  - JWT (JSON Web Token) issuance and validation
-  - Refresh token mechanism
-  - Session management
+   ### 2.2 Development Tools
 
-- **Authorization**:
-  - Role-based access control (if needed for future features)
-  - Resource access permissions
+   - **Docker**: For containerization
+   - **Poetry**: For dependency management
+   - **Black/isort**: For code formatting
+   - **Pytest**: For testing
 
-### 2.2 Data Storage Service
+   ## 3. System Architecture
 
-The data storage service will manage user data:
+   The backend uses a straightforward three-layer architecture:
 
-- **Prompt Data Management**:
-  - Storage of original and optimized prompts
-  - Versioning and history tracking
-  - Categories and tagging
+   ```
+   [Client Applications] <--> [REST API] <--> [Database]
+   ```
 
-- **User Preferences**:
-  - UI preferences
-  - Default model settings
-  - Language preferences
+   ### 3.1 API Layer
 
-- **AI Model Configurations**:
-  - Encrypted storage of API keys
-  - Model-specific settings
-  - Usage tracking (optional)
+   The API layer handles HTTP requests and provides endpoints for the client applications. It's responsible for request validation, authentication, and routing.
 
-### 2.3 Synchronization Service
+   ### 3.2 Service Layer
 
-The synchronization service will ensure data consistency across platforms:
+   The service layer contains the business logic for each feature. It's responsible for data processing, validation, and coordination between different components.
 
-- **Real-time Synchronization**:
-  - WebSocket-based real-time updates
-  - Client-side conflict resolution
-  - Offline operation support with synchronization on reconnect
+   ### 3.3 Data Layer
 
-- **Change Tracking**:
-  - Modification timestamps
-  - Optimistic updates with verification
-  - Conflict detection and resolution
+   The data layer handles database interactions. It's responsible for data persistence, retrieval, and migration.
 
-### 2.4 API Gateway
+   ## 4. Core Components
 
-The API gateway will provide a unified interface for all frontend platforms:
+   ### 4.1 Authentication Service
 
-- **RESTful API**:
-  - Standard CRUD operations
-  - Batch operations for efficiency
-  - Rate limiting and throttling
+   Handles user registration, login, and session management.
 
-- **GraphQL API** (optional):
-  - Flexible data querying
-  - Reduced network overhead
-  - Subscription support for real-time updates
+   - Basic email/password authentication
+   - JWT token issuance and validation
+   - Optional integration with OAuth providers (future)
 
-### 2.5 AI Model Proxy (Optional)
+   ### 4.2 User Settings Service
 
-Depending on requirements, an AI model proxy could be implemented:
+   Manages user-specific settings and preferences.
 
-- **API Key Management**:
-  - Secure handling of user API keys
-  - Key rotation and validation
+   - Storage of UI preferences
+   - Management of default model settings
+   - Language preferences
 
-- **Request Formatting**:
-  - Consistent interface for different AI models
-  - Model-specific request mapping
+   ### 4.3 Template Service
 
-- **Response Processing**:
-  - Standardized response format
-  - Error handling and retry logic
+   Manages prompt enhancement templates.
 
-## 3. Technology Stack
+   - CRUD operations for templates
+   - Categorization and tagging
+   - Public/private template management
 
-### 3.1 Framework
+   ### 4.4 Prompt History Service
 
-- **FastAPI**: Modern, high-performance Python framework
-  - Async support for efficient handling of concurrent requests
-  - Automatic API documentation with OpenAPI
-  - Type hints and validation with Pydantic
+   Manages the history of user prompts and their optimized versions.
 
-### 3.2 Database
+   - Storage of original and optimized prompts
+   - Version history tracking
+   - Synchronization across user devices
 
-- **PostgreSQL**: Robust relational database
-  - JSONB support for flexible schema
-  - Strong data integrity and transactions
-  - Excellent support for complex queries
-
-- **Redis**: In-memory data store
-  - Session management
-  - Caching for performance
-  - Pub/sub for real-time notifications
-
-### 3.3 Authentication
-
-- **OAuth2 / OpenID Connect**: For social authentication
-  - Integration with WeChat authentication
-  - Integration with Google authentication
-  - Standard compliant implementation
-
-- **Passlib / Argon2**: For password hashing (if needed)
-  - Modern, secure password hashing
-  - Salt management
-
-### 3.4 Deployment
-
-- **Docker**: Containerization for consistent deployment
-  - Microservices architecture
-  - Environment isolation
-
-- **Kubernetes** (optional): For orchestration
-  - Scaling and load balancing
-  - Service discovery and configuration
-
-### 3.5 Additional Tools
-
-- **Alembic**: Database migrations
-- **Celery**: Background task processing
-- **Pytest**: Testing framework
-- **Black/Flake8/isort**: Code formatting and linting
-- **Sentry**: Error tracking
-- **Prometheus/Grafana**: Monitoring
-
-## 4. API Structure
-
-The API will be structured around resources:
-
-### 4.1 Authentication Endpoints
-
-```
-POST   /api/auth/login              # Login with email/password
-POST   /api/auth/social/wechat      # WeChat authentication
-POST   /api/auth/social/google      # Google authentication
-POST   /api/auth/refresh            # Refresh access token
-POST   /api/auth/logout             # Logout (invalidate tokens)
-```
-
-### 4.2 User Endpoints
-
-```
-GET    /api/users/me                # Get current user profile
-PATCH  /api/users/me                # Update user profile
-GET    /api/users/me/preferences    # Get user preferences
-PATCH  /api/users/me/preferences    # Update user preferences
-```
-
-### 4.3 Prompt Endpoints
-
-```
-GET    /api/prompts                 # List prompts
-POST   /api/prompts                 # Create prompt
-GET    /api/prompts/{id}            # Get prompt
-PUT    /api/prompts/{id}            # Update prompt
-DELETE /api/prompts/{id}            # Delete prompt
-GET    /api/prompts/{id}/history    # Get prompt optimization history
-POST   /api/prompts/{id}/optimize   # Optimize prompt
-```
-
-### 4.4 AI Model Configuration Endpoints
-
-```
-GET    /api/models                  # List available models
-GET    /api/models/config           # Get user model configurations
-PUT    /api/models/config/{model}   # Update model configuration
-DELETE /api/models/config/{model}   # Delete model configuration
-```
-
-### 4.5 Synchronization Endpoints
-
-```
-GET    /api/sync/status             # Get sync status
-POST   /api/sync/force              # Force synchronization
-```
-
-## 5. Data Models
-
-### 5.1 User Model
-
-```python
-class User:
-    id: UUID
-    email: str
-    name: str
-    created_at: datetime
-    updated_at: datetime
-    last_login: datetime
-    social_accounts: List[SocialAccount]
-    preferences: UserPreferences
-```
-
-### 5.2 Prompt Model
-
-```python
-class Prompt:
-    id: UUID
-    user_id: UUID
-    title: str
-    original_text: str
-    optimized_text: str
-    created_at: datetime
-    updated_at: datetime
-    tags: List[str]
-    model_used: str
-    optimization_history: List[PromptVersion]
-```
-
-### 5.3 AI Model Configuration
-
-```python
-class ModelConfiguration:
-    id: UUID
-    user_id: UUID
-    model_type: str  # openai, gemini, deepseek, etc.
-    api_key: str  # encrypted
-    base_url: Optional[str]
-    parameters: Dict
-    created_at: datetime
-    updated_at: datetime
-```
-
-## 6. Security Considerations
-
-### 6.1 API Key Security
-
-- API keys will be encrypted at rest using strong encryption
-- API keys will never be returned in plaintext to clients
-- API keys will be decrypted only when needed to make requests
-
-### 6.2 Authentication Security
-
-- Short-lived JWT tokens with refresh capability
-- HTTPS for all communications
-- CSRF protection
-- Rate limiting to prevent brute force attacks
-
-### 6.3 Data Security
-
-- Data encrypted at rest
-- Regular security audits
-- Clear data retention policies
-- User data export/deletion capability for compliance
-
-## 7. Deployment Architecture
-
-### 7.1 Production Environment
-
-```
-[Client Applications] <--> [CDN/Load Balancer] <--> [API Gateway]
-                                                     |
-                           [Redis Cluster] <-----> [API Services] <---> [PostgreSQL]
-                                                     |
-                                                  [Workers]
-```
-
-### 7.2 Development Environment
-
-- Docker Compose setup for local development
-- Simplified infrastructure with single instances
-- Development/staging/production environment separation
-
-## 8. Implementation Phases
-
-### Phase 1: Core API Infrastructure
-- Set up FastAPI project structure
-- Implement basic authentication
-- Create database models and migrations
-- Establish CI/CD pipeline
-
-### Phase 2: Data Synchronization
-- Implement sync mechanisms
-- Create WebSocket connections for real-time updates
-- Develop conflict resolution strategies
-
-### Phase 3: AI Integration
-- Create model configuration management
-- Implement secure API key handling
-- Develop standardized model interfaces
-
-### Phase 4: Performance Optimization
-- Implement caching strategies
-- Optimize database queries
-- Refine real-time update mechanisms
-
-### Phase 5: Scaling and Monitoring
-- Set up monitoring and alerting
-- Implement advanced scaling strategies
-- Perform security audits
-
-## 9. Monitoring and Maintenance
-
-### 9.1 Logging
-
-- Structured logging with contextual information
-- Log aggregation and analysis
-- Audit logging for security-sensitive operations
-
-### 9.2 Monitoring
-
-- API endpoint performance metrics
-- Error rate tracking
-- Resource utilization monitoring
-- User activity patterns
-
-### 9.3 Backup Strategy
-
-- Regular database backups
-- Point-in-time recovery capability
-- Backup verification procedures
-
-## 10. Next Steps
-
-1. Create detailed database schema design
-2. Set up development environment with Docker
-3. Implement authentication service with social login support
-4. Develop basic CRUD operations for prompt management
-5. Implement secure API key storage and handling
+   ## 5. Data Models
+
+   ### 5.1 User
+
+   ```python
+   class User(Base):
+       id = Column(UUID, primary_key=True, default=uuid.uuid4)
+       email = Column(String, unique=True, index=True)
+       username = Column(String, unique=True, index=True)
+       hashed_password = Column(String)
+       is_active = Column(Boolean, default=True)
+       created_at = Column(DateTime, default=datetime.utcnow)
+       updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+   ```
+
+   ### 5.2 UserSettings
+
+   ```python
+   class UserSettings(Base):
+       id = Column(UUID, primary_key=True, default=uuid.uuid4)
+       user_id = Column(UUID, ForeignKey("users.id"))
+       theme = Column(String, default="light")
+       language = Column(String, default="en")
+       default_model = Column(String)
+       settings_data = Column(JSONB)  # Flexible storage for additional settings
+       created_at = Column(DateTime, default=datetime.utcnow)
+       updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+   ```
+
+   ### 5.3 Template
+
+   ```python
+   class Template(Base):
+       id = Column(UUID, primary_key=True, default=uuid.uuid4)
+       user_id = Column(UUID, ForeignKey("users.id"))
+       name = Column(String)
+       content = Column(Text)
+       description = Column(Text, nullable=True)
+       is_public = Column(Boolean, default=False)
+       tags = Column(ARRAY(String), default=[])
+       created_at = Column(DateTime, default=datetime.utcnow)
+       updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+   ```
+
+   ### 5.4 PromptGroup and PromptVersion
+
+   ```python
+   class PromptGroup(Base):
+       id = Column(UUID, primary_key=True, default=uuid.uuid4)
+       user_id = Column(UUID, ForeignKey("users.id"))
+       original_prompt = Column(Text)
+       current_version_number = Column(Integer, default=1)
+       status = Column(String)
+       created_at = Column(DateTime, default=datetime.utcnow)
+       updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+       versions = relationship("PromptVersion", back_populates="group")
+   
+   class PromptVersion(Base):
+       id = Column(UUID, primary_key=True, default=uuid.uuid4)
+       group_id = Column(UUID, ForeignKey("prompt_groups.id"))
+       number = Column(Integer)
+       original_prompt = Column(Text)
+       optimized_prompt = Column(Text)
+       reasoning = Column(Text, nullable=True)
+       iteration_direction = Column(Text, nullable=True)
+       model_id = Column(String)
+       provider = Column(String)
+       model_name = Column(String)
+       status = Column(String)
+       timestamp = Column(DateTime, default=datetime.utcnow)
+       group = relationship("PromptGroup", back_populates="versions")
+   ```
+
+   ## 6. API Endpoints
+
+   ### 6.1 Authentication
+
+   ```
+   POST   /api/auth/register         # Register new user
+   POST   /api/auth/login            # Login
+   POST   /api/auth/refresh-token    # Refresh JWT token
+   ```
+
+   ### 6.2 User Settings
+
+   ```
+   GET    /api/settings              # Get user settings
+   PUT    /api/settings              # Update user settings
+   ```
+
+   ### 6.3 Templates
+
+   ```
+   GET    /api/templates             # List templates
+   POST   /api/templates             # Create template
+   GET    /api/templates/{id}        # Get template
+   PUT    /api/templates/{id}        # Update template
+   DELETE /api/templates/{id}        # Delete template
+   ```
+
+   ### 6.4 Prompt History
+
+   ```
+   GET    /api/prompts               # List prompt groups
+   POST   /api/prompts               # Create prompt group
+   GET    /api/prompts/{id}          # Get prompt group
+   DELETE /api/prompts/{id}          # Delete prompt group
+   GET    /api/prompts/{id}/versions # Get versions for a prompt group
+   GET    /api/versions/{id}         # Get specific version
+   ```
+
+   ## 7. Security Considerations
+
+   ### 7.1 Authentication
+
+   - Passwords hashed using bcrypt
+   - JWT tokens with short expiration time
+   - HTTPS for all communications
+   - Session invalidation on logout
+
+   ### 7.2 Data Security
+
+   - Input validation using Pydantic models
+   - SQL injection protection via SQLAlchemy
+   - Rate limiting on authentication endpoints
+   - Proper error handling to avoid leaking sensitive information
+
+   ## 8. Deployment
+
+   ### 8.1 Docker Setup
+
+   ```yaml
+   # docker-compose.yml
+   version: '3.8'
+   
+   services:
+     api:
+       build: .
+       ports:
+         - "8000:8000"
+       depends_on:
+         - db
+       environment:
+         - DATABASE_URL=postgresql://postgres:postgres@db:5432/promptbooster
+         - SECRET_KEY=${SECRET_KEY}
+         - ALGORITHM=HS256
+         - ACCESS_TOKEN_EXPIRE_MINUTES=30
+   
+     db:
+       image: postgres:14
+       volumes:
+         - postgres_data:/var/lib/postgresql/data
+       environment:
+         - POSTGRES_PASSWORD=postgres
+         - POSTGRES_USER=postgres
+         - POSTGRES_DB=promptbooster
+   
+   volumes:
+     postgres_data:
+   ```
+
+   ### 8.2 Application Structure
+
+   ```
+   prompt-booster-backend/
+   ├── app/
+   │   ├── api/
+   │   │   ├── endpoints/
+   │   │   │   ├── auth.py
+   │   │   │   ├── settings.py
+   │   │   │   ├── templates.py
+   │   │   │   └── prompts.py
+   │   │   ├── dependencies.py
+   │   │   └── router.py
+   │   ├── core/
+   │   │   ├── config.py
+   │   │   ├── security.py
+   │   │   └── exceptions.py
+   │   ├── db/
+   │   │   ├── base.py
+   │   │   ├── session.py
+   │   │   └── init_db.py
+   │   ├── models/
+   │   │   ├── user.py
+   │   │   ├── settings.py
+   │   │   ├── template.py
+   │   │   └── prompt.py
+   │   ├── schemas/
+   │   │   ├── user.py
+   │   │   ├── settings.py
+   │   │   ├── template.py
+   │   │   └── prompt.py
+   │   ├── services/
+   │   │   ├── auth.py
+   │   │   ├── settings.py
+   │   │   ├── template.py
+   │   │   └── prompt.py
+   │   └── main.py
+   ├── migrations/
+   │   ├── versions/
+   │   ├── env.py
+   │   └── script.py.mako
+   ├── tests/
+   │   ├── api/
+   │   ├── services/
+   │   └── conftest.py
+   ├── alembic.ini
+   ├── Dockerfile
+   ├── docker-compose.yml
+   ├── pyproject.toml
+   └── README.md
+   ```
+
+   ## 9. Implementation Plan
+
+   ### Phase 1: Foundation (2 weeks)
+
+   - Set up project structure
+   - Implement database models and migrations
+   - Create basic FastAPI application
+   - Set up Docker configuration
+
+   ### Phase 2: Authentication (1 week)
+
+   - Implement user registration and login
+   - Set up JWT authentication
+   - Create password hashing and verification
+
+   ### Phase 3: Core Features (3 weeks)
+
+   - Implement user settings management
+   - Create template storage and retrieval
+   - Develop prompt history functionality
+   - Build synchronization mechanism
+
+   ### Phase 4: Testing and Deployment (1 week)
+
+   - Write comprehensive tests
+   - Set up deployment pipeline
+   - Document API endpoints
+   - Perform security review
+
+   ## 10. Next Steps
+
+   1. Set up development environment with Python 3.10+, FastAPI, and PostgreSQL
+   2. Implement database models and run initial migrations
+   3. Create authentication endpoints with JWT token generation
+   4. Implement CRUD operations for user settings
+   5. Develop template storage and management
+   6. Build prompt history storage and synchronization
+   7. Test all functionality and deploy the application

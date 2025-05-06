@@ -44,7 +44,7 @@ export interface ModelConfig {
     /**
      * 超时设置（单位：毫秒）
      */
-    timeout: number;
+    timeout?: number;
     
     /**
      * API端点路径（可选）
