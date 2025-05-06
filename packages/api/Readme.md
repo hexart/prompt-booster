@@ -39,7 +39,7 @@
 
   The package follows a modular architecture based on the strategy pattern:
 
-  ```
+  ```markdown
   api/
   ├── client/        # Core LLM client implementation
   ├── config/        # Configuration constants and models

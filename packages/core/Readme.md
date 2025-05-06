@@ -34,7 +34,7 @@
 
    The package is organized into several key modules:
 
-   ```
+   ```markdown
    core/
    ├── config/        # Constants and default configurations
    ├── model/         # Model configuration and services
