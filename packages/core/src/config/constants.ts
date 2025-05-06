@@ -38,8 +38,8 @@ export const MODEL_NAMES = {
         CHAT: 'Qwen/QwQ-32B'
     },
     OLLAMA: {
-        CHAT1: 'qwen2.5:14b',
-        CHAT2: 'deepseek-r1:14b'
+        CHAT1: 'qwen3:32b',
+        CHAT2: 'qwq:latest'
     }
 };
 

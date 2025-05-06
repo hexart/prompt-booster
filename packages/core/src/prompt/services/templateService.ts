@@ -55,9 +55,3 @@ export const reloadTemplates = async (): Promise<void> => {
     }
     await templateProvider.getAllTemplates();
 };
-
-// 为了向后兼容保留的函数
-export const initializeTemplates = async (): Promise<void> => {
-    console.warn('initializeTemplates() is deprecated and no longer needed');
-    await reloadTemplates();
-};

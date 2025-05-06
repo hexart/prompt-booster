@@ -23,14 +23,13 @@ export const MODEL_MAX_TOKENS: Record<string, number> = {
     'deepseek-coder': 16384,
 
     // Ollama 模型 
-    'llama2': 4096,
-    'llama2:13b': 4096,
-    'llama2:70b': 4096,
-    'mistral': 8192,
-    'mixtral': 16384,
+    'qwq': 32768,
+    'qwen3': 32768,
+    'qwen3:32b': 32768,
+    'qwq:latest': 32768,
 
     // 默认值
-    'default': 8192
+    'default': 16384
 };
 
 /**

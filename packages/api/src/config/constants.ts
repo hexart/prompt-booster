@@ -59,6 +59,7 @@ export const PROVIDER_CONFIG: Record<string, any> = {
             models: '/v1/models'
         },
         defaultModel: 'gpt-3.5-turbo',
+        timeout: 60000,
         auth: {
             type: AuthType.BEARER
         },
@@ -77,6 +78,7 @@ export const PROVIDER_CONFIG: Record<string, any> = {
             models: '/v1beta/models'
         },
         defaultModel: 'gemini-pro',
+        timeout: 60000,
         auth: {
             type: AuthType.QUERY_PARAM,
             paramName: 'key'
@@ -95,6 +97,7 @@ export const PROVIDER_CONFIG: Record<string, any> = {
             models: '/v1/models'
         },
         defaultModel: 'deepseek-chat',
+        timeout: 60000,
         auth: {
             type: AuthType.BEARER
         },
@@ -112,6 +115,7 @@ export const PROVIDER_CONFIG: Record<string, any> = {
             models: '/models'
         },
         defaultModel: 'hunyuan-turbos-latest',
+        timeout: 60000,
         auth: {
             type: AuthType.BEARER
         },
@@ -132,6 +136,7 @@ export const PROVIDER_CONFIG: Record<string, any> = {
             models: '/models'
         },
         defaultModel: 'Qwen/QwQ-32B',
+        timeout: 60000,
         auth: {
             type: AuthType.BEARER
         },
@@ -151,7 +156,8 @@ export const PROVIDER_CONFIG: Record<string, any> = {
             chat: '/api/chat',
             models: '/api/tags'
         },
-        defaultModel: 'qwen2.5:14b',
+        defaultModel: 'qwen3:32b',
+        timeout: 180000,
         auth: {
             type: AuthType.CUSTOM
         },
@@ -167,7 +173,7 @@ export const PROVIDER_CONFIG: Record<string, any> = {
 /**
  * 默认超时设置(毫秒)
  */
-export const DEFAULT_TIMEOUT = 60000;
+export const DEFAULT_TIMEOUT = 120000;
 
 /**
  * 默认温度参数

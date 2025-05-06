@@ -49,6 +49,8 @@ export class LLMClientImpl implements LLMClient {
     private apiKey: string;
     /** 模型名称 */
     private model: string;
+    /** 超时设置(毫秒) */
+    private timeout: number;
     /** 端点配置 */
     private endpoints: {
         chat: string;
@@ -63,6 +65,7 @@ export class LLMClientImpl implements LLMClient {
         this.baseUrl = config.baseUrl || '';
         this.apiKey = config.apiKey;
         this.model = config.model || '';
+        this.timeout = config.timeout || DEFAULT_TIMEOUT;
         this.endpoints = {
             chat: config.endpoints?.chat || '/v1/chat/completions',
             models: config.endpoints?.models || '/v1/models'
@@ -277,7 +280,7 @@ export class LLMClientImpl implements LLMClient {
     private createAxiosInstance(): AxiosInstance {
         return axios.create({
             baseURL: this.baseUrl,
-            timeout: DEFAULT_TIMEOUT,
+            timeout: this.timeout || DEFAULT_TIMEOUT,
             headers: {
                 'Content-Type': CONTENT_TYPES.JSON
             }

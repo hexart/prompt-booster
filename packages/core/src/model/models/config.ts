@@ -40,6 +40,11 @@ export interface ModelConfig {
      * 模型名称
      */
     model: string;
+
+    /**
+     * 超时设置（单位：毫秒）
+     */
+    timeout: number;
     
     /**
      * API端点路径（可选）
@@ -85,6 +90,8 @@ export interface CustomInterface {
      * 模型名称
      */
     model: string;
+
+    timeout: number;
     
     /**
      * API端点路径（可选）

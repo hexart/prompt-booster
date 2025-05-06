@@ -77,7 +77,7 @@ export function analyzePromptQuality(prompt: string): {
     }
 
     // 维度 2：是否指定角色
-    const hasRole = /作为|以.+身份|as (an?|a)/i.test(prompt);
+    const hasRole = /作为|以.+身份|as (an?|a)|[Rr]ole|扮演|担任|角色/i.test(prompt);
     if (hasRole) {
         criteria.push({
             label: '指定 AI 角色',
@@ -179,6 +179,7 @@ export interface PromptAnalysisResult {
 }
 
 export async function analyzePromptWithLLM(prompt: string): Promise<PromptAnalysisResult> {
+    const cleanedPrompt = removeThinkTags(prompt);
     const systemPrompt = `
 你是一个专业的提示词（Prompt）质量评估助手。你的任务是：
 1. 从以下提示词中，基于多维度对其质量进行打分（0–10 整数）。
@@ -207,7 +208,7 @@ export async function analyzePromptWithLLM(prompt: string): Promise<PromptAnalys
 \`\`\`
 `;
 
-    const userMessage = `请对以下提示词进行质量分析：\n\n${prompt}`;
+    const userMessage = `请对以下提示词进行质量分析：\n\n${cleanedPrompt}`;
 
     const result = await callLLMWithCurrentModel({
         userMessage,

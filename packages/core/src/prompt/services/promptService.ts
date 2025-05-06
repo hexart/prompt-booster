@@ -13,19 +13,21 @@ import { useModelStore } from '../../model/store';
 import { getTemplateContent } from './templateService';
 import { createClient, StreamHandler } from '@prompt-booster/api';
 import { ERROR_MESSAGES } from '../../config/constants';
+import { DEFAULT_TIMEOUT } from '@prompt-booster/api';
 import { generateId } from '../../utils';
 import { createStorage, StorageType } from '../../storage';
 import { useMemoryStore } from '../../storage/memoryStorage';
+import { removeThinkTags } from '../utils/promptUtils';
 
 // 导出调用大模型的通用方法，同时给其他对话场景用
 export async function callLLMWithCurrentModel(params: LLMCallParams): Promise<string> {
-    const { userMessage, systemMessage, modelId, onData, stream = true } = params;
+    const { userMessage, systemMessage, modelId, onData, stream = true, timeout } = params;
     const modelStore = useModelStore.getState();
 
     const { activeModel, configs, isCustomInterface, getCustomInterface } = modelStore;
     const modelKey = modelId || activeModel;
 
-    let provider, apiKey, baseUrl, model, endpoint;
+    let provider, apiKey, baseUrl, model, endpoint, modelTimeout;
 
     if (isCustomInterface(modelKey)) {
         const customInterface = getCustomInterface(modelKey);
@@ -36,6 +38,7 @@ export async function callLLMWithCurrentModel(params: LLMCallParams): Promise<st
         baseUrl = customInterface.baseUrl;
         model = customInterface.model;
         endpoint = customInterface.endpoint;
+        modelTimeout = customInterface.timeout; // 从模型配置获取超时
     } else {
         const modelConfig = configs[modelKey as keyof typeof configs];
         if (!modelConfig) throw new Error(ERROR_MESSAGES.INVALID_MODEL);
@@ -45,15 +48,19 @@ export async function callLLMWithCurrentModel(params: LLMCallParams): Promise<st
         baseUrl = modelConfig.baseUrl;
         model = modelConfig.model;
         endpoint = modelConfig.endpoint;
+        modelTimeout = modelConfig.timeout; // 从模型配置获取超时
     }
 
     if (!apiKey) throw new Error(ERROR_MESSAGES.NO_API_KEY);
 
-    console.log('[LLM🔄Request]', {
+    console.log('[LLM🔄详细请求]', {
         provider,
         model,
+        baseUrl,
+        endpoint,
         stream,
-        requestLength: userMessage.length + (systemMessage?.length || 0)
+        requestLength: userMessage.length + (systemMessage?.length || 0),
+        systemMessageLength: systemMessage?.length || 0
     });
 
     const client = createClient({
@@ -61,6 +68,7 @@ export async function callLLMWithCurrentModel(params: LLMCallParams): Promise<st
         apiKey,
         baseUrl,
         model,
+        timeout: timeout || modelTimeout || (provider === 'ollama' ? 180000 : DEFAULT_TIMEOUT),
         endpoints: {
             chat: endpoint,
             models: '/v1/models'
@@ -72,16 +80,49 @@ export async function callLLMWithCurrentModel(params: LLMCallParams): Promise<st
     if (!stream) {
         try {
             const res = await client.chat(request);
-            // Debug logging
-            console.log('[LLM📥Response]', {
+            // 更详细的调试日志
+            console.log('[LLM📥详细响应]', {
                 status: 'success',
                 responseStructure: Object.keys(res || {}),
-                dataKeys: Object.keys(res?.data || {}),
-                contentLength: res?.data?.content?.length || 0
+                dataKeys: res?.data ? Object.keys(res.data) : [],
+                contentLength: res?.data?.content?.length || 0,
+                rawData: JSON.stringify(res?.data).substring(0, 200) + '...' // 记录原始数据
             });
 
             // Check if response exists and has expected structure
             if (!res || !res.data || !res.data.content) {
+                // 增加详细日志，记录实际收到的完整响应
+                console.error('[LLM❌详细响应数据]', {
+                    fullResponse: JSON.stringify(res),
+                    dataObject: res?.data ? JSON.stringify(res.data) : 'null',
+                    hasContent: res?.data?.content !== undefined,
+                    contentType: res?.data?.content !== undefined ? typeof res.data.content : 'undefined'
+                });
+
+                // 尝试从不同路径获取内容
+                if (res?.data) {
+                    // 对于 Ollama，检查可能的不同响应格式
+                    if (provider === 'ollama') {
+                        // 使用类型断言处理可能的替代路径
+                        const resData = res.data as any;
+
+                        const possibleContent =
+                            resData.message?.content ||
+                            resData.response ||
+                            resData.choices?.[0]?.message?.content ||
+                            resData.choices?.[0]?.text ||
+                            '';
+
+                        if (possibleContent) {
+                            console.log('[LLM🔍] 从替代路径找到内容:', {
+                                contentLength: possibleContent.length,
+                                preview: possibleContent.substring(0, 50) + '...'
+                            });
+                            return possibleContent;
+                        }
+                    }
+                }
+
                 console.error('[LLM❌EmptyResponse]', 'Response does not contain expected data');
                 return ''; // Return empty string when response is invalid
             }
@@ -702,8 +743,11 @@ export class PromptGroupService {
             // 创建新的空白版本，标记迭代方向
             const newVersion = this._createEmptyVersion(groupId, modelId, direction);
 
+            // 清理当前版本的优化提示词，移除<think>标签
+            const cleanedOptimizedPrompt = removeThinkTags(currentVersion.optimizedPrompt);
+
             // 构建迭代提示词
-            const iterationPrompt = `当前优化后的提示词:\n\n${currentVersion.optimizedPrompt}\n\n迭代方向:\n${direction}`;
+            const iterationPrompt = `当前优化后的提示词:\n\n${cleanedOptimizedPrompt}\n\n迭代方向:\n${direction}`;
 
             // 存储优化后的内容
             let optimizedPrompt = '';

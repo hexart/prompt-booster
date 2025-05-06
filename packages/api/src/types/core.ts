@@ -101,6 +101,8 @@ export interface ClientConfig {
     baseUrl?: string;
     /** 模型名称 */
     model?: string;
+    /** 超时设置(毫秒) */
+    timeout?: number;
     /** 端点配置 */
     endpoints?: {
         chat?: string;

@@ -82,10 +82,11 @@ export const PromptBooster: React.FC = () => {
         setOriginalPrompt(e.target.value);
     };
 
-    // 1. 在组件顶部添加状态和refs
+    // 定义编辑状态和refs
     const [editablePrompt, setEditablePrompt] = useState('');
     const [isEditMode, setIsEditMode] = useState(false);
 
+    // 多版本自动滚动到最新版本位置
     const versionsContainerRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
         // 只在activeGroup存在时执行
@@ -152,20 +153,7 @@ export const PromptBooster: React.FC = () => {
             toast.success('增强提示词成功');
         } catch (error) {
             console.error('增强过程中出错:', error);
-            let errorMessage = '增强提示词时出错';
-
-            if (error instanceof Error) {
-                if (error.message.includes('Load failed') || error.message.includes('network')) {
-                    errorMessage = `无法连接到${activeModel}模型服务，请检查：
-                    1. 模型服务是否已启动
-                    2. API地址与端点是否正确
-                    3. 网络连接是否正常`;
-                } else {
-                    errorMessage = `错误: ${error.message}`;
-                }
-            }
-
-            toast.error(errorMessage);
+            toast.error('增强提示词时出错');
         }
     };
 
@@ -193,6 +181,7 @@ export const PromptBooster: React.FC = () => {
         }
     };
 
+    // 分析提示词状态
     const [loading, setLoading] = useState(false);
     // 跟踪是否已使用LLM分析
     const [hasUsedLLMAnalysis, setHasUsedLLMAnalysis] = useState(false);
