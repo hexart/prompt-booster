@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useMemoryStore } from '@prompt-booster/core/storage/memoryStorage';
 import { promptGroupService } from '@prompt-booster/core/prompt/services/promptService';
 import templates from '@prompt-booster/core/prompt/templates/default-templates.json';
+import medalImage from '../assets/medal.png';
 import { Template } from '@prompt-booster/core/prompt/models/template';
 import { analyzePromptQuality, analyzePromptWithLLM } from '@prompt-booster/core/prompt/utils/promptUtils';
 import { toast, EnhancedTextarea, AutoScrollTextarea, EnhancedDropdown, Dialog } from '@prompt-booster/ui';
@@ -562,7 +563,7 @@ export const PromptBooster: React.FC = () => {
                                                         </Drawer.Title>
                                                         {analysisResult?.score === 10 && (
                                                             <motion.img
-                                                                src="/medal.png"
+                                                                src={medalImage}
                                                                 alt="满分徽章"
                                                                 initial={{ scale: 5.8, opacity: 0, rotate: 15 }}
                                                                 animate={{ scale: 1.5, opacity: 1, rotate: 0 }}
