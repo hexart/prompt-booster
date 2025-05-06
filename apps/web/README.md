@@ -1,54 +1,306 @@
-# React + TypeScript + Vite
+# 提示词增强器 - Web客户端说明文档
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 1. 项目概述
 
-Currently, two official plugins are available:
+提示词增强器是一个基于React的Web应用，专门设计用于优化和改进AI提示词。该工具允许用户输入原始提示词，使用AI模型进行增强处理，并支持对处理后的提示词进行迭代改进、质量评估和比较测试。
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 1.1 核心功能
 
-## Expanding the ESLint configuration
+- 提示词增强：利用AI模型优化原始提示词
+- 提示词评估：对提示词质量进行分析和评分
+- 迭代优化：基于具体方向进一步优化提示词
+- 对比测试：比较原始提示词和增强提示词的效果
+- 版本历史：记录和管理提示词的多个优化版本
+- 多模型支持：集成多种AI模型和自定义API接口
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 2. 技术架构
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+### 2.1 技术栈
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- **前端框架**：React 19.1 + TypeScript
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- **构建工具**：Vite 6.2
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+- **CSS框架**：Tailwind CSS 4.1
+
+- **状态管理**：Zustand 4.4
+
+- UI组件
+
+  ：
+
+  - 自定义UI组件库 (@prompt-booster/ui)
+  - Framer Motion (动画)
+  - Vaul (抽屉组件)
+  - Lucide React (图标)
+
+- **代码质量**：ESLint + TypeScript ESLint
+
+### 2.2 项目结构
+
+项目采用Monorepo架构，主要包含以下几个模块：
+
+- **apps/web**：Web客户端应用
+- **packages/core**：核心业务逻辑
+- **packages/api**：API客户端和连接逻辑
+- **packages/ui**：可复用UI组件库
+
+## 3. 应用功能详解
+
+### 3.1 提示词增强器 (PromptBooster)
+
+提示词增强器是应用的主要功能，位于`PromptBooster.tsx`中：
+
+#### 主要功能
+
+- 输入原始提示词
+- 选择系统提示词模板
+- 选择AI模型
+- 执行提示词增强处理
+- 对增强后的提示词进行编辑
+- 保存编辑内容为新版本
+- 分析提示词质量
+- 继续迭代优化
+
+#### 关键特性
+
+- **流式响应**：支持AI模型的流式输出，实时展示增强结果
+- **版本管理**：支持多版本记录，可以在不同版本间切换
+- **质量分析**：提供本地分析和AI驱动的深度分析两种方式
+- **用户编辑**：允许用户手动编辑增强后的提示词并保存为新版本
+
+### 3.2 对比测试 (TestResult)
+
+对比测试功能允许用户比较原始提示词和增强提示词的表现，位于`TestResult.tsx`中：
+
+#### 主要功能
+
+- 输入测试内容（用户提示词）
+- 选择测试用的AI模型
+- 并行运行原始提示词和增强提示词测试
+- 对比两者的输出结果
+- 支持Markdown渲染切换
+- 结果区域最大化/最小化控制
+
+#### 关键特性
+
+- **并行测试**：同时发送原始提示词和增强提示词到模型
+- **流式响应**：实时展示模型响应
+- **响应优化**：使用RequestAnimationFrame优化UI更新
+- **灵活布局**：支持不同视图模式，方便对比分析
+
+### 3.3 历史记录 (PromptHistory)
+
+历史记录功能提供对过往提示词优化记录的管理，位于`PromptHistory.tsx`中：
+
+#### 主要功能
+
+- 显示所有提示词优化组
+- 按更新时间排序
+- 展开/收起详细信息
+- 查看不同版本的优化内容
+- 加载历史记录到编辑器
+- 删除单个记录或清空所有历史
+
+#### 关键特性
+
+- **版本对比**：在同一组内比较不同版本的优化效果
+- **模型信息**：显示每个版本使用的AI模型
+- **快速加载**：一键将历史版本加载到编辑器中继续优化
+
+### 3.4 模型设置 (ModelSettings)
+
+模型设置功能允许用户配置和管理AI模型连接，位于`ModelSettings.tsx`中：
+
+#### 主要功能
+
+- 管理内置模型配置
+- 添加和编辑自定义API接口
+- 测试模型连接
+- 启用/禁用模型
+- 删除自定义接口
+
+#### 关键特性
+
+- **API密钥管理**：安全存储和显示API密钥
+- **模型列表获取**：从API自动获取可用模型
+- **连接测试**：验证API配置的有效性
+- **自定义接口**：支持添加非标准AI提供商的接口
+
+## 4. 核心组件
+
+### 4.1 布局相关
+
+#### Header 组件
+
+- 提供顶部导航栏和标题显示
+- 支持主题切换功能
+- 集成移动端菜单控制
+- 提供键盘快捷键控制
+
+#### MobileMenu 组件
+
+- 提供移动设备上的导航菜单
+- 优化的点击外部关闭逻辑
+- 动画过渡效果
+
+### 4.2 功能组件
+
+#### IterationDialog 组件
+
+- 用于设置提示词迭代方向
+- 选择迭代提示词模板
+- 输入优化方向描述
+
+#### ModelModal 组件
+
+- 用于编辑模型配置信息
+- 支持API密钥显示/隐藏控制
+- 自动获取模型列表功能
+- 内置验证逻辑
+
+#### RefreshDetector 组件
+
+- 检测页面刷新事件
+- 在刷新时重置应用状态
+- 使用sessionStorage做可靠检测
+
+## 5. 自定义钩子
+
+### 5.1 模型相关钩子
+
+#### useModelConnection
+
+- 管理模型连接测试状态
+- 提供测试连接方法
+- 处理测试反馈和错误报告
+
+#### useModelEdit
+
+- 处理模型配置的保存操作
+- 支持标准模型和自定义接口的更新
+- 提供保存成功/失败的反馈
+
+#### useModelData
+
+- 获取和处理所有模型数据
+- 提供模型启用/禁用功能
+- 管理模型删除操作
+
+#### useModelForm
+
+- 管理模型编辑表单状态
+- 处理API密钥的安全显示
+- 自动生成接口名称
+
+### 5.2 其他业务钩子
+
+#### usePromptGroup
+
+- 管理提示词组的操作
+- 处理版本切换
+- 执行提示词增强和迭代
+
+#### usePromptHistory
+
+- 管理历史记录的交互
+- 控制组展开/收起状态
+- 处理版本选择和加载
+
+## 6. 配置文件
+
+### 6.1 构建配置
+
+#### Vite 配置 (vite.config.ts)
+
+- 配置别名解析
+- 优化构建过程
+- 处理依赖打包
+- 配置开发服务器
+
+#### ESLint 配置 (eslint.config.js)
+
+- TypeScript支持
+- React Hooks规则
+- React Refresh规则
+
+#### Tailwind 配置 (tailwind.config.js)
+
+- 自定义动画
+- 主题扩展
+- 暗色模式支持
+
+### 6.2 TypeScript 配置
+
+- tsx/ts文件支持
+- 严格类型检查
+- 模块解析优化
+
+## 7. 使用指南
+
+### 7.1 提示词增强流程
+
+1. 在"提示词增强"标签页中输入原始提示词
+2. 选择系统提示词模板和AI模型
+3. 点击"开始增强"按钮
+4. 等待增强结果生成
+5. 可选：手动编辑增强结果并保存为新版本
+6. 可选：分析提示词质量得分
+7. 可选：点击"继续迭代"进行进一步优化
+
+### 7.2 对比测试流程
+
+1. 切换到"对比测试"标签页
+2. 输入测试内容（用户提示词）
+3. 选择测试用的模型
+4. 点击"运行测试"按钮
+5. 查看和比较两侧的响应结果
+6. 可选：打开/关闭Markdown渲染
+7. 可选：最大化某一侧的响应查看
+
+### 7.3 历史记录使用
+
+1. 切换到"历史记录"标签页
+2. 浏览历史提示词组
+3. 点击"展开"查看详细信息
+4. 切换版本查看不同的优化结果
+5. 点击"加载此版本"将其加载到编辑器中
+6. 可选：删除不需要的记录
+
+### 7.4 模型配置
+
+1. 切换到"模型设置"标签页
+2. 编辑现有模型的API配置
+3. 点击"添加"创建自定义API接口
+4. 填写API密钥、基础URL和模型信息
+5. 测试连接确认配置正确
+6. 启用/禁用所需的模型
+
+## 8. 最佳实践
+
+### 8.1 提示词优化建议
+
+- 先用本地分析评估提示词质量，再决定是否需要迭代
+- 每次迭代都提供明确的优化方向
+- 定期比较测试验证优化效果
+- 保持版本记录以便回退到之前的版本
+
+### 8.2 性能优化
+
+- 使用自动滚动和节流技术处理流式响应
+- 优先使用本地分析，仅在需要深入分析时使用AI分析
+- 合理使用最大化/最小化控制视图布局
+- 减少不必要的模型API调用
+
+## 9. 未来规划
+
+- 批量测试功能
+- 提示词模板库扩展
+- 更多AI模型集成
+- 团队协作功能
+- 导出/导入提示词功能
+- 移动端应用开发
+
+------
+
+© Hexart Studio 2025 - 版权所有
