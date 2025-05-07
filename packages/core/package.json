@@ -35,14 +35,14 @@
   "dependencies": {
     "@prompt-booster/api": "workspace:*",
     "uuid": "^11.1.0",
-    "zustand": "^4.5.1"
+    "zustand": "^4.5.6"
   },
   "peerDependencies": {
     "react": "^19.1.0"
   },
   "devDependencies": {
     "@types/uuid": "^10.0.0",
-    "typescript": "^5.8.2",
+    "typescript": "^5.8.3",
     "vite": "^6.3.5",
     "vite-plugin-dts": "^4.5.3",
     "vitest": "^3.1.3"

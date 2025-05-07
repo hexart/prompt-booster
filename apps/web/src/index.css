@@ -80,7 +80,7 @@ html {
 }
 
 body {
-  min-height: 100vh;
+  min-height: 100dvh;
   margin: 0;
 }
 
@@ -371,6 +371,6 @@ button:disabled {
     @apply bg-gray-900 dark:border-gray-800;
   }
   .title {
-    @apply text-gray-300
+    @apply text-sky-200
   }
 }
