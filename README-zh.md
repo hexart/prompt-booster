@@ -1,5 +1,3 @@
-我会帮你将这个README.md文档翻译成中文。以下是完整的中文翻译：
-
 # Prompt Booster
 
 [English](README.md)
