@@ -1,5 +1,7 @@
 # Prompt Booster UI Component Library
 
+[中文文档](README-zh.md)
+
 ## Overview
 
 The Prompt Booster UI library provides a comprehensive set of React components designed specifically for prompt engineering and optimization applications. This library offers a collection of components ranging from basic UI elements to specialized prompt editing components, with full support for light and dark themes.

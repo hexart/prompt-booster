@@ -1,306 +1,300 @@
-# 提示词增强器 - Web客户端说明文档
+# Prompt Booster - Web Client Documentation
 
-## 1. 项目概述
+[中文文档](README-zh.md)
 
-提示词增强器是一个基于React的Web应用，专门设计用于优化和改进AI提示词。该工具允许用户输入原始提示词，使用AI模型进行增强处理，并支持对处理后的提示词进行迭代改进、质量评估和比较测试。
+## 1. Project Overview
 
-### 1.1 核心功能
+Prompt Booster is a React-based web application specifically designed to optimize and improve AI prompts. This tool allows users to input original prompts, enhance them using AI models, and supports iterative improvement, quality assessment, and comparative testing of the processed prompts.
 
-- 提示词增强：利用AI模型优化原始提示词
-- 提示词评估：对提示词质量进行分析和评分
-- 迭代优化：基于具体方向进一步优化提示词
-- 对比测试：比较原始提示词和增强提示词的效果
-- 版本历史：记录和管理提示词的多个优化版本
-- 多模型支持：集成多种AI模型和自定义API接口
+### 1.1 Core Features
 
-## 2. 技术架构
+- Prompt Enhancement: Optimize original prompts using AI models
+- Prompt Evaluation: Analyze and score prompt quality
+- Iterative Optimization: Further optimize prompts based on specific directions
+- Comparative Testing: Compare the effectiveness of original prompts and enhanced prompts
+- Version History: Record and manage multiple optimization versions of prompts
+- Multi-model Support: Integrate various AI models and custom API interfaces
 
-### 2.1 技术栈
+## 2. Technical Architecture
 
-- **前端框架**：React 19.1 + TypeScript
+### 2.1 Technology Stack
 
-- **构建工具**：Vite 6.2
+- **Frontend Framework**: React 19.1 + TypeScript
+- **Build Tool**: Vite 6.2
+- **CSS Framework**: Tailwind CSS 4.1
+- **State Management**: Zustand 4.4
+- **UI Components**:
+  - Custom UI component library (@prompt-booster/ui)
+  - Framer Motion (animations)
+  - Vaul (drawer components)
+  - Lucide React (icons)
+- **Code Quality**: ESLint + TypeScript ESLint
 
-- **CSS框架**：Tailwind CSS 4.1
+### 2.2 Project Structure
 
-- **状态管理**：Zustand 4.4
+The project adopts a Monorepo architecture, mainly consisting of the following modules:
 
-- UI组件
+- **apps/web**: Web client application
+- **packages/core**: Core business logic
+- **packages/api**: API client and connection logic
+- **packages/ui**: Reusable UI component library
 
-  ：
+## 3. Application Features in Detail
 
-  - 自定义UI组件库 (@prompt-booster/ui)
-  - Framer Motion (动画)
-  - Vaul (抽屉组件)
-  - Lucide React (图标)
+### 3.1 Prompt Booster
 
-- **代码质量**：ESLint + TypeScript ESLint
+Prompt Booster is the main functionality of the application, located in `PromptBooster.tsx`:
 
-### 2.2 项目结构
+#### Main Functions
 
-项目采用Monorepo架构，主要包含以下几个模块：
+- Input original prompts
+- Select system prompt templates
+- Choose AI models
+- Execute prompt enhancement processing
+- Edit enhanced prompts
+- Save edits as new versions
+- Analyze prompt quality
+- Continue iterative optimization
 
-- **apps/web**：Web客户端应用
-- **packages/core**：核心业务逻辑
-- **packages/api**：API客户端和连接逻辑
-- **packages/ui**：可复用UI组件库
+#### Key Features
 
-## 3. 应用功能详解
+- **Streaming Responses**: Support for AI model streaming output, displaying enhancement results in real-time
+- **Version Management**: Support for multi-version recording, allowing switching between different versions
+- **Quality Analysis**: Provides both local analysis and AI-driven in-depth analysis
+- **User Editing**: Allows users to manually edit enhanced prompts and save as new versions
 
-### 3.1 提示词增强器 (PromptBooster)
+### 3.2 Test Result
 
-提示词增强器是应用的主要功能，位于`PromptBooster.tsx`中：
+The comparative testing feature allows users to compare the performance of original prompts and enhanced prompts, located in `TestResult.tsx`:
 
-#### 主要功能
+#### Main Functions
 
-- 输入原始提示词
-- 选择系统提示词模板
-- 选择AI模型
-- 执行提示词增强处理
-- 对增强后的提示词进行编辑
-- 保存编辑内容为新版本
-- 分析提示词质量
-- 继续迭代优化
+- Input test content (user prompts)
+- Select AI model for testing
+- Run parallel tests of original prompts and enhanced prompts
+- Compare output results
+- Support Markdown rendering toggle
+- Maximize/minimize control for result areas
 
-#### 关键特性
+#### Key Features
 
-- **流式响应**：支持AI模型的流式输出，实时展示增强结果
-- **版本管理**：支持多版本记录，可以在不同版本间切换
-- **质量分析**：提供本地分析和AI驱动的深度分析两种方式
-- **用户编辑**：允许用户手动编辑增强后的提示词并保存为新版本
+- **Parallel Testing**: Simultaneously send original prompts and enhanced prompts to the model
+- **Streaming Responses**: Display model responses in real-time
+- **Response Optimization**: Use RequestAnimationFrame to optimize UI updates
+- **Flexible Layout**: Support different view modes for convenient comparison analysis
 
-### 3.2 对比测试 (TestResult)
+### 3.3 Prompt History
 
-对比测试功能允许用户比较原始提示词和增强提示词的表现，位于`TestResult.tsx`中：
+The history feature provides management of past prompt optimization records, located in `PromptHistory.tsx`:
 
-#### 主要功能
+#### Main Functions
 
-- 输入测试内容（用户提示词）
-- 选择测试用的AI模型
-- 并行运行原始提示词和增强提示词测试
-- 对比两者的输出结果
-- 支持Markdown渲染切换
-- 结果区域最大化/最小化控制
+- Display all prompt optimization groups
+- Sort by update time
+- Expand/collapse detailed information
+- View optimization content of different versions
+- Load history records into the editor
+- Delete individual records or clear all history
 
-#### 关键特性
+#### Key Features
 
-- **并行测试**：同时发送原始提示词和增强提示词到模型
-- **流式响应**：实时展示模型响应
-- **响应优化**：使用RequestAnimationFrame优化UI更新
-- **灵活布局**：支持不同视图模式，方便对比分析
+- **Version Comparison**: Compare optimization effects of different versions within the same group
+- **Model Information**: Display AI model used for each version
+- **Quick Loading**: One-click loading of historical versions into the editor for continued optimization
 
-### 3.3 历史记录 (PromptHistory)
+### 3.4 Model Settings
 
-历史记录功能提供对过往提示词优化记录的管理，位于`PromptHistory.tsx`中：
+The model settings feature allows users to configure and manage AI model connections, located in `ModelSettings.tsx`:
 
-#### 主要功能
+#### Main Functions
 
-- 显示所有提示词优化组
-- 按更新时间排序
-- 展开/收起详细信息
-- 查看不同版本的优化内容
-- 加载历史记录到编辑器
-- 删除单个记录或清空所有历史
+- Manage built-in model configurations
+- Add and edit custom API interfaces
+- Test model connections
+- Enable/disable models
+- Delete custom interfaces
 
-#### 关键特性
+#### Key Features
 
-- **版本对比**：在同一组内比较不同版本的优化效果
-- **模型信息**：显示每个版本使用的AI模型
-- **快速加载**：一键将历史版本加载到编辑器中继续优化
+- **API Key Management**: Securely store and display API keys
+- **Model List Retrieval**: Automatically retrieve available models from the API
+- **Connection Testing**: Verify the validity of API configurations
+- **Custom Interfaces**: Support for adding interfaces from non-standard AI providers
 
-### 3.4 模型设置 (ModelSettings)
+## 4. Core Components
 
-模型设置功能允许用户配置和管理AI模型连接，位于`ModelSettings.tsx`中：
+### 4.1 Layout Related
 
-#### 主要功能
+#### Header Component
 
-- 管理内置模型配置
-- 添加和编辑自定义API接口
-- 测试模型连接
-- 启用/禁用模型
-- 删除自定义接口
+- Provides top navigation bar and title display
+- Supports theme switching functionality
+- Integrates mobile menu control
+- Provides keyboard shortcut control
 
-#### 关键特性
+#### MobileMenu Component
 
-- **API密钥管理**：安全存储和显示API密钥
-- **模型列表获取**：从API自动获取可用模型
-- **连接测试**：验证API配置的有效性
-- **自定义接口**：支持添加非标准AI提供商的接口
+- Provides navigation menu on mobile devices
+- Optimized click-outside-to-close logic
+- Animated transition effects
 
-## 4. 核心组件
+### 4.2 Functional Components
 
-### 4.1 布局相关
+#### IterationDialog Component
 
-#### Header 组件
+- Used for setting prompt iteration direction
+- Select iteration prompt templates
+- Input optimization direction description
 
-- 提供顶部导航栏和标题显示
-- 支持主题切换功能
-- 集成移动端菜单控制
-- 提供键盘快捷键控制
+#### ModelModal Component
 
-#### MobileMenu 组件
+- Used for editing model configuration information
+- Supports API key show/hide control
+- Automatic model list retrieval functionality
+- Built-in validation logic
 
-- 提供移动设备上的导航菜单
-- 优化的点击外部关闭逻辑
-- 动画过渡效果
+#### RefreshDetector Component
 
-### 4.2 功能组件
+- Detects page refresh events
+- Resets application state on refresh
+- Uses sessionStorage for reliable detection
 
-#### IterationDialog 组件
+## 5. Custom Hooks
 
-- 用于设置提示词迭代方向
-- 选择迭代提示词模板
-- 输入优化方向描述
-
-#### ModelModal 组件
-
-- 用于编辑模型配置信息
-- 支持API密钥显示/隐藏控制
-- 自动获取模型列表功能
-- 内置验证逻辑
-
-#### RefreshDetector 组件
-
-- 检测页面刷新事件
-- 在刷新时重置应用状态
-- 使用sessionStorage做可靠检测
-
-## 5. 自定义钩子
-
-### 5.1 模型相关钩子
+### 5.1 Model-Related Hooks
 
 #### useModelConnection
 
-- 管理模型连接测试状态
-- 提供测试连接方法
-- 处理测试反馈和错误报告
+- Manages model connection test status
+- Provides testing connection methods
+- Handles test feedback and error reporting
 
 #### useModelEdit
 
-- 处理模型配置的保存操作
-- 支持标准模型和自定义接口的更新
-- 提供保存成功/失败的反馈
+- Handles saving operations for model configurations
+- Supports updates for standard models and custom interfaces
+- Provides success/failure feedback for saving
 
 #### useModelData
 
-- 获取和处理所有模型数据
-- 提供模型启用/禁用功能
-- 管理模型删除操作
+- Retrieves and processes all model data
+- Provides model enable/disable functionality
+- Manages model deletion operations
 
 #### useModelForm
 
-- 管理模型编辑表单状态
-- 处理API密钥的安全显示
-- 自动生成接口名称
+- Manages model editing form state
+- Handles secure display of API keys
+- Automatically generates interface names
 
-### 5.2 其他业务钩子
+### 5.2 Other Business Hooks
 
 #### usePromptGroup
 
-- 管理提示词组的操作
-- 处理版本切换
-- 执行提示词增强和迭代
+- Manages operations for prompt groups
+- Handles version switching
+- Executes prompt enhancement and iteration
 
 #### usePromptHistory
 
-- 管理历史记录的交互
-- 控制组展开/收起状态
-- 处理版本选择和加载
+- Manages history record interactions
+- Controls group expand/collapse states
+- Handles version selection and loading
 
-## 6. 配置文件
+## 6. Configuration Files
 
-### 6.1 构建配置
+### 6.1 Build Configuration
 
-#### Vite 配置 (vite.config.ts)
+#### Vite Configuration (vite.config.ts)
 
-- 配置别名解析
-- 优化构建过程
-- 处理依赖打包
-- 配置开发服务器
+- Configures alias resolution
+- Optimizes build process
+- Handles dependency packaging
+- Configures development server
 
-#### ESLint 配置 (eslint.config.js)
+#### ESLint Configuration (eslint.config.js)
 
-- TypeScript支持
-- React Hooks规则
-- React Refresh规则
+- TypeScript support
+- React Hooks rules
+- React Refresh rules
 
-#### Tailwind 配置 (tailwind.config.js)
+#### Tailwind Configuration (tailwind.config.js)
 
-- 自定义动画
-- 主题扩展
-- 暗色模式支持
+- Custom animations
+- Theme extensions
+- Dark mode support
 
-### 6.2 TypeScript 配置
+### 6.2 TypeScript Configuration
 
-- tsx/ts文件支持
-- 严格类型检查
-- 模块解析优化
+- tsx/ts file support
+- Strict type checking
+- Module resolution optimization
 
-## 7. 使用指南
+## 7. User Guide
 
-### 7.1 提示词增强流程
+### 7.1 Prompt Enhancement Process
 
-1. 在"提示词增强"标签页中输入原始提示词
-2. 选择系统提示词模板和AI模型
-3. 点击"开始增强"按钮
-4. 等待增强结果生成
-5. 可选：手动编辑增强结果并保存为新版本
-6. 可选：分析提示词质量得分
-7. 可选：点击"继续迭代"进行进一步优化
+1. Input the original prompt in the "Prompt Booster" tab
+2. Select system prompt template and AI model
+3. Click the "Start Enhancement" button
+4. Wait for enhancement results to generate
+5. Optional: Manually edit enhancement results and save as a new version
+6. Optional: Analyze prompt quality score
+7. Optional: Click "Continue Iteration" for further optimization
 
-### 7.2 对比测试流程
+### 7.2 Comparative Testing Process
 
-1. 切换到"对比测试"标签页
-2. 输入测试内容（用户提示词）
-3. 选择测试用的模型
-4. 点击"运行测试"按钮
-5. 查看和比较两侧的响应结果
-6. 可选：打开/关闭Markdown渲染
-7. 可选：最大化某一侧的响应查看
+1. Switch to the "Test Result" tab
+2. Input test content (user prompts)
+3. Select model for testing
+4. Click the "Run Test" button
+5. View and compare response results on both sides
+6. Optional: Turn on/off Markdown rendering
+7. Optional: Maximize one side of the response view
 
-### 7.3 历史记录使用
+### 7.3 Using History Records
 
-1. 切换到"历史记录"标签页
-2. 浏览历史提示词组
-3. 点击"展开"查看详细信息
-4. 切换版本查看不同的优化结果
-5. 点击"加载此版本"将其加载到编辑器中
-6. 可选：删除不需要的记录
+1. Switch to the "History" tab
+2. Browse historical prompt groups
+3. Click "Expand" to view detailed information
+4. Switch versions to view different optimization results
+5. Click "Load This Version" to load it into the editor
+6. Optional: Delete unwanted records
 
-### 7.4 模型配置
+### 7.4 Model Configuration
 
-1. 切换到"模型设置"标签页
-2. 编辑现有模型的API配置
-3. 点击"添加"创建自定义API接口
-4. 填写API密钥、基础URL和模型信息
-5. 测试连接确认配置正确
-6. 启用/禁用所需的模型
+1. Switch to the "Model Settings" tab
+2. Edit API configuration of existing models
+3. Click "Add" to create custom API interfaces
+4. Fill in API key, base URL, and model information
+5. Test connection to confirm correct configuration
+6. Enable/disable required models
 
-## 8. 最佳实践
+## 8. Best Practices
 
-### 8.1 提示词优化建议
+### 8.1 Prompt Optimization Suggestions
 
-- 先用本地分析评估提示词质量，再决定是否需要迭代
-- 每次迭代都提供明确的优化方向
-- 定期比较测试验证优化效果
-- 保持版本记录以便回退到之前的版本
+- First use local analysis to evaluate prompt quality, then decide if iteration is needed
+- Provide clear optimization direction for each iteration
+- Regularly perform comparative tests to validate optimization effects
+- Maintain version records to allow reverting to previous versions
 
-### 8.2 性能优化
+### 8.2 Performance Optimization
 
-- 使用自动滚动和节流技术处理流式响应
-- 优先使用本地分析，仅在需要深入分析时使用AI分析
-- 合理使用最大化/最小化控制视图布局
-- 减少不必要的模型API调用
+- Use auto-scrolling and throttling techniques to handle streaming responses
+- Prioritize local analysis, only use AI analysis when in-depth analysis is needed
+- Make reasonable use of maximize/minimize controls for view layout
+- Reduce unnecessary model API calls
 
-## 9. 未来规划
+## 9. Future Plans
 
-- 批量测试功能
-- 提示词模板库扩展
-- 更多AI模型集成
-- 团队协作功能
-- 导出/导入提示词功能
-- 移动端应用开发
+- Batch testing functionality
+- Prompt template library expansion
+- More AI model integrations
+- Team collaboration features
+- Export/import prompt functionality
+- Mobile application development
 
 ------
 
-© Hexart Studio 2025 - 版权所有
+© Hexart Studio 2025 - All Rights Reserved

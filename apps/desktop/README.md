@@ -1,236 +1,236 @@
-# 提示词增强器 - 桌面客户端说明文档
+# Prompt Enhancer - Desktop Client Documentation
 
-## 1. 产品概述
+[中文文档](README-zh.md)
 
-提示词增强器桌面客户端是基于 Electron 框架的跨平台应用程序，旨在为用户提供原生桌面体验。该应用程序将 Web 版本的提示词增强器功能打包为独立应用，支持 Windows、macOS 和 Linux 操作系统，无需浏览器即可使用全部功能。
+## 1. Product Overview
 
-### 1.1 主要特点
+The Prompt Enhancer desktop client is a cross-platform application based on the Electron framework, designed to provide users with a native desktop experience. This application packages the web version of the Prompt Enhancer functionality as a standalone application, supporting Windows, macOS, and Linux operating systems, with all features available without requiring a browser.
 
-- **原生应用体验**：作为独立桌面应用运行，无需浏览器
-- **跨平台支持**：支持 Windows、macOS(x64/ARM64) 和 Linux
-- **完整功能集成**：包含 Web 版本的所有功能
-- **本地菜单与快捷键**：原生操作系统菜单和快捷键支持
-- **离线可用**：支持本地存储数据，减少网络依赖
-- **统一用户界面**：与 Web 版本保持一致的用户体验
+### 1.1 Key Features
 
-## 2. 技术架构
+- **Native Application Experience**: Runs as a standalone desktop application without needing a browser
+- **Cross-Platform Support**: Compatible with Windows, macOS (x64/ARM64), and Linux
+- **Complete Feature Integration**: Includes all features from the web version
+- **Local Menus and Shortcuts**: Native operating system menu and shortcut support
+- **Offline Availability**: Supports local data storage, reducing network dependency
+- **Unified User Interface**: Maintains consistent user experience with the web version
 
-### 2.1 技术栈
+## 2. Technical Architecture
 
-- **桌面框架**：Electron 36.0.1
-- **构建工具**：Electron-Builder 26.0.12
-- **Web 前端**：React 19.1 + TypeScript
-- **UI 框架**：Tailwind CSS 4.1
-- **状态管理**：Zustand 4.4
+### 2.1 Technology Stack
 
-### 2.2 项目结构
+- **Desktop Framework**: Electron 36.0.1
+- **Build Tool**: Electron-Builder 26.0.12
+- **Web Frontend**: React 19.1 + TypeScript
+- **UI Framework**: Tailwind CSS 4.1
+- **State Management**: Zustand 4.4
 
-桌面客户端采用 Electron 框架封装 Web 应用，主要包含以下文件：
+### 2.2 Project Structure
 
-- **main.js**：Electron 主进程，负责窗口管理和菜单创建
-- **preload.js**：预加载脚本，提供安全的进程间通信
-- **electron-builder.json**：应用打包配置
-- **package.json**：项目依赖和脚本配置
-- **web/**：Web 应用的构建产物
+The desktop client uses the Electron framework to encapsulate the web application, primarily containing the following files:
 
-## 3. 安装指南
+- **main.js**: Electron main process, responsible for window management and menu creation
+- **preload.js**: Preload script, providing secure inter-process communication
+- **electron-builder.json**: Application packaging configuration
+- **package.json**: Project dependencies and script configuration
+- **web/**: Build output of the web application
 
-### 3.1 系统要求
+## 3. Installation Guide
 
-- **Windows**：Windows 10/11 (64位)
-- **macOS**：macOS 10.15+ (Intel 或 Apple Silicon)
-- **Linux**：支持 AppImage 的现代 Linux 发行版
+### 3.1 System Requirements
 
-### 3.2 安装步骤
+- **Windows**: Windows 10/11 (64-bit)
+- **macOS**: macOS 10.15+ (Intel or Apple Silicon)
+- **Linux**: Modern Linux distributions supporting AppImage
+
+### 3.2 Installation Steps
 
 #### Windows
 
-1. 下载最新的 `.exe` 安装包
-2. 双击安装包并按照安装向导进行安装
-3. 安装完成后，在开始菜单中找到"提示词增强"并启动
+1. Download the latest `.exe` installer package
+2. Double-click the installer and follow the installation wizard
+3. After installation, find "Prompt Enhancer" in the Start menu and launch it
 
 #### macOS
 
-1. 下载最新的 `.dmg` 文件
-2. 打开 DMG 文件
-3. 将"提示词增强"拖动到应用程序文件夹
-4. 从启动台或应用程序文件夹启动
+1. Download the latest `.dmg` file
+2. Open the DMG file
+3. Drag "Prompt Enhancer" to the Applications folder
+4. Launch from Launchpad or Applications folder
 
 #### Linux
 
-1. 下载最新的 `.AppImage` 文件
-2. 赋予可执行权限：`chmod +x 提示词增强-*.AppImage`
-3. 直接运行 AppImage 文件
+1. Download the latest `.AppImage` file
+2. Grant executable permissions: `chmod +x PromptEnhancer-*.AppImage`
+3. Run the AppImage file directly
 
-### 3.3 更新方式
+### 3.3 Update Method
 
-应用程序目前不包含自动更新功能，需要通过下载最新版本并重新安装来进行更新。
+The application currently does not include automatic update functionality. Updates require downloading the latest version and reinstalling.
 
-## 4. 功能详解
+## 4. Feature Details
 
-桌面客户端保留了 Web 版本的全部功能，并增加了桌面特有的功能：
+The desktop client retains all features of the web version and adds desktop-specific functionality:
 
-### 4.1 核心功能
+### 4.1 Core Features
 
-- **提示词增强**：利用 AI 模型优化原始提示词
-- **提示词评估**：对提示词质量进行分析和评分
-- **迭代优化**：基于具体方向进一步优化提示词
-- **对比测试**：比较原始提示词和增强提示词的效果
-- **版本历史**：记录和管理提示词的多个优化版本
-- **多模型支持**：集成多种 AI 模型和自定义 API 接口
+- **Prompt Enhancement**: Optimize original prompts using AI models
+- **Prompt Evaluation**: Analyze and score prompt quality
+- **Iterative Optimization**: Further optimize prompts based on specific directions
+- **Comparison Testing**: Compare the effectiveness of original and enhanced prompts
+- **Version History**: Record and manage multiple optimization versions of prompts
+- **Multi-Model Support**: Integrate various AI models and custom API interfaces
 
-### 4.2 桌面特有功能
+### 4.2 Desktop-Specific Features
 
-- **原生菜单**：提供与操作系统一致的菜单体验
-- **窗口控制**：支持最小化、缩放和全屏操作
-- **键盘快捷键**：支持系统标准快捷键
-- **离线运行**：部分功能支持离线使用
+- **Native Menus**: Provide menu experiences consistent with the operating system
+- **Window Controls**: Support minimize, resize, and fullscreen operations
+- **Keyboard Shortcuts**: Support system standard shortcuts
+- **Offline Operation**: Some features support offline use
 
-## 5. 界面概览
+## 5. Interface Overview
 
-桌面客户端的界面与 Web 版本保持一致，主要包括以下区域：
+The desktop client's interface remains consistent with the web version, primarily including the following areas:
 
-### 5.1 主界面
+### 5.1 Main Interface
 
-- **顶部导航**：提供"提示词增强"、"对比测试"、"历史记录"和"模型设置"四个主要功能区切换
-- **内容区域**：根据当前选择的功能标签显示相应内容
-- **底部状态栏**：显示版权信息
+- **Top Navigation**: Provides switching between four main functional areas: "Prompt Enhancement," "Comparison Testing," "History Records," and "Model Settings"
+- **Content Area**: Displays corresponding content based on the currently selected function tab
+- **Bottom Status Bar**: Displays copyright information
 
-### 5.2 菜单结构
+### 5.2 Menu Structure
 
-桌面版提供了原生操作系统菜单，包括：
+The desktop version provides native operating system menus, including:
 
-- **应用菜单**（macOS）：包含隐藏、隐藏其他和退出选项
-- **编辑菜单**：包含撤销、重做、剪切、复制、粘贴和全选
-- **视图菜单**：包含重新加载、开发者工具、缩放控制和全屏切换
-- **窗口菜单**：包含最小化、缩放和关闭窗口
-- **帮助菜单**：包含关于信息
+- **Application Menu** (macOS): Includes hide, hide others, and quit options
+- **Edit Menu**: Includes undo, redo, cut, copy, paste, and select all
+- **View Menu**: Includes reload, developer tools, zoom controls, and fullscreen toggle
+- **Window Menu**: Includes minimize, zoom, and close window
+- **Help Menu**: Includes about information
 
-## 6. 使用指南
+## 6. Usage Guide
 
-### 6.1 提示词增强流程
+### 6.1 Prompt Enhancement Process
 
-1. 启动桌面应用
-2. 在"提示词增强"标签页中输入原始提示词
-3. 选择系统提示词模板和 AI 模型
-4. 点击"开始增强"按钮
-5. 等待增强结果生成
-6. 可选：手动编辑增强结果并保存为新版本
-7. 可选：分析提示词质量得分
-8. 可选：点击"继续迭代"进行进一步优化
+1. Launch the desktop application
+2. Enter the original prompt in the "Prompt Enhancement" tab
+3. Select the system prompt template and AI model
+4. Click the "Start Enhancement" button
+5. Wait for the enhancement result to generate
+6. Optional: Manually edit the enhancement result and save as a new version
+7. Optional: Analyze prompt quality score
+8. Optional: Click "Continue Iteration" for further optimization
 
-### 6.2 对比测试流程
+### 6.2 Comparison Testing Process
 
-1. 切换到"对比测试"标签页
-2. 输入测试内容（用户提示词）
-3. 选择测试用的模型
-4. 点击"运行测试"按钮
-5. 查看和比较两侧的响应结果
-6. 可选：打开/关闭 Markdown 渲染
-7. 可选：最大化某一侧的响应查看
+1. Switch to the "Comparison Testing" tab
+2. Enter test content (user prompt)
+3. Select the model for testing
+4. Click the "Run Test" button
+5. View and compare the response results on both sides
+6. Optional: Turn on/off Markdown rendering
+7. Optional: Maximize one side of the response for viewing
 
-### 6.3 历史记录使用
+### 6.3 Using History Records
 
-1. 切换到"历史记录"标签页
-2. 浏览历史提示词组
-3. 点击"展开"查看详细信息
-4. 切换版本查看不同的优化结果
-5. 点击"加载此版本"将其加载到编辑器中
-6. 可选：删除不需要的记录
+1. Switch to the "History Records" tab
+2. Browse historical prompt groups
+3. Click "Expand" to view detailed information
+4. Switch versions to view different optimization results
+5. Click "Load This Version" to load it into the editor
+6. Optional: Delete unwanted records
 
-### 6.4 模型配置
+### 6.4 Model Configuration
 
-1. 切换到"模型设置"标签页
-2. 编辑现有模型的 API 配置
-3. 点击"添加"创建自定义 API 接口
-4. 填写 API 密钥、基础 URL 和模型信息
-5. 测试连接确认配置正确
-6. 启用/禁用所需的模型
+1. Switch to the "Model Settings" tab
+2. Edit API configurations for existing models
+3. Click "Add" to create custom API interfaces
+4. Fill in API key, base URL, and model information
+5. Test the connection to confirm the configuration is correct
+6. Enable/disable the desired models
 
-## 7. 开发指南
+## 7. Development Guide
 
-### 7.1 环境设置
+### 7.1 Environment Setup
 
-开发环境要求：
+Development environment requirements:
 
-- Node.js 18.17.0 或更高版本
-- npm 或 pnpm 包管理器
+- Node.js 18.17.0 or higher
+- npm or pnpm package manager
 - Git
 
-### 7.2 构建步骤
+### 7.2 Build Steps
 
-1. 克隆代码仓库
+1. Clone the code repository
 
-2. 安装依赖：
+2. Install dependencies:
 
    ```bash
    cd desktop
    npm install
    ```
 
-3. 开发模式运行：
+3. Run in development mode:
 
    ```bash
    npm run dev
    ```
 
-4. 构建应用：
+4. Build the application:
 
    ```bash
-   npm run build
-   # 构建所有平台npm run build:mac
-   # 构建 macOS ARM64 版本
-   npm run build:mac:universal 
-   # 构建 macOS Universal 版本
-   npm run build:win      
-   # 构建 Windows 版本npm run build:linux    
-   # 构建 Linux 版本
+   npm run build          # Build for all platforms
+   npm run build:mac      # Build macOS version
+   npm run build:mac:arm  # Build macOS ARM64 version
+   npm run build:mac:universal # Build macOS Universal version
+   npm run build:win      # Build Windows version
+   npm run build:linux    # Build Linux version
    ```
 
-### 7.3 项目配置文件
+### 7.3 Project Configuration Files
 
-- **electron-builder.json**：定义应用打包配置，包括应用 ID、产品名称、输出目录和平台特定设置
-- **package.json**：定义项目依赖和脚本命令
+- **electron-builder.json**: Defines application packaging configuration, including application ID, product name, output directory, and platform-specific settings
+- **package.json**: Defines project dependencies and script commands
 
-## 8. 故障排除
+## 8. Troubleshooting
 
-### 8.1 常见问题
+### 8.1 Common Issues
 
-1. **应用无法启动**
-   - 检查系统是否满足最低要求
-   - 尝试重新安装应用
-   - 检查系统日志获取错误信息
-2. **API 连接失败**
-   - 验证 API 密钥是否正确
-   - 检查网络连接状态
-   - 确认 API 端点 URL 是否正确
-   - 检查防火墙设置是否阻止了连接
-3. **界面显示异常**
-   - 尝试重新加载应用（视图菜单 -> 重新加载）
-   - 检查系统显示设置是否兼容
+1. **Application Cannot Start**
+   - Check if the system meets minimum requirements
+   - Try reinstalling the application
+   - Check system logs for error information
+2. **API Connection Failure**
+   - Verify that the API key is correct
+   - Check network connection status
+   - Confirm that the API endpoint URL is correct
+   - Check if firewall settings are blocking the connection
+3. **Interface Display Abnormalities**
+   - Try reloading the application (View menu -> Reload)
+   - Check if system display settings are compatible
 
-### 8.2 性能优化
+### 8.2 Performance Optimization
 
-- 定期清理历史记录以提高应用响应速度
-- 关闭不需要的模型以减少资源占用
-- 使用本地分析而非 AI 分析可减少网络请求
+- Regularly clear history records to improve application responsiveness
+- Turn off unused models to reduce resource usage
+- Using local analysis instead of AI analysis can reduce network requests
 
-## 9. 隐私与数据安全
+## 9. Privacy and Data Security
 
-- 所有 API 密钥和配置信息存储在本地
-- 应用不会收集或上传用户数据
-- 提示词和历史记录保存在本地存储中
-- 与 AI 模型的通信直接从用户设备发起，不经过中间服务器
+- All API keys and configuration information are stored locally
+- The application does not collect or upload user data
+- Prompts and history records are saved in local storage
+- Communication with AI models is initiated directly from the user's device, without going through intermediate servers
 
-## 10. 未来规划
+## 10. Future Plans
 
-- 自动更新功能
-- 离线 AI 模型支持
-- 多语言界面
-- 数据导入/导出功能
-- 团队协作功能
-- 云同步功能
+- Automatic update functionality
+- Offline AI model support
+- Multi-language interface
+- Data import/export functionality
+- Team collaboration features
+- Cloud synchronization functionality
 
 ------
 
-© Hexart Studio 2025 - 版权所有
+© Hexart Studio 2025 - All Rights Reserved

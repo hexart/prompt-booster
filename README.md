@@ -1,5 +1,7 @@
 # Prompt Booster
 
+[中文文档](README-zh.md)
+
 A comprehensive monorepo project for optimizing and enhancing prompts for large language models (LLMs) across multiple platforms.
 
 ## Overview
@@ -10,7 +12,7 @@ The project follows a monorepo architecture using Turborepo and PNPM workspaces,
 
 ## Project Structure
 
-```
+```markdown
 prompt-booster/
 ├── packages/                  # Shared cross-platform code
 │   ├── core/                  # Core business logic and state management

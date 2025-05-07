@@ -1,23 +1,40 @@
-1. # @prompt-booster/core
+# @prompt-booster/core
+
+[中文文档](README-zh.md)
 
    Core package for Prompt Booster providing essential state management, model configurations, prompt optimization services, and utility functions.
 
    ## Table of Contents
 
-   1. [Overview](#overview)
-   2. [Architecture](#architecture)
-   3. Core Features
-      - [Model Management](#model-management)
-      - [Prompt Management](#prompt-management)
-      - [Storage Management](#storage-management)
-   4. Key Components
-      - [Configuration](#configuration)
-      - [Model Service](#model-service)
-      - [Prompt Service](#prompt-service)
-      - [Template Service](#template-service)
-   5. [Hooks](#hooks)
-   6. [Utilities](#utilities)
-   7. [Usage Examples](#usage-examples)
+- [@prompt-booster/core](#prompt-boostercore)
+  - [Table of Contents](#table-of-contents)
+  - [Overview](#overview)
+  - [Architecture](#architecture)
+  - [Core Features](#core-features)
+    - [Model Management](#model-management)
+      - [Example: Configuring a Model](#example-configuring-a-model)
+    - [Prompt Management](#prompt-management)
+      - [Prompt Optimization](#prompt-optimization)
+    - [Storage Management](#storage-management)
+  - [Key Components](#key-components)
+    - [Configuration](#configuration)
+    - [Model Service](#model-service)
+    - [Prompt Service](#prompt-service)
+    - [Template Service](#template-service)
+  - [Hooks](#hooks)
+    - [`useModelStore`](#usemodelstore)
+    - [`usePromptGroup`](#usepromptgroup)
+    - [`usePromptHistory`](#useprompthistory)
+    - [`useMemoryStore`](#usememorystore)
+  - [Utilities](#utilities)
+    - [ID Generation](#id-generation)
+    - [Prompt Utilities](#prompt-utilities)
+  - [Usage Examples](#usage-examples)
+    - [Basic Model Configuration](#basic-model-configuration)
+    - [Optimizing a Prompt](#optimizing-a-prompt)
+    - [Working with Prompt History](#working-with-prompt-history)
+    - [Analyzing Prompt Quality](#analyzing-prompt-quality)
+    - [Custom API Integration](#custom-api-integration)
 
    ## Overview
 
