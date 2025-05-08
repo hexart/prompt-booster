@@ -35,14 +35,14 @@ function App() {
     <ThemeProvider defaultTheme="system" storageKey="my-app-theme">
       <RefreshDetector />
       <div className="min-h-screen antialiased">
-        <Header 
+        <Header
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           isMobileMenuOpen={isMobileMenuOpen}
           setIsMobileMenuOpen={setIsMobileMenuOpen}
           menuButtonRef={menuButtonRef}
         />
-        
+
         <main className="w-full h-auto md:h-[calc(100vh-126px)] overflow-y-auto md:overflow-hidden max-w-(--breakpoint-2xl) mx-auto p-2 md:px-6 md:py-4">
           <Toaster />
           {/* 内容区域 */}
@@ -57,7 +57,7 @@ function App() {
         <footer className="mt-auto footer">
           <div className="w-full max-w-(--breakpoint-2xl) mx-auto px-4 sm:px-6 lg:px-8 py-2 md:py-3">
             <div className="text-center text-sm">
-              Hexart Studio © 2025 - All rights reserved.
+              <div>Hexart Studio © 2025 Licensed under <a href="LICENSE-MIT" className="hover:underline">MIT</a> or <a href="LICENSE-APACHE" className="hover:underline">Apache-2.0</a></div>
             </div>
           </div>
         </footer>
