@@ -354,13 +354,13 @@ export const TestResult: React.FC = () => {
                     )}
                 </div>
                 {/* 内容区域 */}
-                <div className="flex flex-col flex-grow min-h-[200px] md:min-h-0">
+                <div className={"flex flex-col flex-grow min-h-[200px] md:min-h-0" + (isMaximized ? " max-h-[100vh]" : "")}>
                     <AutoScrollContent
                         content={response}
                         streaming={isStreaming}
                         allowHtml={showMarkdown}
                         enableMarkdown={showMarkdown}
-                        className="p-3 border rounded-md max-h-[380px] md:max-h-[100vh] autoscroll-content"
+                        className="p-3 border rounded-md max-h-[380px] min-h-0 md:max-h-[100vh] autoscroll-content"
                         buttonText=""
                         threshold={8}
                         placeholder={isStreaming ? "正在生成响应..." : "暂无响应内容，请运行测试..."}

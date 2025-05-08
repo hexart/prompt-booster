@@ -307,10 +307,10 @@ button:disabled {
     @apply text-gray-500 dark:text-gray-400;
   }
   .autoscroll-placeholder {
-    @apply bg-gray-50 text-gray-400 dark:bg-gray-600/30 dark:text-gray-500;
+    @apply text-gray-400 dark:text-gray-500;
   }
   .autoscroll-content {
-    @apply bg-gray-50 border-gray-200 hover:border-gray-300 text-gray-600 dark:bg-gray-600/30 dark:border-gray-600 hover:dark:border-gray-500 dark:text-white;
+    @apply bg-gray-50 border-gray-200 text-gray-600 dark:bg-gray-600/30 dark:border-gray-600 dark:text-white;
   }
   .autoscroll-border {
     @apply border-gray-200 dark:border-gray-600;

@@ -4,6 +4,15 @@
 
 A comprehensive monorepo project for optimizing and enhancing prompts for large language models (LLMs) across multiple platforms.
 
+[![License: MIT/Apache-2.0](https://img.shields.io/badge/License-MIT%2FApache--2.0-blue.svg)](LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-19.1-61DAFB?logo=react&logoColor=white)](https://react.dev/)
+[![Electron](https://img.shields.io/badge/Electron-36.0-47848F?logo=electron&logoColor=white)](https://www.electronjs.org/)
+[![TailwindCSS](https://img.shields.io/badge/Tailwind-4.1-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Zustand](https://img.shields.io/badge/Zustand-4.4-orange)](https://zustand-demo.pmnd.rs/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![Cross Platform](https://img.shields.io/badge/Platform-Web%20%7C%20Desktop-lightgrey)](README.md)
+
 ## Overview
 
 Prompt Booster is a specialized tool designed to help users optimize prompts for large language models. It leverages multiple AI providers to enable prompt optimization, version control, A/B testing, and template management across different platforms.
@@ -249,4 +258,9 @@ Contributions are welcome! Please refer to the documentation for development gui
 
 ## License
 
-© Hexart Studio 2025 - All Rights Reserved
+This project is licensed under the terms of both the MIT license and the Apache License 2.0, at your option.
+
+- MIT License ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
+- Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
+
+© Hexart Studio 2025

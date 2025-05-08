@@ -14,6 +14,9 @@ interface AutoScrollTextareaProps extends TextareaHTMLAttributes<HTMLTextAreaEle
     // 是否处于内容流式生成状态
     streaming?: boolean;
 
+    // 自定义CSS类
+    className?: string;
+
     // 按钮文本
     buttonText?: string;
 
@@ -128,15 +131,6 @@ export const AutoScrollTextarea: React.FC<AutoScrollTextareaProps> = ({
     // 自动滚动按钮类名
     const buttonClassName = `absolute z-10 backdrop-blur-xs shadow-md text-white bg-blue-500/80 hover:bg-blue-600/80 transition-all duration-600 ease-in-out flex items-center gap-1 bottom-4 left-1/2 -translate-x-1/2 animate-bounce motion-reduce:animate-none ${buttonText ? 'px-4 py-2 rounded-full' : 'p-2 rounded-full aspect-square'}`;
 
-    // 带有悬停状态的textarea类名
-    const textareaClassName = `w-full scrollable rounded-md p-3 border outline-none transition-colors duration-200 
-    ${isHovered
-            ? 'autoscroll-border-hover'
-            : 'autoscroll-border'
-        }
-    focus:ring-2 focus:ring-blue-500 focus:border-transparent
-    ${className}`;
-
     return (
         <div
             className="flex flex-grow relative w-full"
@@ -149,7 +143,11 @@ export const AutoScrollTextarea: React.FC<AutoScrollTextareaProps> = ({
                     {/* 背景textarea */}
                     <textarea
                         ref={elementRef}
-                        className={`w-full h-full absolute inset-0 ${className}`}
+                        className={`w-full h-full absolute inset-0 ${className}
+                        ${isHovered
+                            ? 'autoscroll-border-hover'
+                            : 'autoscroll-border'
+                        }`}
                         onChange={handleChange}
                         value={value as string}
                         {...restProps}
@@ -164,9 +162,14 @@ export const AutoScrollTextarea: React.FC<AutoScrollTextareaProps> = ({
                     </div>
                 </div>
             ) : (
+                // 正常有内容的textarea
                 <textarea
                     ref={elementRef}
-                    className={textareaClassName}
+                    className={`w-full scrollable rounded-md p-3 border-0 outline-none transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${className}
+                    ${isHovered
+                        ? 'autoscroll-border-hover'
+                        : 'autoscroll-border'
+                    }`}
                     onChange={handleChange}
                     placeholder={placeholder as string}
                     value={value as string}

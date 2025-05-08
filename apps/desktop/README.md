@@ -233,4 +233,4 @@ Development environment requirements:
 
 ------
 
-© Hexart Studio 2025 - All Rights Reserved
+© Hexart Studio 2025
