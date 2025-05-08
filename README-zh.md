@@ -1,7 +1,7 @@
 # Prompt Booster
 ![Prompt Booster](img/banner.svg)
 
-[English](README.md)
+[English](README.md)[在线体验](https://hexart.github.io/prompt-booster/)
 
 一个用于优化和增强多平台大型语言模型(LLMs)提示词的综合性单体仓库项目。
 
@@ -247,6 +247,10 @@ docker pull ghcr.io/hexart/prompt-booster:latest \
 ## 贡献
 
 欢迎贡献！请参阅开发指南文档，并遵循现有代码风格。
+
+## 致谢
+
+本项目的开发过程中受到了 [linshenkx](https://github.com/linshenkx) 开发的 [prompt-optimizer](https://github.com/linshenkx/prompt-optimizer) 项目的启发和参考。我们在此对linshenkx在提示词工程和优化领域的开创性工作表示衷心的感谢。他们在MIT许可下的开源贡献对Prompt Booster的开发起到了重要的促进作用。我们强烈推荐大家查看他们的原始项目。
 
 ## 许可证
 

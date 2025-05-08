@@ -1,7 +1,7 @@
 # Prompt Booster
 ![Prompt Booster](img/banner.svg)
 
-[中文文档](README-zh.md)
+[中文文档](README-zh.md)[Online experience](https://hexart.github.io/prompt-booster/)
 
 A comprehensive monorepo project for optimizing and enhancing prompts for large language models (LLMs) across multiple platforms.
 
@@ -256,6 +256,10 @@ Additional documentation is available:
 ## Contributing
 
 Contributions are welcome! Please refer to the documentation for development guidance and follow the existing code style.
+
+## Acknowledgements
+
+This project was inspired by and builds upon [prompt-optimizer](https://github.com/linshenkx/prompt-optimizer) by [linshenkx](https://github.com/linshenkx). We would like to express our sincere gratitude for their pioneering work in the field of prompt engineering and optimization. Their open-source contribution under the MIT license has been instrumental in the development of Prompt Booster. We highly recommend checking out their original project.
 
 ## License
 
