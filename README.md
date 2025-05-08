@@ -20,6 +20,8 @@ Prompt Booster is a specialized tool designed to help users optimize prompts for
 
 The project follows a monorepo architecture using Turborepo and PNPM workspaces, organized into packages for shared code and platform-specific applications.
 
+https://github.com/user-attachments/assets/d4ab19f8-9f23-4c95-97f1-7dba5fb6b5b9
+
 ## Project Structure
 
 ```markdown
