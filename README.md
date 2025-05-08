@@ -1,7 +1,7 @@
 # Prompt Booster
 ![Prompt Booster](img/banner.svg)
 
-[中文文档](README-zh.md)[Online experience](https://hexart.github.io/prompt-booster/)
+[中文文档](README-zh.md) [Online experience](https://hexart.github.io/prompt-booster/)
 
 A comprehensive monorepo project for optimizing and enhancing prompts for large language models (LLMs) across multiple platforms.
 
@@ -268,4 +268,4 @@ This project is licensed under the terms of both the MIT license and the Apache 
 - MIT License ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
 - Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
 
-© Hexart Studio 2025
+© Hexart Studio 2025 [![Hits](https://hits.sh/hexart.github.io/prompt-booster.svg?color=1196cc)](https://hits.sh/hexart.github.io/prompt-booster/)

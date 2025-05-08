@@ -1,7 +1,7 @@
 # Prompt Booster
 ![Prompt Booster](img/banner.svg)
 
-[English](README.md)[在线体验](https://hexart.github.io/prompt-booster/)
+[English](README.md) [在线体验](https://hexart.github.io/prompt-booster/)
 
 一个用于优化和增强多平台大型语言模型(LLMs)提示词的综合性单体仓库项目。
 

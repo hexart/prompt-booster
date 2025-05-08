@@ -56,8 +56,14 @@ function App() {
 
         <footer className="mt-auto footer">
           <div className="w-full max-w-(--breakpoint-2xl) mx-auto px-4 sm:px-6 lg:px-8 py-2 md:py-3">
-            <div className="text-center text-sm">
-              <div>Hexart Studio © 2025 Licensed under <a href="LICENSE-MIT" className="hover:underline">MIT</a> or <a href="LICENSE-APACHE" className="hover:underline">Apache-2.0</a></div>
+            <div className="text-center text-sm flex items-center justify-center space-x-3">
+              <span>
+                Hexart Studio © 2025 ·{" "}
+                <a href="LICENSE" className="hover:underline">MIT/Apache</a>
+              </span>
+              <a href="https://hits.sh/hexart.github.io/prompt-booster/">
+                <img alt="Hits" src="https://hits.sh/hexart.github.io/prompt-booster.svg?color=1196cc" />
+              </a>
             </div>
           </div>
         </footer>
