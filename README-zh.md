@@ -1,4 +1,5 @@
 # Prompt Booster
+![Prompt Booster](img/banner.svg)
 
 [English](README.md)
 
