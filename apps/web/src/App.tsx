@@ -9,6 +9,38 @@ import Header, { TabType } from './components/Header';
 import { ThemeProvider } from '@prompt-booster/ui/components/ThemeContext';
 import { Toaster } from '@prompt-booster/ui';
 
+// 添加 Electron window 类型声明
+declare global {
+  interface Window {
+    electronPlatform: string; // 移除可选标记，因为我们已确保在 preload 中设置
+    electron?: {
+      sendMessage: (channel: string, data: any) => void;
+      receiveMessage: (channel: string, func: (...args: any[]) => void) => void;
+    };
+  }
+}
+
+// 添加 CSS 属性类型声明
+declare module 'react' {
+  interface CSSProperties {
+    WebkitAppRegion?: 'drag' | 'no-drag';
+  }
+}
+
+// 创建一个独立的 MacOSTitleBar 组件
+const MacOSTitleBar = () => {
+  if (window.electronPlatform !== 'darwin') return null;
+
+  return (
+    <div
+      className="fixed top-0 left-0 w-full h-[28px] z-[9999]"
+      style={{
+        WebkitAppRegion: 'drag'
+      }}
+    />
+  );
+};
+
 function App() {
   const [activeTab, setActiveTab] = useState<TabType>('booster');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -34,6 +66,8 @@ function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="my-app-theme">
       <RefreshDetector />
+      {/* 添加 macOS Electron 客户端标题栏 */}
+      <MacOSTitleBar />
       <div className="min-h-screen antialiased">
         <Header
           activeTab={activeTab}
