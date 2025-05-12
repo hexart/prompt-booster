@@ -6,9 +6,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
     <title>提示词增强器</title>
+    <style>
+      :root {
+        --mac-titlebar-height: 0px;
+      }
+      
+      /* macOS Electron 标题栏样式 */
+      #mac-titlebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: var(--mac-titlebar-height);
+        z-index: 9999;
+        -webkit-app-region: drag;
+        display: none;
+      }
+      
+      /* 当在 macOS 平台时的全局样式 */
+      body.is-mac-platform .header {
+        top: var(--mac-titlebar-height);
+      }
+      
+      /* 只在 md 以上屏幕时，为主容器内容区调整高度 */
+      @media (min-width: 768px) {
+        body.is-mac-platform .md\:h-\[calc\(100vh-126px\)\] {
+          height: calc(100vh - 126px - var(--mac-titlebar-height)) !important;
+        }
+      }
+      
+      /* 在所有屏幕尺寸下确保标题栏固定 */
+      body.is-mac-platform .header {
+        position: sticky;
+        top: var(--mac-titlebar-height);
+      }
+      
+      /* 为 Mac 平台添加主容器顶部边距 */
+      body.is-mac-platform .mac-top-margin {
+        margin-top: var(--mac-titlebar-height);
+      }
+    </style>
   </head>
   <body>
+    <!-- macOS Electron 标题栏 -->
+    <div id="mac-titlebar" class="titlebar"></div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // 检测是否为 macOS Electron 平台
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window.electronPlatform === 'darwin') {
+          // 设置 titlebar 高度变量
+          const titlebarHeight = '28px';
+          document.documentElement.style.setProperty('--mac-titlebar-height', titlebarHeight);
+          
+          // 显示标题栏
+          const macTitlebar = document.getElementById('mac-titlebar');
+          if (macTitlebar) {
+            macTitlebar.style.display = 'block';
+          }
+          
+          // 添加 Mac 平台标识类
+          document.body.classList.add('is-mac-platform');
+        }
+      });
+    </script>
   </body>
 </html>

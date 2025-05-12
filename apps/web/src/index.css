@@ -108,6 +108,9 @@ button:disabled {
 
 /* 亮色主题 */
 @layer components {
+  .titlebar { 
+    @apply bg-white dark:bg-gray-900;
+  }
   .header {
     @apply bg-white border-b border-gray-200;
     .title {

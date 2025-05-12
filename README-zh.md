@@ -1,5 +1,5 @@
 # Prompt Booster
-![Prompt Booster](img/banner.svg)
+![Prompt Booster](img/banner.png)
 
 [English](README.md) [在线体验](https://hexart.github.io/prompt-booster/)
 
