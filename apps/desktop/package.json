@@ -33,7 +33,7 @@
     "productName": "Prompt Booster",
     "copyright": "Copyright © 2025 Hexart Studio",
     "directories": {
-      "output": "dist",
+      "output": "release",
       "buildResources": "build"
     },
     "files": [
@@ -79,19 +79,23 @@
       "synopsis": "提升你的提示词输入效率",
       "description": "Prompt Booster 是一款提升AI提示词输入效率的跨平台工具",
       "desktop": {
-        "Name": "Prompt Booster",
-        "Comment": "提升你的提示词输入效率",
-        "Categories": "Utility;Development;"
+        "entry": {
+          "Name": "Prompt Booster",
+          "Comment": "提升你的提示词输入效率",
+          "Categories": "Utility;Development;"
+        }
       }
     },
     "publish": {
       "provider": "github",
+      "owner": "hexart",
+      "repo": "prompt-booster",
       "releaseType": "release"
     }
   },
   "devDependencies": {
     "electron": "^36.2.0",
-    "electron-builder": "^26.0.15",
+    "electron-builder": "^26.0.12",
     "node-gyp": "^11.2.0",
     "vite": "^6.3.5"
   }
