@@ -9,24 +9,13 @@
     "url": "https://github.com/hexart/prompt-booster.git"
   },
   "scripts": {
-    "dev": "npm run build:web && electron .",
-    "build": "npm run build:web && electron-builder",
-    "build:web": "cd ../web && pnpm build",
-    "build:mac": "npm run build:web && electron-builder --mac --arm64",
-    "build:mac:universal": "npm run build:web && electron-builder --mac --universal",
-    "build:win": "npm run build:web && electron-builder --win",
-    "build:win:x64": "npm run build:web && electron-builder --win --x64",
-    "build:win:arm64": "npm run build:web && electron-builder --win --arm64",
-    "build:linux": "npm run build:web && electron-builder --linux",
-    "build:linux:x64": "npm run build:web && electron-builder --linux --x64",
-    "build:linux:arm64": "npm run build:web && electron-builder --linux --arm64",
-    "build:linux:deb:x64": "npm run build:web && electron-builder --linux deb --x64",
-    "build:linux:rpm:x64": "npm run build:web && electron-builder --linux rpm --x64",
-    "build:linux:appimage:x64": "npm run build:web && electron-builder --linux AppImage --x64",
-    "build:linux:deb:arm64": "npm run build:web && electron-builder --linux deb --arm64",
-    "build:linux:rpm:arm64": "npm run build:web && electron-builder --linux rpm --arm64",
-    "build:linux:appimage:arm64": "npm run build:web && electron-builder --linux AppImage --arm64"
-  },
+  "dev": "npm run build:web && electron .",
+  "build": "npm run build:web && electron-builder",
+  "build:web": "cd ../web && pnpm build",
+  "build:mac": "npm run build:web && electron-builder --mac",
+  "build:win": "npm run build:web && electron-builder --win",
+  "build:linux": "npm run build:web && electron-builder --linux"
+},
   "keywords": [
     "Prompt Booster"
   ],

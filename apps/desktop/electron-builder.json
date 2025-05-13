@@ -15,7 +15,20 @@
         "package.json"
     ],
     "mac": {
-        "target": "dmg",
+        "target": [
+            {
+                "target": "dmg",
+                "arch": [
+                    "arm64"
+                ]
+            },
+            {
+                "target": "dmg",
+                "arch": [
+                    "universal"
+                ]
+            }
+        ],
         "icon": "build/icon.icns"
     },
     "win": {
