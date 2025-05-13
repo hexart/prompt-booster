@@ -4,7 +4,7 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { RocketIcon, Columns2Icon, GalleryVerticalEndIcon, CogIcon } from 'lucide-react';
 import ThemeSwitcher from '@prompt-booster/ui/components/ThemeSwitcher';
 import MobileMenu, { TabItem } from './MobileMenu';
-import reactLogo from '../assets/react.svg';
+import logo from '../assets/logo.svg';
 import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
 
 // 为 Electron 的拖动区域属性创建类型声明
@@ -63,12 +63,14 @@ const Header: React.FC<HeaderProps> = ({
                 <div className="w-full max-w-(--breakpoint-2xl) mx-auto px-4 md:px-6 py-4">
                     <div className="flex justify-between items-center">
                         <div className="flex items-center min-w-24">
-                            <img
-                                src={reactLogo}
-                                alt="React Logo"
-                                className="h-8 w-8 mr-2 logo-animation"
-                                style={nonDraggableStyle}
-                            />
+                            <Tooltip text='悟空智算' position='bottom'>
+                                <img
+                                    src={logo}
+                                    alt="悟空智算"
+                                    className="h-8 w-8 mr-2"
+                                    style={nonDraggableStyle}
+                                />
+                            </Tooltip>
                             <h1 className="text-xl sm:text-2xl font-bold whitespace-nowrap truncate title">
                                 提示词增强器
                             </h1>

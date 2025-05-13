@@ -4,22 +4,6 @@
 @config "../tailwind.config.js";
 @import './themeswitcher.css';
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .logo-animation {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
 @keyframes slideIn {
   from {
     opacity: 0;

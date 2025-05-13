@@ -11,13 +11,84 @@
     "build:mac": "npm run build:web && electron-builder --mac --arm64",
     "build:mac:universal": "npm run build:web && electron-builder --mac --universal",
     "build:win": "npm run build:web && electron-builder --win",
-    "build:linux": "npm run build:web && electron-builder --linux"
+    "build:win:x64": "npm run build:web && electron-builder --win --x64",
+    "build:win:arm64": "npm run build:web && electron-builder --win --arm64",
+    "build:linux": "npm run build:web && electron-builder --linux",
+    "build:linux:x64": "npm run build:web && electron-builder --linux --x64",
+    "build:linux:arm64": "npm run build:web && electron-builder --linux --arm64",
+    "build:linux:deb:x64": "npm run build:web && electron-builder --linux deb --x64",
+    "build:linux:rpm:x64": "npm run build:web && electron-builder --linux rpm --x64",
+    "build:linux:appimage:x64": "npm run build:web && electron-builder --linux AppImage --x64",
+    "build:linux:deb:arm64": "npm run build:web && electron-builder --linux deb --arm64",
+    "build:linux:rpm:arm64": "npm run build:web && electron-builder --linux rpm --arm64",
+    "build:linux:appimage:arm64": "npm run build:web && electron-builder --linux AppImage --arm64"
   },
   "keywords": [
     "Prompt Booster"
   ],
   "author": "Hexart Stuido",
   "license": "MIT",
+  "build": {
+    "appId": "com.hexart.promptbooster",
+    "productName": "Prompt Booster",
+    "copyright": "Copyright © 2025 Hexart Studio",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "build/**/*",
+      "web/**/*",
+      "node_modules/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "icon": "build/icon.icns",
+      "darkModeSupport": true,
+      "hardenedRuntime": true
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico"
+    },
+    "linux": {
+      "target": [
+        "deb",
+        "rpm",
+        "AppImage"
+      ],
+      "category": "Utility",
+      "icon": "build/icons",
+      "synopsis": "提升你的提示词输入效率",
+      "description": "Prompt Booster 是一款提升AI提示词输入效率的跨平台工具",
+      "desktop": {
+        "Name": "Prompt Booster",
+        "Comment": "提升你的提示词输入效率",
+        "Categories": "Utility;Development;"
+      }
+    },
+    "publish": {
+      "provider": "github",
+      "releaseType": "release"
+    }
+  },
   "devDependencies": {
     "electron": "^36.2.0",
     "electron-builder": "^26.0.15",
