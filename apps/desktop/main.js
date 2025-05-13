@@ -14,17 +14,24 @@ function createWindow() {
     }
   });
 
-  const template = [
-    {
-      label: app.name,
-      submenu: [
+  const firstMenuItem = {
+    label: process.platform === 'darwin' ? app.name : '文件',
+    submenu: [
+      // macOS 特有菜单项
+      ...(process.platform === 'darwin' ? [
         { role: 'hide', label: '隐藏' },
         { role: 'hideOthers', label: '隐藏其他' },
         { role: 'unhide', label: '取消隐藏' },
         { type: 'separator' },
-        { role: 'quit', label: '退出' }
-      ]
-    },
+      ] : []),
+
+      // 共有菜单项
+      { role: 'quit', label: '退出' }
+    ]
+  };
+
+  const template = [
+    firstMenuItem,
     {
       label: '编辑',
       submenu: [
@@ -99,7 +106,7 @@ function createWindow() {
 // 某些 API 只能在此事件发生后使用。
 app.whenReady().then(() => {
   createWindow()
-  
+
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow()
