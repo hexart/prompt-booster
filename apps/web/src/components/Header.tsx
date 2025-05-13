@@ -7,6 +7,13 @@ import MobileMenu, { TabItem } from './MobileMenu';
 import reactLogo from '../assets/react.svg';
 import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
 
+// 为 Electron 的拖动区域属性创建类型声明
+declare module 'react' {
+    interface CSSProperties {
+        WebkitAppRegion?: 'drag' | 'no-drag';
+    }
+}
+
 export type TabType = 'booster' | 'test' | 'history' | 'settings';
 
 interface HeaderProps {
@@ -44,19 +51,30 @@ const Header: React.FC<HeaderProps> = ({
         shortcut: tab.shortcut
     }));
 
+    // 为交互元素创建防止拖动传播的样式
+    const nonDraggableStyle = { WebkitAppRegion: 'no-drag' as const };
+
     return (
         <>
-            <header className="sticky top-0 w-full z-40 shadow-2xs header">
+            <header
+                className="sticky top-0 w-full z-40 shadow-2xs header"
+                style={{ WebkitAppRegion: 'drag' as const }}
+            >
                 <div className="w-full max-w-(--breakpoint-2xl) mx-auto px-4 md:px-6 py-4">
                     <div className="flex justify-between items-center">
                         <div className="flex items-center min-w-24">
-                            <img src={reactLogo} alt="React Logo" className="h-8 w-8 mr-2 logo-animation" />
+                            <img
+                                src={reactLogo}
+                                alt="React Logo"
+                                className="h-8 w-8 mr-2 logo-animation"
+                                style={nonDraggableStyle}
+                            />
                             <h1 className="text-xl sm:text-2xl font-bold whitespace-nowrap truncate title">
                                 提示词增强器
                             </h1>
                         </div>
 
-                        <div className="flex items-center">
+                        <div className="flex items-center" style={nonDraggableStyle}>
                             {/* 桌面端卡片导航 */}
                             <div className="hidden md:flex tab-container rounded-lg p-1 mr-2">
                                 {tabs.map((tab) => {
@@ -70,7 +88,8 @@ const Header: React.FC<HeaderProps> = ({
                                                     : 'tab-inactive'
                                                     } min-w-0`}
                                                 style={{
-                                                    transform: activeTab === tab.id ? '' : 'none'
+                                                    transform: activeTab === tab.id ? '' : 'none',
+                                                    WebkitAppRegion: 'no-drag'
                                                 }}
                                             >
                                                 <Icon size={18} />
@@ -92,6 +111,7 @@ const Header: React.FC<HeaderProps> = ({
                                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                                     aria-label={isMobileMenuOpen ? "关闭菜单" : "打开菜单"}
                                     aria-expanded={isMobileMenuOpen}
+                                    style={nonDraggableStyle}
                                 >
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
@@ -117,7 +137,8 @@ const Header: React.FC<HeaderProps> = ({
                                             </>
                                         )}
                                     </svg>
-                                </button></div>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

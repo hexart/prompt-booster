@@ -4,7 +4,7 @@ import { promptGroupService } from '@prompt-booster/core/prompt/services/promptS
 import templates from '@prompt-booster/core/prompt/templates/default-templates.json';
 import medalImage from '../assets/medal.png';
 import { Template } from '@prompt-booster/core/prompt/models/template';
-import { analyzePromptQuality, analyzePromptWithLLM } from '@prompt-booster/core/prompt/utils/promptUtils';
+import { analyzePromptQuality, analyzePromptWithLLM, PromptAnalysisResult, CriterionItem } from '@prompt-booster/core/prompt/utils/promptUtils';
 import { toast, EnhancedTextarea, AutoScrollTextarea, EnhancedDropdown, Dialog } from '@prompt-booster/ui';
 import LoadingIcon from '@prompt-booster/ui/components/LoadingIcon';
 import { RocketIcon, ListRestartIcon, StepForwardIcon, ChartBarIcon, CopyPlusIcon, MinimizeIcon, MaximizeIcon, SquareCheckBigIcon, TriangleAlertIcon } from 'lucide-react';
@@ -54,18 +54,7 @@ export const PromptBooster: React.FC = () => {
     const [isIterationDialogOpen, setIsIterationDialogOpen] = useState(false);
 
     // 分析结果状态
-    const [analysisResult, setAnalysisResult] = useState<{
-        score: number;
-        criteria: {
-            label: string;
-            passed: boolean;
-            feedback: string;
-            suggestion?: string;
-            points: number; // ✅ 添加此字段
-        }[];
-        suggestions?: string[];
-        encouragement?: string;
-    } | null>(null);
+    const [analysisResult, setAnalysisResult] = useState<PromptAnalysisResult | null>(null);
 
     // 分析抽屉状态
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -502,7 +491,7 @@ export const PromptBooster: React.FC = () => {
                     <Drawer.Portal>
                         <Drawer.Overlay className="fixed inset-0 z-40 mask" />
                         <Drawer.Content className="drawer-content-container backdrop-blur-md flex flex-col rounded-t-2xl drop-shadow-[0_-15px_15px_rgba(0,0,0,0.15)] fixed bottom-0 left-0 right-0 max-h-[85vh] z-40">
-                            <div className="p-3 overflow-y-auto">
+                            <div className="p-3 pt-2 overflow-y-auto">
                                 {/* 🎉 满分彩带 */}
                                 {analysisResult?.score === 10 && (
                                     <Confetti
@@ -517,7 +506,7 @@ export const PromptBooster: React.FC = () => {
                                     />
                                 )}
                                 {/* 抽屉把手 */}
-                                <div className="mx-auto w-12 h-1.5 shrink-0 rounded-full drawer-handle mb-4" />
+                                <div className="mx-auto w-12 h-1 shrink-0 rounded-full drawer-handle mb-4" />
                                 <div className="max-w-[680px] mx-6 md:mx-auto">
                                     {/* 主体：加载中骨架 vs 分析结果 */}
                                     {loading ? (
@@ -593,7 +582,7 @@ export const PromptBooster: React.FC = () => {
                                             {analysisResult?.criteria && (
                                                 <div className="p-4 drawer-analysis-container rounded-lg mb-4">
                                                     <ul className="space-y-2 text-sm">
-                                                        {analysisResult.criteria.map((item, i) => (
+                                                        {analysisResult.criteria.map((item: CriterionItem, i: number) => (
                                                             <li key={i} className="flex gap-2 items-start justify-between">
                                                                 <div className="flex items-start gap-2 w-[85%]">
                                                                     <span className={item.passed ? "drawer-analysis-passed" : "drawer-analysis-failed"}>
@@ -609,7 +598,7 @@ export const PromptBooster: React.FC = () => {
                                                                     </div>
                                                                 </div>
                                                                 <div className="text-xs whitespace-nowrap text-gray-400 font-mono">
-                                                                    +{item.points}分
+                                                                    {item.passed ? `+${item.points}分` : "0分"}
                                                                 </div>
                                                             </li>
                                                         ))}
