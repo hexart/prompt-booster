@@ -1,6 +1,7 @@
 {
     "appId": "com.hexart.promptbooster",
     "productName": "提示词增强",
+    "copyright": "Copyright © 2025 Hexart Studio",
     "directories": {
         "output": "release"
     },
@@ -19,10 +20,48 @@
     },
     "win": {
         "target": [
-            "nsis"
-        ]
+            {
+                "target": "nsis",
+                "arch": [
+                    "x64",
+                    "arm64"
+                ]
+            },
+            {
+                "target": "portable",
+                "arch": [
+                    "x64",
+                    "arm64"
+                ]
+            }
+        ],
+        "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+        "icon": "build/icon.ico"
     },
     "linux": {
-        "target": "AppImage"
+        "target": [
+            "deb",
+            "rpm",
+            "AppImage"
+        ],
+        "category": "Utility",
+        "icon": "build/icons",
+        "synopsis": "提升你的提示词输入效率",
+        "description": "Prompt Booster 是一款提升AI提示词输入效率的跨平台工具",
+        "desktop": {
+            "entry": {
+                "Name": "Prompt Booster",
+                "Comment": "提升你的提示词输入效率",
+                "Categories": "Utility;Development;"
+            }
+        }
+    },
+    "publish": {
+        "provider": "github",
+        "owner": "hexart",
+        "repo": "prompt-booster",
+        "releaseType": "release",
+        "private": false,
+        "vPrefixedTagName": true
     }
 }

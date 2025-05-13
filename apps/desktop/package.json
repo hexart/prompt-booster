@@ -4,6 +4,10 @@
   "description": "Prompt Booster Desktop App",
   "private": true,
   "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hexart/prompt-booster.git"
+  },
   "scripts": {
     "dev": "npm run build:web && electron .",
     "build": "npm run build:web && electron-builder",
@@ -26,73 +30,8 @@
   "keywords": [
     "Prompt Booster"
   ],
-  "author": "Hexart Stuido",
+  "author": "Hexart Studio",
   "license": "MIT",
-  "build": {
-    "appId": "com.hexart.promptbooster",
-    "productName": "Prompt Booster",
-    "copyright": "Copyright © 2025 Hexart Studio",
-    "directories": {
-      "output": "release",
-      "buildResources": "build"
-    },
-    "files": [
-      "main.js",
-      "preload.js",
-      "build/**/*",
-      "web/**/*",
-      "node_modules/**/*"
-    ],
-    "mac": {
-      "category": "public.app-category.productivity",
-      "icon": "build/icon.icns",
-      "darkModeSupport": true,
-      "hardenedRuntime": true
-    },
-    "win": {
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64",
-            "arm64"
-          ]
-        },
-        {
-          "target": "portable",
-          "arch": [
-            "x64",
-            "arm64"
-          ]
-        }
-      ],
-      "icon": "build/icon.ico"
-    },
-    "linux": {
-      "target": [
-        "deb",
-        "rpm",
-        "AppImage"
-      ],
-      "category": "Utility",
-      "icon": "build/icons",
-      "synopsis": "提升你的提示词输入效率",
-      "description": "Prompt Booster 是一款提升AI提示词输入效率的跨平台工具",
-      "desktop": {
-        "entry": {
-          "Name": "Prompt Booster",
-          "Comment": "提升你的提示词输入效率",
-          "Categories": "Utility;Development;"
-        }
-      }
-    },
-    "publish": {
-      "provider": "github",
-      "owner": "hexart",
-      "repo": "prompt-booster",
-      "releaseType": "release"
-    }
-  },
   "devDependencies": {
     "electron": "^36.2.0",
     "electron-builder": "^26.0.12",
