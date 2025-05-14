@@ -1,6 +1,6 @@
 {
   "name": "prompt-booster",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Prompt Booster Desktop App",
   "private": true,
   "main": "main.js",
@@ -9,13 +9,13 @@
     "url": "https://github.com/hexart/prompt-booster.git"
   },
   "scripts": {
-  "dev": "npm run build:web && electron .",
-  "build": "npm run build:web && electron-builder",
-  "build:web": "cd ../web && pnpm build",
-  "build:mac": "npm run build:web && electron-builder --mac",
-  "build:win": "npm run build:web && electron-builder --win",
-  "build:linux": "npm run build:web && electron-builder --linux"
-},
+    "dev": "npm run build:web && electron .",
+    "build": "npm run build:web && electron-builder",
+    "build:web": "cd ../web && pnpm build",
+    "build:mac": "npm run build:web && electron-builder --mac",
+    "build:win": "npm run build:web && electron-builder --win",
+    "build:linux": "npm run build:web && electron-builder --linux"
+  },
   "keywords": [
     "Prompt Booster"
   ],

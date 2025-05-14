@@ -17,7 +17,8 @@
     "start:dev": "turbo run dev",
     "desktop:dev": "cd apps/desktop && npm run dev",
     "desktop:package": "npm run build && cd apps/desktop && npm run package",
-    "desktop:package:mac": "npm run build && cd apps/desktop && npm run package:mac"
+    "desktop:package:mac": "npm run build && cd apps/desktop && npm run package:mac",
+    "release": "cd apps/desktop && npm version patch --no-git-tag-version && cd ../.. && git add . && git commit -m \"chore: prepare release\" && git tag v$(node -e \"console.log(require('./apps/desktop/package.json').version)\") && git push && git push --tags"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.16",

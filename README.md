@@ -115,14 +115,32 @@ Native desktop experience using Electron:
 
 ### Installation
 
-1. Clone the repository:
+1. Install Node.js:
+
+   - Download and install Node.js 18.17.0 or higher from [the official Node.js website](https://nodejs.org/)
+   - Verify the installation by running `node -v` and `npm -v` in your terminal
+
+2. Install pnpm:
+
+   ```bash
+   # Using npm
+   npm install -g pnpm
+   
+   # Or using the recommended standalone script
+   curl -fsSL https://get.pnpm.io/install.sh | sh -
+   
+   # Verify installation
+   pnpm --version
+   ```
+
+3. Clone the repository:
 
    ```bash
    git clone https://github.com/yourusername/prompt-booster.git
    cd prompt-booster
    ```
 
-2. Install dependencies:
+4. Install dependencies:
 
    ```bash
    pnpm install
@@ -141,7 +159,9 @@ Run the desktop application in development mode:
 
 ```bash
 # Start desktop app in development mode
-pnpm desktop:dev
+cd apps/desktop
+npm install
+npm run dev
 ```
 
 Build all packages and applications:
@@ -166,11 +186,12 @@ pnpm clean:all
 Build desktop application packages for different platforms:
 
 ```bash
+cd apps/desktop
 # Package for all platforms
-pnpm desktop:package
+npm run build
 
 # Package for macOS
-pnpm desktop:package:mac
+npm run build:mac
 ```
 
 ## Deployment

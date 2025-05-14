@@ -104,14 +104,32 @@ prompt-booster/
 
 ### 安装
 
-1. 克隆仓库：
+1. 安装 Node.js：
+
+   - 从 [Node.js 官网](https://nodejs.org/) 下载并安装 Node.js 18.17.0 或更高版本
+   - 在终端运行 `node -v` 和 `npm -v` 命令验证安装是否成功
+
+2. 安装 pnpm：
+
+   ```bash
+   # 使用 npm 安装
+   npm install -g pnpm
+   
+   # 或使用推荐的独立脚本安装
+   curl -fsSL https://get.pnpm.io/install.sh | sh -
+   
+   # 验证安装
+   pnpm --version
+   ```
+
+3. 克隆仓库：
 
    ```bash
    git clone https://github.com/yourusername/prompt-booster.git
    cd prompt-booster
    ```
 
-2. 安装依赖：
+4. 安装依赖：
 
    ```bash
    pnpm install
@@ -130,7 +148,9 @@ pnpm dev
 
 ```bash
 # 以开发模式启动桌面应用
-pnpm desktop:dev
+cd apps/desktop
+npm install
+npm run dev
 ```
 
 构建所有包和应用：
@@ -155,11 +175,12 @@ pnpm clean:all
 为不同平台构建桌面应用包：
 
 ```bash
+cd apps/desktop
 # 为所有平台打包
-pnpm desktop:package
+npm run build
 
 # 为macOS打包
-pnpm desktop:package:mac
+npm run build:mac
 ```
 
 ## 部署

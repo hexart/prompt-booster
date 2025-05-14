@@ -1,5 +1,5 @@
 {
-    "$schema": "https://turbo.build/schema.json",
+    "$schema": "https://turborepo.com/schema.json",
     "globalDependencies": [
         "**/.env.*local"
     ],
@@ -22,23 +22,6 @@
         },
         "clean": {
             "cache": false
-        },
-        "electron:dev": {
-            "dependsOn": ["^build", "build:packages"],
-            "cache": false,
-            "persistent": true
-        },
-        "electron:build": {
-            "dependsOn": ["build:packages", "build"],
-            "outputs": [
-                "release/**"
-            ]
-        },
-        "electron:build:mac": {
-            "dependsOn": ["build:packages", "build"],
-            "outputs": [
-                "release/**"
-            ]
-        }
+        }        
     }
 }
