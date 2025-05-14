@@ -6,6 +6,8 @@
 
 提示词增强器桌面客户端是基于 Electron 框架的跨平台应用程序，旨在为用户提供原生桌面体验。该应用程序将 Web 版本的提示词增强器功能打包为独立应用，支持 Windows、macOS 和 Linux 操作系统，无需浏览器即可使用全部功能。
 
+**重要说明**：桌面客户端是作为与主项目结构完全独立的包设计的。虽然它使用编译后的 Web 资源，但它维护自己的依赖管理和构建系统，允许在不需要整个项目代码库的情况下进行独立开发和编译。
+
 ### 1.1 主要特点
 
 - **原生应用体验**：作为独立桌面应用运行，无需浏览器
@@ -14,6 +16,7 @@
 - **本地菜单与快捷键**：原生操作系统菜单和快捷键支持
 - **离线可用**：支持本地存储数据，减少网络依赖
 - **统一用户界面**：与 Web 版本保持一致的用户体验
+- **独立架构**：作为独立包运行，具有专用的依赖管理
 
 ## 2. 技术架构
 
@@ -21,6 +24,7 @@
 
 - **桌面框架**：Electron 36.0.1
 - **构建工具**：Electron-Builder 26.0.12
+- **包管理器**：npm（注意：桌面客户端独立使用npm，与项目其余部分分开）
 - **Web 前端**：React 19.1 + TypeScript
 - **UI 框架**：Tailwind CSS 4.1
 - **状态管理**：Zustand 4.4
@@ -32,8 +36,16 @@
 - **main.js**：Electron 主进程，负责窗口管理和菜单创建
 - **preload.js**：预加载脚本，提供安全的进程间通信
 - **electron-builder.json**：应用打包配置
-- **package.json**：项目依赖和脚本配置
-- **web/**：Web 应用的构建产物
+- **package.json**：项目依赖和脚本配置（独立于主项目）
+- **web/**：Web 应用的构建产物（从 web 项目导入）
+
+### 2.3 与主项目的集成
+
+桌面客户端：
+- 使用 web 项目的编译输出
+- 不与主项目共享依赖
+- 维护自己的基于 npm 的依赖管理
+- 在提供 web 构建产物的情况下可以独立开发和构建
 
 ## 3. 安装指南
 
@@ -156,43 +168,60 @@
 开发环境要求：
 
 - Node.js 18.17.0 或更高版本
-- npm 或 pnpm 包管理器
+- npm 包管理器（注意：桌面客户端特别使用 npm，而非 pnpm）
 - Git
 
-### 7.2 构建步骤
+### 7.2 本地构建指南
 
-1. 克隆代码仓库
+#### 独立编译
 
-2. 安装依赖：
+当提供 web 构建资源时，桌面客户端可以独立于主项目进行编译：
 
+1. 确保你有可用的 web 构建输出：
+   ```bash
+   # 方法 1：首先构建 web 项目（如果使用 monorepo，则从项目根目录）
+   cd ../web
+   pnpm build
+   
+   # 方法 2：如果可用，使用现有的构建产物
+   ```
+
+2. 导航到 desktop 目录（该目录独立于主项目）：
    ```bash
    cd desktop
+   ```
+
+3. 使用 npm（而非 pnpm）安装依赖：
+   ```bash
    npm install
    ```
 
-3. 开发模式运行：
-
+4. 开发模式运行：
    ```bash
    npm run dev
    ```
 
-4. 构建应用：
-
+5. 构建应用：
    ```bash
-   npm run build
-   # 构建所有平台npm run build:mac
-   # 构建 macOS ARM64 版本
-   npm run build:mac:universal 
-   # 构建 macOS Universal 版本
-   npm run build:win      
-   # 构建 Windows 版本npm run build:linux    
-   # 构建 Linux 版本
+   npm run build          # 构建所有平台
+   npm run build:mac      # 构建 macOS 版本
+   npm run build:win      # 构建 Windows 版本
+   npm run build:linux    # 构建 Linux 版本
    ```
+
+#### 依赖管理
+
+由于 pnpm 和 Electron Builder 之间的兼容性问题，桌面客户端特意使用 npm 而非 pnpm：
+
+- 所有依赖通过 npm 管理
+- desktop 目录中的 package.json 完全独立
+- 切勿在 desktop 目录内混合使用 pnpm 和 npm 命令
 
 ### 7.3 项目配置文件
 
 - **electron-builder.json**：定义应用打包配置，包括应用 ID、产品名称、输出目录和平台特定设置
-- **package.json**：定义项目依赖和脚本命令
+- **package.json**：定义项目依赖和脚本命令（独立于主项目）
+- **.npmrc**：可选的 npm 配置，专用于桌面客户端
 
 ## 8. 故障排除
 

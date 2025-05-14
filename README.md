@@ -102,6 +102,8 @@ Native desktop experience using Electron:
 - Offline-capable functionality
 - Consistent UI with web version
 
+**Important Note**: The desktop application is intentionally managed as a completely independent package outside the main project structure. Unlike other packages in this monorepo which use pnpm, the desktop package exclusively uses npm for dependency management due to compatibility issues between pnpm and Electron Builder. The desktop client consumes the compiled web application but maintains its own build process and dependency tree. For detailed compilation and development instructions, please refer to the [Desktop Application Documentation](apps/desktop/README.md).
+
 [View Desktop Application Documentation](apps/desktop/README.md)
 
 ## Setup and Development

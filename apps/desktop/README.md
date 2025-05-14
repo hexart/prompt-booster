@@ -6,6 +6,8 @@
 
 The Prompt Enhancer desktop client is a cross-platform application based on the Electron framework, designed to provide users with a native desktop experience. This application packages the web version of the Prompt Enhancer functionality as a standalone application, supporting Windows, macOS, and Linux operating systems, with all features available without requiring a browser.
 
+**Important Note**: The desktop client is designed as a completely independent package separate from the main project structure. While it consumes the compiled web assets, it maintains its own dependency management and build system, allowing for standalone development and compilation without requiring the entire project codebase.
+
 ### 1.1 Key Features
 
 - **Native Application Experience**: Runs as a standalone desktop application without needing a browser
@@ -14,13 +16,15 @@ The Prompt Enhancer desktop client is a cross-platform application based on the 
 - **Local Menus and Shortcuts**: Native operating system menu and shortcut support
 - **Offline Availability**: Supports local data storage, reducing network dependency
 - **Unified User Interface**: Maintains consistent user experience with the web version
+- **Independent Architecture**: Operates as a standalone package with dedicated dependency management
 
 ## 2. Technical Architecture
 
 ### 2.1 Technology Stack
 
-- **Desktop Framework**: Electron 36.0.1
+- **Desktop Framework**: Electron 36.2.0
 - **Build Tool**: Electron-Builder 26.0.12
+- **Package Manager**: npm (Note: The desktop client uses npm independently from the rest of the project)
 - **Web Frontend**: React 19.1 + TypeScript
 - **UI Framework**: Tailwind CSS 4.1
 - **State Management**: Zustand 4.4
@@ -32,8 +36,16 @@ The desktop client uses the Electron framework to encapsulate the web applicatio
 - **main.js**: Electron main process, responsible for window management and menu creation
 - **preload.js**: Preload script, providing secure inter-process communication
 - **electron-builder.json**: Application packaging configuration
-- **package.json**: Project dependencies and script configuration
-- **web/**: Build output of the web application
+- **package.json**: Project dependencies and script configuration (independent from the main project)
+- **web/**: Build output of the web application (imported from the web project)
+
+### 2.3 Integration with Main Project
+
+The desktop client:
+- Consumes the compiled output from the web project
+- Does not share dependencies with the main project
+- Maintains its own npm-based dependency management
+- Can be developed and built independently when provided with the web build artifacts
 
 ## 3. Installation Guide
 
@@ -156,41 +168,60 @@ The desktop version provides native operating system menus, including:
 Development environment requirements:
 
 - Node.js 18.17.0 or higher
-- npm or pnpm package manager
+- npm package manager (Note: The desktop client uses npm specifically, not pnpm)
 - Git
 
-### 7.2 Build Steps
+### 7.2 Local Build Guide
 
-1. Clone the code repository
+#### Standalone Compilation
 
-2. Install dependencies:
+The desktop client can be compiled independently of the main project when provided with the web build assets:
 
+1. Ensure you have the web build output available:
+   ```bash
+   # Option 1: Build the web project first (from project root if using monorepo)
+   cd ../web
+   pnpm build
+   
+   # Option 2: Use existing build artifacts if available
+   ```
+
+2. Navigate to the desktop directory (which is independent of the main project):
    ```bash
    cd desktop
+   ```
+
+3. Install dependencies using npm (not pnpm):
+   ```bash
    npm install
    ```
 
-3. Run in development mode:
-
+4. Run in development mode:
    ```bash
    npm run dev
    ```
 
-4. Build the application:
-
+5. Build the application:
    ```bash
    npm run build          # Build for all platforms
    npm run build:mac      # Build macOS version
-   npm run build:mac:arm  # Build macOS ARM64 version
-   npm run build:mac:universal # Build macOS Universal version
    npm run build:win      # Build Windows version
    npm run build:linux    # Build Linux version
    ```
 
+#### Dependency Management
+
+The desktop client intentionally uses npm instead of pnpm due to compatibility issues between pnpm and Electron Builder:
+
+- All dependencies are managed via npm
+- The package.json in the desktop directory is completely independent
+- Never mix pnpm and npm commands within the desktop directory
+
 ### 7.3 Project Configuration Files
 
 - **electron-builder.json**: Defines application packaging configuration, including application ID, product name, output directory, and platform-specific settings
-- **package.json**: Defines project dependencies and script commands
+- **package.json**: Defines project dependencies and script commands (independent from the main project)
+- **.npmrc**: Optional npm configuration specific to the desktop client
 
 ## 8. Troubleshooting
 

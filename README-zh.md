@@ -91,6 +91,8 @@ prompt-booster/
 - 离线功能
 - 与Web版本一致的UI
 
+**重要说明**：桌面应用被有意设计为完全独立于主项目结构的包。与单体仓库中使用pnpm的其他包不同，由于pnpm与Electron Builder之间的兼容性问题，桌面包专门使用npm进行依赖管理。桌面客户端虽然使用编译后的web应用，但维护着自己的构建过程和依赖树。有关详细的编译和开发说明，请参阅[桌面应用文档](apps/desktop/README-zh.md)。
+
 [查看桌面应用文档](apps/desktop/README-zh.md)
 
 ## 设置和开发
