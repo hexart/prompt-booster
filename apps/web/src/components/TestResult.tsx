@@ -10,8 +10,10 @@ import { createStreamHandler } from '@prompt-booster/api/utils/stream';
 import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
 import { RocketIcon, MinimizeIcon, MaximizeIcon, ArrowLeftFromLineIcon, ArrowRightFromLineIcon, ArrowDownFromLineIcon, ArrowUpFromLineIcon } from 'lucide-react';
 import LoadingIcon from '@prompt-booster/ui/components/LoadingIcon';
+import { useTranslation } from 'react-i18next';
 
 export const TestResult: React.FC = () => {
+    const { t } = useTranslation();
     // 使用memoryStore获取所有需要的状态
     const {
         originalPrompt,
@@ -61,7 +63,7 @@ export const TestResult: React.FC = () => {
     useEffect(() => {
         if (error) {
             // 主要错误信息
-            toast.error(`测试错误: ${error}`, {
+            toast.error(`${t('toast.testError')}: ${error}`, {
                 duration: 5000,  // 对于多行内容，保持可见的时间更长
             });
 
@@ -249,7 +251,7 @@ export const TestResult: React.FC = () => {
                     // 完成处理
                     () => {
                         setIsTestingOriginal(false);
-                        toast.success('原始提示词响应已完成');
+                        toast.success(t('toast.originalResponseCompleted'));
                     }
                 )),
 
@@ -272,7 +274,7 @@ export const TestResult: React.FC = () => {
                     // 完成处理
                     () => {
                         setIsTestingOptimized(false);
-                        toast.success('增强提示词响应已完成');
+                        toast.success(t('toast.enhancedResponseCompleted'));
                     }
                 ))
             ]);
@@ -336,7 +338,9 @@ export const TestResult: React.FC = () => {
                                         <div className="flex md:hidden">
                                             {isOriginal ? <ArrowUpFromLineIcon size={16} /> : <ArrowDownFromLineIcon size={16} />}
                                         </div>
-                                        <span className="hidden lg:inline">收缩</span>
+                                        <span className="hidden lg:inline">
+                                            {t('common.buttons.collapse')}
+                                        </span>
                                     </>
                                 ) : (
                                     <>
@@ -346,7 +350,9 @@ export const TestResult: React.FC = () => {
                                         <div className="flex md:hidden">
                                             {isOriginal ? <ArrowDownFromLineIcon size={16} /> : <ArrowUpFromLineIcon size={16} />}
                                         </div>
-                                        <span className="hidden lg:inline">扩展</span>
+                                        <span className="hidden lg:inline">
+                                            {t('common.buttons.expand')}
+                                        </span>
                                     </>
                                 )}
                             </button>
@@ -363,12 +369,12 @@ export const TestResult: React.FC = () => {
                         className="p-3 border rounded-md max-h-[380px] min-h-0 md:max-h-[100vh] autoscroll-content"
                         buttonText=""
                         threshold={8}
-                        placeholder={isStreaming ? "正在生成响应..." : "暂无响应内容，请运行测试..."}
+                        placeholder={isStreaming ? t('testResult.responding') : t('testResult.noResponseYet')}
                     />
                 </div>
 
                 <div className="flex text-sm mt-2 justify-end input-charactor-counter">
-                    {response.length} 字符
+                    {t('promptBooster.characterCount', { count: Number(response.length) })}
                 </div>
             </div>
         );
@@ -379,21 +385,24 @@ export const TestResult: React.FC = () => {
             {/* 用户输入区域 */}
             {!isMaximized && (
                 <div className="p-4 mb-4 border rounded-lg shadow-2xs flex-none secondary-container">
-                    <h2 className="text-xl font-semibold mb-4 title-secondary">提示词对比测试</h2>
+                    <h2 className="text-xl font-semibold mb-4 title-secondary">
+                        {t('testResult.title')}
+                    </h2>
                     {/* 使用新的DraggableNotice组件 */}
                     {showRequirements && (
                         <DraggableNotice
+                            title={t('testResult.notice.title')}
                             items={[
                                 {
-                                    text: "需要输入原始提示词",
+                                    text: t('testResult.notice.text1'),
                                     isNeeded: !originalPrompt?.trim()
                                 },
                                 {
-                                    text: "需要先增强提示词",
+                                    text: t('testResult.notice.text2'),
                                     isNeeded: !optimizedPrompt?.trim() && !isProcessing
                                 },
                                 {
-                                    text: "需要输入测试内容",
+                                    text: t('testResult.notice.text3'),
                                     isNeeded: !userTestPrompt.trim()
                                 }
                             ]}
@@ -403,10 +412,10 @@ export const TestResult: React.FC = () => {
                     )}
                     {/* textarea区域 */}
                     <EnhancedTextarea
-                        placeholder="输入测试内容，它将与系统提示词组合进行测试..."
+                        placeholder={t('testResult.inputPlaceholder')}
                         value={userTestPrompt}
                         onChange={(e) => setUserTestPrompt(e.target.value)}
-                        label="测试输入 (用户提示词)"
+                        label={t('testResult.testInput')}
                         labelClassName="input-description"
                         className='input-textarea'
                         rows={4}
@@ -419,7 +428,9 @@ export const TestResult: React.FC = () => {
             <div className="flex flex-row justify-between items-end gap-4 mb-4">
                 {/* 选择模型菜单区域 */}
                 <div className="min-w-[33%]">
-                    <label className="block text-sm font-medium mb-2 whitespace-nowrap truncate input-description">选择模型进行测试</label>
+                    <label className="block text-sm font-medium mb-2 whitespace-nowrap truncate input-description">
+                        {t('testResult.modelSelect')}
+                    </label>
                     <EnhancedDropdown
                         options={getEnabledModels().map(model => ({
                             value: model.id,
@@ -427,7 +438,7 @@ export const TestResult: React.FC = () => {
                         }))}
                         value={selectedTestModelId}
                         onChange={setSelectedTestModelId}
-                        placeholder="选择模型..."
+                        placeholder={t('promptBooster.modelPlaceholder')}
                         disabled={isTestingOriginal || isTestingOptimized}
                         className=""
                     />
@@ -435,7 +446,7 @@ export const TestResult: React.FC = () => {
                 {/* 按钮区域 */}
                 <div className="flex items-center justify-end gap-2 flex-shrink min-w-0">
                     {/* Markdown按钮 */}
-                    <Tooltip text={`${showMarkdown ? '关闭Markdown渲染' : '开启Markdown渲染'}`} position="top">
+                    <Tooltip text={`${showMarkdown ? t('testResult.disableMarkdown') : t('testResult.enableMarkdown')}`} position="top">
                         <button
                             type="button"
                             onClick={() => setShowMarkdown(!showMarkdown)}
@@ -451,7 +462,7 @@ export const TestResult: React.FC = () => {
                         </button>
                     </Tooltip>
                     {/* 运行对比测试按钮 */}
-                    <Tooltip text="运行对比测试">
+                    <Tooltip text={t('testResult.runComparisonTest')}>
                         <button
                             className={`flex gap-2 items-center px-3 py-2 rounded-md h-10 min-w-[30%] truncate transition-colors duration-500 button-confirm
                                 ${isTestingOriginal || isTestingOptimized
@@ -468,8 +479,8 @@ export const TestResult: React.FC = () => {
                         >
                             <RocketIcon size={16} />
                             {isTestingOriginal || isTestingOptimized
-                                ? '生成中...'
-                                : (retryCount > 0 ? `重试中 (${retryCount}/${maxRetries})...` : '运行测试')
+                                ? t('testResult.generating')
+                                : (retryCount > 0 ? t('testResult.retryingCount', { count: retryCount, max: maxRetries }) : t('testResult.runTest'))
                             }
                         </button>
                     </Tooltip>
@@ -482,12 +493,12 @@ export const TestResult: React.FC = () => {
                         {isMaximized ? (
                             <>
                                 <MinimizeIcon size={14} />
-                                <span className="hidden md:block">还原</span>
+                                <span className="hidden md:block">{t('common.buttons.restore')}</span>
                             </>
                         ) : (
                             <>
                                 <MaximizeIcon size={14} />
-                                <span className="hidden md:block">最大化</span>
+                                <span className="hidden md:block">{t('common.buttons.maximize')}</span>
                             </>
                         )}
                     </button>
@@ -500,7 +511,7 @@ export const TestResult: React.FC = () => {
                 {!isOptimizedMaximized && (
                     <div className={isOriginalMaximized ? "col-span-2 min-h-0" : "min-h-0"}>
                         {renderResponseArea(
-                            "原始提示词响应",
+                            t('testResult.originalResponse'),
                             originalResponse,
                             isTestingOriginal,
                             isOriginalMaximized,
@@ -517,7 +528,7 @@ export const TestResult: React.FC = () => {
                 {!isOriginalMaximized && (
                     <div className={isOptimizedMaximized ? "col-span-2 min-h-0" : "min-h-0"}>
                         {renderResponseArea(
-                            "增强提示词响应",
+                            t('testResult.enhancedResponse'),
                             optimizedResponse,
                             isTestingOptimized,
                             isOptimizedMaximized,

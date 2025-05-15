@@ -4,6 +4,7 @@ import { toast } from '../index';
 import { DialogContext } from './Dialog';
 import LoadingIcon from './LoadingIcon';
 import { ChevronDown } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export interface ModelOption {
     id: string;
@@ -29,6 +30,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
     disabled = false,
     onFetch
 }) => {
+    const { t } = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
     const [options, setOptions] = useState<ModelOption[]>([]);
     const [filteredOptions, setFilteredOptions] = useState<ModelOption[]>([]);
@@ -174,13 +176,13 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
             }
 
             if (models.length > 0) {
-                toast.success(`成功获取 ${models.length} 个模型`);
+                toast.success(t('toast.getModelListSuccess', { count: models.length }));
             } else {
-                toast.info('没有可用的模型');
+                toast.info(t('toast.noModelAvailable'));
             }
         } catch (error) {
             console.error('获取模型列表失败:', error);
-            toast.error('获取模型列表失败');
+            toast.error(t('toast.getModelListFailed'));
         } finally {
             setIsLoading(false);
         }
@@ -309,11 +311,11 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                         // 空白下拉菜单
                         <div className="p-2 text-center flex items-center justify-center dropdown-null space-x-2">
                             <LoadingIcon />
-                            <span>加载中...</span>
+                            <span>{t('settings.loading')}</span>
                         </div>
                     ) : filteredOptions.length === 0 ? (
                         <div className="p-2 text-center dropdown-null">
-                            {options.length === 0 ? '没有可用的模型' : '没有匹配的模型'}
+                            {options.length === 0 ? t('settings.noModelAvailable') : t('settings.noMatchingModel')}
                         </div>
                     ) : (
                         filteredOptions.map((option) => (

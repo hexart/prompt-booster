@@ -39,4 +39,8 @@
     .theme-dropdown-inactive {
         @apply text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600;
     }
+
+    .lang-button {
+        @apply p-[8px] rounded-md transition-all;
+    }
 }

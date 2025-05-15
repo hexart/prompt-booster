@@ -5,12 +5,14 @@ import { PromptGroup } from '@prompt-booster/core/prompt/models/prompt';
 import { usePromptHistory } from '@prompt-booster/core/prompt/hooks/usePromptHistory';
 import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
 import { Trash2Icon, ChevronsDownIcon, ChevronsUpIcon, RotateCcwIcon } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface PromptHistoryProps {
     onNavigateToEditor?: () => void;
 }
 
 export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor }) => {
+    const { t } = useTranslation();
     // 使用提示词组钩子
     const {
         getAllGroups,
@@ -52,8 +54,8 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
         return (
             <div className="p-4 border rounded-lg shadow-2xs h-full listcard-container">
                 <div className="p-8 text-center h-full items-center listcard-description">
-                    <p>暂无优化历史记录</p>
-                    <p className="text-sm mt-2">优化提示词后将在此处显示历史记录</p>
+                    <p>{t('history.noHistory')}</p>
+                    <p className="text-sm mt-2">{t('history.noHistoryHint')}</p>
                 </div>
             </div>
         );
@@ -117,14 +119,14 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
     return (
         <div className="flex flex-col h-full p-4 border rounded-lg secondary-container">
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold title-secondary">历史记录 ({groups.length})</h2>
+                <h2 className="text-xl font-semibold title-secondary">{t('history.title')} ({groups.length})</h2>
                 <div>
                     <button
                         onClick={handleClearHistoryClick}
                         className="px-3 py-2 flex items-center gap-1 text-sm rounded-md button-danger"
                     >
                         <Trash2Icon size={15} />
-                        <span className="hidden sm:block">清空</span>
+                        <span className="hidden sm:block">{t('history.clearHistory')}</span>
                     </button>
                 </div>
             </div>
@@ -146,7 +148,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                                     </span>
                                     {versions.length > 1 && (
                                         <span className="px-2 py-0.5 text-xs rounded-full listcard-tag">
-                                            {versions.length}个版本
+                                            {t('history.versionsCount', { count: versions.length })}
                                         </span>
                                     )}
                                 </div>
@@ -156,7 +158,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                                         className="flex items-center gap-1 text-sm px-3 py-2 rounded-md button-secondary"
                                     >
                                         {expandedGroupId === group.id ? <ChevronsUpIcon size={15} /> : <ChevronsDownIcon size={15} />}
-                                        <span className="hidden md:block">{expandedGroupId === group.id ? '收起' : '展开'}</span>
+                                        <span className="hidden md:block">{expandedGroupId === group.id ? t('history.collapse') : t('history.expand')}</span>
                                     </button>
 
                                     <button
@@ -164,7 +166,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                                         className="flex items-center gap-1 text-sm px-3 py-2 rounded-md button-secondary-load"
                                     >
                                         <RotateCcwIcon size={15} />
-                                        <span className="hidden md:block">加载</span>
+                                        <span className="hidden md:block">{t('history.load')}</span>
                                     </button>
 
                                     <button
@@ -172,7 +174,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                                         className="flex items-center gap-1 text-sm px-3 py-2 rounded-md button-secondary-danger"
                                     >
                                         <Trash2Icon size={15} />
-                                        <span className="hidden md:block">删除组</span>
+                                        <span className="hidden md:block">{t('history.deleteGroup')}</span>
                                     </button>
                                 </div>
                             </div>
@@ -189,7 +191,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                                         return (
                                             <>
                                                 <div>
-                                                    <h3 className="text-sm font-medium mb-1 listcard-description">原始提示词：</h3>
+                                                    <h3 className="text-sm font-medium mb-1 listcard-description">{t('history.originalPrompt')}</h3>
                                                     <div className="p-2 max-h-32 overflow-y-scroll rounded-md text-sm whitespace-pre-wrap listcard-prompt-container">
                                                         {group.originalPrompt}
                                                     </div>
@@ -198,7 +200,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                                                 {/* 版本列表 */}
                                                 <div className="flex space-x-2 overflow-y-visible overflow-x-auto py-2 [&::-webkit-scrollbar]:h-1">
                                                     {versions.map(version => (
-                                                        <Tooltip key={version.id} text={`使用模型：\n${version.provider ? `${version.provider} - ` : ''}${version.modelName || version.modelId || '未知模型'}`}>
+                                                        <Tooltip key={version.id} text={`${t('history.usingModel')}\n${version.provider ? `${version.provider} - ` : ''}${version.modelName || version.modelId || '未知模型'}`}>
                                                             <button
                                                                 key={version.id}
                                                                 onClick={() => handleSelectVersion(group.id, version.number)}
@@ -214,14 +216,14 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                                                 </div>
 
                                                 <div>
-                                                    <h3 className="text-sm font-medium mb-1 listcard-description">迭代方向：</h3>
+                                                    <h3 className="text-sm font-medium mb-1 listcard-description">{t('history.iterationDirection')}</h3>
                                                     <div className="p-2 rounded-md text-sm whitespace-pre-wrap iteration-prompt-container">
                                                         {displayVersion.iterationDirection || "无"}
                                                     </div>
                                                 </div>
 
                                                 <div>
-                                                    <h3 className="text-sm font-medium mb-1 listcard-description">增强后提示词：</h3>
+                                                    <h3 className="text-sm font-medium mb-1 listcard-description">{t('history.enhancedPrompt')}</h3>
                                                     <div className="p-2 max-h-[460px] overflow-auto rounded-md text-sm listcard-prompt-container">
                                                         {displayVersion.optimizedPrompt || ''}
                                                     </div>
@@ -239,7 +241,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                                                         }}
                                                         className="text-sm px-3 py-2 rounded-md button-secondary-load-version"
                                                     >
-                                                        加载此版本
+                                                        {t('history.loadVersion')}
                                                     </button>
                                                 </div>
                                             </>
@@ -251,7 +253,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                             {/* 未展开时只显示原始提示词 */}
                             {expandedGroupId !== group.id && (
                                 <div>
-                                    <div className="text-sm font-medium mb-1 listcard-description">原始提示词：</div>
+                                    <div className="text-sm font-medium mb-1 listcard-description">{t('history.originalPrompt')}</div>
                                     <div className="truncate p-2 text-sm listcard-description">
                                         {truncateText(group.originalPrompt)}
                                     </div>
@@ -266,7 +268,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
             <Dialog
                 isOpen={isClearDialogOpen}
                 onClose={cancelClearHistory}
-                title="确认清空历史"
+                title={t('history.confirmClearTitle')}
                 maxWidth="max-w-md"
                 footer={
                     <div className="flex justify-end gap-3">
@@ -274,25 +276,25 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                             onClick={cancelClearHistory}
                             className="px-4 py-2 rounded-md button-cancel"
                         >
-                            取消
+                            {t('common.buttons.cancel')}
                         </button>
                         <button
                             onClick={confirmClearHistory}
                             className="px-4 py-2 rounded-md button-danger"
                         >
-                            确认清空
+                            {t('history.confirmClearButton')}
                         </button>
                     </div>
                 }
             >
-                <p>确定要清空所有历史记录吗？此操作不可撤销。</p>
+                <p>{t('history.confirmClearMsg')}</p>
             </Dialog>
 
             {/* 删除提示词组确认对话框 */}
             <Dialog
                 isOpen={deleteDialogInfo.isOpen}
                 onClose={cancelDeleteHistoryItem}
-                title="确认删除整组提示词"
+                title={t('history.confirmDeleteTitle')}
                 maxWidth="max-w-md"
                 footer={
                     <div className="flex justify-end gap-3">
@@ -300,19 +302,19 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                             onClick={cancelDeleteHistoryItem}
                             className="px-4 py-2 rounded-md button-cancel"
                         >
-                            取消
+                            {t('common.buttons.cancel')}
                         </button>
                         <button
                             onClick={confirmDeleteHistoryItem}
                             className="px-4 py-2 rounded-md button-danger"
                         >
-                            确认删除
+                            {t('history.confirmDeleteButton')}
                         </button>
                     </div>
                 }
             >
                 <p>
-                    确定要删除这组提示词的所有版本吗？此操作不可撤销。
+                    {t('history.confirmDeleteMsg')}
                 </p>
             </Dialog>
         </div>

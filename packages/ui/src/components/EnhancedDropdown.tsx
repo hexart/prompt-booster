@@ -1,6 +1,7 @@
 //packages/ui/src/components/EnhancedDropdown.tsx
 import { useState, useRef, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export interface DropdownOption {
     value: string;
@@ -24,6 +25,7 @@ export const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
     disabled = false,
     className = ""
 }) => {
+    const { t } = useTranslation();
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const dropdownRef = useRef<HTMLDivElement | null>(null);
     const optionsContainerRef = useRef<HTMLDivElement | null>(null);
@@ -109,7 +111,9 @@ export const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
                         ))}
 
                         {options.length === 0 && (
-                            <li className="px-3 py-2 text-sm italic dropdown-null">没有可选项</li>
+                            <li className="px-3 py-2 text-sm italic dropdown-null">
+                                {t('common.dropdownNull')}
+                            </li>
                         )}
                     </ul>
                 </div>

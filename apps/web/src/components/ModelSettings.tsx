@@ -10,6 +10,7 @@ import { useModelConnection, useModelData, useModelEdit } from '../modelhooks/mo
 import { ModelModal } from './ModelModal';
 import { disableApiClientLogs } from '@prompt-booster/api/utils/connection';
 import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
+import { useTranslation } from 'react-i18next';
 
 // 在应用初始化时禁用 API 客户端日志
 disableApiClientLogs();
@@ -68,6 +69,7 @@ const ConfirmDialog: React.FC<{
 
 // 主组件
 export const ModelSettings: React.FC = () => {
+    const { t } = useTranslation();
     const {
         getCustomInterface,
     } = useModelStore();
@@ -122,7 +124,7 @@ export const ModelSettings: React.FC = () => {
 
             setActiveModel(id);
         } else {
-            toast.error('找不到要编辑的接口');
+            toast.error(t('toast.noInterfaceToEdit'));
         }
     };
 
@@ -181,7 +183,7 @@ export const ModelSettings: React.FC = () => {
                 interfaceName: interfaceToDelete.name || id
             });
         } else {
-            toast.error('找不到要删除的接口');
+            toast.error(t('toast.noInterfaceToDelete'));
         }
     };
 
@@ -196,14 +198,14 @@ export const ModelSettings: React.FC = () => {
     return (
         <div className="flex flex-col h-full p-4 border rounded-lg shadow-2xs secondary-container">
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold title-secondary">AI模型设置</h2>
-                <Tooltip text='添加自定义接口'>
+                <h2 className="text-xl font-semibold title-secondary">{t('settings.title')}</h2>
+                <Tooltip text={t('settings.addCustomModel')}>
                     <button
                         onClick={handleOpenAddCustomModal}
                         className="px-3 py-2 rounded-md text-sm inline-flex items-center gap-1 button-confirm"
                     >
                         <ListPlus size={17} />
-                        <span className="hidden sm:block">添加</span>
+                        <span className="hidden sm:block">{t('settings.add')}</span>
                     </button>
                 </Tooltip>
             </div>
@@ -214,7 +216,7 @@ export const ModelSettings: React.FC = () => {
                     <ListCard
                         key={model.id}
                         title={model.name}
-                        description={model.isStandard ? '内置模型' : `自定义模型`}
+                        description={model.isStandard ? t('settings.builtInModel') : t('settings.customModel')}
                         className={`border rounded-lg p-4 mb-2 last:mb-0 shadow-2xs hover:shadow-md transition-all duration-300 listcard-container ${!model.isEnabled ? 'opacity-50' : 'opacity-100'}`}
                         renderTitle={(title) => (
                             <h3 className="font-semibold text-lg truncate w-full listcard-title">{title}</h3>
@@ -236,7 +238,7 @@ export const ModelSettings: React.FC = () => {
                                     ) : (
                                         <Power size={14} />
                                     )}
-                                    <span className="hidden md:inline whitespace-nowrap">{model.isEnabled ? '已启用' : '已禁用'}</span>
+                                    <span className="hidden md:inline whitespace-nowrap">{model.isEnabled ? t('settings.enabled') : t('settings.disabled')}</span>
                                 </button>
 
                                 <button
@@ -251,7 +253,7 @@ export const ModelSettings: React.FC = () => {
                                             <LoadingIcon />
                                         )}
                                     </div>
-                                    <span className="hidden md:inline whitespace-nowrap">测试连接</span>
+                                    <span className="hidden md:inline whitespace-nowrap">{t('settings.testConnection')}</span>
                                 </button>
 
                                 <button
@@ -259,7 +261,7 @@ export const ModelSettings: React.FC = () => {
                                     className={`${!model.isStandard ? "mr-2" : ""} px-3 py-2 rounded-md text-sm inline-flex items-center gap-1 button-secondary-edit`}
                                 >
                                     <FileCog size={14} />
-                                    <span className="hidden md:inline whitespace-nowrap">编辑</span>
+                                    <span className="hidden md:inline whitespace-nowrap">{t('common.buttons.edit')}</span>
                                 </button>
 
                                 {!model.isStandard && (
@@ -268,7 +270,7 @@ export const ModelSettings: React.FC = () => {
                                         className="px-3 py-2 rounded-md text-sm inline-flex items-center gap-1 button-secondary-danger"
                                     >
                                         <Trash2 size={14} />
-                                        <span className="hidden md:inline whitespace-nowrap">删除</span>
+                                        <span className="hidden md:inline whitespace-nowrap">{t('common.buttons.delete')}</span>
                                     </button>
                                 )}
                             </div>
@@ -279,7 +281,7 @@ export const ModelSettings: React.FC = () => {
                 {/* 空状态显示 */}
                 {allModels.length === 0 && (
                     <div className="text-center py-8 input-description">
-                        暂无模型配置，请点击"添加自定义接口"按钮创建
+                        {t('settings.noModels')}
                     </div>
                 )}
             </div>
@@ -303,9 +305,10 @@ export const ModelSettings: React.FC = () => {
                 <ConfirmDialog
                     isOpen={confirmDeleteModal.isOpen}
                     onClose={confirmDeleteModal.closeModal}
-                    title="删除确认"
-                    message={`确定要删除接口 "${confirmDeleteModal.data.interfaceName}" 吗？`}
-                    confirmText="删除"
+                    title={t('settings.confirmDeleteTitle')}
+                    message={t('settings.confirmDeleteMsg', { name: confirmDeleteModal.data.interfaceName })}
+                    confirmText={t('common.buttons.delete')}
+                    cancelText={t('common.buttons.cancel')}
                     onConfirm={handleConfirmDelete}
                     danger={true}
                 />

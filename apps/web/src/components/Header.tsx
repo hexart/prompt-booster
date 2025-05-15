@@ -6,6 +6,8 @@ import ThemeSwitcher from '@prompt-booster/ui/components/ThemeSwitcher';
 import MobileMenu, { TabItem } from './MobileMenu';
 import logo from '../assets/logo.svg';
 import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
+import { LanguageSwitcher } from '@prompt-booster/ui/components/LanguageSwitcher';
+import { useTranslation } from 'react-i18next';
 
 // 为 Electron 的拖动区域属性创建类型声明
 declare module 'react' {
@@ -31,11 +33,12 @@ const Header: React.FC<HeaderProps> = ({
     setIsMobileMenuOpen,
     menuButtonRef
 }) => {
+    const { t } = useTranslation();
     const tabs = [
-        { id: 'booster', icon: RocketIcon, label: '提示词增强', shortcut: '⌥+1' },
-        { id: 'test', icon: Columns2Icon, label: '对比测试', shortcut: '⌥+2' },
-        { id: 'history', icon: GalleryVerticalEndIcon, label: '历史记录', shortcut: '⌥+3' },
-        { id: 'settings', icon: CogIcon, label: '模型设置', shortcut: '⌥+4' }
+        { id: 'booster', icon: RocketIcon, label: t('common.tabs.booster'), shortcut: '⌥+1' },
+        { id: 'test', icon: Columns2Icon, label: t('common.tabs.test'), shortcut: '⌥+2' },
+        { id: 'history', icon: GalleryVerticalEndIcon, label: t('common.tabs.history'), shortcut: '⌥+3' },
+        { id: 'settings', icon: CogIcon, label: t('common.tabs.settings'), shortcut: '⌥+4' }
     ] as const;
 
     // 设置快捷键
@@ -63,16 +66,16 @@ const Header: React.FC<HeaderProps> = ({
                 <div className="w-full max-w-(--breakpoint-2xl) mx-auto px-4 md:px-6 py-4">
                     <div className="flex justify-between items-center">
                         <div className="flex items-center min-w-24">
-                            <Tooltip text='悟空智算' position='bottom'>
+                            <Tooltip text={t('common.wuKong')} position='bottom'>
                                 <img
                                     src={logo}
-                                    alt="悟空智算"
+                                    alt={t('common.wuKong')}
                                     className="h-8 w-8 mr-2"
                                     style={nonDraggableStyle}
                                 />
                             </Tooltip>
                             <h1 className="text-xl sm:text-2xl font-bold whitespace-nowrap truncate title">
-                                提示词增强器
+                                {t('common.appName')}
                             </h1>
                         </div>
 
@@ -105,13 +108,16 @@ const Header: React.FC<HeaderProps> = ({
                             {/* 主题切换按钮 - 使用断点控制内部渲染模式 */}
                             <ThemeSwitcher />
 
+                            {/* 添加语言切换器 */}
+                            <LanguageSwitcher />
+
                             {/* 移动端菜单按钮 */}
                             <div className='md:hidden ml-2 p-1 rounded-lg mobile-menu-button-container'>
                                 <button
                                     ref={menuButtonRef}
                                     className="p-2 rounded-md mobile-menu-button"
                                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                                    aria-label={isMobileMenuOpen ? "关闭菜单" : "打开菜单"}
+                                    aria-label={isMobileMenuOpen ? t('aria.closeMenu') : t('aria.openMenu')}
                                     aria-expanded={isMobileMenuOpen}
                                     style={nonDraggableStyle}
                                 >

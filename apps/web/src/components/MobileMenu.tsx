@@ -1,6 +1,7 @@
 // src/components/MobileMenu.tsx
 import React, { useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 
 // 菜单类型定义
 export type TabItem = {
@@ -26,6 +27,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
     onTabChange,
     toggleButtonRef,
 }) => {
+    const { t } = useTranslation();
     const [mounted, setMounted] = useState(false);
     const menuRef = useRef<HTMLElement>(null);
 
@@ -75,7 +77,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
             <nav
                 ref={menuRef}
                 className="absolute top-18 right-4 overflow-hidden rounded-lg shadow-lg pointer-events-auto mobile-menu-container menu-container-animation"
-                aria-label="移动端导航菜单"
+                aria-label={t('aria.mobileMenu')}
             >
                 <div className="p-2">
                     {tabs.map((tab, index) => (

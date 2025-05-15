@@ -4,6 +4,7 @@ import { useTheme } from './ThemeContext';
 import { Moon, Sun, MonitorCog } from 'lucide-react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { Tooltip } from './Tooltip';
+import { useTranslation } from 'react-i18next';
 
 // 主题类型
 type ThemeType = 'light' | 'dark' | 'system';
@@ -23,36 +24,6 @@ const THEME_CLASSES = {
     }
 };
 
-// 主题配置
-const themeConfig: Record<ThemeType, {
-    icon: React.ComponentType<{ size?: number }>,
-    label: string,
-    getStyleType: (isDarkMode: boolean) => 'light' | 'dark',
-    shortcut: string,
-    hotkey: string
-}> = {
-    light: {
-        icon: Sun,
-        label: '亮色模式',
-        getStyleType: () => 'light', // 始终使用亮色样式
-        shortcut: '⌥+L',
-        hotkey: 'alt+l'
-    },
-    dark: {
-        icon: Moon,
-        label: '暗色模式',
-        getStyleType: () => 'dark', // 始终使用暗色样式
-        shortcut: '⌥+D',
-        hotkey: 'alt+d'
-    },
-    system: {
-        icon: MonitorCog,
-        label: '跟随系统',
-        getStyleType: (isDarkMode) => isDarkMode ? 'dark' : 'light', // 根据系统主题选择样式
-        shortcut: '⌥+S',
-        hotkey: 'alt+s'
-    }
-};
 
 interface ThemeSwitcherProps {
     /**
@@ -60,7 +31,7 @@ interface ThemeSwitcherProps {
      * @default 19
      */
     iconSize?: number;
-    
+
     /**
      * 是否启用快捷键
      * @default true
@@ -72,9 +43,42 @@ const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
     iconSize = 19,
     enableHotkeys = true
 }) => {
+    const { t } = useTranslation();
     const { theme, setTheme } = useTheme();
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
+
+
+    // 主题配置
+    const themeConfig: Record<ThemeType, {
+        icon: React.ComponentType<{ size?: number }>,
+        label: string,
+        getStyleType: (isDarkMode: boolean) => 'light' | 'dark',
+        shortcut: string,
+        hotkey: string
+    }> = {
+        light: {
+            icon: Sun,
+            label: t('common.theme.light'),
+            getStyleType: () => 'light', // 始终使用亮色样式
+            shortcut: '⌥+L',
+            hotkey: 'alt+l'
+        },
+        dark: {
+            icon: Moon,
+            label: t('common.theme.dark'),
+            getStyleType: () => 'dark', // 始终使用暗色样式
+            shortcut: '⌥+D',
+            hotkey: 'alt+d'
+        },
+        system: {
+            icon: MonitorCog,
+            label: t('common.theme.system'),
+            getStyleType: (isDarkMode) => isDarkMode ? 'dark' : 'light', // 根据系统主题选择样式
+            shortcut: '⌥+S',
+            hotkey: 'alt+s'
+        }
+    };
 
     // 检测当前是否处于暗色模式
     const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -185,12 +189,12 @@ const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
     return (
         <div className="relative inline-block" ref={dropdownRef}>
             {/* 大屏幕按钮组 */}
-            <div className={`hidden md:flex gap-1 ${THEME_CLASSES.container}`}>
+            <div className={`hidden lg:!flex gap-1 ${THEME_CLASSES.container}`}>
                 {Object.keys(themeConfig).map(key => renderThemeButton(key as ThemeType))}
             </div>
 
             {/* 小屏幕菜单 */}
-            <div className="md:hidden">
+            <div className="lg:hidden">
                 <div className={THEME_CLASSES.container}>
                     <Tooltip text={tooltipText} position="left">
                         <button

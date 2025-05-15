@@ -4,6 +4,7 @@ import { useAutoScroll } from '../hooks/useAutoscroll';
 import { ArrowDownIcon, ClipboardIcon, ClipboardCheckIcon } from 'lucide-react';
 import { Tooltip } from './Tooltip';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 
 /**
  * 自动滚动文本输入区组件
@@ -43,6 +44,7 @@ export const AutoScrollTextarea: React.FC<AutoScrollTextareaProps> = ({
     showCopyButton = true,
     ...restProps
 }) => {
+    const { t } = useTranslation();
     const {
         elementRef,
         scrollToBottom,
@@ -76,12 +78,12 @@ export const AutoScrollTextarea: React.FC<AutoScrollTextareaProps> = ({
             .then(() => {
                 setCopied(true);
                 // 显示提示消息
-                toast.success('已复制到剪贴板');
+                toast.success(t('toast.copySuccess'));
                 // 2秒后重置复制状态
                 setTimeout(() => setCopied(false), 2000);
             })
             .catch(err => {
-                console.error('无法复制文本: ', err);
+                console.error(t('toast.copyFailed'), err);
             });
     };
 
@@ -190,7 +192,7 @@ export const AutoScrollTextarea: React.FC<AutoScrollTextareaProps> = ({
 
             {/* 复制按钮 - 仅在悬停且有内容时显示 */}
             {showCopyButton && isHovered && !isEmpty && (
-                <Tooltip text="复制" position="bottom">
+                <Tooltip text={t('common.buttons.copy')} position="bottom">
                     <button
                         className="absolute top-2 right-2 p-2 rounded-md input-copy-button"
                         onClick={handleCopy}

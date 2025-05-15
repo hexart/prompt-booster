@@ -214,8 +214,27 @@ export interface LLMAnalysisResponse {
     suggestions?: string[];             // LLM提供的综合建议（可选）
 }
 
-export async function analyzePromptWithLLM(prompt: string): Promise<PromptAnalysisResult> {
+export async function analyzePromptWithLLM(
+    prompt: string,
+    currentLanguage?: string
+): Promise<PromptAnalysisResult> {
     const cleanedPrompt = removeThinkTags(prompt);
+    let languageInstruction = '';
+    if (currentLanguage) {
+        if (currentLanguage.includes('zh')) {
+            languageInstruction = '请使用中文输出结果。';
+        } else if (currentLanguage.includes('en')) {
+            languageInstruction = 'Please output the result in English.';
+        } else if (currentLanguage.includes('ja')) {
+            languageInstruction = '結果を日本語で出力してください。';
+        } else {
+            // 默认使用英语
+            languageInstruction = 'Please output the result in English.';
+        }
+    } else {
+        // 如果没有提供语言，默认使用中文
+        languageInstruction = '请使用中文输出结果。';
+    }
     const systemPrompt = `
 你是一个专业的提示词（Prompt）质量评估助手，你将对用户提供的提示词进行公正、创造性且全面的评估。
 
@@ -260,9 +279,11 @@ export async function analyzePromptWithLLM(prompt: string): Promise<PromptAnalys
   "suggestions": ["整体优化建议1", "整体优化建议2"],
   "encouragement": "基于提示词特点的个性化鼓励语，应明确反映其优势和特色"
 }
+
+${languageInstruction}
 `;
 
-    const userMessage = `请对以下提示词进行质量分析。如果它确实表现优秀，请给予高分评价；如果有不足，请如实指出并提供改进建议：\n\n${cleanedPrompt}`;
+    const userMessage = `请对以下提示词进行质量分析。如果它确实表现优秀，请给予高分评价；如果有不足，请如实指出并提供改进建议，${languageInstruction}：\n\n${cleanedPrompt}`;
 
     const result = await callLLMWithCurrentModel({
         userMessage,
@@ -287,7 +308,7 @@ export async function analyzePromptWithLLM(prompt: string): Promise<PromptAnalys
 
         // 验证并调整评分逻辑
         const criteria = parsed.criteria || [];
-        
+
         // 确保每个criterion都有正确的字段
         const enhancedCriteria: CriterionItem[] = criteria.map((c: {
             label: string;
@@ -305,7 +326,7 @@ export async function analyzePromptWithLLM(prompt: string): Promise<PromptAnalys
 
         // 计算总分
         let calculatedScore: number = enhancedCriteria.reduce((sum: number, c: CriterionItem) => sum + c.points, 0);
-        
+
         // 如果总分超过10分，按比例缩减
         if (calculatedScore > 10) {
             const scaleFactor: number = 10 / calculatedScore;

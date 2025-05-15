@@ -16,8 +16,10 @@ import { IterationDialog } from './IterationDialog';
 import { usePromptGroup } from '@prompt-booster/core/prompt/hooks/usePrompt';
 import { useModelStore } from '@prompt-booster/core/model/store/modelStore';
 import { PromptVersion } from '@prompt-booster/core/prompt/models/prompt';
+import { useTranslation } from 'react-i18next';
 
 export const PromptBooster: React.FC = () => {
+    const { t, i18n } = useTranslation();
     // 使用提示词组钩子
     const {
         activeGroup,
@@ -131,7 +133,7 @@ export const PromptBooster: React.FC = () => {
             const activeModelInfo = getEnabledModels().find(model => model.id === activeModel);
             const modelName = activeModelInfo?.name || activeModel;
 
-            toast.info(`正在使用${modelName}模型增强提示词，请稍候...`);
+            toast.info(t('toast.enhancingWithModel', { modelName }));
 
             // 执行优化
             await enhancePrompt({
@@ -140,10 +142,10 @@ export const PromptBooster: React.FC = () => {
                 modelId: activeModel
             });
 
-            toast.success('增强提示词成功');
+            toast.success(t('toast.enhancePromptSuccess'));
         } catch (error) {
             console.error('增强过程中出错:', error);
-            toast.error('增强提示词时出错');
+            toast.error(t('toast.enhancePromptFailed'));
         }
     };
 
@@ -164,10 +166,10 @@ export const PromptBooster: React.FC = () => {
                 editablePrompt
             );
 
-            toast.success('已保存您的修改为新版本');
+            toast.success(t('toast.saveAsNewVersionSuccess'));
         } catch (error) {
             console.error('保存失败:', error);
-            toast.error('保存修改失败');
+            toast.error(t('toast.saveAsNewVersionFailed'));
         }
     };
 
@@ -191,7 +193,7 @@ export const PromptBooster: React.FC = () => {
             // 重置LLM分析使用状态(每次打开抽屉时重置)
             setHasUsedLLMAnalysis(false);
         } catch (err: any) {
-            toast.error(err.message || '提示词分析失败');
+            toast.error(err.message || t('toast.analyzePromptFailed'));
         } finally {
             setLoading(false);
         }
@@ -207,18 +209,18 @@ export const PromptBooster: React.FC = () => {
             // 尝试使用LLM分析
             let result;
             try {
-                result = await analyzePromptWithLLM(optimizedPrompt);
+                result = await analyzePromptWithLLM(optimizedPrompt, i18n.language);
                 // 标记已使用LLM分析
                 setHasUsedLLMAnalysis(true);
             } catch (e) {
                 console.warn('[Fallback] LLM 评分失败，尝试使用本地分析:', e);
                 result = analyzePromptQuality(optimizedPrompt);
-                toast.warning('LLM分析失败，已回退到本地分析');
+                toast.warning(t('toast.analyzePromptLLMFailed'));
             }
 
             setAnalysisResult(result);
         } catch (err: any) {
-            toast.error(err.message || '提示词分析失败');
+            toast.error(err.message || t('toast.analyzePromptFailed'));
         } finally {
             setLoading(false);
         }
@@ -247,7 +249,7 @@ export const PromptBooster: React.FC = () => {
             setIsIterationDialogOpen(false);
         } catch (error) {
             console.error('迭代失败:', error);
-            toast.error('迭代过程中出错');
+            toast.error(t('toast.iterationFailed'));
         }
     };
 
@@ -270,7 +272,7 @@ export const PromptBooster: React.FC = () => {
         // 使用useMemoryStore的clearAll方法重置
         useMemoryStore.getState().clearAll();
 
-        toast.info('已重置工作区');
+        toast.info(t('toast.workspaceResetSuccess'));
     };
 
     // 计算字符差异
@@ -291,15 +293,15 @@ export const PromptBooster: React.FC = () => {
             {!isMaximized && (
                 <div className="p-4 border rounded-lg shadow-2xs flex-none secondary-container">
                     <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-xl font-semibold title-secondary">原始提示词</h2>
+                        <h2 className="text-xl font-semibold title-secondary">{t('promptBooster.originalPrompt')}</h2>
                         {activeGroup && (
-                            <Tooltip text="清空并重新开始">
+                            <Tooltip text={t('promptBooster.resetWorkspace')}>
                                 <button
                                     className="px-3 py-2 text-sm flex items-center gap-1 rounded-md button-danger"
                                     onClick={() => setIsResetDialogOpen(true)}
                                 >
                                     <ListRestartIcon size={18} />
-                                    <span className="hidden sm:block">重置</span>
+                                    <span className="hidden sm:block">{t('common.buttons.reset')}</span>
                                 </button>
                             </Tooltip>
                         )}
@@ -308,7 +310,7 @@ export const PromptBooster: React.FC = () => {
                     <EnhancedTextarea
                         value={originalPrompt || ''}
                         onChange={handleOriginalPromptChange}
-                        placeholder="请输入您的提示词..."
+                        placeholder={t('promptBooster.originalInput')}
                         className='input-textarea'
                         rows={5}
                         showCharCount={true}
@@ -320,7 +322,9 @@ export const PromptBooster: React.FC = () => {
             {/* 控制栏 */}
             <div className="flex items-end gap-3">
                 <div className="min-w-[26%] inline-block">
-                    <label className="block text-sm font-medium mb-2 whitespace-nowrap truncate input-description">系统提示词模板</label>
+                    <label className="block text-sm font-medium mb-2 whitespace-nowrap truncate input-description">
+                        {t('promptBooster.templateSelect')}
+                    </label>
                     <EnhancedDropdown
                         options={Object.entries(templates as Record<string, Template>)
                             .filter(([_, template]) => template.metadata?.templateType === 'optimize')
@@ -330,14 +334,16 @@ export const PromptBooster: React.FC = () => {
                             }))}
                         value={selectedTemplateId}
                         onChange={setSelectedTemplateId}
-                        placeholder="选择系统提示词模板..."
+                        placeholder={t('promptBooster.templatePlaceholder')}
                         disabled={isProcessing}
                         className=''
                     />
                 </div>
 
                 <div className="min-w-[33%] grow">
-                    <label className="block text-sm font-medium mb-2 input-description">模型选择</label>
+                    <label className="block text-sm font-medium mb-2 input-description">
+                        {t('promptBooster.modelSelect')}
+                    </label>
                     <EnhancedDropdown
                         options={getEnabledModels().map(model => ({
                             value: model.id,
@@ -345,13 +351,13 @@ export const PromptBooster: React.FC = () => {
                         }))}
                         value={activeModel}
                         onChange={setActiveModel}
-                        placeholder="选择模型..."
+                        placeholder={t('promptBooster.modelPlaceholder')}
                         disabled={isProcessing}
                         className=''
                     />
                 </div>
 
-                <Tooltip text="增强提示词">
+                <Tooltip text={t('promptBooster.enhancePrompt')}>
                     <button
                         className={`flex gap-2 items-center h-10 px-4 py-2 rounded-md truncate button-confirm 
                             ${isProcessing
@@ -362,7 +368,7 @@ export const PromptBooster: React.FC = () => {
                         disabled={isProcessing || !originalPrompt || !originalPrompt.trim() || !activeModel}
                     >
                         <RocketIcon size={16} />
-                        {isProcessing ? '增强中...' : '开始增强'}
+                        {isProcessing ? t('promptBooster.enhancing') : t('promptBooster.startEnhance')}
                     </button>
                 </Tooltip>
             </div>
@@ -373,9 +379,9 @@ export const PromptBooster: React.FC = () => {
                     ${isMaximized ? "min-h-[calc(100vh-260px)]" : "min-h-[calc(100vh-550px)]"
                     }`}>
                 <div className="flex w-full mb-4 gap-2">{/* 父容器 */}
-                    <div className="flex-shrink  md:w-fit min-w-[95px] max-w-[150px]">
+                    <div className="flex-shrink  md:w-fit min-w-[95px]">
                         <h2 className="text-xl font-semibold truncate title-secondary">
-                            增强提示词
+                            {t('promptBooster.enhancedPrompt')}
                         </h2>
                     </div>
                     {/* 版本切换标签 */}
@@ -416,7 +422,9 @@ export const PromptBooster: React.FC = () => {
                             disabled={!optimizedPrompt || isProcessing || !activeGroup}
                         >
                             <StepForwardIcon size={14} />
-                            <span className="hidden md:block">继续迭代</span>
+                            <span className="hidden md:block">
+                                {t('promptBooster.continueIteration')}
+                            </span>
                         </button>
 
                         <button
@@ -427,12 +435,16 @@ export const PromptBooster: React.FC = () => {
                             {loading ? (
                                 <>
                                     <LoadingIcon />
-                                    <span className="hidden md:block">分析中...</span>
+                                    <span className="hidden md:block">
+                                        {t('promptBooster.analyzing')}
+                                    </span>
                                 </>
                             ) : (
                                 <>
                                     <ChartBarIcon size={14} />
-                                    <span className="hidden md:block">分析提示词</span>
+                                    <span className="hidden md:block">
+                                        {t('promptBooster.analyzePrompt')}
+                                    </span>
                                 </>
                             )}
                         </button>
@@ -445,12 +457,16 @@ export const PromptBooster: React.FC = () => {
                             {isMaximized ? (
                                 <>
                                     <MinimizeIcon size={14} />
-                                    <span className="hidden md:block">还原</span>
+                                    <span className="hidden md:block">
+                                        {t('common.buttons.restore')}
+                                    </span>
                                 </>
                             ) : (
                                 <>
                                     <MaximizeIcon size={14} />
-                                    <span className="hidden md:block">最大化</span>
+                                    <span className="hidden md:block">
+                                        {t('common.buttons.maximize')}
+                                    </span>
                                 </>
                             )}
                         </button>
@@ -467,20 +483,22 @@ export const PromptBooster: React.FC = () => {
                             }`}
                         value={isEditMode ? editablePrompt : optimizedPrompt}
                         onChange={handleOptimizedPromptChange}
-                        placeholder={isProcessing ? "正在增强中..." : "优化后的提示词将在这里显示"}
+                        placeholder={isProcessing ? t('promptBooster.enhancing') : t('promptBooster.enhancedPromptPlaceholder')}
                         readOnly={isProcessing || !isEditMode}
                         streaming={isProcessing}
                         buttonText=""
                         centerPlaceholder={!isProcessing && !optimizedPrompt}
                     />
                     {isEditMode && editablePrompt !== optimizedPrompt && !isProcessing && (
-                        <Tooltip text='另存新版本' position='top'>
+                        <Tooltip text={t('promptBooster.saveAsNewVersion')} position='top'>
                             <button
                                 onClick={handleSaveUserModification}
                                 className="absolute animate-pulse mt-40 bottom-4 right-4 text-sm px-3 py-2 rounded-md shadow-sm flex items-center gap-1 transition-colors button-save-as"
                             >
                                 <CopyPlusIcon size={14} />
-                                <span className="hidden md:block">另存</span>
+                                <span className="hidden md:block">
+                                    {t('promptBooster.saveAs')}
+                                </span>
                             </button>
                         </Tooltip>
                     )}
@@ -548,7 +566,7 @@ export const PromptBooster: React.FC = () => {
                                                 <div className="flex justify-between items-center">
                                                     <div className="relative inline-flex items-center">
                                                         <Drawer.Title className="text-lg font-semibold drawer-title">
-                                                            增强提示词分析
+                                                            {t('promptBooster.drawer.title')}
                                                         </Drawer.Title>
                                                         {analysisResult?.score === 10 && (
                                                             <motion.img
@@ -567,7 +585,7 @@ export const PromptBooster: React.FC = () => {
                                                 </div>
 
                                                 <Drawer.Description className="text-sm mt-1 drawer-description">
-                                                    查看提示词各维度的评估结果和优化建议
+                                                    {t('promptBooster.drawer.description')}
                                                 </Drawer.Description>
 
                                                 {/* 鼓励语 ✅ 移到评分下方 */}
@@ -598,7 +616,10 @@ export const PromptBooster: React.FC = () => {
                                                                     </div>
                                                                 </div>
                                                                 <div className="text-xs whitespace-nowrap text-gray-400 font-mono">
-                                                                    {item.passed ? `+${item.points}分` : "0分"}
+                                                                    {item.passed
+                                                                        ? t('promptBooster.drawer.score.points', { points: item.points })
+                                                                        : t('promptBooster.drawer.score.zero')
+                                                                    }
                                                                 </div>
                                                             </li>
                                                         ))}
@@ -611,9 +632,11 @@ export const PromptBooster: React.FC = () => {
                                                 || analysisResult?.suggestions?.length) && (
                                                     <div className="p-4 mt-2 drawer-suggestion-container rounded-lg">
                                                         <div className="flex justify-between items-center mb-2">
-                                                            <h4 className="text-sm font-semibold drawer-suggestion-title">迭代建议</h4>
+                                                            <h4 className="text-sm font-semibold drawer-suggestion-title">
+                                                                {t('promptBooster.drawer.suggestionsTitle')}
+                                                            </h4>
                                                             <button
-                                                                className="text-sm drawer-suggestion-copy hover:underline"
+                                                                className="text-sm font-semibold drawer-suggestion-copy hover:underline"
                                                                 onClick={() => {
                                                                     const criteriaTips = analysisResult.criteria
                                                                         .filter(c => !c.passed && c.suggestion)
@@ -621,11 +644,11 @@ export const PromptBooster: React.FC = () => {
                                                                     const globalTips = analysisResult.suggestions || [];
                                                                     const allTips = [...criteriaTips, ...globalTips];
                                                                     navigator.clipboard.writeText(allTips.join('\n'))
-                                                                        .then(() => toast.success('已复制所有迭代建议'))
-                                                                        .catch(() => toast.error('复制失败'));
+                                                                        .then(() => toast.success(t('toast.copySuggestionSuccess')))
+                                                                        .catch(() => toast.error(t('toast.copyFailed')));
                                                                 }}
                                                             >
-                                                                复制全部
+                                                                {t('promptBooster.drawer.copyAll')}
                                                             </button>
                                                         </div>
                                                         <ul className="list-disc pl-5 drawer-suggestion-title space-y-1">
@@ -654,9 +677,9 @@ export const PromptBooster: React.FC = () => {
                                                 {loading ? (
                                                     <span className="flex items-center gap-2">
                                                         <LoadingIcon />
-                                                        分析中...
+                                                        {t('promptBooster.analyzing')}
                                                     </span>
-                                                ) : "深度分析"}
+                                                ) : t('promptBooster.drawer.deepAnalysis')}
                                             </button>
                                         )}
                                     </div>
@@ -670,7 +693,7 @@ export const PromptBooster: React.FC = () => {
                 {/* 字符数差异 */}
                 <div className="mt-2 flex justify-end">
                     <div className="text-sm input-charactor-counter">
-                        改进: {calculateCharDiff()} 字符
+                        {t('promptBooster.charDiff', { count: Number(calculateCharDiff()) })}
                     </div>
                 </div>
             </div>
@@ -687,7 +710,7 @@ export const PromptBooster: React.FC = () => {
             <Dialog
                 isOpen={isResetDialogOpen}
                 onClose={() => setIsResetDialogOpen(false)}
-                title="确认重置"
+                title={t('promptBooster.confirmResetTitle')}
                 maxWidth="max-w-md"
                 footer={
                     <div className="flex justify-end gap-3">
@@ -695,18 +718,18 @@ export const PromptBooster: React.FC = () => {
                             className="px-4 py-2 rounded-md button-cancel"
                             onClick={() => setIsResetDialogOpen(false)}
                         >
-                            取消
+                            {t('common.buttons.cancel')}
                         </button>
                         <button
                             className="px-4 py-2 rounded-md button-danger"
                             onClick={handleConfirmReset}
                         >
-                            确认重置
+                            {t('promptBooster.confirmResetTitle')}
                         </button>
                     </div>
                 }
             >
-                <p>确定要清空所有内容并重新开始吗？此操作无法撤销。</p>
+                <p>{t('promptBooster.confirmResetMsg')}</p>
             </Dialog>
         </div>
     );

@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { ClipboardIcon, ClipboardCheckIcon } from 'lucide-react';
 import { Tooltip } from './Tooltip';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 
 interface EnhancedTextareaProps {
     value: string;
@@ -32,6 +33,7 @@ export const EnhancedTextarea: React.FC<EnhancedTextareaProps> = ({
     minHeight,
     showCharCount = false,
 }) => {
+    const { t } = useTranslation();
     const [isHovered, setIsHovered] = useState(false);
     const [copied, setCopied] = useState(false);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -46,12 +48,12 @@ export const EnhancedTextarea: React.FC<EnhancedTextareaProps> = ({
         navigator.clipboard.writeText(value)
             .then(() => {
                 setCopied(true);
-                toast.success('已复制到剪贴板');
+                toast.success(t('toast.copySuccess'));
                 // 2秒后重置复制状态
                 setTimeout(() => setCopied(false), 2000);
             })
             .catch(err => {
-                console.error('无法复制文本: ', err);
+                console.error(t('toast.copyFailed'), err);
             });
     };
 
@@ -95,7 +97,7 @@ export const EnhancedTextarea: React.FC<EnhancedTextareaProps> = ({
 
                 {/* 复制按钮 - 仅在悬停且有内容时显示 */}
                 {isHovered && value.trim() && (
-                    <Tooltip text="复制" position="bottom">
+                    <Tooltip text={t('common.buttons.copy')} position="bottom">
                         <button
                             className="absolute top-2 right-2 p-2 rounded-md input-copy-button"
                             onClick={handleCopy}
@@ -110,7 +112,10 @@ export const EnhancedTextarea: React.FC<EnhancedTextareaProps> = ({
             {showCharCount && (
                 <div className="mt-2 flex justify-end">
                     <span className="text-sm input-charactor-counter">
-                        {maxLength ? `${value.length}/${maxLength}` : `${value.length} 字符`}
+                        {maxLength
+                            ? `${value.length}/${maxLength}`
+                            : t('promptBooster.characterCount', { count: Number(value.length) })
+                        }
                     </span>
                 </div>
             )}

@@ -6,6 +6,7 @@ import { validateModelConfig, getDefaultBaseUrl } from '@prompt-booster/core/mod
 import { Dialog, ModelSelector, toast } from '@prompt-booster/ui';
 import { useModelForm } from '../modelhooks/model-hooks';
 import { EyeIcon, EyeClosedIcon } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 // 模型编辑弹窗组件
 interface ModelModalProps {
@@ -29,6 +30,7 @@ export const ModelModal: React.FC<ModelModalProps> = ({
     isNewInterface,
     modelId
 }) => {
+    const { t } = useTranslation();
     const {
         formData,
         isMaskedApiKey,
@@ -80,7 +82,7 @@ export const ModelModal: React.FC<ModelModalProps> = ({
             onClose();
         } catch (error) {
             console.error('保存模型配置失败:', error);
-            toast.error('保存失败，请重试');
+            toast.error(t('toast.savingFailed'));
         } finally {
             setIsSaving(false);
         }
@@ -91,21 +93,21 @@ export const ModelModal: React.FC<ModelModalProps> = ({
             isOpen={isOpen}
             onClose={onClose}
             maxWidth="max-w-md"
-            title={isCustom ? (isNewInterface ? '新建自定义接口' : '编辑自定义接口') : `编辑模型: ${modelType}`}
+            title={isCustom ? (isNewInterface ? t('settings.newInterface') : t('settings.editInterface')) : t('settings.editModel', {type: modelType})}
             footer={
                 <div className="flex justify-end gap-3">
                     <button
                         onClick={onClose}
                         className="px-4 py-2 rounded-md transition-colors button-cancel"
                     >
-                        取消
+                        {t('common.buttons.cancel')}
                     </button>
                     <button
                         onClick={handleSave}
                         disabled={isSaving || !formData.apiKey}
                         className="px-4 py-2 rounded-md transition-colors button-confirm"
                     >
-                        {isSaving ? '保存中...' : '保存'}
+                        {isSaving ? t('common.buttons.saving') : t('common.buttons.save')}
                     </button>
                 </div>
             }
@@ -113,14 +115,14 @@ export const ModelModal: React.FC<ModelModalProps> = ({
             <div className="space-y-4">
                 {isCustom && (
                     <div>
-                        <label className="block text-sm font-medium mb-1 input-label">供应商名称</label>
+                        <label className="block text-sm font-medium mb-1 input-label">{t('settings.providerName')}</label>
                         <input
                             type="text"
                             name="providerName"
                             value={(formData as CustomInterface).providerName || ''}
                             onChange={handleInputChange}
                             className="w-full p-2 border rounded input"
-                            placeholder="例如: OpenAI"
+                            placeholder={t('settings.providerNamePlaceholder')}
                         />
                     </div>
                 )}
@@ -134,7 +136,7 @@ export const ModelModal: React.FC<ModelModalProps> = ({
                             value={formData.apiKey || ''}
                             onChange={handleInputChange}
                             className="w-full overflow-hidden truncate p-2 pr-12 border rounded input"
-                            placeholder="输入你的API Key"
+                            placeholder={t('settings.apiKeyPlaceholder')}
                         />
                         {originalApiKey && (
                             <button
@@ -150,13 +152,13 @@ export const ModelModal: React.FC<ModelModalProps> = ({
                     </div>
                     <p className="mt-1 text-xs input-description">
                         {isMaskedApiKey
-                            ? "按住显示按钮不松开显示API Key"
-                            : "松开鼠标恢复隐藏"}
+                            ? t('settings.apiKeyShow')
+                            : t('settings.apiKeyHide')}
                     </p>
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium mb-1 input-laebel">API基础URL</label>
+                    <label className="block text-sm font-medium mb-1 input-laebel">{t('settings.apiBaseURL')}</label>
                     <input
                         type="text"
                         name="baseUrl"
@@ -164,18 +166,18 @@ export const ModelModal: React.FC<ModelModalProps> = ({
                         onChange={handleInputChange}
                         className="w-full p-2 border rounded input"
                         placeholder={isCustom
-                            ? "输入API基础URL"
+                            ? t('settings.apiBaseURLPlaceholder')
                             : getDefaultBaseUrl(modelType as StandardModelType)}
                     />
                     {!isCustom && (
                         <p className="mt-1 text-xs input-description">
-                            默认URL: {getDefaultBaseUrl(modelType as StandardModelType) || "未设置"}
+                            {t('settings.apiBaseURLDefault')} {getDefaultBaseUrl(modelType as StandardModelType) || "未设置"}
                         </p>
                     )}
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium mb-1 input-laebel">API端点路径</label>
+                    <label className="block text-sm font-medium mb-1 input-laebel">{t('settings.apiEndpointPath')}</label>
                     <input
                         type="text"
                         name="endpoint"
@@ -186,13 +188,13 @@ export const ModelModal: React.FC<ModelModalProps> = ({
                     />
                     <p className="mt-1 text-xs input-description">
                         {isCustom
-                            ? "端点路径，例如: /v1/chat/completions 或 /api/generate (不包含基础URL)"
-                            : "留空将使用默认端点，对于大多数模型是/v1/chat/completions"}
+                            ? t('settings.apiEndpointCustomHint')
+                            : t('settings.apiEndpointBuiltInHint')}
                     </p>
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium mb-1 input-laebel">模型</label>
+                    <label className="block text-sm font-medium mb-1 input-laebel">{t('settings.modelList')}</label>
                     <ModelSelector
                         value={formData.model || ''}
                         onChange={(value) => {
@@ -209,7 +211,7 @@ export const ModelModal: React.FC<ModelModalProps> = ({
                             try {
                                 // 只有当有 apiKey 和 baseUrl 时才尝试获取模型列表
                                 if (!formData.apiKey || !formData.baseUrl) {
-                                    toast.error('请先填写 API Key 和 Base URL');
+                                    toast.error(t('toast.fillAPIKey_BaseURL'));
                                     return [];
                                 }
 
@@ -238,11 +240,11 @@ export const ModelModal: React.FC<ModelModalProps> = ({
                                 return options;
                             } catch (error) {
                                 console.error('获取模型列表失败:', error);
-                                toast.error('获取模型列表失败');
+                                toast.error(t('toast.getModelListFailed'));
                                 return [];
                             }
                         }}
-                        placeholder="选择或输入模型名称"
+                        placeholder={t('settings.modelListPlaceholder')}
                         className="w-full"
                         disabled={!formData.apiKey || !formData.baseUrl}
                     />
@@ -250,17 +252,17 @@ export const ModelModal: React.FC<ModelModalProps> = ({
 
                 {isCustom && (
                     <div>
-                        <label className="block text-sm font-medium mb-1 input-laebel">接口名称</label>
+                        <label className="block text-sm font-medium mb-1 input-laebel">{t('settings.interfaceName')}</label>
                         <input
                             type="text"
                             name="name"
                             value={formData.name || ''}
                             disabled={true}
                             className="w-full p-2 border rounded input input-disabled"
-                            placeholder="自动生成的接口名称"
+                            placeholder={t('settings.interfaceNamePlaceholder')}
                         />
                         <p className="mt-1 text-xs input-description">
-                            接口名称自动由供应商名称和模型名称组合生成
+                            {t('settings.interfaceNameHint')}
                         </p>
                     </div>
                 )}
@@ -274,7 +276,7 @@ export const ModelModal: React.FC<ModelModalProps> = ({
                         className="w-4 h-4 input"
                     />
                     <label htmlFor="enableAfterSave" className="ml-2 text-sm font-medium input-laebel">
-                        保存后启用模型
+                        {t('settings.saveAndEnable')}
                     </label>
                 </div>
             </div>

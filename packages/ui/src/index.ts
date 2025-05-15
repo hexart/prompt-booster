@@ -10,7 +10,8 @@ export * from './components/ModelSelector';
 export * from './components/EnhancedDropdown';
 export * from './components/EnhancedTextarea'
 export * from './components/Dialog';
-export * from './components/DraggableNotice'
+export * from './components/DraggableNotice';
+export * from './components/LanguageSwitcher'
 export { Toaster } from './components/Toaster';
 export { Markdown } from './components/Markdown';
 export { toast } from 'sonner';
