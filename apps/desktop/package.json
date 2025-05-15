@@ -1,6 +1,6 @@
 {
   "name": "prompt-booster",
-  "version": "0.5.6",
+  "version": "0.5.7",
   "description": "Prompt Booster Desktop App",
   "private": true,
   "main": "main.js",
@@ -21,7 +21,7 @@
   "keywords": [
     "Prompt Booster"
   ],
-  "author": "Hexart Studio",
+  "author": "Hexart Studio <hexart@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "electron": "^36.2.0",
