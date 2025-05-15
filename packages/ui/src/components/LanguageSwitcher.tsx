@@ -6,7 +6,7 @@ import { Tooltip } from './Tooltip';
 import { useTheme } from './ThemeContext';
 
 // 语言类型
-type LanguageCode = 'zh-CN' | 'en-US' | 'ja-JP';
+type LanguageCode = 'zh-CN' | 'en-US' | 'ja-JP' | 'de-DE';
 
 // 语言配置
 const languageConfig: Record<LanguageCode, {
@@ -32,6 +32,12 @@ const languageConfig: Record<LanguageCode, {
         label: '日本語',
         shortcut: '⌥+J',
         hotkey: 'alt+j'
+    },
+    'de-DE': {
+        icon: '🇩🇪',
+        label: 'Deutsch',
+        shortcut: '⌥+D',
+        hotkey: 'alt+d'
     }
 };
 
@@ -69,6 +75,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
         
         if (lang.includes('zh')) return 'zh-CN';
         if (lang.includes('ja')) return 'ja-JP';
+        if (lang.includes('de')) return 'de-DE';
         return 'en-US';
     };
     

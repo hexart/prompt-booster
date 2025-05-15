@@ -12,6 +12,8 @@ if (systemLang === 'zh') {
     localStorage.setItem('i18nextLng', 'en-US');
 } else if (systemLang === 'ja') {
     localStorage.setItem('i18nextLng', 'ja-JP');
+} else if (systemLang === 'de') {
+    localStorage.setItem('i18nextLng', 'de-DE');
 }
 
 i18n
@@ -20,7 +22,7 @@ i18n
     .use(initReactI18next)
     .init({
         fallbackLng: 'zh-CN',
-        supportedLngs: ['zh-CN', 'en-US', 'ja-JP'],
+        supportedLngs: ['zh-CN', 'en-US', 'ja-JP', 'de-DE'],
 
         debug: false,
 
@@ -50,6 +52,8 @@ i18n.on('initialized', () => {
         i18n.changeLanguage('en-US');
     } else if (currentLang === 'ja') {
         i18n.changeLanguage('ja-JP');
+    } else if (currentLang === 'de') {
+        i18n.changeLanguage('de-DE');
     }
 });
 
