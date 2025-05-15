@@ -16,6 +16,7 @@
         "buttons": {
             "confirm": "확인",
             "cancel": "취소",
+            "close": "닫기",
             "edit": "편집",
             "delete": "삭제",
             "reset": "초기화",

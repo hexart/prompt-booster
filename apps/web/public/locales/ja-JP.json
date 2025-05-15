@@ -16,6 +16,7 @@
         "buttons": {
             "confirm": "確認",
             "cancel": "キャンセル",
+            "close": "閉じる",
             "edit": "編集",
             "delete": "削除",
             "reset": "リセット",

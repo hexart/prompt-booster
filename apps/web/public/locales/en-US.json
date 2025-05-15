@@ -16,6 +16,7 @@
         "buttons": {
             "confirm": "Confirm",
             "cancel": "Cancel",
+            "close": "Close",
             "edit": "Edit",
             "delete": "Delete",
             "reset": "Reset",

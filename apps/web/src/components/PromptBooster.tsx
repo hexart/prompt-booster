@@ -505,7 +505,7 @@ export const PromptBooster: React.FC = () => {
                 </div>
 
                 {/* 分析结果抽屉 */}
-                <Drawer.Root open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+                <Drawer.Root dismissible={false} open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
                     <Drawer.Portal>
                         <Drawer.Overlay className="fixed inset-0 z-40 mask" />
                         <Drawer.Content className="drawer-content-container backdrop-blur-md flex flex-col rounded-t-2xl drop-shadow-[0_-15px_15px_rgba(0,0,0,0.15)] fixed bottom-0 left-0 right-0 max-h-[85vh] z-40">
@@ -682,6 +682,12 @@ export const PromptBooster: React.FC = () => {
                                                 ) : t('promptBooster.drawer.deepAnalysis')}
                                             </button>
                                         )}
+                                        <button
+                                            className="px-4 py-2 ml-2 text-sm button-cancel rounded-md transition"
+                                            onClick={() => setIsDrawerOpen(false)}
+                                        >
+                                            {t('common.buttons.close')}
+                                        </button>
                                     </div>
                                 </div>
 

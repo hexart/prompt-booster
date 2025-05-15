@@ -24,7 +24,7 @@
   "author": "Hexart Studio <hexart@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^36.2.0",
+    "electron": "^36.2.1",
     "electron-builder": "^26.0.12",
     "fs": "^0.0.1-security",
     "node-gyp": "^11.2.0",

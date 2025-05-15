@@ -8,11 +8,18 @@ import { PromptHistory } from './components/PromptHistory';
 import Header, { TabType } from './components/Header';
 import { ThemeProvider } from '@prompt-booster/ui/components/ThemeContext';
 import { Toaster } from '@prompt-booster/ui';
+import { useTranslation } from 'react-i18next';
 
 function App() {
+  const { t, i18n } = useTranslation();
   const [activeTab, setActiveTab] = useState<TabType>('booster');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    document.documentElement.lang = i18n.language;
+    document.title = t('common.appName');
+  }, [t, i18n.language]);
 
   // 检测窗口大小变化以适应响应式布局
   useEffect(() => {
