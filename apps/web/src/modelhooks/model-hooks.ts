@@ -4,12 +4,14 @@ import { toast } from '@prompt-booster/ui';
 import { useModelStore, type StandardModelType } from '@prompt-booster/core';
 import { testModelConnection, maskApiKey, prepareModelsForDisplay } from '@prompt-booster/core/model/services/modelService';
 import { ModelConfig, CustomInterface } from '@prompt-booster/core/model/models/config';
+import { useTranslation } from 'react-i18next';
 
 /**
  * 连接测试钩子
  * 管理模型连接测试状态和函数
  */
 export function useModelConnection() {
+    const { t } = useTranslation();
     const [testingModels, setTestingModels] = useState<Record<string, boolean>>({});
 
     const testConnection = async (model: any) => {
@@ -23,7 +25,7 @@ export function useModelConnection() {
             const provider = model.isStandard ? model.id : (model.providerName || model.id);
             const { apiKey, baseUrl, model: modelName, endpoint } = model.config;
 
-            toast.info(`正在测试连接 ${modelName} ...`);
+            toast.info(t('toast.testingConnection', { modelName }));
 
             const result = await testModelConnection(
                 provider,
@@ -34,17 +36,17 @@ export function useModelConnection() {
             );
 
             if ('data' in result && result.data.success) {
-                toast.success(`${modelName} 连接成功！`);
+                toast.success(t('toast.connectionSuccess', { modelName }));
             } else if ('success' in result && result.success) {
-                toast.success(`${modelName} 连接成功！`);
+                toast.success(t('toast.connectionSuccess', { modelName }));
             } else {
                 const errorMsg = 'data' in result ? result.data.message :
-                    ('message' in result ? result.message : '连接失败，请检查您的API配置。');
+                    ('message' in result ? result.message : t('toast.connectionFailed'));
                 toast.error(errorMsg);
             }
         } catch (error) {
             const errorMessage = error instanceof Error ? (error.message || '未知错误') : '未知错误';
-            toast.error(`连接测试出错: ${errorMessage}`);
+            toast.error(t('toast.connectionError', { errorMessage }));
         } finally {
             // 清除加载状态
             setTestingModels(prev => {
@@ -66,6 +68,7 @@ export function useModelConnection() {
  * 管理模型编辑状态和函数
  */
 export function useModelEdit() {
+    const { t } = useTranslation();
     const { updateConfig, addCustomInterface, updateCustomInterface } = useModelStore();
 
     // 保存模型配置
@@ -85,7 +88,7 @@ export function useModelEdit() {
                     // 更新标准模型
                     updateConfig(modelId as StandardModelType, data as ModelConfig);
                 }
-                toast.success('接口更新成功');
+                toast.success(t('toast.interfaceUpdateSuccess'));
                 return;
             }
 
@@ -104,12 +107,12 @@ export function useModelEdit() {
                     enabled: customData.enabled || false
                 });
 
-                toast.success('新接口创建成功');
+                toast.success(t('toast.newInterfaceCreated'));
                 return newId;
             }
         } catch (error) {
             console.error('保存模型配置失败:', error);
-            toast.error('保存失败: ' + (error instanceof Error ? error.message : String(error)));
+            toast.error(t('toast.saveFailed', { errorMessage: error instanceof Error ? error.message : String(error) }));
             throw error;
         }
     };
@@ -124,6 +127,7 @@ export function useModelEdit() {
  * 获取和处理模型列表
  */
 export function useModelData() {
+    const { t } = useTranslation();
     const { configs, customInterfaces, updateConfig, updateCustomInterface, deleteCustomInterface, setActiveModel } = useModelStore();
 
     // 所有模型数据(合并标准模型和自定义接口)
@@ -139,13 +143,13 @@ export function useModelData() {
 
             // 检查 apiKey 是否填写
             if (!modelConfig.apiKey || modelConfig.apiKey.trim() === '') {
-                toast.error(`启用 ${id} 模型失败: 请先配置 API Key`);
+                toast.error(t('toast.enableModelFailed', { modelName: id, reason: t('toast.reasonNoApiKey') }));
                 return;
             }
 
             // 检查 baseUrl 是否填写（对于需要 baseUrl 的模型）
             if (id === 'hunyuan' && (!modelConfig.baseUrl || modelConfig.baseUrl.trim() === '')) {
-                toast.error(`启用 ${id} 模型失败: 请先配置 API 基础 URL`);
+                toast.error(t('toast.enableModelFailed', { modelName: id, reason: t('toast.reasonNoBaseUrl') }));
                 return;
             }
         }
@@ -161,7 +165,7 @@ export function useModelData() {
     // 处理删除自定义接口
     const deleteModel = (id: string) => {
         deleteCustomInterface(id);
-        toast.success('接口删除成功');
+        toast.success(t('toast.interfaceDeleteSuccess'));
     };
 
     return {

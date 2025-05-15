@@ -3,10 +3,10 @@
         "appName": "프롬프트 부스터",
         "wuKong": "Wukong AI",
         "tabs": {
-            "booster": "부스터",
-            "test": "비교",
-            "history": "기록",
-            "settings": "설정"
+            "booster": "프롬프트 향상",
+            "test": "비교 테스트",
+            "history": "기록 내역",
+            "settings": "모델 설정"
         },
         "theme": {
             "system": "시스템 따르기",
@@ -51,7 +51,18 @@
         "fillAPIKey_BaseURL": "먼저 API 키와 기본 URL을 입력해주세요.",
         "getModelListFailed": "모델 목록을 가져오지 못했습니다",
         "getModelListSuccess": "{{count}}개의 모델을 성공적으로 가져왔습니다",
-        "noModelAvailable": "사용 가능한 모델 없음"
+        "noModelAvailable": "사용 가능한 모델 없음",
+        "testingConnection": "{{modelName}}에 연결 테스트 중...",
+        "connectionSuccess": "{{modelName}} 연결 성공!",
+        "connectionFailed": "연결 실패, API 구성을 확인하세요.",
+        "connectionError": "연결 테스트 오류: {{errorMessage}}",
+        "interfaceUpdateSuccess": "인터페이스가 성공적으로 업데이트되었습니다",
+        "newInterfaceCreated": "새 인터페이스가 성공적으로 생성되었습니다",
+        "saveFailed": "저장 실패: {{errorMessage}}",
+        "enableModelFailed": "{{modelName}} 모델 활성화 실패: {{reason}}",
+        "reasonNoApiKey": "API 키를 먼저 구성하세요",
+        "reasonNoBaseUrl": "API 기본 URL을 먼저 구성하세요",
+        "interfaceDeleteSuccess": "인터페이스가 성공적으로 삭제되었습니다"
     },
     "aria": {
         "openMenu": "메뉴 열기",

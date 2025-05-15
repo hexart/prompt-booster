@@ -99,7 +99,7 @@ jobs:
           version: '10.9.0'
           
       - name: Build web & packages
-        run: pnpm build:web
+        run: pnpm build
         
       - name: Install desktop dependencies (npm)
         working-directory: ./apps/desktop

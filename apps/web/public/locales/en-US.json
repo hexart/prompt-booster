@@ -51,7 +51,18 @@
         "fillAPIKey_BaseURL": "Please fill in the API Key and Base URL first.",
         "getModelListFailed": "Failed to retrieve the model list",
         "getModelListSuccess": "Successfully obtained {{count}} models",
-        "noModelAvailable": "No models available"
+        "noModelAvailable": "No models available",
+        "testingConnection": "Testing connection to {{modelName}}...",
+        "connectionSuccess": "{{modelName}} connected successfully!",
+        "connectionFailed": "Connection failed, please check your API configuration.",
+        "connectionError": "Connection test error: {{errorMessage}}",
+        "interfaceUpdateSuccess": "Interface updated successfully",
+        "newInterfaceCreated": "New interface created successfully",
+        "saveFailed": "Save failed: {{errorMessage}}",
+        "enableModelFailed": "Failed to enable {{modelName}} model: {{reason}}",
+        "reasonNoApiKey": "Please configure API Key first",
+        "reasonNoBaseUrl": "Please configure API Base URL first",
+        "interfaceDeleteSuccess": "Interface deleted successfully"
     },
     "aria": {
         "openMenu": "Open the menu",
@@ -91,7 +102,7 @@
         "drawer": {
             "title": "Enhanced prompt analysis",
             "description": "View evaluation results and optimization suggestions for each dimension of the prompt.",
-            "points": "分",
+            "points": "points",
             "suggestionsTitle": "Iteration suggestions",
             "copyAll": "Copy All",
             "deepAnalysis": "In-depth analysis",

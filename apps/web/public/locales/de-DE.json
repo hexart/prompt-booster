@@ -51,7 +51,18 @@
         "fillAPIKey_BaseURL": "Bitte füllen Sie zuerst API-Schlüssel und Basis-URL aus",
         "getModelListFailed": "Abrufen der Modellliste fehlgeschlagen",
         "getModelListSuccess": "Erfolgreich {{count}} Modelle abgerufen",
-        "noModelAvailable": "Keine Modelle verfügbar"
+        "noModelAvailable": "Keine Modelle verfügbar",
+        "testingConnection": "Verbindung zu {{modelName}} wird getestet...",
+        "connectionSuccess": "{{modelName}} erfolgreich verbunden!",
+        "connectionFailed": "Verbindung fehlgeschlagen, bitte überprüfen Sie Ihre API-Konfiguration.",
+        "connectionError": "Verbindungstest-Fehler: {{errorMessage}}",
+        "interfaceUpdateSuccess": "Schnittstelle erfolgreich aktualisiert",
+        "newInterfaceCreated": "Neue Schnittstelle erfolgreich erstellt",
+        "saveFailed": "Speichern fehlgeschlagen: {{errorMessage}}",
+        "enableModelFailed": "Aktivierung des {{modelName}}-Modells fehlgeschlagen: {{reason}}",
+        "reasonNoApiKey": "Bitte konfigurieren Sie zuerst den API-Schlüssel",
+        "reasonNoBaseUrl": "Bitte konfigurieren Sie zuerst die API-Basis-URL",
+        "interfaceDeleteSuccess": "Schnittstelle erfolgreich gelöscht"
     },
     "aria": {
         "openMenu": "Menü öffnen",

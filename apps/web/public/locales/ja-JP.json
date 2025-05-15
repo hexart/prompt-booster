@@ -3,10 +3,10 @@
         "appName": "プロンプトブースター",
         "wuKong": "Wukong AI",
         "tabs": {
-            "booster": "ブースター",
-            "test": "比較",
-            "history": "履歴",
-            "settings": "設定"
+            "booster": "プロンプト強化",
+            "test": "比較テスト",
+            "history": "履歴記録",
+            "settings": "モデル設定"
         },
         "theme": {
             "system": "システム設定に従う",
@@ -51,7 +51,18 @@
         "fillAPIKey_BaseURL": "最初にAPIキーとベースURLを入力してください",
         "getModelListFailed": "モデルリストの取得に失敗しました",
         "getModelListSuccess": "{{count}}個のモデルを正常に取得しました",
-        "noModelAvailable": "利用可能なモデルがありません"
+        "noModelAvailable": "利用可能なモデルがありません",
+        "testingConnection": "{{modelName}} への接続をテスト中...",
+        "connectionSuccess": "{{modelName}} が正常に接続されました！",
+        "connectionFailed": "接続に失敗しました。API設定を確認してください。",
+        "connectionError": "接続テストエラー: {{errorMessage}}",
+        "interfaceUpdateSuccess": "インターフェースが正常に更新されました",
+        "newInterfaceCreated": "新しいインターフェースが正常に作成されました",
+        "saveFailed": "保存に失敗しました: {{errorMessage}}",
+        "enableModelFailed": "{{modelName}} モデルの有効化に失敗しました: {{reason}}",
+        "reasonNoApiKey": "先にAPIキーを設定してください",
+        "reasonNoBaseUrl": "先にAPI基本URLを設定してください",
+        "interfaceDeleteSuccess": "インターフェースが正常に削除されました"
     },
     "aria": {
         "openMenu": "メニューを開く",
@@ -163,7 +174,7 @@
         "editInterface": "カスタムインターフェースを編集",
         "providerName": "プロバイダ名",
         "providerNamePlaceholder": "例：OpenAI",
-        "apiKeyPlaceholder": "APIキーを入力してください",
+        "apiKeyPlaceholder": "APIキーを設定してください",
         "apiKeyShow": "ボタンを押し続けるとAPIキーが表示されます",
         "apiKeyHide": "マウスを離すと非表示に戻ります",
         "apiBaseURL": "APIベースURL",

@@ -51,7 +51,18 @@
         "fillAPIKey_BaseURL": "请先填写 API Key 和 Base URL",
         "getModelListFailed": "获取模型列表失败",
         "getModelListSuccess": "成功获取 {{count}} 个模型",
-        "noModelAvailable": "没有可用的模型"
+        "noModelAvailable": "没有可用的模型",
+        "testingConnection": "正在测试连接 {{modelName}} ...",
+        "connectionSuccess": "{{modelName}} 连接成功！",
+        "connectionFailed": "连接失败，请检查您的API配置。",
+        "connectionError": "连接测试出错: {{errorMessage}}",
+        "interfaceUpdateSuccess": "接口更新成功",
+        "newInterfaceCreated": "新接口创建成功",
+        "saveFailed": "保存失败: {{errorMessage}}",
+        "enableModelFailed": "启用 {{modelName}} 模型失败: {{reason}}",
+        "reasonNoApiKey": "请先配置 API Key",
+        "reasonNoBaseUrl": "请先配置 API 基础 URL",
+        "interfaceDeleteSuccess": "接口删除成功"
     },
     "aria": {
         "openMenu": "打开菜单",
