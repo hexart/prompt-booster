@@ -323,7 +323,7 @@ export const TestResult: React.FC = () => {
                         <div className="ml-2">
                             <LoadingIcon />
                         </div>
-                    ) : response && (
+                    ) : (
                         <div className='flex gap-2'>
                             <button
                                 className="flex text-sm items-center gap-1 rounded-lg p-3 lg:px-3 lg:py-2 button-third"

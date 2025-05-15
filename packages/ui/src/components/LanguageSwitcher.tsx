@@ -6,7 +6,7 @@ import { Tooltip } from './Tooltip';
 import { useTheme } from './ThemeContext';
 
 // 语言类型
-type LanguageCode = 'zh-CN' | 'en-US' | 'ja-JP' | 'de-DE';
+type LanguageCode = 'zh-CN' | 'zh-Hant' | 'en-US' | 'ja-JP' | 'ko-KR' | 'de-DE';
 
 // 语言配置
 const languageConfig: Record<LanguageCode, {
@@ -21,6 +21,12 @@ const languageConfig: Record<LanguageCode, {
         shortcut: '⌥+C',
         hotkey: 'alt+c'
     },
+    'zh-Hant': {
+        icon: '🇨🇳',
+        label: '繁體中文',
+        shortcut: '⌥+H',
+        hotkey: 'alt+h'
+    },
     'en-US': {
         icon: '🇺🇸',
         label: 'English',
@@ -32,6 +38,12 @@ const languageConfig: Record<LanguageCode, {
         label: '日本語',
         shortcut: '⌥+J',
         hotkey: 'alt+j'
+    },
+    'ko-KR': {
+        icon: '🇰🇷',
+        label: '한국어',
+        shortcut: '⌥+K',
+        hotkey: 'alt+k'
     },
     'de-DE': {
         icon: '🇩🇪',
@@ -73,9 +85,16 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
     const getCurrentLangCode = (): LanguageCode => {
         const lang = i18n.language || 'zh-CN';
         
-        if (lang.includes('zh')) return 'zh-CN';
-        if (lang.includes('ja')) return 'ja-JP';
-        if (lang.includes('de')) return 'de-DE';
+        if (lang.includes('zh-CN') || lang === 'zh-Hans' || (lang === 'zh' && !lang.includes('TW') && !lang.includes('HK') && !lang.includes('Hant'))) 
+            return 'zh-CN';
+        if (lang.includes('zh-TW') || lang.includes('zh-HK') || lang.includes('zh-Hant') || lang === 'zh-Hant') 
+            return 'zh-Hant';
+        if (lang.includes('ja')) 
+            return 'ja-JP';
+        if (lang.includes('ko')) 
+            return 'ko-KR';
+        if (lang.includes('de')) 
+            return 'de-DE';
         return 'en-US';
     };
     

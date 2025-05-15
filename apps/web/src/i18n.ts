@@ -6,12 +6,16 @@ import Backend from 'i18next-http-backend';
 
 // 预处理系统语言（可选）
 const systemLang = navigator.language;
-if (systemLang === 'zh') {
+if (systemLang === 'zh' || systemLang === 'zh-CN' || systemLang === 'zh-Hans') {
     localStorage.setItem('i18nextLng', 'zh-CN');
+} else if (systemLang === 'zh-TW' || systemLang === 'zh-HK' || systemLang === 'zh-Hant') {
+    localStorage.setItem('i18nextLng', 'zh-Hant');
 } else if (systemLang === 'en') {
     localStorage.setItem('i18nextLng', 'en-US');
 } else if (systemLang === 'ja') {
     localStorage.setItem('i18nextLng', 'ja-JP');
+} else if (systemLang === 'ko') {
+    localStorage.setItem('i18nextLng', 'ko-KR');
 } else if (systemLang === 'de') {
     localStorage.setItem('i18nextLng', 'de-DE');
 }
@@ -22,7 +26,7 @@ i18n
     .use(initReactI18next)
     .init({
         fallbackLng: 'zh-CN',
-        supportedLngs: ['zh-CN', 'en-US', 'ja-JP', 'de-DE'],
+        supportedLngs: ['zh-CN', 'zh-Hant', 'en-US', 'ja-JP', 'ko-KR', 'de-DE'],
 
         debug: false,
 
@@ -48,10 +52,14 @@ i18n.on('initialized', () => {
     const currentLang = i18n.language;
     if (currentLang === 'zh') {
         i18n.changeLanguage('zh-CN');
+    } else if (currentLang === 'zh-TW' || currentLang === 'zh-HK' || currentLang === 'zh-Hant') {
+        i18n.changeLanguage('zh-Hant');
     } else if (currentLang === 'en') {
         i18n.changeLanguage('en-US');
     } else if (currentLang === 'ja') {
         i18n.changeLanguage('ja-JP');
+    } else if (currentLang === 'ko') {
+        i18n.changeLanguage('ko-KR');
     } else if (currentLang === 'de') {
         i18n.changeLanguage('de-DE');
     }
