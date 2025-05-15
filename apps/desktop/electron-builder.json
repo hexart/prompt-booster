@@ -1,6 +1,6 @@
 {
     "appId": "com.hexart.promptbooster",
-    "productName": "提示词增强",
+    "productName": "Prompt Booster",
     "copyright": "Copyright © 2025 Hexart Studio",
     "directories": {
         "output": "release"
@@ -29,7 +29,10 @@
                 ]
             }
         ],
-        "icon": "build/icon.icns"
+        "icon": "build/icon.icns",
+        "extendInfo": {
+            "LSHasLocalizedDisplayName": true
+        }
     },
     "win": {
         "target": [
@@ -75,5 +78,6 @@
         "releaseType": "release",
         "private": false,
         "vPrefixedTagName": true
-    }
+    },
+    "afterPack": "./buildAfterPack.js" 
 }

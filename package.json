@@ -16,8 +16,6 @@
     "dev": "turbo run build --filter=@prompt-booster/api --filter=@prompt-booster/core --filter=@prompt-booster/ui && turbo run dev --filter=web",
     "start:dev": "turbo run dev",
     "desktop:dev": "cd apps/desktop && npm run dev",
-    "desktop:package": "npm run build && cd apps/desktop && npm run package",
-    "desktop:package:mac": "npm run build && cd apps/desktop && npm run package:mac",
     "build:mac": "cd apps/desktop && npm run build:mac",
     "release": "cd apps/desktop && npm version patch --no-git-tag-version && cd ../.. && git add . && git commit -m \"chore: prepare release\" && git tag v$(node -e \"console.log(require('./apps/desktop/package.json').version)\") && git push && git push --tags"
   },
