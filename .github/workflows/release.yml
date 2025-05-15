@@ -62,7 +62,7 @@ jobs:
         uses: pnpm/action-setup@v2
         with:
           version: '10.9.0'
-
+      
       - name: Install dependencies
         run: pnpm install
           
@@ -78,12 +78,16 @@ jobs:
         if: matrix.os == 'windows-latest'
         working-directory: ./apps/desktop
         run: npm run build:win-ci
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
       # Linux构建
       - name: Build desktop app for Linux
         if: matrix.os == 'ubuntu-latest'
         working-directory: ./apps/desktop
         run: npm run build:linux-ci
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
       # 上传构建产物
       - name: Upload artifacts
