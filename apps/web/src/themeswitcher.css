@@ -41,6 +41,6 @@
     }
 
     .lang-button {
-        @apply p-[8px] rounded-md transition-all;
+        @apply p-[8px] w-10 rounded-md transition-all;
     }
 }
