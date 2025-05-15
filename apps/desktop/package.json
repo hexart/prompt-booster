@@ -1,6 +1,6 @@
 {
   "name": "prompt-booster",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "description": "Prompt Booster Desktop App",
   "private": true,
   "main": "main.js",
@@ -14,7 +14,9 @@
     "build:web": "cd ../web && pnpm build",
     "build:mac": "npm run build:web && electron-builder --mac",
     "build:win": "npm run build:web && electron-builder --win",
-    "build:linux": "npm run build:web && electron-builder --linux"
+    "build:linux": "npm run build:web && electron-builder --linux",
+    "build:win-ci": "electron-builder --win",
+    "build:linux-ci": "electron-builder --linux"
   },
   "keywords": [
     "Prompt Booster"
