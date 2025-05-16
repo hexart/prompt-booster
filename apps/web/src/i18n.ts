@@ -18,6 +18,10 @@ if (systemLang === 'zh' || systemLang === 'zh-CN' || systemLang === 'zh-Hans') {
     localStorage.setItem('i18nextLng', 'ko-KR');
 } else if (systemLang === 'de') {
     localStorage.setItem('i18nextLng', 'de-DE');
+} else if (systemLang === 'nl' || systemLang === 'nl-NL') {
+    localStorage.setItem('i18nextLng', 'nl-NL');
+} else if (systemLang === 'ru' || systemLang === 'ru-RU') {
+    localStorage.setItem('i18nextLng', 'ru-RU');
 }
 
 i18n
@@ -26,7 +30,7 @@ i18n
     .use(initReactI18next)
     .init({
         fallbackLng: 'zh-CN',
-        supportedLngs: ['zh-CN', 'zh-Hant', 'en-US', 'ja-JP', 'ko-KR', 'de-DE'],
+        supportedLngs: ['zh-CN', 'zh-Hant', 'en-US', 'ja-JP', 'ko-KR', 'de-DE', 'nl-NL', 'ru-RU'],
 
         debug: false,
 
@@ -62,6 +66,10 @@ i18n.on('initialized', () => {
         i18n.changeLanguage('ko-KR');
     } else if (currentLang === 'de') {
         i18n.changeLanguage('de-DE');
+    } else if (currentLang === 'nl') {
+        i18n.changeLanguage('nl-NL');
+    } else if (currentLang === 'ru') {
+        i18n.changeLanguage('ru-RU');
     }
 });
 

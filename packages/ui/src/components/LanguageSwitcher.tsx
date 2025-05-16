@@ -6,7 +6,7 @@ import { Tooltip } from './Tooltip';
 import { useTheme } from './ThemeContext';
 
 // 语言类型
-type LanguageCode = 'zh-CN' | 'zh-Hant' | 'en-US' | 'ja-JP' | 'ko-KR' | 'de-DE';
+type LanguageCode = 'zh-CN' | 'zh-Hant' | 'en-US' | 'ja-JP' | 'ko-KR' | 'de-DE'| 'nl-NL' | 'ru-RU';
 
 // 语言配置
 const languageConfig: Record<LanguageCode, {
@@ -48,8 +48,20 @@ const languageConfig: Record<LanguageCode, {
     'de-DE': {
         icon: '🇩🇪',
         label: 'Deutsch',
-        shortcut: '⌥+D',
-        hotkey: 'alt+d'
+        shortcut: '⌥+G',
+        hotkey: 'alt+g'
+    },
+    'nl-NL': {
+        icon: '🇳🇱',
+        label: 'Nederlands',
+        shortcut: '⌥+N',
+        hotkey: 'alt+n'
+    },
+    'ru-RU': {
+        icon: '🇷🇺',
+        label: 'Русский',
+        shortcut: '⌥+R',
+        hotkey: 'alt+r'
     }
 };
 
@@ -95,6 +107,10 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
             return 'ko-KR';
         if (lang.includes('de')) 
             return 'de-DE';
+        if (lang.includes('nl')) 
+            return 'nl-NL';
+        if (lang.includes('ru')) 
+            return 'ru-RU';
         return 'en-US';
     };
     
