@@ -6,7 +6,7 @@ import { Tooltip } from './Tooltip';
 import { useTheme } from './ThemeContext';
 
 // 语言类型
-type LanguageCode = 'zh-CN' | 'zh-Hant' | 'en-US' | 'ja-JP' | 'ko-KR' | 'de-DE'| 'nl-NL' | 'ru-RU';
+type LanguageCode = 'zh-CN' | 'zh-Hant' | 'en-US' | 'ja-JP' | 'ko-KR' | 'de-DE' | 'nl-NL' | 'ru-RU' | 'es-ES' | 'fr-FR' | 'ar-SA' | 'pt-BR' | 'hi-IN';
 
 // 语言配置
 const languageConfig: Record<LanguageCode, {
@@ -62,6 +62,36 @@ const languageConfig: Record<LanguageCode, {
         label: 'Русский',
         shortcut: '⌥+R',
         hotkey: 'alt+r'
+    },
+    'es-ES': {
+        icon: '🇪🇸',
+        label: 'Español',
+        shortcut: '⌥+S',
+        hotkey: 'alt+s'
+    },
+    'fr-FR': {
+        icon: '🇫🇷',
+        label: 'Français',
+        shortcut: '⌥+F',
+        hotkey: 'alt+f'
+    },
+    'ar-SA': {
+        icon: '🇸🇦',
+        label: 'العربية',
+        shortcut: '⌥+A',
+        hotkey: 'alt+a'
+    },
+    'pt-BR': {
+        icon: '🇧🇷',
+        label: 'Português',
+        shortcut: '⌥+P',
+        hotkey: 'alt+p'
+    },
+    'hi-IN': {
+        icon: '🇮🇳',
+        label: 'हिन्दी',
+        shortcut: '⌥+I',
+        hotkey: 'alt+i'
     }
 };
 
@@ -111,6 +141,16 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
             return 'nl-NL';
         if (lang.includes('ru')) 
             return 'ru-RU';
+        if (lang.includes('es')) 
+            return 'es-ES';
+        if (lang.includes('fr')) 
+            return 'fr-FR';
+        if (lang.includes('ar')) 
+            return 'ar-SA';
+        if (lang.includes('pt')) 
+            return 'pt-BR';
+        if (lang.includes('hi')) 
+            return 'hi-IN';
         return 'en-US';
     };
     

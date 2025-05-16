@@ -22,6 +22,38 @@ const languageConfig = {
     'ko': {
         'CFBundleDisplayName': '프롬프트 부스터',
         'CFBundleName': '프롬프트 부스터'
+    },
+    'de': {
+        'CFBundleDisplayName': 'Prompt Booster',
+        'CFBundleName': 'Prompt Booster'
+    },
+    'nl': {
+        'CFBundleDisplayName': 'Prompt Booster',
+        'CFBundleName': 'Prompt Booster'
+    },
+    'ru': {
+        'CFBundleDisplayName': 'Prompt Booster',
+        'CFBundleName': 'Улучшитель Запросов'
+    },
+    'es': {
+        'CFBundleDisplayName': 'Prompt Booster',
+        'CFBundleName': 'Potenciador de Prompts'
+    },
+    'fr': {
+        'CFBundleDisplayName': 'Prompt Booster',
+        'CFBundleName': 'Amplificateur de Prompts'
+    },
+    'ar': {
+        'CFBundleDisplayName': 'Prompt Booster',
+        'CFBundleName': 'معزز النصوص'
+    },
+    'pt_BR': {
+        'CFBundleDisplayName': 'Prompt Booster',
+        'CFBundleName': 'Potenciador de Prompts'
+    },
+    'hi': {
+        'CFBundleDisplayName': 'Prompt Booster',
+        'CFBundleName': 'प्रॉम्प्ट बूस्टर'
     }
     // 可以添加更多语言
 };

@@ -22,6 +22,16 @@ if (systemLang === 'zh' || systemLang === 'zh-CN' || systemLang === 'zh-Hans') {
     localStorage.setItem('i18nextLng', 'nl-NL');
 } else if (systemLang === 'ru' || systemLang === 'ru-RU') {
     localStorage.setItem('i18nextLng', 'ru-RU');
+} else if (systemLang === 'es' || systemLang === 'es-ES') {
+    localStorage.setItem('i18nextLng', 'es-ES');
+} else if (systemLang === 'fr' || systemLang === 'fr-FR') {
+    localStorage.setItem('i18nextLng', 'fr-FR');
+} else if (systemLang === 'ar' || systemLang === 'ar-SA') {
+    localStorage.setItem('i18nextLng', 'ar-SA');
+} else if (systemLang === 'pt' || systemLang === 'pt-BR') {
+    localStorage.setItem('i18nextLng', 'pt-BR');
+} else if (systemLang === 'hi' || systemLang === 'hi-IN') {
+    localStorage.setItem('i18nextLng', 'hi-IN');
 }
 
 i18n
@@ -30,7 +40,10 @@ i18n
     .use(initReactI18next)
     .init({
         fallbackLng: 'zh-CN',
-        supportedLngs: ['zh-CN', 'zh-Hant', 'en-US', 'ja-JP', 'ko-KR', 'de-DE', 'nl-NL', 'ru-RU'],
+        supportedLngs: [
+            'zh-CN', 'zh-Hant', 'en-US', 'ja-JP', 'ko-KR', 'de-DE', 
+            'nl-NL', 'ru-RU', 'es-ES', 'fr-FR', 'ar-SA', 'pt-BR', 'hi-IN'
+        ],
 
         debug: false,
 
@@ -70,6 +83,16 @@ i18n.on('initialized', () => {
         i18n.changeLanguage('nl-NL');
     } else if (currentLang === 'ru') {
         i18n.changeLanguage('ru-RU');
+    } else if (currentLang === 'es') {
+        i18n.changeLanguage('es-ES');
+    } else if (currentLang === 'fr') {
+        i18n.changeLanguage('fr-FR');
+    } else if (currentLang === 'ar') {
+        i18n.changeLanguage('ar-SA');
+    } else if (currentLang === 'pt') {
+        i18n.changeLanguage('pt-BR');
+    } else if (currentLang === 'hi') {
+        i18n.changeLanguage('hi-IN');
     }
 });
 
