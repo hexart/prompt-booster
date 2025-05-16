@@ -17,7 +17,9 @@
     "start:dev": "turbo run dev",
     "desktop:dev": "cd apps/desktop && npm run dev",
     "build:mac": "cd apps/desktop && npm run build:mac",
-    "release": "cd apps/desktop && npm version patch --no-git-tag-version && cd ../.. && git add . && git commit -m \"chore: prepare release\" && git tag v$(node -e \"console.log(require('./apps/desktop/package.json').version)\") && git push && git push --tags"
+    "release": "cd apps/desktop && npm version patch --no-git-tag-version && cd ../.. && git add . && git commit -m \"chore: prepare release\" && git tag v$(node -e \"console.log(require('./apps/desktop/package.json').version)\") && git push && git push --tags",
+    "release:minor": "cd apps/desktop && npm version minor --no-git-tag-version && cd ../.. && git add . && git commit -m \"chore: prepare minor release\" && git tag v$(node -e \"console.log(require('./apps/desktop/package.json').version)\") && git push && git push --tags",
+    "release:major": "cd apps/desktop && npm version major --no-git-tag-version && cd ../.. && git add . && git commit -m \"chore: prepare major release\" && git tag v$(node -e \"console.log(require('./apps/desktop/package.json').version)\") && git push && git push --tags"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.16",

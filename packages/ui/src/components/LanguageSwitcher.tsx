@@ -13,85 +13,99 @@ const languageConfig: Record<LanguageCode, {
     icon: string,
     label: string,
     shortcut: string,
-    hotkey: string
+    hotkey: string,
+    display: boolean // 是否显示该语言按钮
 }> = {
     'zh-CN': {
         icon: '🇨🇳',
         label: '中文',
         shortcut: '⌥+C',
-        hotkey: 'alt+c'
+        hotkey: 'alt+c',
+        display: true // 默认显示
     },
     'zh-Hant': {
         icon: '🇨🇳',
         label: '繁體中文',
         shortcut: '⌥+H',
-        hotkey: 'alt+h'
+        hotkey: 'alt+h',
+        display: true
     },
     'en-US': {
         icon: '🇺🇸',
         label: 'English',
         shortcut: '⌥+E',
-        hotkey: 'alt+e'
+        hotkey: 'alt+e',
+        display: true
     },
     'ja-JP': {
         icon: '🇯🇵',
         label: '日本語',
         shortcut: '⌥+J',
-        hotkey: 'alt+j'
+        hotkey: 'alt+j',
+        display: true
     },
     'ko-KR': {
         icon: '🇰🇷',
         label: '한국어',
         shortcut: '⌥+K',
-        hotkey: 'alt+k'
+        hotkey: 'alt+k',
+        display: true
     },
     'de-DE': {
         icon: '🇩🇪',
         label: 'Deutsch',
         shortcut: '⌥+G',
-        hotkey: 'alt+g'
+        hotkey: 'alt+g',
+        display: true
     },
     'nl-NL': {
         icon: '🇳🇱',
         label: 'Nederlands',
         shortcut: '⌥+N',
-        hotkey: 'alt+n'
+        hotkey: 'alt+n',
+        display: true
     },
     'ru-RU': {
         icon: '🇷🇺',
         label: 'Русский',
         shortcut: '⌥+R',
-        hotkey: 'alt+r'
+        hotkey: 'alt+r',
+        display: true
     },
     'es-ES': {
         icon: '🇪🇸',
         label: 'Español',
         shortcut: '⌥+S',
-        hotkey: 'alt+s'
+        hotkey: 'alt+s',
+        display: true
     },
     'fr-FR': {
         icon: '🇫🇷',
         label: 'Français',
         shortcut: '⌥+F',
-        hotkey: 'alt+f'
+        hotkey: 'alt+f',
+        display: true
     },
     'ar-SA': {
         icon: '🇸🇦',
         label: 'العربية',
         shortcut: '⌥+A',
-        hotkey: 'alt+a'
+        hotkey: 'alt+a',
+        display: true
     },
     'pt-BR': {
         icon: '🇧🇷',
         label: 'Português',
         shortcut: '⌥+P',
-        hotkey: 'alt+p'
+        hotkey: 'alt+p',
+        display: true
     },
     'hi-IN': {
         icon: '🇮🇳',
         label: 'हिन्दी',
         shortcut: '⌥+I',
-        hotkey: 'alt+i'
+        hotkey: 'alt+i',
+        display: true
     }
 };
 
@@ -129,7 +143,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
         
         if (lang.includes('zh-CN') || lang === 'zh-Hans' || (lang === 'zh' && !lang.includes('TW') && !lang.includes('HK') && !lang.includes('Hant'))) 
             return 'zh-CN';
-        if (lang.includes('zh-TW') || lang.includes('zh-HK') || lang.includes('zh-Hant') || lang === 'zh-Hant') 
+        if (lang.includes('zh-TW') || lang.includes('zh-HK') || lang.includes('zh-Hant') || lang === 'zh-Hant')
             return 'zh-Hant';
         if (lang.includes('ja')) 
             return 'ja-JP';
@@ -154,7 +168,12 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
         return 'en-US';
     };
     
-    // 设置快捷键
+    // 获取可显示的语言数量
+    const getDisplayableLanguagesCount = (): number => {
+        return Object.values(languageConfig).filter(config => config.display).length;
+    };
+    
+    // 设置快捷键（为所有语言设置快捷键，不受显示设置影响）
     if (enableHotkeys) {
         Object.entries(languageConfig).forEach(([langCode, config]) => {
             useHotkeys(config.hotkey, (event) => {
@@ -211,9 +230,14 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
         );
     };
     
-    // 获取当前语言代码
+    // 获取当前语言代码和配置
     const currentLangCode = getCurrentLangCode();
     const currentLangConfig = languageConfig[currentLangCode];
+    
+    // 如果没有可显示的语言或只有一种语言，则不显示语言切换器
+    if (getDisplayableLanguagesCount() <= 1) {
+        return null;
+    }
     
     // 下拉菜单切换按钮样式
     const dropdownButtonStyle = isOpen
@@ -246,9 +270,10 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
             {isOpen && (
                 <div className="theme-dropdown-container theme-container">
                     <div className="flex flex-col gap-1">
-                        {Object.keys(languageConfig).map(key =>
-                            renderLanguageOption(key as LanguageCode)
-                        )}
+                        {Object.keys(languageConfig)
+                            .filter(key => languageConfig[key as LanguageCode].display)
+                            .map(key => renderLanguageOption(key as LanguageCode))
+                        }
                     </div>
                 </div>
             )}

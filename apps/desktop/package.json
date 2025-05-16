@@ -1,6 +1,6 @@
 {
   "name": "prompt-booster",
-  "version": "0.5.8",
+  "version": "0.6.0",
   "description": "Prompt Booster Desktop App",
   "private": true,
   "main": "main.js",
