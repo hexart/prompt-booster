@@ -1,6 +1,7 @@
-// “模块用于控制应用程序生命周期并创建原生浏览器窗口。”
+// "模块用于控制应用程序生命周期并创建原生浏览器窗口。"
 const { app, BrowserWindow, Menu, dialog } = require('electron')
 const path = require('node:path')
+const packageInfo = require('./package.json')
 
 let mainWindow;
 function createWindow() {
@@ -74,7 +75,7 @@ function createWindow() {
             dialog.showMessageBox({
               type: 'info',
               title: '关于 Prompt Booster',
-              message: 'Prompt Booster\n版本：0.5.0\n版权所有 © 2025 Hexart Studio\n保留所有权利。',
+              message: `Prompt Booster\n版本：${packageInfo.version}\n版权所有 © 2025 Hexart Studio\n保留所有权利。`,
               buttons: ['确定']
             });
           }

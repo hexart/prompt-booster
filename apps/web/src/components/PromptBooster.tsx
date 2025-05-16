@@ -514,7 +514,6 @@ export const PromptBooster: React.FC = () => {
                                 {analysisResult?.score === 10 && (
                                     <Confetti
                                         width={window.innerWidth}
-                                        height={300}
                                         numberOfPieces={200}
                                         gravity={0.3}
                                         recycle={false}

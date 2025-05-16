@@ -235,6 +235,20 @@ export async function analyzePromptWithLLM(
             languageInstruction = '결과를 한국어로 출력해 주세요.';
         } else if (currentLanguage.includes('de')) {
             languageInstruction = 'Bitte geben Sie das Ergebnis auf Deutsch aus.';
+        } else if (currentLanguage.includes('nl')) {
+            languageInstruction = 'Geef het resultaat in het Nederlands weer.';
+        } else if (currentLanguage.includes('ru')) {
+            languageInstruction = 'Пожалуйста, выведите результат на русском языке.';
+        } else if (currentLanguage.includes('es')) {
+            languageInstruction = 'Por favor, muestre el resultado en español.';
+        } else if (currentLanguage.includes('fr')) {
+            languageInstruction = 'Veuillez afficher le résultat en français.';
+        } else if (currentLanguage.includes('ar')) {
+            languageInstruction = 'الرجاء إظهار النتيجة باللغة العربية.';
+        } else if (currentLanguage.includes('pt')) {
+            languageInstruction = 'Por favor, apresente o resultado em português.';
+        } else if (currentLanguage.includes('hi')) {
+            languageInstruction = 'कृपया परिणाम हिंदी में प्रदर्शित करें।';
         } else {
             // 默认使用英语
             languageInstruction = 'Please output the result in English.';
