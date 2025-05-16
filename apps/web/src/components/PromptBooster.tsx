@@ -368,7 +368,7 @@ export const PromptBooster: React.FC = () => {
                         disabled={isProcessing || !originalPrompt || !originalPrompt.trim() || !activeModel}
                     >
                         <RocketIcon size={16} />
-                        {isProcessing ? t('promptBooster.enhancing') : t('promptBooster.startEnhance')}
+                        <span className='hidden sm:block'>{isProcessing ? t('promptBooster.enhancing') : t('promptBooster.startEnhance')}</span>
                     </button>
                 </Tooltip>
             </div>

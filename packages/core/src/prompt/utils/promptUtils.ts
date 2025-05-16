@@ -222,11 +222,19 @@ export async function analyzePromptWithLLM(
     let languageInstruction = '';
     if (currentLanguage) {
         if (currentLanguage.includes('zh')) {
-            languageInstruction = '请使用中文输出结果。';
+            if (currentLanguage.includes('Hant')) {
+                languageInstruction = '請使用繁體中文輸出結果。';
+            } else {
+                languageInstruction = '请使用中文输出结果。';
+            }
         } else if (currentLanguage.includes('en')) {
             languageInstruction = 'Please output the result in English.';
         } else if (currentLanguage.includes('ja')) {
             languageInstruction = '結果を日本語で出力してください。';
+        } else if (currentLanguage.includes('ko')) {
+            languageInstruction = '결과를 한국어로 출력해 주세요.';
+        } else if (currentLanguage.includes('de')) {
+            languageInstruction = 'Bitte geben Sie das Ergebnis auf Deutsch aus.';
         } else {
             // 默认使用英语
             languageInstruction = 'Please output the result in English.';
@@ -282,7 +290,7 @@ export async function analyzePromptWithLLM(
 
 ${languageInstruction}
 `;
-
+    console.log(languageInstruction);
     const userMessage = `请对以下提示词进行质量分析。如果它确实表现优秀，请给予高分评价；如果有不足，请如实指出并提供改进建议，${languageInstruction}：\n\n${cleanedPrompt}`;
 
     const result = await callLLMWithCurrentModel({

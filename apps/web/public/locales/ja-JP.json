@@ -3,7 +3,7 @@
         "appName": "プロンプトブースター",
         "wuKong": "Wukong AI",
         "tabs": {
-            "booster": "プロンプト強化",
+            "booster": "ブースター",
             "test": "比較テスト",
             "history": "履歴記録",
             "settings": "モデル設定"

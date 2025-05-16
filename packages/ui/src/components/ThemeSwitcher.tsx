@@ -179,7 +179,7 @@ const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
     const CurrentThemeIcon = themeConfig[theme as ThemeType]?.icon || Sun;
     const currentThemeLabel = themeConfig[theme as ThemeType]?.label || '切换主题';
     const currentShortcut = enableHotkeys ? themeConfig[theme as ThemeType]?.shortcut : '';
-    const tooltipText = enableHotkeys && currentShortcut ? `${currentThemeLabel} (${currentShortcut})` : currentThemeLabel;
+    const tooltipText = enableHotkeys && currentShortcut ? `${currentThemeLabel}\n(${currentShortcut})` : currentThemeLabel;
 
     // 下拉菜单切换按钮样式
     const dropdownButtonStyle = isOpen

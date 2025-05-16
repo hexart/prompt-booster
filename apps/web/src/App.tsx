@@ -41,7 +41,7 @@ function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="my-app-theme">
       <RefreshDetector />
-      <div className="min-h-screen antialiased">
+      <div className="min-h-screen antialiased overflow-x-hidden">
         <Header
           activeTab={activeTab}
           setActiveTab={setActiveTab}

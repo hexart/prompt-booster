@@ -190,12 +190,18 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
     // 如果没有需要显示的项目，返回null
     if (filteredItems.length === 0) return null;
     
+    // 淡入淡出动画类
+    const animationClass = isClosing 
+        ? 'fade-out' 
+        : isVisible 
+            ? 'fade-in' 
+            : 'fade-hidden';
+    
     // 弹窗内容
     const noticeContent = (
         <div
             ref={floatingRef}
-            className={`fixed z-50 ${isDragging ? 'cursor-grabbing' : 'cursor-grab'} ${className} 
-                    transition-opacity duration-500 ease-in-out ${isClosing ? 'opacity-0' : isVisible ? 'opacity-100' : 'opacity-0'}`}
+            className={`fixed z-50 ${isDragging ? 'cursor-grabbing' : 'cursor-grab'} ${className} ${animationClass}`}
             style={hasBeenDragged ? {
                 // 如果已经被拖动过，使用绝对像素位置
                 left: position.x,

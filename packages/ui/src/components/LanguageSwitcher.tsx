@@ -172,7 +172,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
                         ? `${currentLangConfig.label}\n(${currentLangConfig.shortcut})` 
                         : currentLangConfig.label
                     } 
-                    position="bottom"
+                    position="left"
                 >
                     <button
                         onClick={() => setIsOpen(!isOpen)}
