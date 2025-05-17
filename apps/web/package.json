@@ -15,7 +15,7 @@
     "@prompt-booster/core": "workspace:*",
     "@prompt-booster/ui": "workspace:*",
     "crypto-js": "^4.2.0",
-    "framer-motion": "^12.10.0",
+    "framer-motion": "^12.12.1",
     "i18next": "^25.1.2",
     "i18next-browser-languagedetector": "^8.1.0",
     "i18next-http-backend": "^3.0.2",
