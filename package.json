@@ -52,7 +52,8 @@
       "@npmcli/move-file": "^3.0.0",
       "boolean": "^3.2.0",
       "inflight": "^1.0.6",
-      "lodash.isequal": "^4.5.0"
+      "lodash.isequal": "^4.5.0",
+      "zustand": "5.0.4"
     },
     "onlyBuiltDependencies": [
       "@tailwindcss/oxide",

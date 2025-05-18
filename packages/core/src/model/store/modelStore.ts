@@ -1,7 +1,4 @@
-/**
- * 17. store/model-store.ts - 模型配置存储
- */
-// packages/core/src/store/model-store.ts
+// packages/core/src/model/store/modelStore.ts - 模型配置存储
 import { createWithEqualityFn } from 'zustand/traditional';
 import { persist } from 'zustand/middleware';
 import { StandardModelType, ModelConfig, CustomInterface } from '../models/config';
@@ -177,21 +174,21 @@ export const useModelStore = createWithEqualityFn<ModelState>()(
 
             getEnabledModels: () => {
                 const { configs, customInterfaces } = get();
-            
+
                 const standardModels = Object.entries(configs)
                     .filter(([_, config]) => config.enabled !== false)
                     .map(([id, config]) => ({
                         id,
                         name: `${config.providerName} - ${config.model}`  // 修改这里，使用"provider-modelName"格式
                     }));
-            
+
                 const custom = customInterfaces
                     .filter(item => item.enabled !== false)
                     .map(item => ({
                         id: item.id,
                         name: `${item.providerName} - ${item.model}`  // 修改这里，使用"provider-modelName"格式
                     }));
-            
+
                 return [...standardModels, ...custom];
             }
         }),
@@ -210,3 +207,14 @@ export const useModelStore = createWithEqualityFn<ModelState>()(
     ),
     Object.is
 );
+
+setTimeout(() => {
+    const state = useModelStore.getState();
+    // 确保初始状态被持久化，只在第一次运行时执行
+    if (state.lastUpdate === 0) {
+        useModelStore.setState({
+            ...state,
+            lastUpdate: Date.now()
+        });
+    }
+}, 0);

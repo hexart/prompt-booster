@@ -30,5 +30,8 @@
     "node-gyp": "^11.2.0",
     "path": "^0.12.7",
     "vite": "^6.3.5"
+  },
+  "dependencies": {
+    "update-electron-app": "^3.1.1"
   }
 }
