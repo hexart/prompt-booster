@@ -614,9 +614,14 @@ export class PromptGroupService {
             // 存储优化后的内容
             let optimizedPrompt = '';
 
+            // 在用户原始提示词后追加语言指令
+            const finalUserMessage = languageInstruction
+                ? `${originalPrompt}\n\n${languageInstruction}`
+                : originalPrompt;
+
             // 调用LLM进行优化
             await callLLMWithCurrentModel({
-                userMessage: originalPrompt,
+                userMessage: finalUserMessage,
                 systemMessage: finalSystemPrompt,
                 modelId,
                 onData: (chunk) => {
@@ -760,7 +765,12 @@ export class PromptGroupService {
             const cleanedOptimizedPrompt = removeThinkTags(currentVersion.optimizedPrompt);
 
             // 构建迭代提示词
-            const iterationPrompt = `当前优化后的提示词:\n\n${cleanedOptimizedPrompt}\n\n迭代方向:\n${direction}`;
+            let iterationPrompt = `当前优化后的提示词:\n\n${cleanedOptimizedPrompt}\n\n迭代方向:\n${direction}`;
+
+            // 在用户迭代方向提示词后追加语言指令
+            if (languageInstruction) {
+                iterationPrompt += `\n\n${languageInstruction}`;
+            }
 
             // 存储优化后的内容
             let optimizedPrompt = '';
