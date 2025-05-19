@@ -139,7 +139,8 @@ export const PromptBooster: React.FC = () => {
             await enhancePrompt({
                 originalPrompt,
                 templateId: selectedTemplateId,
-                modelId: activeModel
+                modelId: activeModel,
+                language: i18n.language
             });
 
             toast.success(t('toast.enhancePromptSuccess'));
@@ -243,7 +244,8 @@ export const PromptBooster: React.FC = () => {
                 groupId: activeGroup.id,
                 direction,
                 templateId,
-                modelId: activeModel
+                modelId: activeModel,
+                language: i18n.language
             });
 
             setIsIterationDialogOpen(false);

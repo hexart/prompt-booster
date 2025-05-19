@@ -1,6 +1,47 @@
 // packages/core/src/utils/prompt-utils.ts
 import { callLLMWithCurrentModel } from '../services/promptService';
 
+/**
+ * 根据语言代码生成对应的语言指令
+ * @param language 语言代码
+ * @returns 对应语言的输出指令
+ */
+export function getLanguageInstruction(language?: string): string {
+    if (!language) return '';
+    
+    if (language.includes('zh')) {
+        if (language.includes('Hant')) {
+            return '請使用繁體中文輸出結果。';
+        } else {
+            return '请使用中文输出结果。';
+        }
+    } else if (language.includes('en')) {
+        return 'Please output the result in English.';
+    } else if (language.includes('ja')) {
+        return '結果を日本語で出力してください。';
+    } else if (language.includes('ko')) {
+        return '결과를 한국어로 출력해 주세요.';
+    } else if (language.includes('de')) {
+        return 'Bitte geben Sie das Ergebnis auf Deutsch aus.';
+    } else if (language.includes('nl')) {
+        return 'Geef het resultaat in het Nederlands weer.';
+    } else if (language.includes('ru')) {
+        return 'Пожалуйста, выведите результат на русском языке.';
+    } else if (language.includes('es')) {
+        return 'Por favor, muestre el resultado en español.';
+    } else if (language.includes('fr')) {
+        return 'Veuillez afficher le résultat en français.';
+    } else if (language.includes('ar')) {
+        return 'الرجاء إظهار النتيجة باللغة العربية.';
+    } else if (language.includes('pt')) {
+        return 'Por favor, apresente o resultado em português.';
+    } else if (language.includes('hi')) {
+        return 'कृपया परिणाम हिंदी में प्रदर्शित करें।';
+    } else {
+        // 默认使用英语
+        return 'Please output the result in English.';
+    }
+}
 
 /**
  * 移除文本中的<think>标签及其内容
@@ -219,44 +260,7 @@ export async function analyzePromptWithLLM(
     currentLanguage?: string
 ): Promise<PromptAnalysisResult> {
     const cleanedPrompt = removeThinkTags(prompt);
-    let languageInstruction = '';
-    if (currentLanguage) {
-        if (currentLanguage.includes('zh')) {
-            if (currentLanguage.includes('Hant')) {
-                languageInstruction = '請使用繁體中文輸出結果。';
-            } else {
-                languageInstruction = '请使用中文输出结果。';
-            }
-        } else if (currentLanguage.includes('en')) {
-            languageInstruction = 'Please output the result in English.';
-        } else if (currentLanguage.includes('ja')) {
-            languageInstruction = '結果を日本語で出力してください。';
-        } else if (currentLanguage.includes('ko')) {
-            languageInstruction = '결과를 한국어로 출력해 주세요.';
-        } else if (currentLanguage.includes('de')) {
-            languageInstruction = 'Bitte geben Sie das Ergebnis auf Deutsch aus.';
-        } else if (currentLanguage.includes('nl')) {
-            languageInstruction = 'Geef het resultaat in het Nederlands weer.';
-        } else if (currentLanguage.includes('ru')) {
-            languageInstruction = 'Пожалуйста, выведите результат на русском языке.';
-        } else if (currentLanguage.includes('es')) {
-            languageInstruction = 'Por favor, muestre el resultado en español.';
-        } else if (currentLanguage.includes('fr')) {
-            languageInstruction = 'Veuillez afficher le résultat en français.';
-        } else if (currentLanguage.includes('ar')) {
-            languageInstruction = 'الرجاء إظهار النتيجة باللغة العربية.';
-        } else if (currentLanguage.includes('pt')) {
-            languageInstruction = 'Por favor, apresente o resultado em português.';
-        } else if (currentLanguage.includes('hi')) {
-            languageInstruction = 'कृपया परिणाम हिंदी में प्रदर्शित करें।';
-        } else {
-            // 默认使用英语
-            languageInstruction = 'Please output the result in English.';
-        }
-    } else {
-        // 如果没有提供语言，默认使用中文
-        languageInstruction = '请使用中文输出结果。';
-    }
+    let languageInstruction = getLanguageInstruction(currentLanguage);
     const systemPrompt = `
 你是一个专业的提示词（Prompt）质量评估助手，你将对用户提供的提示词进行公正、创造性且全面的评估。
 

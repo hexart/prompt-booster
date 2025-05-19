@@ -17,7 +17,7 @@ import { DEFAULT_TIMEOUT } from '@prompt-booster/api';
 import { generateId } from '../../utils';
 import { createStorage, StorageType } from '../../storage';
 import { useMemoryStore } from '../../storage/memoryStorage';
-import { removeThinkTags } from '../utils/promptUtils';
+import { removeThinkTags, getLanguageInstruction } from '../utils/promptUtils';
 
 // 导出调用大模型的通用方法，同时给其他对话场景用
 export async function callLLMWithCurrentModel(params: LLMCallParams): Promise<string> {
@@ -577,7 +577,7 @@ export class PromptGroupService {
      */
     public async enhancePrompt(params: EnhancePromptParams): Promise<EnhanceResult> {
 
-        const { originalPrompt, templateId, modelId } = params;
+        const { originalPrompt, templateId, modelId, language } = params;
 
         if (!originalPrompt || !originalPrompt.trim()) {
             throw new Error(ERROR_MESSAGES.EMPTY_PROMPT);
@@ -595,6 +595,13 @@ export class PromptGroupService {
                 throw new Error(ERROR_MESSAGES.TEMPLATE_NOT_FOUND);
             }
 
+            // 添加语言指令
+            const languageInstruction = getLanguageInstruction(language);
+            const finalSystemPrompt = languageInstruction
+                ? `${systemPrompt}\n\n${languageInstruction}`
+                : systemPrompt;
+
+
             // 创建新的提示词组
             const groupId = this.createPromptGroup(originalPrompt);
 
@@ -610,7 +617,7 @@ export class PromptGroupService {
             // 调用LLM进行优化
             await callLLMWithCurrentModel({
                 userMessage: originalPrompt,
-                systemMessage: systemPrompt,
+                systemMessage: finalSystemPrompt,
                 modelId,
                 onData: (chunk) => {
                     // 累积优化后的内容
@@ -708,7 +715,7 @@ export class PromptGroupService {
      * @returns 迭代结果
      */
     public async iteratePrompt(params: IteratePromptParams): Promise<IterateResult> {
-        const { groupId, direction, templateId, modelId } = params;
+        const { groupId, direction, templateId, modelId, language } = params;
 
         if (!this.state.groups[groupId]) {
             throw new Error(`提示词组 ${groupId} 不存在`);
@@ -728,6 +735,12 @@ export class PromptGroupService {
             if (!systemPrompt) {
                 throw new Error(ERROR_MESSAGES.TEMPLATE_NOT_FOUND);
             }
+
+            // 添加语言指令
+            const languageInstruction = getLanguageInstruction(language);
+            const finalSystemPrompt = languageInstruction
+                ? `${systemPrompt}\n\n${languageInstruction}`
+                : systemPrompt;
 
             // 获取当前版本
             const group = this.state.groups[groupId];
@@ -755,7 +768,7 @@ export class PromptGroupService {
             // 调用LLM进行迭代
             await callLLMWithCurrentModel({
                 userMessage: iterationPrompt,
-                systemMessage: systemPrompt,
+                systemMessage: finalSystemPrompt,
                 modelId,
                 onData: (chunk) => {
                     // 累积优化后的内容

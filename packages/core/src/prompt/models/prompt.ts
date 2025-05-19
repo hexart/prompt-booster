@@ -50,6 +50,7 @@ export interface EnhancePromptParams {
     originalPrompt: string;
     templateId: string;
     modelId?: string;
+    language?: string;
 }
 
 // 提示词增强结果
@@ -66,6 +67,7 @@ export interface IteratePromptParams {
     direction: string;
     templateId: string;
     modelId?: string;
+    language?: string;
 }
 
 // 提示词迭代结果

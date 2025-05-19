@@ -5,6 +5,7 @@ import { ArrowDownIcon, ClipboardIcon, ClipboardCheckIcon } from 'lucide-react';
 import { Markdown } from './Markdown';
 import { toast } from 'sonner';
 import { Tooltip } from './Tooltip';
+import { useTranslation } from 'react-i18next';
 
 /**
  * 自动滚动内容显示组件
@@ -61,6 +62,7 @@ export const AutoScrollContent: React.FC<AutoScrollContentProps> = ({
     placeholder = '',
     showCopyButton = true,
 }) => {
+    const { t } = useTranslation();
     const {
         elementRef,
         scrollToBottom,
@@ -136,11 +138,11 @@ export const AutoScrollContent: React.FC<AutoScrollContentProps> = ({
         navigator.clipboard.writeText(content)
             .then(() => {
                 setCopied(true);
-                toast.success('已复制到剪贴板');
+                toast.success(t('toast.copySuccess'));
                 setTimeout(() => setCopied(false), 2000);
             })
             .catch(err => {
-                console.error('无法复制文本: ', err);
+                console.error(t('toast.copyFailed'), err);
             });
     };
 
@@ -199,7 +201,7 @@ export const AutoScrollContent: React.FC<AutoScrollContentProps> = ({
 
             {/* 复制按钮 - 仅在悬停且有内容时显示 */}
             {showCopyButton && isHovered && content.trim() && !streaming && (
-                <Tooltip text="复制" position="bottom">
+                <Tooltip text={t('common.buttons.copy')} position="bottom">
                     <button
                         className="absolute top-2 right-2 p-2 rounded-md input-copy-button"
                         onClick={handleCopy}
