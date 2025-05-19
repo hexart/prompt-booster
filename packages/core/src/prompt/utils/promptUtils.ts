@@ -388,6 +388,18 @@ ${languageInstruction}
  * - 语言后缀使用连字符加语言代码（如 general_optimize-zh）
  * - 无语言后缀的视为英文默认版本
  * 
+ * 未来表设计：
+ * 表名: templates
+ * 
+ * 字段:
+ * - id: 整数, 主键, 自增 (数据库记录的唯一标识)
+ * - template_key: 字符串, 唯一, 非空 (功能性标识符，如"general_optimize")
+ * - language_code: 字符串, 非空 (如"zh", "en"，默认为"en")
+ * - name: 字符串, 非空 (显示名称)
+ * - content: 文本, 非空 (模板内容)
+ * - metadata: JSON (元数据)
+ * - ...其他字段
+ * 
  * @param templates 原始模板集合
  * @param currentLanguage 当前语言代码
  * @returns 本地化后的模板集合和ID转换函数
