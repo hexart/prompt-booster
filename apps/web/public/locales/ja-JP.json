@@ -63,7 +63,10 @@
         "enableModelFailed": "{{modelName}} モデルの有効化に失敗しました: {{reason}}",
         "reasonNoApiKey": "先にAPIキーを設定してください",
         "reasonNoBaseUrl": "先にAPI基本URLを設定してください",
-        "interfaceDeleteSuccess": "インターフェースが正常に削除されました"
+        "interfaceDeleteSuccess": "インターフェースが正常に削除されました",
+        "loadTemplatesSuccess": "{{count}}個のテンプレートを読み込みました",
+        "loadTemplatesFailed": "テンプレートの読み込みに失敗しました",
+        "noTemplatesAvailable": "利用可能なテンプレートはありません"
     },
     "aria": {
         "openMenu": "メニューを開く",
@@ -76,6 +79,7 @@
         "enhancedPrompt": "強化されたプロンプト",
         "templateSelect": "システムプロンプトテンプレート",
         "templatePlaceholder": "システムプロンプトテンプレートを選択...",
+        "noTemplatesAvailable": "利用可能なテンプレートはありません",
         "modelSelect": "モデル選択",
         "modelPlaceholder": "モデルを選択...",
         "startEnhance": "強化開始",

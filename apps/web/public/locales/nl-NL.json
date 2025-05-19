@@ -63,7 +63,10 @@
         "enableModelFailed": "Inschakelen van {{modelName}} model mislukt: {{reason}}",
         "reasonNoApiKey": "Configureer eerst de API-sleutel",
         "reasonNoBaseUrl": "Configureer eerst de API basis-URL",
-        "interfaceDeleteSuccess": "Interface succesvol verwijderd"
+        "interfaceDeleteSuccess": "Interface succesvol verwijderd",
+        "loadTemplatesSuccess": "{{count}} sjablonen geladen",
+        "loadTemplatesFailed": "Sjablonen laden mislukt",
+        "noTemplatesAvailable": "Geen sjablonen beschikbaar"
     },
     "aria": {
         "openMenu": "Menu openen",
@@ -76,6 +79,7 @@
         "enhancedPrompt": "Verbeterde prompt",
         "templateSelect": "Systeemprompt sjabloon",
         "templatePlaceholder": "Selecteer systeemprompt sjabloon...",
+        "noTemplatesAvailable": "Geen sjablonen beschikbaar",
         "modelSelect": "Geselecteerd model",
         "modelPlaceholder": "Selecteer model...",
         "startEnhance": "Begin met verbeteren",

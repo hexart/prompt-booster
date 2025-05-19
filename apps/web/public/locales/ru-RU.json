@@ -63,7 +63,10 @@
         "enableModelFailed": "Не удалось включить модель {{modelName}}: {{reason}}",
         "reasonNoApiKey": "Сначала настройте API-ключ",
         "reasonNoBaseUrl": "Сначала настройте базовый URL API",
-        "interfaceDeleteSuccess": "Интерфейс успешно удален"
+        "interfaceDeleteSuccess": "Интерфейс успешно удален",
+        "loadTemplatesSuccess": "Загружено {{count}} шаблонов",
+        "loadTemplatesFailed": "Не удалось загрузить шаблоны",
+        "noTemplatesAvailable": "Нет доступных шаблонов"
     },
     "aria": {
         "openMenu": "Открыть меню",
@@ -76,6 +79,7 @@
         "enhancedPrompt": "Улучшенный запрос",
         "templateSelect": "Шаблон системного запроса",
         "templatePlaceholder": "Выберите шаблон системного запроса...",
+        "noTemplatesAvailable": "Нет доступных шаблонов",
         "modelSelect": "Выбранная модель",
         "modelPlaceholder": "Выберите модель...",
         "startEnhance": "Начать улучшение",

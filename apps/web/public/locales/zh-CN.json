@@ -63,7 +63,10 @@
         "enableModelFailed": "启用 {{modelName}} 模型失败: {{reason}}",
         "reasonNoApiKey": "请先配置 API Key",
         "reasonNoBaseUrl": "请先配置 API 基础 URL",
-        "interfaceDeleteSuccess": "接口删除成功"
+        "interfaceDeleteSuccess": "接口删除成功",
+        "loadTemplatesSuccess": "加载了 {{count}} 个模板",
+        "loadTemplatesFailed": "加载模板失败",
+        "noTemplatesAvailable": "没有可用的模板"
     },
     "aria": {
         "openMenu": "打开菜单",
@@ -76,6 +79,7 @@
         "enhancedPrompt": "增强提示词",
         "templateSelect": "系统提示词模板",
         "templatePlaceholder": "选择系统提示词模板...",
+        "noTemplatesAvailable": "没有可用的模板",
         "modelSelect": "模型选择",
         "modelPlaceholder": "选择模型...",
         "startEnhance": "开始增强",

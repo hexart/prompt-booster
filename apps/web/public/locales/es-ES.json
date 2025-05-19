@@ -63,7 +63,10 @@
         "enableModelFailed": "Error al habilitar el modelo {{modelName}}: {{reason}}",
         "reasonNoApiKey": "Configure la clave API primero",
         "reasonNoBaseUrl": "Configure la URL base de API primero",
-        "interfaceDeleteSuccess": "Interfaz eliminada con éxito"
+        "interfaceDeleteSuccess": "Interfaz eliminada con éxito",
+        "loadTemplatesSuccess": "Cargadas {{count}} plantillas",
+        "loadTemplatesFailed": "Error al cargar las plantillas",
+        "noTemplatesAvailable": "No hay plantillas disponibles"
     },
     "aria": {
         "openMenu": "Abrir menú",
@@ -76,6 +79,7 @@
         "enhancedPrompt": "Prompt mejorado",
         "templateSelect": "Plantilla de prompt del sistema",
         "templatePlaceholder": "Seleccione plantilla de prompt del sistema...",
+        "noTemplatesAvailable": "No hay plantillas disponibles",
         "modelSelect": "Modelo seleccionado",
         "modelPlaceholder": "Seleccione modelo...",
         "startEnhance": "Iniciar mejora",

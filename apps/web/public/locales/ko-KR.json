@@ -63,7 +63,10 @@
         "enableModelFailed": "{{modelName}} 모델 활성화 실패: {{reason}}",
         "reasonNoApiKey": "API 키를 먼저 구성하세요",
         "reasonNoBaseUrl": "API 기본 URL을 먼저 구성하세요",
-        "interfaceDeleteSuccess": "인터페이스가 성공적으로 삭제되었습니다"
+        "interfaceDeleteSuccess": "인터페이스가 성공적으로 삭제되었습니다",
+        "loadTemplatesSuccess": "{{count}}개의 템플릿을 불러왔습니다",
+        "loadTemplatesFailed": "템플릿을 불러오지 못했습니다",
+        "noTemplatesAvailable": "사용 가능한 템플릿이 없습니다"
     },
     "aria": {
         "openMenu": "메뉴 열기",
@@ -76,6 +79,7 @@
         "enhancedPrompt": "향상된 프롬프트",
         "templateSelect": "시스템 프롬프트 템플릿",
         "templatePlaceholder": "시스템 프롬프트 템플릿 선택...",
+        "noTemplatesAvailable": "사용 가능한 템플릿이 없습니다",
         "modelSelect": "선택된 모델",
         "modelPlaceholder": "모델 선택...",
         "startEnhance": "향상 시작",

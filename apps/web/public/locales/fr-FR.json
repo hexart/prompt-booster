@@ -63,7 +63,10 @@
         "enableModelFailed": "Échec de l'activation du modèle {{modelName}} : {{reason}}",
         "reasonNoApiKey": "Veuillez d'abord configurer la clé API",
         "reasonNoBaseUrl": "Veuillez d'abord configurer l'URL de base de l'API",
-        "interfaceDeleteSuccess": "Interface supprimée avec succès"
+        "interfaceDeleteSuccess": "Interface supprimée avec succès",
+        "loadTemplatesSuccess": "{{count}} modèles chargés",
+        "loadTemplatesFailed": "Échec du chargement des modèles",
+        "noTemplatesAvailable": "Aucun modèle disponible"
     },
     "aria": {
         "openMenu": "Ouvrir le menu",
@@ -76,6 +79,7 @@
         "enhancedPrompt": "Prompt amélioré",
         "templateSelect": "Modèle de prompt système",
         "templatePlaceholder": "Sélectionnez un modèle de prompt système...",
+        "noTemplatesAvailable": "Aucun modèle disponible",
         "modelSelect": "Modèle sélectionné",
         "modelPlaceholder": "Sélectionnez un modèle...",
         "startEnhance": "Commencer l'amélioration",

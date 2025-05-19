@@ -63,7 +63,10 @@
         "enableModelFailed": "Falha ao habilitar o modelo {{modelName}}: {{reason}}",
         "reasonNoApiKey": "Configure a Chave API primeiro",
         "reasonNoBaseUrl": "Configure a URL Base da API primeiro",
-        "interfaceDeleteSuccess": "Interface excluída com sucesso"
+        "interfaceDeleteSuccess": "Interface excluída com sucesso",
+        "loadTemplatesSuccess": "{{count}} modelos carregados",
+        "loadTemplatesFailed": "Falha ao carregar modelos",
+        "noTemplatesAvailable": "Nenhum modelo disponível"
     },
     "aria": {
         "openMenu": "Abrir menu",
@@ -76,6 +79,7 @@
         "enhancedPrompt": "Prompt aprimorado",
         "templateSelect": "Modelo de prompt do sistema",
         "templatePlaceholder": "Selecione o modelo de prompt do sistema...",
+        "noTemplatesAvailable": "Nenhum modelo disponível",
         "modelSelect": "Modelo selecionado",
         "modelPlaceholder": "Selecione o modelo...",
         "startEnhance": "Iniciar aprimoramento",

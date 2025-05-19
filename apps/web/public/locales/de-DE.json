@@ -63,7 +63,10 @@
         "enableModelFailed": "Aktivierung des {{modelName}}-Modells fehlgeschlagen: {{reason}}",
         "reasonNoApiKey": "Bitte konfigurieren Sie zuerst den API-Schlüssel",
         "reasonNoBaseUrl": "Bitte konfigurieren Sie zuerst die API-Basis-URL",
-        "interfaceDeleteSuccess": "Schnittstelle erfolgreich gelöscht"
+        "interfaceDeleteSuccess": "Schnittstelle erfolgreich gelöscht",
+        "loadTemplatesSuccess": "{{count}} Vorlagen geladen",
+        "loadTemplatesFailed": "Vorlagen konnten nicht geladen werden",
+        "noTemplatesAvailable": "Keine Vorlagen verfügbar"
     },
     "aria": {
         "openMenu": "Menü öffnen",
@@ -76,6 +79,7 @@
         "enhancedPrompt": "Verbesserter Prompt",
         "templateSelect": "System-Prompt-Vorlage",
         "templatePlaceholder": "System-Prompt-Vorlage auswählen...",
+        "noTemplatesAvailable": "Keine Vorlagen verfügbar",
         "modelSelect": "Modell auswählen",
         "modelPlaceholder": "Modell auswählen...",
         "startEnhance": "Verbesserung starten",

@@ -63,7 +63,10 @@
         "enableModelFailed": "{{modelName}} मॉडल को सक्षम करने में विफल: {{reason}}",
         "reasonNoApiKey": "कृपया पहले API Key कॉन्फिगर करें",
         "reasonNoBaseUrl": "कृपया पहले API Base URL कॉन्फिगर करें",
-        "interfaceDeleteSuccess": "इंटरफेस सफलतापूर्वक हटाया गया"
+        "interfaceDeleteSuccess": "इंटरफेस सफलतापूर्वक हटाया गया",
+        "loadTemplatesSuccess": "{{count}} टेम्पलेट लोड किए गए",
+        "loadTemplatesFailed": "टेम्पलेट लोड करने में विफल",
+        "noTemplatesAvailable": "कोई टेम्पलेट उपलब्ध नहीं है"
     },
     "aria": {
         "openMenu": "मेन्यू खोलें",
@@ -76,6 +79,7 @@
         "enhancedPrompt": "बेहतर प्रॉम्प्ट",
         "templateSelect": "सिस्टम प्रॉम्प्ट टेम्पलेट",
         "templatePlaceholder": "सिस्टम प्रॉम्प्ट टेम्पलेट चुनें...",
+        "noTemplatesAvailable": "कोई टेम्पलेट उपलब्ध नहीं है",
         "modelSelect": "चयनित मॉडल",
         "modelPlaceholder": "मॉडल चुनें...",
         "startEnhance": "बेहतर बनाना शुरू करें",

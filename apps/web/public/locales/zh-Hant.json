@@ -63,7 +63,10 @@
         "enableModelFailed": "啟用 {{modelName}} 模型失敗: {{reason}}",
         "reasonNoApiKey": "請先配置 API Key",
         "reasonNoBaseUrl": "請先配置 API 基礎 URL",
-        "interfaceDeleteSuccess": "接口刪除成功"
+        "interfaceDeleteSuccess": "接口刪除成功",
+        "loadTemplatesSuccess": "加載了 {{count}} 個模板",
+        "loadTemplatesFailed": "加載模板失敗",
+        "noTemplatesAvailable": "沒有可用的模板"
     },
     "aria": {
         "openMenu": "打開菜單",
@@ -78,6 +81,7 @@
         "templatePlaceholder": "選擇系統提示詞模板...",
         "modelSelect": "模型選擇",
         "modelPlaceholder": "選擇模型...",
+        "noTemplatesAvailable": "沒有可用的模板",
         "startEnhance": "開始增強",
         "enhancing": "增強中...",
         "enhancePrompt": "增強提示詞",
