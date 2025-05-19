@@ -8,7 +8,7 @@ import { callLLMWithCurrentModel } from '../services/promptService';
  */
 export function getLanguageInstruction(language?: string): string {
     if (!language) return '';
-    
+
     if (language.includes('zh')) {
         if (language.includes('Hant')) {
             return '請使用繁體中文輸出結果。';
@@ -378,3 +378,57 @@ ${languageInstruction}
         throw new Error('LLM 评分结果解析失败');
     }
 }
+
+/**
+ * 根据当前语言处理模板本地化
+ * 
+ * 该函数根据用户当前语言选择合适的模板显示版本。
+ * 命名规则：
+ * - 基本ID使用下划线分隔词（如 general_optimize）
+ * - 语言后缀使用连字符加语言代码（如 general_optimize-zh）
+ * - 无语言后缀的视为英文默认版本
+ * 
+ * @param templates 原始模板集合
+ * @param currentLanguage 当前语言代码
+ * @returns 本地化后的模板集合和ID转换函数
+ */
+export const handleTemplateLocalization = (
+  templates: Record<string, any>,
+  currentLanguage: string
+): {
+  displayTemplates: Record<string, any>;
+  getActualTemplateId: (displayId: string) => string;
+} => {
+  // 提取简化的语言代码
+  const simpleLang = currentLanguage.split('-')[0];
+  
+  // 创建返回的结果对象
+  const displayTemplates: Record<string, any> = {};
+  const templateIdMap: Record<string, string> = {};
+  
+  // 第一步：收集所有不带语言后缀的模板（默认英文版）
+  Object.entries(templates).forEach(([id, template]) => {
+    if (!id.includes('-')) {
+      displayTemplates[id] = template;
+      templateIdMap[id] = id;
+    }
+  });
+  
+  // 第二步：尝试替换为当前语言的模板
+  if (simpleLang !== 'en') {
+    Object.entries(templates).forEach(([id, template]) => {
+      if (id.endsWith(`-${simpleLang}`)) {
+        const baseId = id.substring(0, id.lastIndexOf('-'));
+        if (displayTemplates[baseId]) {
+          displayTemplates[baseId] = template;
+          templateIdMap[baseId] = id;
+        }
+      }
+    });
+  }
+  
+  return {
+    displayTemplates,
+    getActualTemplateId: (id) => templateIdMap[id] || id
+  };
+};

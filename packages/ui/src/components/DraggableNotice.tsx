@@ -209,8 +209,8 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
                 right: 'auto'
             } : {
                 // 如果未被拖动过，保持与右侧的相对距离
-                right: '40px',
-                top: '120px',
+                right: '80px',
+                top: '110px',
                 left: 'auto'
             }}
             onMouseDown={handleMouseDown}

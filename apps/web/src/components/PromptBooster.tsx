@@ -5,7 +5,7 @@ import { promptGroupService } from '@prompt-booster/core/prompt/services/promptS
 import medalImage from '../assets/medal.png';
 import { getAllTemplatesAsRecord } from '@prompt-booster/core/prompt/services/templateService';
 import { Template } from '@prompt-booster/core/prompt/models/template';
-import { analyzePromptQuality, analyzePromptWithLLM, PromptAnalysisResult, CriterionItem } from '@prompt-booster/core/prompt/utils/promptUtils';
+import { analyzePromptQuality, analyzePromptWithLLM, PromptAnalysisResult, CriterionItem, handleTemplateLocalization } from '@prompt-booster/core/prompt/utils/promptUtils';
 import { toast, EnhancedTextarea, AutoScrollTextarea, EnhancedDropdown, Dialog } from '@prompt-booster/ui';
 import LoadingIcon from '@prompt-booster/ui/components/LoadingIcon';
 import { RocketIcon, ListRestartIcon, StepForwardIcon, ChartBarIcon, CopyPlusIcon, MinimizeIcon, MaximizeIcon, SquareCheckBigIcon, TriangleAlertIcon } from 'lucide-react';
@@ -50,6 +50,9 @@ export const PromptBooster: React.FC = () => {
     const [templates, setTemplates] = useState<Record<string, Template>>({});
     const [isTemplatesLoading, setIsTemplatesLoading] = useState(true);
 
+    const [displayTemplates, setDisplayTemplates] = useState<Record<string, Template>>({});
+    const [getActualTemplateId, setGetActualTemplateId] = useState<(id: string) => string>(() => (id: string): string => id);
+
     // 加载模板列表
     useEffect(() => {
         const loadTemplates = async () => {
@@ -57,6 +60,12 @@ export const PromptBooster: React.FC = () => {
                 setIsTemplatesLoading(true);
                 const templatesRecord = await getAllTemplatesAsRecord();
                 setTemplates(templatesRecord);
+
+                // 应用模板本地化
+                const { displayTemplates: localizedTemplates, getActualTemplateId: idMapper } =
+                    handleTemplateLocalization(templatesRecord, i18n.language);
+                setDisplayTemplates(localizedTemplates);
+                setGetActualTemplateId(() => idMapper);
 
                 if (Object.keys(templatesRecord).length > 0) {
                     console.log(t('toast.loadTemplatesSuccess', { count: Object.keys(templatesRecord).length }))
@@ -73,7 +82,7 @@ export const PromptBooster: React.FC = () => {
         };
 
         loadTemplates();
-    }, [t]);
+    }, [t, i18n.language]);
 
     // 获取模型商店
     const {
@@ -167,10 +176,13 @@ export const PromptBooster: React.FC = () => {
 
             toast.info(t('toast.enhancingWithModel', { modelName }));
 
+            // 获取实际的模板ID
+            const actualTemplateId = getActualTemplateId(selectedTemplateId);
+
             // 执行优化
             await enhancePrompt({
                 originalPrompt,
-                templateId: selectedTemplateId,
+                templateId: actualTemplateId,
                 modelId: activeModel,
                 language: i18n.language
             });
@@ -276,10 +288,13 @@ export const PromptBooster: React.FC = () => {
         if (!activeGroup) return;
 
         try {
+            // 获取实际的模板ID
+            const actualTemplateId = getActualTemplateId(templateId);
+
             await iteratePrompt({
                 groupId: activeGroup.id,
                 direction,
-                templateId,
+                templateId: actualTemplateId,
                 modelId: activeModel,
                 language: i18n.language
             });
@@ -365,7 +380,7 @@ export const PromptBooster: React.FC = () => {
                     </label>
                     <div className="relative">
                         <EnhancedDropdown
-                            options={Object.entries(templates)
+                            options={Object.entries(displayTemplates)
                                 .filter(([_, template]) => template.metadata?.templateType === 'optimize')
                                 .map(([id, template]) => ({
                                     value: id,
@@ -760,7 +775,7 @@ export const PromptBooster: React.FC = () => {
                 isOpen={isIterationDialogOpen}
                 onClose={() => setIsIterationDialogOpen(false)}
                 onSubmit={handleIterationSubmit}
-                templates={templates}
+                templates={displayTemplates}
             />
 
             {/* 重置确认对话框 */}
