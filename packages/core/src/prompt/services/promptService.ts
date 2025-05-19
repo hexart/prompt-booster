@@ -1,4 +1,4 @@
-// packages/core/src/services/promptGroupService.ts
+// packages/core/src/prompt/services/promptService.ts
 import {
     PromptGroup,
     PromptVersion,

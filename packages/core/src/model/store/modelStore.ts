@@ -1,5 +1,5 @@
 // packages/core/src/model/store/modelStore.ts - 模型配置存储
-import { createWithEqualityFn } from 'zustand/traditional';
+import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { StandardModelType, ModelConfig, CustomInterface } from '../models/config';
 import { defaultModelConfigs } from '../../config/defaults';
@@ -51,7 +51,7 @@ interface ModelState {
 }
 
 // 创建store
-export const useModelStore = createWithEqualityFn<ModelState>()(
+export const useModelStore = create<ModelState>()(
     persist(
         (set, get) => ({
             activeModel: 'openai',
@@ -204,8 +204,7 @@ export const useModelStore = createWithEqualityFn<ModelState>()(
                 }
             }
         }
-    ),
-    Object.is
+    )
 );
 
 setTimeout(() => {

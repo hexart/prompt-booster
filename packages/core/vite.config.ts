@@ -26,10 +26,6 @@ export default defineConfig({
                 'zustand',
                 'zustand/traditional',
                 'zustand/middleware',
-                'use-sync-external-store',
-                'use-sync-external-store/shim',
-                'use-sync-external-store/shim/with-selector',
-                'use-sync-external-store/shim/with-selector.js',
                 'uuid',
                 '@prompt-booster/api',
                 /^@prompt-booster\/api\/.*/
@@ -41,9 +37,6 @@ export default defineConfig({
                     zustand: 'zustand',
                     'zustand/traditional': 'zustandTraditional',
                     'zustand/middleware': 'zustandMiddleware',
-                    'use-sync-external-store': 'useSyncExternalStore',
-                    'use-sync-external-store/shim': 'useSyncExternalStoreShim',
-                    'use-sync-external-store/shim/with-selector': 'useSyncExternalStoreWithSelector',
                     uuid: 'uuid',
                     '@prompt-booster/api': 'PromptOptimizerApi'
                 }

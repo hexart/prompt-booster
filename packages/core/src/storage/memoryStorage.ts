@@ -1,5 +1,5 @@
 // packages/core/src/storage/memoryStorage.ts
-import { createWithEqualityFn } from 'zustand/traditional';
+import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { createStorage, StorageType } from './storageService';
 
@@ -27,7 +27,7 @@ const memoryStorage = createStorage({
     key: 'MEMORY_STORE'
 });
 
-export const useMemoryStore = createWithEqualityFn<MemoryState>()(
+export const useMemoryStore = create<MemoryState>()(
     persist(
         (set) => ({
             originalPrompt: '',
@@ -62,17 +62,16 @@ export const useMemoryStore = createWithEqualityFn<MemoryState>()(
             }),
         }),
         memoryStorage
-    ),
-    Object.is
+    )
 );
 
 setTimeout(() => {
     const state = useMemoryStore.getState();
     // 只在需要时更新初始状态
-    if (state.originalPrompt === '' && 
-        state.optimizedPrompt === '' && 
-        state.userTestPrompt === '' && 
-        state.originalResponse === '' && 
+    if (state.originalPrompt === '' &&
+        state.optimizedPrompt === '' &&
+        state.userTestPrompt === '' &&
+        state.originalResponse === '' &&
         state.optimizedResponse === '') {
         useMemoryStore.setState({
             ...state

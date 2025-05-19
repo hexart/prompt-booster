@@ -19,12 +19,7 @@ export default defineConfig({
             formats: ['es', 'cjs']
         },
         rollupOptions: {
-            external: [
-                'use-sync-external-store',
-                'use-sync-external-store/shim',
-                'use-sync-external-store/shim/with-selector',
-                'use-sync-external-store/shim/with-selector.js'
-            ]
+            external: []
         },
         sourcemap: true
     }
