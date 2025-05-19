@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useMemoryStore } from '@prompt-booster/core/storage/memoryStorage';
 import { promptGroupService } from '@prompt-booster/core/prompt/services/promptService';
-import templates from '@prompt-booster/core/prompt/templates/default-templates.json';
+// import templates from '@prompt-booster/core/prompt/templates/default-templates.json';
 import medalImage from '../assets/medal.png';
+import { getAllTemplatesAsRecord } from '@prompt-booster/core/prompt/services/templateService';
 import { Template } from '@prompt-booster/core/prompt/models/template';
 import { analyzePromptQuality, analyzePromptWithLLM, PromptAnalysisResult, CriterionItem } from '@prompt-booster/core/prompt/utils/promptUtils';
 import { toast, EnhancedTextarea, AutoScrollTextarea, EnhancedDropdown, Dialog } from '@prompt-booster/ui';
@@ -44,6 +45,35 @@ export const PromptBooster: React.FC = () => {
     const [selectedTemplateId, setSelectedTemplateId] = useState(() => {
         return localStorage.getItem('selectedTemplateId') || 'general-optimize';
     });
+
+    // 新增状态来存储模板列表
+    const [templates, setTemplates] = useState<Record<string, Template>>({});
+    const [isTemplatesLoading, setIsTemplatesLoading] = useState(true);
+
+    // 加载模板列表
+    useEffect(() => {
+        const loadTemplates = async () => {
+            try {
+                setIsTemplatesLoading(true);
+                const templatesRecord = await getAllTemplatesAsRecord();
+                setTemplates(templatesRecord);
+
+                if (Object.keys(templatesRecord).length > 0) {
+                    console.log(t('toast.loadTemplatesSuccess', { count: Object.keys(templatesRecord).length }))
+                    // toast.success(t('toast.loadTemplatesSuccess', { count: Object.keys(templatesRecord).length }));
+                } else {
+                    toast.info(t('toast.noTemplatesAvailable'));
+                }
+            } catch (error) {
+                console.error('加载模板失败:', error);
+                toast.error(t('toast.loadTemplatesFailed'));
+            } finally {
+                setIsTemplatesLoading(false);
+            }
+        };
+
+        loadTemplates();
+    }, [t]);
 
     // 获取模型商店
     const {
@@ -323,23 +353,35 @@ export const PromptBooster: React.FC = () => {
 
             {/* 控制栏 */}
             <div className="flex items-end gap-3">
-                <div className="min-w-[26%] inline-block">
+                <div className="min-w-[26%] inline-block relative">
                     <label className="block text-sm font-medium mb-2 whitespace-nowrap truncate input-description">
                         {t('promptBooster.templateSelect')}
                     </label>
-                    <EnhancedDropdown
-                        options={Object.entries(templates as Record<string, Template>)
-                            .filter(([_, template]) => template.metadata?.templateType === 'optimize')
-                            .map(([id, template]) => ({
-                                value: id,
-                                label: template.name
-                            }))}
-                        value={selectedTemplateId}
-                        onChange={setSelectedTemplateId}
-                        placeholder={t('promptBooster.templatePlaceholder')}
-                        disabled={isProcessing}
-                        className=''
-                    />
+                    <div className="relative">
+                        <EnhancedDropdown
+                            options={Object.entries(templates)
+                                .filter(([_, template]) => template.metadata?.templateType === 'optimize')
+                                .map(([id, template]) => ({
+                                    value: id,
+                                    label: template.name
+                                }))}
+                            value={selectedTemplateId}
+                            onChange={setSelectedTemplateId}
+                            placeholder={t('promptBooster.templatePlaceholder')}
+                            disabled={isProcessing || isTemplatesLoading}
+                            className=''
+                        />
+                        {isTemplatesLoading && (
+                            <div className="absolute right-10 top-1/2 transform -translate-y-1/2">
+                                <LoadingIcon />
+                            </div>
+                        )}
+                    </div>
+                    {!isTemplatesLoading && Object.keys(templates).length === 0 && (
+                        <div className="mt-2 p-2 text-center text-sm dropdown-null">
+                            {t('promptBooster.noTemplatesAvailable')}
+                        </div>
+                    )}
                 </div>
 
                 <div className="min-w-[33%] grow">
@@ -710,7 +752,7 @@ export const PromptBooster: React.FC = () => {
                 isOpen={isIterationDialogOpen}
                 onClose={() => setIsIterationDialogOpen(false)}
                 onSubmit={handleIterationSubmit}
-                templates={templates as unknown as Record<string, Template>}
+                templates={templates}
             />
 
             {/* 重置确认对话框 */}

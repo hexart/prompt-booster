@@ -6,6 +6,14 @@ import { FileTemplateProvider } from '../provider/fileTemplateProvider';
 const templateProvider: TemplateProvider = new FileTemplateProvider();
 
 /**
+ * 获取模板提供者实例
+ * @returns 模板提供者
+ */
+export const getTemplateProvider = (): TemplateProvider => {
+    return templateProvider;
+};
+
+/**
  * 获取模板
  * @param id 模板ID
  * @returns 模板对象或null
@@ -21,6 +29,14 @@ export const getTemplate = async (id: string): Promise<Template | null> => {
 export const getAllTemplates = async (): Promise<Template[]> => {
     const templates = await templateProvider.getAllTemplates();
     return Object.values(templates);
+};
+
+/**
+ * 获取所有模板并作为Record返回
+ * @returns 模板Record对象，键为模板ID
+ */
+export const getAllTemplatesAsRecord = async (): Promise<Record<string, Template>> => {
+    return templateProvider.getAllTemplates();
 };
 
 /**
