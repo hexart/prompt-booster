@@ -91,6 +91,8 @@ export const PromptBooster: React.FC = () => {
     // 分析抽屉状态
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
+    // 抽屉是否可关闭状态
+    const [isDrawerDismissible, setIsDrawerDismissible] = useState(true);
 
     // 保存模板选择到localStorage
     useEffect(() => {
@@ -216,6 +218,8 @@ export const PromptBooster: React.FC = () => {
         try {
             setIsDrawerOpen(true);
             setLoading(true);
+            // 设置抽屉为可关闭状态
+            setIsDrawerDismissible(true);
 
             // 使用本地分析方法
             const result = analyzePromptQuality(optimizedPrompt);
@@ -236,6 +240,8 @@ export const PromptBooster: React.FC = () => {
 
         try {
             setLoading(true);
+            // 设置抽屉为不可关闭状态
+            setIsDrawerDismissible(false);
 
             // 尝试使用LLM分析
             let result;
@@ -549,7 +555,7 @@ export const PromptBooster: React.FC = () => {
                 </div>
 
                 {/* 分析结果抽屉 */}
-                <Drawer.Root dismissible={false} open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+                <Drawer.Root dismissible={isDrawerDismissible} open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
                     <Drawer.Portal>
                         <Drawer.Overlay className="fixed inset-0 z-40 mask" />
                         <Drawer.Content className="drawer-content-container backdrop-blur-md flex flex-col rounded-t-2xl drop-shadow-[0_-15px_15px_rgba(0,0,0,0.15)] fixed bottom-0 left-0 right-0 max-h-[85vh] z-40">
@@ -725,12 +731,14 @@ export const PromptBooster: React.FC = () => {
                                                 ) : t('promptBooster.drawer.deepAnalysis')}
                                             </button>
                                         )}
-                                        <button
-                                            className="px-4 py-2 ml-2 text-sm button-cancel rounded-md transition"
-                                            onClick={() => setIsDrawerOpen(false)}
-                                        >
-                                            {t('common.buttons.close')}
-                                        </button>
+                                        {!isDrawerDismissible && (
+                                            <button
+                                                className="px-4 py-2 ml-2 text-sm button-cancel rounded-md transition"
+                                                onClick={() => setIsDrawerOpen(false)}
+                                            >
+                                                {t('common.buttons.close')}
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
 
