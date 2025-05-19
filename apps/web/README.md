@@ -22,7 +22,7 @@ Prompt Booster is a React-based web application specifically designed to optimiz
 - **Frontend Framework**: React 19.1 + TypeScript
 - **Build Tool**: Vite 6.2
 - **CSS Framework**: Tailwind CSS 4.1
-- **State Management**: Zustand 4.4
+- **State Management**: Zustand 5.0
 - **UI Components**:
   - Custom UI component library (@prompt-booster/ui)
   - Framer Motion (animations)

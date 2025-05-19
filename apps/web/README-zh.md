@@ -25,7 +25,7 @@
 
 - **CSS框架**：Tailwind CSS 4.1
 
-- **状态管理**：Zustand 4.4
+- **状态管理**：Zustand 5.0
 
 - UI组件
 

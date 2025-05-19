@@ -27,7 +27,7 @@ The Prompt Enhancer desktop client is a cross-platform application based on the 
 - **Package Manager**: npm (Note: The desktop client uses npm independently from the rest of the project)
 - **Web Frontend**: React 19.1 + TypeScript
 - **UI Framework**: Tailwind CSS 4.1
-- **State Management**: Zustand 4.4
+- **State Management**: Zustand 5.0
 
 ### 2.2 Project Structure
 

@@ -27,7 +27,7 @@
 - **包管理器**：npm（注意：桌面客户端独立使用npm，与项目其余部分分开）
 - **Web 前端**：React 19.1 + TypeScript
 - **UI 框架**：Tailwind CSS 4.1
-- **状态管理**：Zustand 4.4
+- **状态管理**：Zustand 5.0
 
 ### 2.2 项目结构
 

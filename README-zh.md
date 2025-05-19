@@ -261,7 +261,7 @@ docker pull ghcr.io/hexart/prompt-booster:latest \
 
 - **语言**：TypeScript、Python（后端）
 - **前端**：React 19.1、TailwindCSS 4.1
-- **状态管理**：Zustand 4.4
+- **状态管理**：Zustand 5.0
 - **构建工具**：Vite、Turborepo、PNPM
 - **桌面**：Electron 36
 - **后端**（计划）：FastAPI、PostgreSQL
