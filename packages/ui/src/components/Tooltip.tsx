@@ -14,6 +14,7 @@ type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
  * @param shadowClass - Tailwind 阴影强度类，例如 'shadow-md'、'shadow-lg'，控制提示框的阴影大小和模糊程度
  * @param shadowColor - Tailwind 阴影颜色类，例如 'shadow-blue-500/50'、'shadow-gray-700/30'，用于自定义阴影的颜色或透明度
  * @param duration - 过渡动画持续时间，单位毫秒，支持 0、150、200、300、500、700、1000
+ * @param disabled - 是否禁用tooltip，设为true时不显示提示框
  */
 interface TooltipProps {
     content?: ReactNode;
@@ -23,6 +24,7 @@ interface TooltipProps {
     shadowClass?: string;
     shadowColor?: string;
     duration?: 0 | 150 | 200 | 300 | 500 | 700 | 1000;
+    disabled?: boolean;
     children: React.ReactElement<React.HTMLAttributes<HTMLElement>>; // 只包裹单个原生元素
 }
 
@@ -34,6 +36,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
     shadowClass = 'shadow-md',
     shadowColor = '',
     duration = 300,
+    disabled = false,
     children,
 }) => {
     // 获取主题上下文
@@ -57,7 +60,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
 
     // 计算提示框位置
     useEffect(() => {
-        if (!triggerRef.current || !isVisible) return;
+        if (!triggerRef.current || !isVisible || disabled) return;
         const rect = triggerRef.current.getBoundingClientRect();
         let top = 0;
         let left = 0;
@@ -82,7 +85,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
         }
 
         setTooltipPosition({ top, left });
-    }, [isVisible, position]);
+    }, [isVisible, position, disabled]);
 
     // 过渡类
     const durationClass = (() => {
@@ -140,7 +143,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
             else if (childRef) (childRef as React.MutableRefObject<HTMLElement | null>).current = node;
         },
         onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
-            setIsVisible(true);
+            if (!disabled) setIsVisible(true);
             children.props.onMouseEnter?.(e);
         },
         onMouseLeave: (e: React.MouseEvent<HTMLElement>) => {
@@ -148,7 +151,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
             children.props.onMouseLeave?.(e);
         },
         onFocus: (e: React.FocusEvent<HTMLElement>) => {
-            setIsVisible(true);
+            if (!disabled) setIsVisible(true);
             children.props.onFocus?.(e);
         },
         onBlur: (e: React.FocusEvent<HTMLElement>) => {
@@ -178,10 +181,13 @@ export const Tooltip: React.FC<TooltipProps> = ({
     // 处理内容显示
     const tooltipContent = content || text || '';
 
+    // 如果禁用或没有内容，不渲染tooltip
+    const shouldRenderTooltip = !disabled && (!!tooltipContent) && portalTarget;
+
     return (
         <>
             {trigger}
-            {portalTarget &&
+            {shouldRenderTooltip &&
                 createPortal(
                     <div
                         role="tooltip"
