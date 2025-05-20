@@ -430,7 +430,7 @@ export const PromptBooster: React.FC = () => {
                                 : ''
                             }`}
                         onClick={handleOptimize}
-                        disabled={isProcessing || !originalPrompt || !originalPrompt.trim() || !activeModel}
+                        disabled={isProcessing || !originalPrompt || !originalPrompt.trim() || !activeModel || !selectedTemplateId || !displayTemplates[selectedTemplateId]}
                     >
                         <RocketIcon size={16} />
                         <span className='hidden sm:block'>{isProcessing ? t('promptBooster.enhancing') : t('promptBooster.startEnhance')}</span>
