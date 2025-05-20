@@ -5,7 +5,8 @@ import { promptGroupService } from '@prompt-booster/core/prompt/services/promptS
 import medalImage from '../assets/medal.png';
 import { getAllTemplatesAsRecord } from '@prompt-booster/core/prompt/services/templateService';
 import { Template } from '@prompt-booster/core/prompt/models/template';
-import { analyzePromptQuality, analyzePromptWithLLM, PromptAnalysisResult, CriterionItem, handleTemplateLocalization } from '@prompt-booster/core/prompt/utils/promptUtils';
+import { analyzePromptWithLLM, PromptAnalysisResult, CriterionItem, handleTemplateLocalization } from '@prompt-booster/core/prompt/utils/promptUtils';
+import { analyzePromptQuality } from '@prompt-booster/core/prompt/utils/promptAnalysisUtils';
 import { toast, EnhancedTextarea, AutoScrollTextarea, EnhancedDropdown, Dialog } from '@prompt-booster/ui';
 import LoadingIcon from '@prompt-booster/ui/components/LoadingIcon';
 import { RocketIcon, ListRestartIcon, StepForwardIcon, ChartBarIcon, CopyPlusIcon, MinimizeIcon, MaximizeIcon, SquareCheckBigIcon, TriangleAlertIcon } from 'lucide-react';
@@ -93,7 +94,6 @@ export const PromptBooster: React.FC = () => {
 
     // 检查当前选择的模型是否还在启用的模型列表中
     const isActiveModelEnabled = getEnabledModels().some(model => model.id === activeModel);
-    console.log("当前选中的模型ID:", activeModel)
 
     // 迭代对话框状态
     const [isIterationDialogOpen, setIsIterationDialogOpen] = useState(false);
@@ -238,7 +238,7 @@ export const PromptBooster: React.FC = () => {
             setIsDrawerDismissible(true);
 
             // 使用本地分析方法
-            const result = analyzePromptQuality(optimizedPrompt);
+            const result = analyzePromptQuality(optimizedPrompt, i18n.language);
             setAnalysisResult(result);
 
             // 重置LLM分析使用状态(每次打开抽屉时重置)
@@ -772,14 +772,12 @@ export const PromptBooster: React.FC = () => {
                                                 </div>
                                             </Tooltip>
                                         )}
-                                        {!isDrawerDismissible && (
-                                            <button
-                                                className="px-4 py-2 ml-2 text-sm button-cancel rounded-md transition"
-                                                onClick={() => setIsDrawerOpen(false)}
-                                            >
-                                                {t('common.buttons.close')}
-                                            </button>
-                                        )}
+                                        <button
+                                            className="px-4 py-2 ml-2 text-sm button-cancel rounded-md transition"
+                                            onClick={() => setIsDrawerOpen(false)}
+                                        >
+                                            {t('common.buttons.close')}
+                                        </button>
                                     </div>
                                 </div>
 
