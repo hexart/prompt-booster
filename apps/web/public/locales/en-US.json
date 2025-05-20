@@ -111,6 +111,7 @@
             "suggestionsTitle": "Iteration suggestions",
             "copyAll": "Copy All",
             "deepAnalysis": "In-depth analysis",
+            "enableModelFirst": "Please enable the model interface first",
             "score": {
                 "zero": "0 points",
                 "points": "+{{points}} points"

@@ -111,6 +111,7 @@
             "suggestionsTitle": "Iteratiesuggesties",
             "copyAll": "Alles kopiëren",
             "deepAnalysis": "Diepgaande analyse",
+            "enableModelFirst": "Schakel eerst de modelinterface in",
             "score": {
                 "zero": "0 punten",
                 "points": "+{{points}} punten"

@@ -111,6 +111,7 @@
             "suggestionsTitle": "Iterationsvorschläge",
             "copyAll": "Alle kopieren",
             "deepAnalysis": "Tiefgehende Analyse",
+            "enableModelFirst": "Aktivieren Sie zuerst das Modell",
             "score": {
                 "zero": "0 Punkte",
                 "points": "+{{points}} Punkte"

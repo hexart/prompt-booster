@@ -91,6 +91,10 @@ export const PromptBooster: React.FC = () => {
         getEnabledModels
     } = useModelStore();
 
+    // 检查当前选择的模型是否还在启用的模型列表中
+    const isActiveModelEnabled = getEnabledModels().some(model => model.id === activeModel);
+    console.log("当前选中的模型ID:", activeModel)
+
     // 迭代对话框状态
     const [isIterationDialogOpen, setIsIterationDialogOpen] = useState(false);
 
@@ -283,6 +287,20 @@ export const PromptBooster: React.FC = () => {
         }
     }, [isDrawerOpen]);
 
+    // 自动切换到有效模型接口
+    useEffect(() => {
+        // 获取可用模型列表
+        const enabledModels = getEnabledModels();
+
+        // 如果当前选中的模型不在可用列表中，且有可用模型，则切换到第一个可用模型
+        if (activeModel && !enabledModels.some(model => model.id === activeModel) && enabledModels.length > 0) {
+            const firstAvailableModel = enabledModels[0].id;
+            setActiveModel(firstAvailableModel);
+            console.log("模型不可用，已自动切换到:", firstAvailableModel);
+        }
+        // 注意：我们不再尝试设置为null，因为setActiveModel不接受null
+    }, [activeModel, getEnabledModels]);
+
     // 处理迭代对话框提交
     const handleIterationSubmit = async (templateId: string, direction: string) => {
         if (!activeGroup) return;
@@ -430,7 +448,7 @@ export const PromptBooster: React.FC = () => {
                                 : ''
                             }`}
                         onClick={handleOptimize}
-                        disabled={isProcessing || !originalPrompt || !originalPrompt.trim() || !activeModel || !selectedTemplateId || !displayTemplates[selectedTemplateId]}
+                        disabled={isProcessing || !originalPrompt || !originalPrompt.trim() || !isActiveModelEnabled || !selectedTemplateId || !displayTemplates[selectedTemplateId]}
                     >
                         <RocketIcon size={16} />
                         <span className='hidden sm:block'>{isProcessing ? t('promptBooster.enhancing') : t('promptBooster.startEnhance')}</span>
@@ -733,18 +751,26 @@ export const PromptBooster: React.FC = () => {
                                     )}
                                     <div className="mt-4 flex justify-center">
                                         {!hasUsedLLMAnalysis && (
-                                            <button
-                                                className="px-4 py-2 text-sm button-confirm rounded-md transition"
-                                                onClick={handleLLMAnalyze}
-                                                disabled={loading}
+                                            <Tooltip
+                                                text={!isActiveModelEnabled ? t('promptBooster.drawer.enableModelFirst') : ''}
+                                                position="top"
+                                                disabled={isActiveModelEnabled}
                                             >
-                                                {loading ? (
-                                                    <span className="flex items-center gap-2">
-                                                        <LoadingIcon />
-                                                        {t('promptBooster.analyzing')}
-                                                    </span>
-                                                ) : t('promptBooster.drawer.deepAnalysis')}
-                                            </button>
+                                                <div> {/* 使用div作为disabled按钮的容器，确保onMouseEnter触发 */}
+                                                    <button
+                                                        className="px-4 py-2 text-sm button-confirm rounded-md transition"
+                                                        onClick={handleLLMAnalyze}
+                                                        disabled={loading || !isActiveModelEnabled}
+                                                    >
+                                                        {loading ? (
+                                                            <span className="flex items-center gap-2">
+                                                                <LoadingIcon />
+                                                                {t('promptBooster.analyzing')}
+                                                            </span>
+                                                        ) : t('promptBooster.drawer.deepAnalysis')}
+                                                    </button>
+                                                </div>
+                                            </Tooltip>
                                         )}
                                         {!isDrawerDismissible && (
                                             <button

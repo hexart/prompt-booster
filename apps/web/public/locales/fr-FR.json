@@ -111,6 +111,7 @@
             "suggestionsTitle": "Suggestions d'itération",
             "copyAll": "Tout copier",
             "deepAnalysis": "Analyse approfondie",
+            "enableModelFirst": "Veuillez activer le modèle d'abord",
             "score": {
                 "zero": "0 point",
                 "points": "+{{points}} points"

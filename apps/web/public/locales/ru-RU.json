@@ -113,6 +113,7 @@
             "suggestionsTitle": "Предложения по итерации",
             "copyAll": "Копировать всё",
             "deepAnalysis": "Глубокий анализ",
+            "enableModelFirst": "Сначала включите интерфейс модели",
             "score": {
                 "zero": "0 баллов",
                 "points": "+{{points}} баллов"
