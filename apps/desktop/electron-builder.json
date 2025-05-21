@@ -37,7 +37,6 @@
     "win": {
         "target": [
             {
-                "artifactName": "${productName} Setup ${version} ${arch}.${ext}",
                 "target": "nsis",
                 "arch": [
                     "x64",
@@ -45,7 +44,6 @@
                 ]
             },
             {
-                "artifactName": "${productName} ${version} ${arch}.${ext}",
                 "target": "portable",
                 "arch": [
                     "x64",
@@ -55,21 +53,36 @@
         ],
         "icon": "build/icon.ico"
     },
+    "nsis": {
+        "artifactName": "${productName} Setup ${version} ${arch}.${ext}"
+    },
+    "portable": {
+        "artifactName": "${productName} ${version} ${arch}.${ext}"
+    },
     "linux": {
         "target": [
-        {
-            "target": "AppImage",
-            "arch": ["x64", "arm64"]
-        },
-        {
-            "target": "deb",
-            "arch": ["x64", "arm64"]
-        },
-        {
-            "target": "rpm",
-            "arch": ["x64", "arm64"]
-        }
-    ],
+            {
+                "target": "AppImage",
+                "arch": [
+                    "x64",
+                    "arm64"
+                ]
+            },
+            {
+                "target": "deb",
+                "arch": [
+                    "x64",
+                    "arm64"
+                ]
+            },
+            {
+                "target": "rpm",
+                "arch": [
+                    "x64",
+                    "arm64"
+                ]
+            }
+        ],
         "category": "Utility",
         "icon": "build/icons",
         "synopsis": "提升你的提示词输入效率",
@@ -90,5 +103,5 @@
         "private": false,
         "vPrefixedTagName": true
     },
-    "afterPack": "./buildAfterPack.js" 
+    "afterPack": "./buildAfterPack.js"
 }
