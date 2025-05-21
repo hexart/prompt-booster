@@ -95,11 +95,9 @@ jobs:
         with:
           name: desktop-artifacts-${{ matrix.os }}
           path: |
-            ./apps/desktop/release/Prompt-Booster*.exe
+            ./apps/desktop/release/Prompt-Booster*
             ./apps/desktop/release/*.zip
-            ./apps/desktop/release/Prompt-Booster*.AppImage
-            ./apps/desktop/release/Prompt-Booster*.deb
-            ./apps/desktop/release/Prompt-Booster*.rpm
+            ./apps/desktop/release/latest*.yml
           if-no-files-found: ignore
 
   # 创建GitHub Release
@@ -123,6 +121,44 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           name: Prompt Booster ${{ steps.get_version.outputs.VERSION }}
+          body: |
+            ## For macOS Users: Running Unsigned App
+
+            Since this app is not signed with an Apple Developer certificate, macOS may prevent it from running. Use either of these methods:
+
+            ### Option 1: Remove quarantine attribute for this app only
+            ```bash
+            xattr -d com.apple.quarantine /Applications/Prompt\ Booster.app
+            ```
+            (Replace with your actual app path)
+
+            ### Option 2: Temporarily disable Gatekeeper
+            ```bash
+            sudo spctl --master-disable
+            ```
+            After using the app, re-enable Gatekeeper for security:
+            ```bash
+            sudo spctl --master-enable
+            ```
+
+            ## 针对macOS用户：运行未签名应用
+
+            由于本应用未经Apple开发者证书签名，macOS可能会阻止其运行。请使用以下方法之一：
+
+            ### 方法一：仅移除本应用的隔离属性
+            ```bash
+            xattr -d com.apple.quarantine /Applications/Prompt\ Booster.app
+            ```
+            （请替换为您的实际应用路径）
+
+            ### 方法二：临时禁用Gatekeeper
+            ```bash
+            sudo spctl --master-disable
+            ```
+            使用应用后，为安全起见请重新启用Gatekeeper：
+            ```bash
+            sudo spctl --master-enable
+            ```
           draft: false
           prerelease: false
           generate_release_notes: true
