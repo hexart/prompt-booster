@@ -67,7 +67,7 @@ jobs:
         run: pnpm install
           
       - name: Build packages
-        run: pnpm build:packages
+        run: pnpm build
         
       - name: Install desktop dependencies (npm)
         working-directory: ./apps/desktop
