@@ -16,19 +16,15 @@
     ],
     "mac": {
         "target": [
-            {
-                "target": "dmg",
-                "arch": [
-                    "arm64"
-                ]
-            },
-            {
-                "target": "dmg",
-                "arch": [
-                    "universal"
-                ]
-            }
-        ],
+        {
+            "target": "dmg",
+            "arch": ["arm64", "universal"]
+        },
+        {
+            "target": "zip",
+            "arch": ["arm64", "universal"]
+        }
+    ],
         "icon": "build/icon.icns",
         "extendInfo": {
             "LSHasLocalizedDisplayName": true
