@@ -37,46 +37,15 @@
     "win": {
         "target": [
             {
-                "target": "nsis",
-                "arch": [
-                    "x64",
-                    "arm64"
-                ]
-            },
-            {
-                "target": "portable",
-                "arch": [
-                    "x64",
-                    "arm64"
-                ]
+                "target": "portable"
             }
         ],
         "icon": "build/icon.ico"
-    },
-    "nsis": {
-        "artifactName": "${productName} Setup ${version} ${arch}.${ext}"
-    },
-    "portable": {
-        "artifactName": "${productName} ${version} ${arch}.${ext}"
     },
     "linux": {
         "target": [
             {
                 "target": "AppImage",
-                "arch": [
-                    "x64",
-                    "arm64"
-                ]
-            },
-            {
-                "target": "deb",
-                "arch": [
-                    "x64",
-                    "arm64"
-                ]
-            },
-            {
-                "target": "rpm",
                 "arch": [
                     "x64",
                     "arm64"
