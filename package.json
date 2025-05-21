@@ -22,9 +22,9 @@
     "release:major": "cd apps/desktop && npm version major --no-git-tag-version && cd ../.. && git add . && git commit -m \"chore: prepare major release\" && git tag v$(node -e \"console.log(require('./apps/desktop/package.json').version)\") && git push && git push --tags"
   },
   "devDependencies": {
-    "@types/lodash": "^4.17.16",
-    "@types/node": "^22.15.19",
-    "@types/react": "^19.1.4",
+    "@types/lodash": "^4.17.17",
+    "@types/node": "^22.15.21",
+    "@types/react": "^19.1.5",
     "@typescript-eslint/eslint-plugin": "^8.32.1",
     "@typescript-eslint/parser": "^8.32.1",
     "@vitejs/plugin-react": "^4.4.1",
