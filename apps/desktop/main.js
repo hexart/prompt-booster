@@ -1,12 +1,12 @@
 // "模块用于控制应用程序生命周期并创建原生浏览器窗口。"
-import { app, BrowserWindow, Menu, dialog, Notification } from 'electron';
-import { join } from 'node:path';
-import { version } from './package.json';
-import electronLog, { error as _error } from 'electron-log';
-import { existsSync, readFileSync, writeFileSync } from 'fs';
+const { app, BrowserWindow, Menu, dialog, Notification } = require('electron')
+const path = require('node:path')
+const packageInfo = require('./package.json')
+const electronLog = require('electron-log')
+const fs = require('fs');
 
 // 引入 autoUpdater 用于手动检查
-import { autoUpdater } from 'electron-updater';
+const { autoUpdater } = require('electron-updater');
 
 // 使用通知系统进行更新检查状态显示，使用对话框显示结果
 function checkForUpdates() {
@@ -66,14 +66,14 @@ function checkForUpdates() {
     });
 
     // 记录错误
-    _error('更新检查失败:', error);
+    electronLog.error('更新检查失败:', error);
   });
 }
 
 // 配置 autoUpdater 额外的事件监听
 autoUpdater.logger = electronLog;
 autoUpdater.on('error', (error) => {
-  _error('更新错误:', error);
+  electronLog.error('更新错误:', error);
 });
 
 // 监听更新下载完成事件
@@ -110,9 +110,9 @@ function createWindow() {
     width: 1280,
     height: 900,
     titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default',
-    icon: join(__dirname, 'build/icon.png'),
+    icon: path.join(__dirname, 'build/icon.png'),
     webPreferences: {
-      preload: join(__dirname, 'preload.js'),
+      preload: path.join(__dirname, 'preload.js'),
     }
   });
 
@@ -181,7 +181,7 @@ function createWindow() {
             dialog.showMessageBox({
               type: 'info',
               title: '关于 Prompt Booster',
-              message: `Prompt Booster\n版本：${version}\n版权所有 © 2025 Hexart Studio\n保留所有权利。`,
+              message: `Prompt Booster\n版本：${packageInfo.version}\n版权所有 © 2025 Hexart Studio\n保留所有权利。`,
               buttons: ['确定']
             });
           }
@@ -198,9 +198,9 @@ function createWindow() {
   const isDev = !app.isPackaged;
 
   if (isDev) {
-    mainWindow.loadURL(`file://${join(__dirname, '../web/dist/index.html')}`);
+    mainWindow.loadURL(`file://${path.join(__dirname, '../web/dist/index.html')}`);
   } else {
-    mainWindow.loadURL(`file://${join(__dirname, 'web/index.html')}`);
+    mainWindow.loadURL(`file://${path.join(__dirname, 'web/index.html')}`);
   }
 
   // 打开开发者工具（可选）
@@ -218,16 +218,16 @@ app.whenReady().then(() => {
   if (app.isPackaged) {
     setTimeout(() => {
       // 配置文件路径
-      const lastCheckFilePath = join(app.getPath('userData'), 'last-update-check.txt');
+      const lastCheckFilePath = path.join(app.getPath('userData'), 'last-update-check.txt');
 
       // 读取上次检查时间
       let lastCheckDate = null;
       try {
-        if (existsSync(lastCheckFilePath)) {
-          lastCheckDate = readFileSync(lastCheckFilePath, 'utf8');
+        if (fs.existsSync(lastCheckFilePath)) {
+          lastCheckDate = fs.readFileSync(lastCheckFilePath, 'utf8');
         }
       } catch (err) {
-        _error('读取更新检查记录失败:', err);
+        electronLog.error('读取更新检查记录失败:', err);
       }
 
       const today = new Date().toDateString();
@@ -258,17 +258,17 @@ app.whenReady().then(() => {
 
           // 记录今天已经检查过
           try {
-            writeFileSync(lastCheckFilePath, today, 'utf8');
+            fs.writeFileSync(lastCheckFilePath, today, 'utf8');
           } catch (err) {
-            _error('保存更新检查记录失败:', err);
+            electronLog.error('保存更新检查记录失败:', err);
           }
         }).catch(error => {
-          _error('自动更新检查失败:', error);
+          electronLog.error('自动更新检查失败:', error);
           // 记录今天已检查
           try {
-            writeFileSync(lastCheckFilePath, today, 'utf8');
+            fs.writeFileSync(lastCheckFilePath, today, 'utf8');
           } catch (err) {
-            _error('保存更新检查记录失败:', err);
+            electronLog.error('保存更新检查记录失败:', err);
           }
         });
       }
