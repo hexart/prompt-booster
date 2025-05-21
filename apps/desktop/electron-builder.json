@@ -33,7 +33,7 @@
     "win": {
         "target": [
             {
-                "target": "portable"
+                "target": "nsis"
             }
         ],
         "icon": "build/icon.ico"
