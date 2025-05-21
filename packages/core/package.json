@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "@prompt-booster/core",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.es.js",
   "types": "./dist/index.d.ts",

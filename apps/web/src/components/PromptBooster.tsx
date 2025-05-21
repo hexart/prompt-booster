@@ -448,7 +448,7 @@ export const PromptBooster: React.FC = () => {
                                 : ''
                             }`}
                         onClick={handleOptimize}
-                        disabled={isProcessing || !originalPrompt || !originalPrompt.trim() || !isActiveModelEnabled || !selectedTemplateId || !displayTemplates[selectedTemplateId]}
+                        disabled={isProcessing || !originalPrompt || !originalPrompt.trim() || !isActiveModelEnabled || !selectedTemplateId || !displayTemplates[selectedTemplateId] || Boolean(activeGroup)}
                     >
                         <RocketIcon size={16} />
                         <span className='hidden sm:block'>{isProcessing ? t('promptBooster.enhancing') : t('promptBooster.startEnhance')}</span>
@@ -500,7 +500,7 @@ export const PromptBooster: React.FC = () => {
                     {/* 按钮区域 */}
                     <div className="flex-shrink-0 flex gap-2">
                         <button
-                            className="text-sm flex items-center gap-1 rounded-lg px-3 py-2 button-third"
+                            className={`text-sm flex items-center gap-1 rounded-lg px-3 py-2 ${activeGroup ? 'button-confirm' : 'button-third'}`}
                             onClick={() => setIsIterationDialogOpen(true)}
                             disabled={!optimizedPrompt || isProcessing || !activeGroup}
                         >

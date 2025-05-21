@@ -95,11 +95,11 @@ jobs:
         with:
           name: desktop-artifacts-${{ matrix.os }}
           path: |
-            ./apps/desktop/release/*.exe
+            ./apps/desktop/release/Prompt-Booster*.exe
             ./apps/desktop/release/*.zip
-            ./apps/desktop/release/*.AppImage
-            ./apps/desktop/release/*.deb
-            ./apps/desktop/release/*.rpm
+            ./apps/desktop/release/Prompt-Booster*.AppImage
+            ./apps/desktop/release/Prompt-Booster*.deb
+            ./apps/desktop/release/Prompt-Booster*.rpm
           if-no-files-found: ignore
 
   # 创建GitHub Release
