@@ -37,6 +37,7 @@
     "win": {
         "target": [
             {
+                "artifactName": "${productName} Setup ${version} ${arch}.${ext}",
                 "target": "nsis",
                 "arch": [
                     "x64",
@@ -44,6 +45,7 @@
                 ]
             },
             {
+                "artifactName": "${productName} ${version} ${arch}.${ext}",
                 "target": "portable",
                 "arch": [
                     "x64",
@@ -55,10 +57,19 @@
     },
     "linux": {
         "target": [
-            "deb",
-            "rpm",
-            "AppImage"
-        ],
+        {
+            "target": "AppImage",
+            "arch": ["x64", "arm64"]
+        },
+        {
+            "target": "deb",
+            "arch": ["x64", "arm64"]
+        },
+        {
+            "target": "rpm",
+            "arch": ["x64", "arm64"]
+        }
+    ],
         "category": "Utility",
         "icon": "build/icons",
         "synopsis": "提升你的提示词输入效率",
