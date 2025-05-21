@@ -385,7 +385,7 @@ export const PromptBooster: React.FC = () => {
                         className='input-textarea'
                         rows={5}
                         showCharCount={true}
-                        disabled={isProcessing}
+                        disabled={isProcessing || Boolean(activeGroup)}
                     />
                 </div>
             )}
