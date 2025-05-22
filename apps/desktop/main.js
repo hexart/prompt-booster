@@ -209,6 +209,16 @@ function createWindow() {
   }
 }
 
+// 为Linux平台自动添加no-sandbox参数，解决AppImage沙箱问题
+if (process.platform === 'linux') {
+  // 检查是否在AppImage环境中运行
+  if (process.env.APPIMAGE || process.env.APPDIR) {
+    app.commandLine.appendSwitch('no-sandbox');
+    app.commandLine.appendSwitch('disable-dev-shm-usage');
+    console.log('检测到AppImage环境，已自动添加--no-sandbox参数');
+  }
+}
+
 // 当 Electron 完成初始化并准备创建浏览器窗口时，将调用此方法。
 // 某些 API 只能在此事件发生后使用。
 app.whenReady().then(() => {
