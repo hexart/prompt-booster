@@ -125,7 +125,7 @@ prompt-booster/
 3. 克隆仓库：
 
    ```bash
-   git clone https://github.com/yourusername/prompt-booster.git
+   git clone https://github.com/hexart/prompt-booster.git
    cd prompt-booster
    ```
 
@@ -269,7 +269,12 @@ docker pull ghcr.io/hexart/prompt-booster:latest \
 
 ## 贡献
 
-欢迎贡献！请参阅开发指南文档，并遵循现有代码风格。
+欢迎贡献！请参阅我们的[贡献指南](CONTRIBUTING-zh.md)获取如何为此项目贡献代码的详细说明。
+
+- 📋 [贡献指南](CONTRIBUTING-zh.md) - 如何Fork、开发和提交Pull Request
+- 🐛 [报告问题](https://github.com/hexart/prompt-booster/issues) - 报告错误或请求新功能
+
+请遵循贡献指南中概述的现有代码风格和开发指导原则。
 
 ## 致谢
 

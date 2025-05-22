@@ -136,7 +136,7 @@ Native desktop experience using Electron:
 3. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/prompt-booster.git
+   git clone https://github.com/hexart/prompt-booster.git
    cd prompt-booster
    ```
 
@@ -280,7 +280,12 @@ Additional documentation is available:
 
 ## Contributing
 
-Contributions are welcome! Please refer to the documentation for development guidance and follow the existing code style.
+Contributions are welcome! Please refer to our [Contributing Guide](CONTRIBUTING.md) for detailed instructions on how to contribute to this project.
+
+- 📋 [Contributing Guide](CONTRIBUTING.md) - How to fork, develop, and submit pull requests
+- 🐛 [Report Issues](https://github.com/hexart/prompt-booster/issues) - Report bugs or request features  
+
+Please follow the existing code style and development guidelines outlined in the contributing guide.
 
 ## Acknowledgements
 
