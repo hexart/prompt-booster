@@ -92,6 +92,7 @@ export const ModelModal: React.FC<ModelModalProps> = ({
         <Dialog
             isOpen={isOpen}
             onClose={onClose}
+            clickOutside={false}
             maxWidth="max-w-md"
             title={isCustom ? (isNewInterface ? t('settings.newInterface') : t('settings.editInterface')) : t('settings.editModel', {type: modelType})}
             footer={

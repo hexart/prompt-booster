@@ -223,7 +223,7 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
                 </div>
                 <button
                     onClick={handleClose}
-                    className="close-button p-2 m-1 dragable-notice-header-close"
+                    className="close-button p-2 m-1 transition-transform duration-300 hover:rotate-180 dragable-notice-header-close"
                 >
                     <XIcon size={16} />
                 </button>

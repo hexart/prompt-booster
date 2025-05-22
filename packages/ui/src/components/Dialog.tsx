@@ -12,6 +12,7 @@ export interface DialogProps {
     className?: string;
     maxWidth?: string;
     showCloseButton?: boolean;
+    clickOutside?: boolean;
 }
 
 // 创建一个上下文以便子组件可以访问对话框的容器引用
@@ -30,6 +31,7 @@ export const Dialog: React.FC<DialogProps> = ({
     className = '',
     maxWidth = 'max-w-[500px]',
     showCloseButton = true,
+    clickOutside = true,
 }) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const [animationState, setAnimationState] = useState<'none' | 'opening' | 'closing'>('none');
@@ -53,12 +55,19 @@ export const Dialog: React.FC<DialogProps> = ({
 
     if (!isOpen && animationState === 'none') return null;
 
+    const handleClickOutside = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (clickOutside && e.target === e.currentTarget) {
+            onClose();
+        }
+    };
+
     // Dialog内容
     const dialogContent = (
         <DialogContext.Provider value={{ containerRef }}>
             <div
                 className={`fixed inset-0 flex overflow-y-auto z-50 transition-opacity duration-300 mask ${isOpen ? 'opacity-100' : 'opacity-0'}`}
                 ref={containerRef}
+                onClick={handleClickOutside}
                 style={{
                     alignItems: 'flex-start',
                     justifyContent: 'center',
@@ -93,7 +102,7 @@ export const Dialog: React.FC<DialogProps> = ({
                                     onClick={onClose}
                                     className="dialog-close-button"
                                 >
-                                    <X size={20} />
+                                    <X size={20} className="transition-transform duration-300 hover:rotate-180" />
                                 </button>
                             )}
                         </div>

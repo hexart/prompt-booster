@@ -407,7 +407,7 @@ export const TestResult: React.FC = () => {
                                 }
                             ]}
                             onClose={() => setShowRequirements(false)}
-                            className='w-56 backdrop-blur-md shadow-lg rounded-lg dragable-notice-container'
+                            className='w-60 backdrop-blur-md shadow-lg rounded-lg dragable-notice-container'
                         />
                     )}
                     {/* textarea区域 */}

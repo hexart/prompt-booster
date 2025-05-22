@@ -48,6 +48,7 @@ export const IterationDialog: React.FC<IterationDialogProps> = ({
         <Dialog
             isOpen={isOpen}
             onClose={onClose}
+            clickOutside={false}
             title={t('promptBooster.iterationDialog.title')}
             maxWidth="max-w-xl"
             footer={
