@@ -2,7 +2,7 @@
 
 [中文文档](README-zh.md)
 
-A flexible and extensible client library for interacting with various Large Language Models (LLMs) through a unified interface.
+A flexible and extensible client library for interacting with various Large Language Model (LLM) services through a unified interface.
 
 ## Table of Contents
 
@@ -20,9 +20,9 @@ A flexible and extensible client library for interacting with various Large Lang
 
 ## Overview
 
-`@prompt-booster/api` is a unified client library for interacting with various AI model providers through a consistent interface. It abstracts the differences between different LLM service APIs and provides a clean, consistent way to interact with models from OpenAI, Google Gemini, DeepSeek, Tencent Hunyuan, SiliconFlow, and Ollama.
+`@prompt-booster/api` is a unified client library that interacts with various AI model providers through a consistent interface. It abstracts the differences between different LLM service APIs, providing a clean and consistent way to interact with models from OpenAI, Google Gemini, DeepSeek, Tencent Hunyuan, SiliconFlow, and Ollama.
 
-The package implements the strategy pattern, making it easy to adapt to different provider APIs while maintaining a consistent interface for your application. This abstraction allows your application to switch between providers with minimal code changes.
+The package implements the Strategy Pattern, making it easy to adapt to different provider APIs while maintaining a consistent interface for your applications. This abstraction allows your application to switch between providers with minimal code changes.
 
 ## Installation
 
@@ -39,7 +39,7 @@ yarn add @prompt-booster/api
 
 ## Architecture
 
-The package follows a modular architecture based on the strategy pattern:
+The package follows a modular architecture based on the Strategy Pattern:
 
 ```markdown
 api/
@@ -51,9 +51,8 @@ api/
 │   └── response.ts# Response parsing strategies
 ├── types/         # TypeScript type definitions
 ├── utils/         # Utility functions
-│   ├── connection.ts # Connection testing utilities
-│   ├── retry.ts      # Retry logic
-│   └── stream.ts     # Stream handling utilities
+│   ├── apiLogging.ts # API logging control utilities
+│   └── stream.ts     # Stream processing utilities
 └── factory.ts     # Client factory functions
 ```
 
@@ -62,33 +61,35 @@ This architecture allows for easy extension and customization, enabling you to:
 - Add support for new LLM providers
 - Customize request/response handling
 - Implement custom authentication strategies
+- Control logging output at the API layer
 
 ## Key Features
 
 - **Unified Interface**: Interact with multiple LLM providers through a single API
 - **Provider Support**: Pre-configured support for OpenAI, Gemini, DeepSeek, Tencent Hunyuan, SiliconFlow, and Ollama
 - **Streaming Responses**: Support for streaming responses with easy-to-use handlers
-- **Authentication**: Multiple authentication strategies (Bearer token, query parameters, custom)
+- **Authentication**: Multiple authentication strategies (Bearer tokens, query parameters, custom)
 - **Error Handling**: Standardized error handling and reporting
 - **Retry Logic**: Built-in retry mechanisms for transient failures
+- **Logging Control**: Controllable API layer logging output
 - **Type Safety**: Comprehensive TypeScript type definitions
 
 ## Supported LLM Providers
 
-The package has built-in support for the following providers:
+The package includes built-in support for the following providers:
 
 - **OpenAI** - Compatible with GPT model APIs
 - **Google Gemini** - Support for Gemini Pro and Ultra models
 - **DeepSeek** - Support for DeepSeek Chat and Coder models
 - **Tencent Hunyuan** - Tencent's Hunyuan models
-- **SiliconFlow** - Support for SiliconFlow's models like Qwen/QwQ
+- **SiliconFlow** - Support for SiliconFlow models like Qwen/QwQ
 - **Ollama** - For local model hosting using Ollama
 
 Each provider is configured with sensible defaults, but all aspects can be customized.
 
 ### Supported Models
 
-The package has built-in token limit support for the following models:
+The package includes built-in token limit support for the following models:
 
 - **OpenAI Models**:
   - gpt-4 (8192 tokens)
@@ -127,7 +128,7 @@ const client = createClient({
 
 async function getResponse() {
   const response = await client.chat({
-    userMessage: 'Explain the concept of strategy pattern in software design',
+    userMessage: 'Explain the concept of Strategy Pattern in software design',
     systemMessage: 'You are a helpful programming assistant'
   });
   
@@ -158,11 +159,11 @@ async function streamResponse() {
     },
     // Handle errors
     (error) => {
-      console.error('Stream error:', error);
+      console.error('Streaming error:', error);
     },
     // Handle completion
     () => {
-      console.log('\nStream completed');
+      console.log('\nStreaming completed');
     }
   );
   
@@ -177,7 +178,7 @@ streamResponse();
 
 ### Using Simplified Client Factory
 
-Use simplified factory for common providers:
+Use the simplified factory for common providers:
 
 ```typescript
 import { createLLMClient } from '@prompt-booster/api';
@@ -189,7 +190,7 @@ const client = createLLMClient(
   { model: 'gpt-4-turbo' }
 );
 
-// Use client normally
+// Use the client normally
 async function askQuestion() {
   const response = await client.chat({
     userMessage: 'What are the main features of TypeScript?'
@@ -199,32 +200,6 @@ async function askQuestion() {
 }
 
 askQuestion();
-```
-
-### Testing Connection
-
-Test if the connection to the LLM provider is working properly:
-
-```typescript
-import { createClient, testConnection } from '@prompt-booster/api';
-
-async function testLLMConnection() {
-  const client = createClient({
-    provider: 'openai',
-    apiKey: 'your-api-key',
-    model: 'gpt-4-turbo'
-  });
-  
-  const result = await testConnection(client);
-  
-  if (result.data.success) {
-    console.log('Connection successful');
-  } else {
-    console.error('Connection failed:', result.error || result.data.message);
-  }
-}
-
-testLLMConnection();
 ```
 
 ## API Reference
@@ -239,20 +214,20 @@ Creates a new LLM client instance with detailed configuration.
 const client = createClient({
   provider: 'openai',      // Provider name
   apiKey: 'your-api-key',  // API key/token
-  baseUrl: 'https://api.openai.com', // Optional: Base URL override
+  baseUrl: 'https://api.openai.com', // Optional: base URL override
   model: 'gpt-4-turbo',    // Model name
-  timeout: 60000,          // Optional: Timeout in ms
-  endpoints: {             // Optional: Custom endpoints
+  timeout: 60000,          // Optional: timeout in milliseconds
+  endpoints: {             // Optional: custom endpoints
     chat: '/v1/chat/completions',
     models: '/v1/models'
   },
-  auth: {                  // Optional: Auth configuration
+  auth: {                  // Optional: authentication configuration
     type: 'bearer'         // 'bearer', 'query_param', or 'custom'
   },
-  request: {               // Optional: Request formatting config
+  request: {               // Optional: request formatting configuration
     type: 'openai_compatible'
   },
-  response: {              // Optional: Response parsing config
+  response: {              // Optional: response parsing configuration
     type: 'openai_compatible'
   }
 });
@@ -267,7 +242,7 @@ const client = createLLMClient(
   'gemini',          // Provider name
   'your-api-key',    // API key
   {
-    model: 'gemini-pro',  // Optional: Model override
+    model: 'gemini-pro',  // Optional: model override
     baseUrl: 'https://custom-url.com'  // Optional: URL override
   }
 );
@@ -281,14 +256,11 @@ The main client interface for interacting with LLM services.
 
 ```typescript
 interface LLMClient {
-  // Send a chat request (non-streaming)
+  // Send chat request (non-streaming)
   chat(request: ChatRequest): Promise<ClientResponse<ChatResponse>>;
   
-  // Send a streaming chat request
+  // Send streaming chat request
   streamChat(request: ChatRequest, streamHandler: StreamHandler): Promise<void>;
-  
-  // Test API connection
-  testConnection(): Promise<ClientResponse<{ success: boolean; message?: string }>>;
   
   // Get available models from the provider
   getModels(): Promise<Array<{ id: string; name?: string }>>;
@@ -376,7 +348,7 @@ Implement custom request formatting:
 import { createClient, RequestFormatType } from '@prompt-booster/api';
 
 const client = createClient({
-  // Base configuration...
+  // Basic configuration...
   request: {
     type: RequestFormatType.CUSTOM,
     formatFn: (request) => {
@@ -401,11 +373,11 @@ Implement custom response parsing:
 import { createClient, ResponseParseType } from '@prompt-booster/api';
 
 const client = createClient({
-  // Base configuration...
+  // Basic configuration...
   response: {
     type: ResponseParseType.CUSTOM,
     parseStreamFn: (chunk) => {
-      // Parse streaming chunk
+      // Parse streaming data chunks
       if (typeof chunk === 'string') return chunk;
       if (chunk.output) return chunk.output;
       return null;
@@ -459,7 +431,7 @@ async function handleErrors() {
 
 ## Streaming Responses
 
-The package provides robust tools for handling streaming responses:
+The package provides powerful tools for handling streaming responses:
 
 ```typescript
 import { 
@@ -470,7 +442,7 @@ import {
 
 async function advancedStreaming() {
   const client = createClient({
-    // Base configuration...
+    // Basic configuration...
   });
   
   // Create abort controller
@@ -489,7 +461,7 @@ async function advancedStreaming() {
       console.error('Error:', error);
     },
     () => {
-      console.log('Stream completed');
+      console.log('Streaming completed');
     }
   );
   
@@ -514,60 +486,39 @@ async function advancedStreaming() {
 
 The package includes several useful utility functions:
 
-### Connection Testing
-
-```typescript
-import { createClient, testConnection } from '@prompt-booster/api';
-
-async function testWithRetry() {
-  const client = createClient({
-    // Base configuration...
-  });
-  
-  // Test with 5 retries
-  const result = await testConnection(client, 5);
-  console.log('Connection result:', result.data.success);
-}
-```
-
-### Retry Logic
-
-```typescript
-import { withRetry } from '@prompt-booster/api';
-
-async function functionWithRetry() {
-  // Execute with retry logic
-  const result = await withRetry(
-    async () => {
-      // Function that might fail
-      const response = await fetch('https://api.example.com/data');
-      if (!response.ok) throw new Error('API error');
-      return await response.json();
-    },
-    3,        // Maximum retry attempts
-    1000,     // Initial delay in ms
-    1.5       // Delay multiplier
-  );
-  
-  return result;
-}
-```
-
-### Logging Control
+### API Logging Control
 
 ```typescript
 import { 
   enableApiClientLogs,
-  disableApiClientLogs
+  disableApiClientLogs,
+  isLoggingEnabled
 } from '@prompt-booster/api';
 
-// Enable debug logs
+// Check current logging status
+console.log('Logging enabled:', isLoggingEnabled());
+
+// Enable API client debug logs
 enableApiClientLogs();
 
-// Perform operations...
+// Perform API operations, will show detailed logs
+const client = createClient({
+  provider: 'openai',
+  apiKey: 'your-api-key',
+  model: 'gpt-4-turbo'
+});
+
+await client.chat({
+  userMessage: 'Hello'
+});
 
 // Disable logs for production
 disableApiClientLogs();
+
+// Perform operations again, no debug logs will be shown
+await client.chat({
+  userMessage: 'Hello again'
+});
 ```
 
 ### Model Token Limits
@@ -584,49 +535,46 @@ const unknownModelLimit = getMaxTokensForModel('unknown-model', 4096);
 console.log(`Unknown model token limit: ${unknownModelLimit}`);
 ```
 
-### React Integration
+## Logging Control Details
 
-The package provides a stream handler creation function for React applications:
+The API package provides fine-grained logging control functionality, allowing you to flexibly control log output in development and production environments:
 
+### Logging Control Functions
+
+- **`enableApiClientLogs()`** - Enable detailed debug logs for API clients
+- **`disableApiClientLogs()`** - Disable debug logs for API clients
+- **`isLoggingEnabled()`** - Check current logging enabled status
+
+### Use Cases
+
+**Development Environment**: Enable logs for debugging and monitoring API calls
 ```typescript
-import { createDefaultStreamHandlers } from '@prompt-booster/api';
-import { useState, useRef } from 'react';
+enableApiClientLogs();
+// Perform development and testing operations
+```
 
-function ChatComponent() {
-  const [output, setOutput] = useState('');
-  const [isStreaming, setIsStreaming] = useState(false);
-  const abortControllerRef = useRef(null);
-  
-  async function handleChat() {
-    const client = createClient({
-      // Client configuration...
-    });
-    
-    const streamHandlers = createDefaultStreamHandlers(
-      setOutput,
-      setIsStreaming,
-      abortControllerRef
-    );
-    
-    await client.streamChat({
-      userMessage: 'User input message'
-    }, streamHandlers);
-  }
-  
-  function handleCancel() {
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-  }
-  
-  return (
-    <div>
-      <div>{output}</div>
-      <button onClick={handleChat}>Start Chat</button>
-      {isStreaming && <button onClick={handleCancel}>Cancel</button>}
-    </div>
-  );
+**Production Environment**: Disable logs to reduce console output and improve performance
+```typescript
+disableApiClientLogs();
+// Perform production operations
+```
+
+**Conditional Logging**: Dynamically control based on environment variables or configuration
+```typescript
+if (process.env.NODE_ENV === 'development') {
+  enableApiClientLogs();
+} else {
+  disableApiClientLogs();
 }
 ```
 
-> Note: The `createDefaultStreamHandlers` function has been marked as deprecated and will be removed in a future version. It is recommended to use the `createStreamHandler` function and manage state updates manually.
+### Notes
+
+- Logging control is global and affects all API client instances
+- Logging state persists throughout the application lifecycle unless explicitly changed
+- Log output includes request details, response status, and error information
+- It's recommended to disable logging in production to avoid sensitive information leakage
+
+## License
+
+This project is dual-licensed under the MIT License and Apache License 2.0. See the license files in the project root for details.

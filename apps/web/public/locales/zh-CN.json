@@ -153,6 +153,7 @@
         "deleteGroup": "删除组",
         "originalPrompt": "原始提示词：",
         "usingModel": "使用模型：",
+        "userEdit": "用户编辑",
         "iterationDirection": "迭代方向：",
         "enhancedPrompt": "增强后提示词：",
         "loadVersion": "加载此版本",

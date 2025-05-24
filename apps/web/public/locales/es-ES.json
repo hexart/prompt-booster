@@ -156,6 +156,7 @@
         "deleteGroup": "Eliminar grupo",
         "originalPrompt": "Prompt original:",
         "usingModel": "Modelo utilizado:",
+        "userEdit": "Edición del Usuario",
         "iterationDirection": "Dirección de iteración:",
         "enhancedPrompt": "Prompt mejorado:",
         "loadVersion": "Cargar esta versión",

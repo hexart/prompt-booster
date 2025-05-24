@@ -1,70 +1,42 @@
 /**
- * 6. config/defaults.ts - 默认配置
+ * 默认配置
  */
-// packages/core/src/config/defaults.ts
 import { ModelConfig, StandardModelType } from '../model';
-import { API_BASEURL, MODEL_NAMES } from './constants';
+import { MODEL_REGISTRY } from '../model/unifiedModelConfig';
+
+/**
+ * 创建默认模型配置
+ */
+export const createDefaultModelConfigs = (): Record<StandardModelType, ModelConfig> => {
+  const configs: Record<string, ModelConfig> = {};
+  
+  Object.entries(MODEL_REGISTRY).forEach(([key, registry]) => {
+    configs[key] = {
+      id: key,
+      providerName: registry.name,
+      apiKey: '',
+      model: registry.defaultModel,
+      baseUrl: registry.baseUrl,
+      endpoint: registry.endpoint,
+      timeout: registry.timeout,
+      enabled: false
+    };
+  });
+  
+  return configs as Record<StandardModelType, ModelConfig>;
+};
 
 /**
  * 默认模型配置
  */
-export const defaultModelConfigs: Record<StandardModelType, ModelConfig> = {
-    openai: {
-        id: 'openai',
-        providerName: 'OpenAI',
-        apiKey: '',
-        model: MODEL_NAMES.OPENAI.GPT4_TURBO,
-        baseUrl: API_BASEURL.OPENAI,
-        enabled: false
-    },
-    gemini: {
-        id: 'gemini',
-        providerName: 'Gemini',
-        apiKey: '',
-        model: MODEL_NAMES.GEMINI.PRO,
-        baseUrl: API_BASEURL.GEMINI,
-        enabled: false
-    },
-    deepseek: {
-        id: 'deepseek',
-        providerName: 'DeepSeek',
-        apiKey: '',
-        model: MODEL_NAMES.DEEPSEEK.CHAT,
-        baseUrl: API_BASEURL.DEEPSEEK,
-        enabled: false
-    },
-    hunyuan: {
-        id: 'hunyuan',
-        providerName: 'Hunyuan',
-        apiKey: '',
-        model: MODEL_NAMES.HUNYUAN.CHAT,
-        baseUrl: API_BASEURL.HUNYUAN,
-        enabled: false
-    },
-    siliconflow: {
-        id: 'siliconflow',
-        providerName: 'Siliconflow',
-        apiKey: '',
-        model: MODEL_NAMES.SILICONFLOW.CHAT,
-        baseUrl: API_BASEURL.SILICONFLOW,
-        enabled: false
-    },
-    ollama: {
-        id: 'ollama',
-        providerName: 'Ollama',
-        apiKey: '',
-        model: MODEL_NAMES.OLLAMA.CHAT1,
-        baseUrl: API_BASEURL.OLLAMA,
-        enabled: false
-    },
-};
+export const defaultModelConfigs = createDefaultModelConfigs();
 
 /**
  * 默认优化设置
  */
 export const defaultOptimizeSettings = {
-    temperature: 0.7,
-    maxTokens: 1000,
-    stream: true,
-    timeout: 60000
+  temperature: 0.7,
+  maxTokens: 1000,
+  stream: true,
+  timeout: 60000
 };

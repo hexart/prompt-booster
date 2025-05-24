@@ -4,21 +4,17 @@ import { persist } from 'zustand/middleware';
 import { createStorage, StorageType } from './storageService';
 
 interface MemoryState {
-    originalPrompt: string;
-    optimizedPrompt: string;
-    userTestPrompt: string;
-    originalResponse: string;
-    optimizedResponse: string;
-    isLoadingFromHistory: boolean; // 新增状态，用于跟踪是否从历史记录加载
+  userTestPrompt: string;
+  originalResponse: string;
+  optimizedResponse: string;
+  isLoadingFromHistory: boolean;
 
-    setOriginalPrompt: (prompt: string) => void;
-    setOptimizedPrompt: (prompt: string) => void;
-    setUserTestPrompt: (prompt: string) => void;
-    setOriginalResponse: (response: string | ((prev: string) => string)) => void;
-    setOptimizedResponse: (response: string | ((prev: string) => string)) => void;
-    setIsLoadingFromHistory: (isLoading: boolean) => void; // 新增方法
+  setUserTestPrompt: (prompt: string) => void;
+  setOriginalResponse: (response: string | ((prev: string) => string)) => void;
+  setOptimizedResponse: (response: string | ((prev: string) => string)) => void;
+  setIsLoadingFromHistory: (isLoading: boolean) => void;
 
-    clearAll: () => void;
+  clearAll: () => void;
 }
 
 // 创建内存存储，确保使用内存存储而不是会话存储
@@ -28,49 +24,41 @@ const memoryStorage = createStorage({
 });
 
 export const useMemoryStore = create<MemoryState>()(
-    persist(
-        (set) => ({
-            originalPrompt: '',
-            optimizedPrompt: '',
-            userTestPrompt: '',
-            originalResponse: '',
-            optimizedResponse: '',
-            isLoadingFromHistory: false, // 初始化为false
+  persist(
+    (set) => ({
+      userTestPrompt: '',
+      originalResponse: '',
+      optimizedResponse: '',
+      isLoadingFromHistory: false,
 
-            setOriginalPrompt: (prompt: string) => set({ originalPrompt: prompt }),
-            setOptimizedPrompt: (prompt: string) => set({ optimizedPrompt: prompt }),
-            setUserTestPrompt: (prompt: string) => set({ userTestPrompt: prompt }),
-            setOriginalResponse: (response) => set(state => ({
-                originalResponse: typeof response === 'function'
-                    ? response(state.originalResponse)
-                    : response
-            })),
-            setOptimizedResponse: (response) => set(state => ({
-                optimizedResponse: typeof response === 'function'
-                    ? response(state.optimizedResponse)
-                    : response
-            })),
-            setIsLoadingFromHistory: (isLoading: boolean) => set({ isLoadingFromHistory: isLoading }),
+      setUserTestPrompt: (prompt: string) => set({ userTestPrompt: prompt }),
+      setOriginalResponse: (response) => set(state => ({
+        originalResponse: typeof response === 'function'
+          ? response(state.originalResponse)
+          : response
+      })),
+      setOptimizedResponse: (response) => set(state => ({
+        optimizedResponse: typeof response === 'function'
+          ? response(state.optimizedResponse)
+          : response
+      })),
+      setIsLoadingFromHistory: (isLoading: boolean) => set({ isLoadingFromHistory: isLoading }),
 
-            clearAll: () => set({
-                originalPrompt: '',
-                optimizedPrompt: '',
-                userTestPrompt: '',
-                originalResponse: '',
-                optimizedResponse: '',
-                isLoadingFromHistory: false
-            }),
-        }),
-        memoryStorage
-    )
+      clearAll: () => set({
+        userTestPrompt: '',
+        originalResponse: '',
+        optimizedResponse: '',
+        isLoadingFromHistory: false
+      }),
+    }),
+    memoryStorage
+  )
 );
 
 setTimeout(() => {
     const state = useMemoryStore.getState();
-    // 只在需要时更新初始状态
-    if (state.originalPrompt === '' &&
-        state.optimizedPrompt === '' &&
-        state.userTestPrompt === '' &&
+    // 只检查存在的属性
+    if (state.userTestPrompt === '' &&
         state.originalResponse === '' &&
         state.optimizedResponse === '') {
         useMemoryStore.setState({

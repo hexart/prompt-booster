@@ -1,1029 +1,512 @@
 // packages/core/src/prompt/services/promptService.ts
-import {
-    PromptGroup,
-    PromptVersion,
-    PromptGroupServiceState,
-    EnhancePromptParams,
-    EnhanceResult,
-    IteratePromptParams,
-    IterateResult,
-    LLMCallParams
-} from '../models/prompt';
-import { useModelStore } from '../../model/store';
-import { getTemplateContent } from './templateService';
-import { createClient, StreamHandler } from '@prompt-booster/api';
-import { ERROR_MESSAGES } from '../../config/constants';
-import { DEFAULT_TIMEOUT } from '@prompt-booster/api';
-import { generateId } from '../../utils';
-import { createStorage, StorageType } from '../../storage';
-import { useMemoryStore } from '../../storage/memoryStorage';
-import { removeThinkTags, getLanguageInstruction } from '../utils/promptUtils';
-
-// 导出调用大模型的通用方法，同时给其他对话场景用
-export async function callLLMWithCurrentModel(params: LLMCallParams): Promise<string> {
-    const { userMessage, systemMessage, modelId, onData, stream = true, timeout } = params;
-    const modelStore = useModelStore.getState();
-
-    const { activeModel, configs, isCustomInterface, getCustomInterface } = modelStore;
-    const modelKey = modelId || activeModel;
-
-    let provider, apiKey, baseUrl, model, endpoint, modelTimeout;
-
-    if (isCustomInterface(modelKey)) {
-        const customInterface = getCustomInterface(modelKey);
-        if (!customInterface) throw new Error('未找到自定义接口配置');
-
-        provider = customInterface.providerName || customInterface.id;
-        apiKey = customInterface.apiKey;
-        baseUrl = customInterface.baseUrl;
-        model = customInterface.model;
-        endpoint = customInterface.endpoint;
-        modelTimeout = customInterface.timeout; // 从模型配置获取超时
-    } else {
-        const modelConfig = configs[modelKey as keyof typeof configs];
-        if (!modelConfig) throw new Error(ERROR_MESSAGES.INVALID_MODEL);
-
-        provider = modelKey;
-        apiKey = modelConfig.apiKey;
-        baseUrl = modelConfig.baseUrl;
-        model = modelConfig.model;
-        endpoint = modelConfig.endpoint;
-        modelTimeout = modelConfig.timeout; // 从模型配置获取超时
-    }
-
-    if (!apiKey) throw new Error(ERROR_MESSAGES.NO_API_KEY);
-
-    console.log('[LLM🔄详细请求]', {
-        provider,
-        model,
-        baseUrl,
-        endpoint,
-        stream,
-        requestLength: userMessage.length + (systemMessage?.length || 0),
-        systemMessageLength: systemMessage?.length || 0
-    });
-
-    const client = createClient({
-        provider,
-        apiKey,
-        baseUrl,
-        model,
-        timeout: timeout || modelTimeout || (provider === 'ollama' ? 180000 : DEFAULT_TIMEOUT),
-        endpoints: {
-            chat: endpoint,
-            models: '/v1/models'
-        }
-    });
-
-    const request = { userMessage, systemMessage, options: { temperature: 0.7 } };
-
-    if (!stream) {
-        try {
-            const res = await client.chat(request);
-            // 更详细的调试日志
-            console.log('[LLM📥详细响应]', {
-                status: 'success',
-                responseStructure: Object.keys(res || {}),
-                dataKeys: res?.data ? Object.keys(res.data) : [],
-                contentLength: res?.data?.content?.length || 0,
-                rawData: JSON.stringify(res?.data).substring(0, 200) + '...' // 记录原始数据
-            });
-
-            // Check if response exists and has expected structure
-            if (!res || !res.data || !res.data.content) {
-                // 增加详细日志，记录实际收到的完整响应
-                console.error('[LLM❌详细响应数据]', {
-                    fullResponse: JSON.stringify(res),
-                    dataObject: res?.data ? JSON.stringify(res.data) : 'null',
-                    hasContent: res?.data?.content !== undefined,
-                    contentType: res?.data?.content !== undefined ? typeof res.data.content : 'undefined'
-                });
-
-                // 尝试从不同路径获取内容
-                if (res?.data) {
-                    // 对于 Ollama，检查可能的不同响应格式
-                    if (provider === 'ollama') {
-                        // 使用类型断言处理可能的替代路径
-                        const resData = res.data as any;
-
-                        const possibleContent =
-                            resData.message?.content ||
-                            resData.response ||
-                            resData.choices?.[0]?.message?.content ||
-                            resData.choices?.[0]?.text ||
-                            '';
-
-                        if (possibleContent) {
-                            console.log('[LLM🔍] 从替代路径找到内容:', {
-                                contentLength: possibleContent.length,
-                                preview: possibleContent.substring(0, 50) + '...'
-                            });
-                            return possibleContent;
-                        }
-                    }
-                }
-
-                console.error('[LLM❌EmptyResponse]', 'Response does not contain expected data');
-                return ''; // Return empty string when response is invalid
-            }
-
-            return res.data?.content || '';
-        } catch (error) {
-            console.error('[LLM❌Error]', error);
-            throw error; // Re-throw to be handled by caller
-        }
-    }
-
-    let fullResponse = '';
-    const handler: StreamHandler = {
-        onData: (chunk: string) => {
-            fullResponse += chunk;
-            if (onData) onData(chunk);
-        },
-        onComplete: () => {
-            console.log('[LLM📥StreamComplete]', {
-                responseLength: fullResponse.length,
-                firstChars: fullResponse.substring(0, 50) + '...'
-            });
-        },
-        onError: (error: Error) => {
-            console.error('[LLM❌StreamError]', error);
-            throw error;
-        }
-    };
-
-    await client.streamChat(request, handler);
-    return fullResponse;
-}
-
 /**
- * 提示词组管理服务
- * 整合提示词组和版本的创建、管理和处理功能
+ * 提示词服务
+ * 管理提示词组的创建、版本控制和优化操作
  */
-export class PromptGroupService {
-    private state: PromptGroupServiceState = {
-        groups: {},
-        versions: {},
-        activeGroupId: null,
-        activeVersionNumber: null,
-        isProcessing: false,
-        error: null
+import { PromptGroupManager } from "./promptGroupManager";
+import { llmService } from "./llmService";
+import { getTemplateContent } from "./templateService";
+import { getLanguageInstruction, removeThinkTags } from "../utils/promptUtils";
+import { useMemoryStore } from "../../storage/memoryStorage";
+import { useModelStore } from "../../model/store/modelStore";
+import {
+  PromptGroupServiceState,
+  EnhancePromptParams,
+  EnhanceResult,
+  IteratePromptParams,
+  IterateResult,
+} from "../models/prompt";
+
+export const PROVIDER_USER_EDIT = '__USEREDIT__';
+export class PromptService {
+  private groupManager = new PromptGroupManager();
+  private listeners: Array<(state: PromptGroupServiceState) => void> = [];
+  private refreshDetector: (() => void) | null = null;
+
+  private state: PromptGroupServiceState = {
+    groups: {},
+    versions: {},
+    activeGroupId: null,
+    activeVersionNumber: null,
+    isProcessing: false,
+    error: null,
+  };
+
+  constructor() {
+    this.loadFromStorage();
+    this.setupRefreshDetection();
+  }
+
+  /**
+   * 设置页面刷新检测
+   * 使用sessionStorage检测页面刷新并重置状态
+   */
+  private setupRefreshDetection() {
+    if (typeof window === "undefined") return;
+
+    const PAGE_LOAD_KEY = "prompt_service_page_load";
+    const pageLoadFlag = sessionStorage.getItem(PAGE_LOAD_KEY);
+
+    if (!pageLoadFlag) {
+      // 首次加载，设置标记
+      sessionStorage.setItem(PAGE_LOAD_KEY, "loaded");
+    } else {
+      // 页面刷新，重置状态
+      console.log("Page refresh detected, resetting session...");
+      this.resetSession();
+
+      // 清除内存存储
+      const memoryStore = useMemoryStore.getState();
+      memoryStore.clearAll();
+    }
+
+    // 注册刷新前的清理函数
+    this.refreshDetector = () => {
+      sessionStorage.removeItem(PAGE_LOAD_KEY);
     };
 
-    private listeners: Array<(state: PromptGroupServiceState) => void> = [];
-    private storage;
+    window.addEventListener("beforeunload", this.refreshDetector);
+  }
 
-    private isStreamingResponse: boolean = false;
+  /**
+   * 清理函数
+   */
+  dispose() {
+    if (this.refreshDetector) {
+      window.removeEventListener("beforeunload", this.refreshDetector);
+    }
+  }
 
-    constructor() {
-        // 初始化存储
-        this.storage = createStorage({
-            type: StorageType.LOCAL,
-            key: 'PROMPT_STORE',
-            version: 1
-        });
+  // 订阅状态变化
+  subscribe(listener: (state: PromptGroupServiceState) => void): () => void {
+    this.listeners.push(listener);
+    return () => {
+      this.listeners = this.listeners.filter((l) => l !== listener);
+    };
+  }
 
-        // 从存储加载状态
-        this.loadFromStorage();
+  // 获取状态
+  getState(): PromptGroupServiceState {
+    return { ...this.state };
+  }
+
+  // 更新状态
+  private updateState(updates: Partial<PromptGroupServiceState>) {
+    this.state = { ...this.state, ...updates };
+    this.notifyListeners();
+    this.saveToStorage();
+  }
+
+  // 直接获取当前显示的内容
+  getCurrentDisplayContent(): {
+    originalPrompt: string;
+    optimizedPrompt: string;
+  } {
+    if (!this.state.activeGroupId || !this.state.activeVersionNumber) {
+      return { originalPrompt: "", optimizedPrompt: "" };
     }
 
-    /**
-     * 获取当前状态
-     */
-    public getState(): PromptGroupServiceState {
-        return { ...this.state };
+    const group = this.groupManager.getGroup(this.state.activeGroupId);
+    const version = this.groupManager.getVersion(
+      this.state.activeGroupId,
+      this.state.activeVersionNumber
+    );
+
+    return {
+      originalPrompt: group?.originalPrompt || "",
+      optimizedPrompt: version?.optimizedPrompt || "",
+    };
+  }
+
+  // 通知监听器
+  private notifyListeners() {
+    const state = this.getState();
+    this.listeners.forEach((listener) => listener(state));
+  }
+
+  // 增强提示词
+  async enhancePrompt(params: EnhancePromptParams): Promise<EnhanceResult> {
+    const { originalPrompt, templateId, modelId, language } = params;
+
+    if (!originalPrompt?.trim()) {
+      throw new Error("Original prompt is empty");
     }
 
-    /**
-     * 从存储加载状态
-     */
-    private async loadFromStorage() {
-        try {
-            if (this.storage && this.storage.storage) {
-                const storedData = await this.storage.storage.getItem('PROMPT_STORE');
-                if (storedData !== null && storedData !== undefined) {
-                    // 使用 JSON.parse 解析存储的字符串，添加类型断言
-                    try {
-                        // 先转为 unknown，再转为 string
-                        const parsedData = JSON.parse(storedData as unknown as string);
-                        if (parsedData) {
-                            this.state = {
-                                ...this.state,
-                                ...parsedData
-                            };
-                            this._emitStateChange();
-                        }
-                    } catch (parseError) {
-                        console.error('解析存储数据失败:', parseError);
-                    }
-                }
-            }
-        } catch (error) {
-            console.error('加载提示词组状态失败:', error);
-        }
+    this.updateState({ isProcessing: true, error: null });
+
+    try {
+      // 获取模板
+      const systemPrompt = await getTemplateContent(templateId);
+      if (!systemPrompt) {
+        throw new Error("Template not found");
+      }
+
+      // 添加语言指令
+      const languageInstruction = getLanguageInstruction(language);
+      const finalSystemPrompt = languageInstruction
+        ? `${systemPrompt}\n\n${languageInstruction}`
+        : systemPrompt;
+
+      // 创建组
+      const group = this.groupManager.createGroup(originalPrompt);
+
+      // 获取模型信息
+      const modelStore = useModelStore.getState();
+      const modelInfo = this.getModelInfo(modelId || modelStore.activeModel);
+
+      // 创建预备版本
+      const version = this.groupManager.createPendingVersion(
+        group.id,
+        modelInfo
+      );
+
+      // 立即更新状态，让 UI 可以响应
+      this.updateState({
+        groups: { ...this.groupManager.exportData().groups },
+        versions: { ...this.groupManager.exportData().versions },
+        activeGroupId: group.id,
+        activeVersionNumber: version.number,
+        isProcessing: true,
+      });
+
+      // 存储累积的响应
+      let optimizedPrompt = "";
+
+      // 调用LLM
+      await llmService.callLLM({
+        userMessage: originalPrompt,
+        systemMessage: finalSystemPrompt,
+        modelId,
+        stream: true,
+        onData: (chunk) => {
+          // 累积响应
+          optimizedPrompt += chunk;
+
+          // 直接更新版本内容
+          this.groupManager.updateVersionContent(
+            group.id,
+            version.id,
+            optimizedPrompt
+          );
+
+          // 触发状态更新通知UI
+          this.updateState({
+            versions: { ...this.groupManager.exportData().versions },
+          });
+        },
+      });
+
+      // 完成后最终更新
+      this.groupManager.updateVersionContent(
+        group.id,
+        version.id,
+        optimizedPrompt
+      );
+
+      // 最终更新状态
+      this.updateState({
+        groups: { ...this.groupManager.exportData().groups },
+        versions: { ...this.groupManager.exportData().versions },
+        isProcessing: false,
+      });
+
+      return {
+        groupId: group.id,
+        versionId: version.id,
+        optimizedPrompt,
+      };
+    } catch (error) {
+      this.updateState({
+        isProcessing: false,
+        error: error instanceof Error ? error.message : String(error),
+      });
+      throw error;
+    }
+  }
+
+  // 迭代提示词
+  async iteratePrompt(params: IteratePromptParams): Promise<IterateResult> {
+    const { groupId, direction, templateId, modelId, language } = params;
+
+    if (!direction?.trim()) {
+      throw new Error("Iteration direction is empty");
     }
 
-    /**
-     * 保存状态到存储
-     */
-    private async saveToStorage() {
-        try {
-            if (this.storage && this.storage.storage) {
-                const stateToSave = {
-                    groups: this.state.groups,
-                    versions: this.state.versions,
-                    activeGroupId: this.state.activeGroupId,
-                    activeVersionNumber: this.state.activeVersionNumber
-                };
+    this.updateState({ isProcessing: true, error: null });
 
-                // 将数据序列化为字符串
-                const serializedData = JSON.stringify(stateToSave);
+    try {
+      // 获取当前版本
+      const group = this.groupManager.getGroup(groupId);
+      if (!group) {
+        throw new Error("Group not found");
+      }
 
-                // 存储数据，使用双重类型断言
-                await this.storage.storage.setItem(
-                    'PROMPT_STORE',
-                    serializedData as unknown as Parameters<typeof this.storage.storage.setItem>[1]
-                );
-                console.log('持久化状态已保存, 组数量:', Object.keys(this.state.groups).length);
-            }
-        } catch (error) {
-            console.error('保存提示词组状态失败:', error);
-        }
-    }
+      const currentVersion = this.groupManager.getVersion(
+        groupId,
+        group.currentVersionNumber
+      );
+      if (!currentVersion) {
+        throw new Error("Current version not found");
+      }
 
-    /**
-     * 订阅状态变更
-     * @param listener 监听器函数
-     * @returns 取消订阅的函数
-     */
-    public subscribe(listener: (state: PromptGroupServiceState) => void): () => void {
-        this.listeners.push(listener);
+      // 获取模板
+      const systemPrompt = await getTemplateContent(templateId);
+      if (!systemPrompt) {
+        throw new Error("Template not found");
+      }
 
-        // 返回取消订阅函数
-        return () => {
-            this.listeners = this.listeners.filter(l => l !== listener);
-        };
-    }
+      // 清理当前提示词
+      const cleanedPrompt = removeThinkTags(currentVersion.optimizedPrompt);
 
-    // 节流函数
-    private saveThrottled = (() => {
-        let lastSave = 0;
-        let pendingSave = false;
-        const THROTTLE_DELAY = 3000; // 3秒钟节流
+      // 构建迭代消息
+      const iterationMessage = `当前优化后的提示词:\n\n${cleanedPrompt}\n\n迭代方向:\n${direction}`;
 
-        return () => {
-            const now = Date.now();
-            if (now - lastSave > THROTTLE_DELAY) {
-                // 可以立即保存
-                lastSave = now;
-                this.saveToStorage();
-                pendingSave = false;
-            } else if (!pendingSave) {
-                // 设置延迟保存
-                pendingSave = true;
-                setTimeout(() => {
-                    lastSave = Date.now();
-                    this.saveToStorage();
-                    pendingSave = false;
-                }, THROTTLE_DELAY - (now - lastSave));
-            }
-        };
-    })();
+      // 添加语言指令
+      const languageInstruction = getLanguageInstruction(language);
+      const finalSystemPrompt = languageInstruction
+        ? `${systemPrompt}\n\n${languageInstruction}`
+        : systemPrompt;
 
-    /**
-     * 发布状态变更事件
-     * @private
-     */
-    private _emitStateChange() {
-        const state = this.getState();
-        this.listeners.forEach(listener => listener(state));
+      // 获取模型信息
+      const modelStore = useModelStore.getState();
+      const modelInfo = this.getModelInfo(modelId || modelStore.activeModel);
 
-        // 仅在非流式响应时使用节流保存
-        if (!this.isStreamingResponse) {
-            this.saveThrottled();
-        }
-    }
+      // 创建预备版本
+      const version = this.groupManager.createPendingVersion(
+        groupId,
+        modelInfo,
+        direction
+      );
 
-    /**
-     * 更新状态
-     * @param updates 状态更新
-     * @private
-     */
-    private _updateState(updates: Partial<PromptGroupServiceState>) {
-        this.state = {
-            ...this.state,
-            ...updates
-        };
-        // 触发状态变更并保存
-        this._emitStateChange();
-    }
+      // 立即更新状态
+      this.updateState({
+        groups: { ...this.groupManager.exportData().groups },
+        versions: { ...this.groupManager.exportData().versions },
+        activeVersionNumber: version.number,
+        isProcessing: true,
+      });
 
-    /**
-     * 创建提示词组
-     * @param originalPrompt 原始提示词
-     * @returns 创建的提示词组ID
-     */
-    public createPromptGroup(originalPrompt: string): string {
-        const groupId = generateId();
+      // 存储累积的响应
+      let optimizedPrompt = "";
 
-        const newGroup: PromptGroup = {
-            id: groupId,
-            originalPrompt,
-            currentVersionNumber: 0,
-            status: 'idle',
-            createdAt: Date.now(),
-            updatedAt: Date.now()
-        };
+      // 调用LLM
+      await llmService.callLLM({
+        userMessage: iterationMessage,
+        systemMessage: finalSystemPrompt,
+        modelId,
+        stream: true,
+        onData: (chunk) => {
+          // 累积响应
+          optimizedPrompt += chunk;
 
-        this._updateState({
-            groups: {
-                ...this.state.groups,
-                [groupId]: newGroup
-            },
-            versions: {
-                ...this.state.versions,
-                [groupId]: []
-            }
-        });
-
-        return groupId;
-    }
-
-    /**
-     * 根据内容查找提示词组
-     * @param content 提示词内容
-     * @returns 匹配的提示词组或null
-     * @deprecated
-     */
-    public findPromptGroupByContent(content: string): PromptGroup | null {
-        if (!content) return null;
-
-        const groupIds = Object.keys(this.state.groups);
-        for (const groupId of groupIds) {
-            // 查找该组的所有版本
-            const versions = this.state.versions[groupId] || [];
-
-            // 检查是否有版本的优化提示词匹配
-            const matchingVersion = versions.find(v => v.optimizedPrompt === content);
-            if (matchingVersion) {
-                return this.state.groups[groupId];
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * 获取活跃提示词组
-     * @returns 活跃提示词组或null
-     */
-    public getActivePromptGroup(): PromptGroup | null {
-        const { activeGroupId } = this.state;
-        if (!activeGroupId) return null;
-
-        return this.state.groups[activeGroupId] || null;
-    }
-
-    /**
-     * 设置活跃提示词组
-     * @param groupId 提示词组ID
-     */
-    public setActivePromptGroup(groupId: string): void {
-        if (!this.state.groups[groupId]) {
-            throw new Error(`提示词组 ${groupId} 不存在`);
-        }
-
-        const group = this.state.groups[groupId];
-
-        this._updateState({
-            activeGroupId: groupId,
-            activeVersionNumber: group.currentVersionNumber
-        });
-    }
-
-    /**
-     * 删除提示词组
-     * @param groupId 提示词组ID
-     */
-    public deletePromptGroup(groupId: string): void {
-        if (!this.state.groups[groupId]) {
-            throw new Error(`提示词组 ${groupId} 不存在`);
-        }
-
-        // 创建新的状态对象，移除指定组
-        const { [groupId]: _, ...restGroups } = this.state.groups;
-        const { [groupId]: __, ...restVersions } = this.state.versions;
-
-        let updates: Partial<PromptGroupServiceState> = {
-            groups: restGroups,
-            versions: restVersions
-        };
-
-        // 如果删除的是当前活跃组，重置活跃状态
-        if (this.state.activeGroupId === groupId) {
-            updates.activeGroupId = null;
-            updates.activeVersionNumber = null;
-        }
-
-        this._updateState(updates);
-        this.saveToStorage();
-    }
-
-    /**
-     * 获取提示词组的所有版本
-     * @param groupId 提示词组ID
-     * @returns 版本数组
-     */
-    public getGroupVersions(groupId: string): PromptVersion[] {
-        if (!this.state.groups[groupId]) {
-            return [];
-        }
-
-        return this.state.versions[groupId] || [];
-    }
-
-    /**
-     * 获取当前活跃版本
-     * @param groupId 可选的组ID，默认使用当前活跃组
-     * @returns 活跃版本或null
-     */
-    public getActiveVersion(groupId?: string): PromptVersion | null {
-        const targetGroupId = groupId || this.state.activeGroupId;
-        if (!targetGroupId) return null;
-
-        const group = this.state.groups[targetGroupId];
-        if (!group) return null;
-
-        const versions = this.state.versions[targetGroupId] || [];
-        return versions.find(v => v.number === (this.state.activeVersionNumber || group.currentVersionNumber)) || null;
-    }
-
-    /**
-     * 切换到指定版本
-     * @param groupId 提示词组ID
-     * @param versionNumber 版本号
-     */
-    public switchVersion(groupId: string, versionNumber: number): void {
-        if (!this.state.groups[groupId]) {
-            throw new Error(`提示词组 ${groupId} 不存在`);
-        }
-
-        const versions = this.state.versions[groupId] || [];
-        const version = versions.find(v => v.number === versionNumber);
-
-        if (!version) {
-            throw new Error(`版本 ${versionNumber} 不存在于提示词组 ${groupId} 中`);
-        }
-
-        this._updateState({
-            activeGroupId: groupId,
-            activeVersionNumber: versionNumber
-        });
-    }
-
-    /**
-     * 创建新的空白版本（内部使用）
-     * @param groupId 提示词组ID
-     * @param modelId 可选的模型ID
-     * @param iterationDirection 可选的迭代方向
-     * @returns 新创建的版本
-     * @private
-     */
-    private _createEmptyVersion(
-        groupId: string,
-        modelId?: string,
-        iterationDirection?: string
-    ): PromptVersion {
-        if (!this.state.groups[groupId]) {
-            throw new Error(`提示词组 ${groupId} 不存在`);
-        }
-
-        const group = this.state.groups[groupId];
-        const versions = this.state.versions[groupId] || [];
-
-        // 确定新版本号
-        const nextVersionNumber = versions.length > 0
-            ? Math.max(...versions.map(v => v.number)) + 1
-            : 1;
-
-        // 获取当前使用的模型
-        const modelStore = useModelStore.getState();
-        const modelIdToUse = modelId || modelStore.activeModel;
-
-        // 新增：直接从 getEnabledModels 获取模型信息
-        let provider = "";
-        let modelName = "";
-
-        // 获取所有启用的模型
-        const enabledModels = modelStore.getEnabledModels();
-        const modelInfo = enabledModels.find(m => m.id === modelIdToUse);
-
-        if (modelInfo) {
-            // modelInfo.name 格式为 "provider - modelName"
-            const parts = modelInfo.name.split(' - ');
-            if (parts.length === 2) {
-                provider = parts[0];
-                modelName = parts[1];
-            } else {
-                provider = modelIdToUse; // 回退到使用 modelId 作为 provider
-                modelName = modelInfo.name;
-            }
-        }
-
-        // 创建新版本
-        const newVersion: PromptVersion = {
-            id: generateId(),
-            number: nextVersionNumber,
+          // 直接更新版本内容
+          this.groupManager.updateVersionContent(
             groupId,
-            originalPrompt: group.originalPrompt,
-            optimizedPrompt: '优化中...',
-            modelId: modelIdToUse,
-            provider,
-            modelName,
-            iterationDirection,
-            status: 'pending',
-            timestamp: Date.now()
+            version.id,
+            optimizedPrompt
+          );
+
+          // 触发状态更新通知UI
+          this.updateState({
+            versions: { ...this.groupManager.exportData().versions },
+          });
+        },
+      });
+
+      // 完成后最终更新
+      this.groupManager.updateVersionContent(
+        groupId,
+        version.id,
+        optimizedPrompt
+      );
+
+      // 最终更新状态
+      this.updateState({
+        groups: { ...this.groupManager.exportData().groups },
+        versions: { ...this.groupManager.exportData().versions },
+        isProcessing: false,
+      });
+
+      return {
+        groupId,
+        versionId: version.id,
+        versionNumber: version.number,
+        optimizedPrompt,
+      };
+    } catch (error) {
+      this.updateState({
+        isProcessing: false,
+        error: error instanceof Error ? error.message : String(error),
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * 保存用户手动修改的提示词为新版本
+   */
+  async saveUserModification(
+    groupId: string,
+    modifiedPrompt: string
+  ): Promise<IterateResult> {
+    if (!this.groupManager.getGroup(groupId)) {
+      throw new Error(`Group ${groupId} not found`);
+    }
+
+    if (!modifiedPrompt?.trim()) {
+      throw new Error("Modified prompt is empty");
+    }
+
+    try {
+      const modelStore = useModelStore.getState();
+      const modelInfo = {
+        modelId: modelStore.activeModel,
+        provider: PROVIDER_USER_EDIT,
+        modelName: "",
+      };
+
+      const version = this.groupManager.createVersion(
+        groupId,
+        modifiedPrompt,
+        modelInfo,
+        "用户手动修改"
+      );
+
+      // 更新状态
+      this.updateState({
+        groups: { ...this.groupManager.exportData().groups },
+        versions: { ...this.groupManager.exportData().versions },
+        activeVersionNumber: version.number,
+      });
+
+      return {
+        groupId,
+        versionId: version.id,
+        versionNumber: version.number,
+        optimizedPrompt: modifiedPrompt,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // 获取模型信息
+  private getModelInfo(modelId: string) {
+    const modelStore = useModelStore.getState();
+    const enabledModels = modelStore.getEnabledModels();
+    const modelInfo = enabledModels.find((m: any) => m.id === modelId);
+
+    if (modelInfo) {
+      const parts = modelInfo.name.split(" - ");
+      return {
+        modelId,
+        provider: parts[0] || modelId,
+        modelName: parts[1] || modelInfo.name,
+      };
+    }
+
+    return {
+      modelId,
+      provider: modelId,
+      modelName: modelId,
+    };
+  }
+
+  // 存储相关方法
+  private loadFromStorage() {
+    try {
+      const stored = localStorage.getItem("PROMPT_STORE");
+      if (stored) {
+        const data = JSON.parse(stored);
+        this.groupManager.importData(data);
+        this.state = {
+          ...this.state,
+          groups: data.groups || {},
+          versions: data.versions || {},
+          activeGroupId: data.activeGroupId || null,
+          activeVersionNumber: data.activeVersionNumber || null,
         };
+      }
+    } catch (error) {
+      console.error("Failed to load from storage:", error);
+    }
+  }
 
-        // 更新状态
-        this._updateState({
-            versions: {
-                ...this.state.versions,
-                [groupId]: [...versions, newVersion]
-            },
-            groups: {
-                ...this.state.groups,
-                [groupId]: {
-                    ...group,
-                    currentVersionNumber: nextVersionNumber,
-                    updatedAt: Date.now(),
-                    status: iterationDirection ? 'iterating' : 'enhancing'
-                }
-            },
-            activeGroupId: groupId,
-            activeVersionNumber: nextVersionNumber,
-            isProcessing: true
-        });
+  private saveToStorage() {
+    try {
+      const data = {
+        ...this.groupManager.exportData(),
+        activeGroupId: this.state.activeGroupId,
+        activeVersionNumber: this.state.activeVersionNumber,
+      };
+      localStorage.setItem("PROMPT_STORE", JSON.stringify(data));
+    } catch (error) {
+      console.error("Failed to save to storage:", error);
+    }
+  }
 
-        return newVersion;
+  // 公共方法
+  getAllGroups() {
+    return this.groupManager.getAllGroups();
+  }
+
+  getGroupVersions(groupId: string) {
+    return this.groupManager.getVersions(groupId);
+  }
+
+  deleteGroup(groupId: string) {
+    this.groupManager.deleteGroup(groupId);
+
+    let newState: Partial<PromptGroupServiceState> = {
+      groups: { ...this.groupManager.exportData().groups },
+      versions: { ...this.groupManager.exportData().versions },
+    };
+
+    if (this.state.activeGroupId === groupId) {
+      newState.activeGroupId = null;
+      newState.activeVersionNumber = null;
     }
 
-    // @ts-ignore
-    private isEnhancingRef = false;
-    /**
-     * 执行提示词优化
-     * @param params 优化参数
-     * @returns 优化结果
-     */
-    public async enhancePrompt(params: EnhancePromptParams): Promise<EnhanceResult> {
+    this.updateState(newState);
+  }
 
-        const { originalPrompt, templateId, modelId, language } = params;
+  switchVersion(groupId: string, versionNumber: number) {
+    this.updateState({
+      activeGroupId: groupId,
+      activeVersionNumber: versionNumber,
+    });
+  }
 
-        if (!originalPrompt || !originalPrompt.trim()) {
-            throw new Error(ERROR_MESSAGES.EMPTY_PROMPT);
-        }
+  resetSession() {
+    this.updateState({
+      activeGroupId: null,
+      activeVersionNumber: null,
+    });
+  }
 
-        // 将错误状态重置
-        this._updateState({ error: null });
-
-        try {
-            this.isEnhancingRef = true;
-            this.isStreamingResponse = true;
-            // 获取系统提示词模板
-            const systemPrompt = await getTemplateContent(templateId);
-            if (!systemPrompt) {
-                throw new Error(ERROR_MESSAGES.TEMPLATE_NOT_FOUND);
-            }
-
-            // 添加语言指令
-            const languageInstruction = getLanguageInstruction(language);
-            const finalSystemPrompt = languageInstruction
-                ? `${systemPrompt}\n\n${languageInstruction}`
-                : systemPrompt;
-
-
-            // 创建新的提示词组
-            const groupId = this.createPromptGroup(originalPrompt);
-
-            // 创建空白版本
-            const newVersion = this._createEmptyVersion(groupId, modelId);
-
-            // 手动触发一次完整保存
-            this.saveToStorage();
-
-            // 存储优化后的内容
-            let optimizedPrompt = '';
-
-            // 在用户原始提示词后追加语言指令
-            const finalUserMessage = languageInstruction
-                ? `${originalPrompt}\n\n${languageInstruction}`
-                : originalPrompt;
-
-            // 调用LLM进行优化
-            await callLLMWithCurrentModel({
-                userMessage: finalUserMessage,
-                systemMessage: finalSystemPrompt,
-                modelId,
-                onData: (chunk) => {
-                    // 累积优化后的内容
-                    optimizedPrompt += chunk;
-
-                    // 更新版本中的优化后提示词
-                    const versions = this.state.versions[groupId] || [];
-                    const updatedVersions = versions.map(v =>
-                        v.id === newVersion.id
-                            ? {
-                                ...v,
-                                optimizedPrompt: v.optimizedPrompt === '优化中...' ? chunk : v.optimizedPrompt + chunk,
-                                status: v.status // 保持原状态，确保类型一致
-                            }
-                            : v
-                    ) as PromptVersion[]; // 显式类型断言确保类型正确
-
-                    this._updateState({
-                        versions: {
-                            ...this.state.versions,
-                            [groupId]: updatedVersions
-                        }
-                    });
-
-                    // 新增：直接更新 MemoryStore
-                    const memoryStore = useMemoryStore.getState();
-                    const currentVersionOptimizedPrompt = newVersion.optimizedPrompt;
-                    if (currentVersionOptimizedPrompt === '优化中...') {
-                        memoryStore.setOptimizedPrompt(chunk);
-                    } else {
-                        memoryStore.setOptimizedPrompt(memoryStore.optimizedPrompt + chunk);
-                    }
-                }
-
-            });
-
-            // 更新版本状态为已完成
-            const versions = this.state.versions[groupId] || [];
-            const updatedVersions = versions.map(v =>
-                v.id === newVersion.id
-                    ? { ...v, status: 'completed' as const, optimizedPrompt }
-                    : v
-            );
-
-            // 更新组状态
-            const updatedGroup = {
-                ...this.state.groups[groupId],
-                status: 'completed' as const
-            };
-
-            this._updateState({
-                versions: {
-                    ...this.state.versions,
-                    [groupId]: updatedVersions
-                },
-                groups: {
-                    ...this.state.groups,
-                    [groupId]: updatedGroup
-                },
-                isProcessing: false
-            });
-
-            this.isStreamingResponse = false;
-
-            // 完成后手动触发一次完整保存
-            this.saveToStorage();
-
-            return {
-                groupId,
-                versionId: newVersion.id,
-                optimizedPrompt,
-                reasoning: '' // 本次没有返回理由
-            };
-        } catch (error) {
-            this.isEnhancingRef = false;
-            this.isStreamingResponse = false;
-            // 处理错误
-            console.error('提示词优化失败:', error);
-            const errorMessage = error instanceof Error ? error.message : String(error);
-
-            this._updateState({
-                error: errorMessage,
-                isProcessing: false
-            });
-
-            throw error;
-        } finally {
-            this.isEnhancingRef = false;
-        }
+  loadFromHistory(groupId: string, versionNumber?: number) {
+    const group = this.groupManager.getGroup(groupId);
+    if (!group) {
+      throw new Error(`Group ${groupId} not found`);
     }
 
-    /**
-     * 执行提示词迭代
-     * @param params 迭代参数
-     * @returns 迭代结果
-     */
-    public async iteratePrompt(params: IteratePromptParams): Promise<IterateResult> {
-        const { groupId, direction, templateId, modelId, language } = params;
+    const targetVersion = versionNumber || group.currentVersionNumber;
+    this.updateState({
+      activeGroupId: groupId,
+      activeVersionNumber: targetVersion,
+    });
+  }
 
-        if (!this.state.groups[groupId]) {
-            throw new Error(`提示词组 ${groupId} 不存在`);
-        }
+  // 单例模式
+  private static instance: PromptService;
 
-        if (!direction || !direction.trim()) {
-            throw new Error('迭代方向不能为空');
-        }
-
-        // 将错误状态重置
-        this._updateState({ error: null });
-
-        try {
-            this.isStreamingResponse = true;
-            // 获取系统提示词模板
-            const systemPrompt = await getTemplateContent(templateId);
-            if (!systemPrompt) {
-                throw new Error(ERROR_MESSAGES.TEMPLATE_NOT_FOUND);
-            }
-
-            // 添加语言指令
-            const languageInstruction = getLanguageInstruction(language);
-            const finalSystemPrompt = languageInstruction
-                ? `${systemPrompt}\n\n${languageInstruction}`
-                : systemPrompt;
-
-            // 获取当前版本
-            const group = this.state.groups[groupId];
-            const versions = this.state.versions[groupId] || [];
-
-            const versionNumberToUse = this.state.activeVersionNumber || group.currentVersionNumber;
-            const currentVersion = versions.find(v => v.number === versionNumberToUse);
-
-            if (!currentVersion || !currentVersion.optimizedPrompt) {
-                throw new Error('无法找到当前版本或当前版本尚未优化');
-            }
-
-            // 创建新的空白版本，标记迭代方向
-            const newVersion = this._createEmptyVersion(groupId, modelId, direction);
-
-            // 清理当前版本的优化提示词，移除<think>标签
-            const cleanedOptimizedPrompt = removeThinkTags(currentVersion.optimizedPrompt);
-
-            // 构建迭代提示词
-            let iterationPrompt = `当前优化后的提示词:\n\n${cleanedOptimizedPrompt}\n\n迭代方向:\n${direction}`;
-
-            // 在用户迭代方向提示词后追加语言指令
-            if (languageInstruction) {
-                iterationPrompt += `\n\n${languageInstruction}`;
-            }
-
-            // 存储优化后的内容
-            let optimizedPrompt = '';
-
-            // 调用LLM进行迭代
-            await callLLMWithCurrentModel({
-                userMessage: iterationPrompt,
-                systemMessage: finalSystemPrompt,
-                modelId,
-                onData: (chunk) => {
-                    // 累积优化后的内容
-                    optimizedPrompt += chunk;
-
-                    // 更新版本中的优化后提示词
-                    const versions = this.state.versions[groupId] || [];
-                    const updatedVersions = versions.map(v =>
-                        v.id === newVersion.id
-                            ? {
-                                ...v,
-                                optimizedPrompt: v.optimizedPrompt === '优化中...' ? chunk : v.optimizedPrompt + chunk,
-                                status: v.status // 保持原状态，确保类型一致
-                            }
-                            : v
-                    ) as PromptVersion[]; // 显式类型断言确保类型正确
-
-                    this._updateState({
-                        versions: {
-                            ...this.state.versions,
-                            [groupId]: updatedVersions
-                        }
-                    });
-
-                    const memoryStore = useMemoryStore.getState();
-                    if (newVersion.optimizedPrompt === '优化中...') {
-                        memoryStore.setOptimizedPrompt(chunk);
-                    } else {
-                        memoryStore.setOptimizedPrompt(memoryStore.optimizedPrompt + chunk);
-                    }
-                }
-            });
-
-            // 更新版本状态为已完成
-            const updatedVersions = this.state.versions[groupId].map(v =>
-                v.id === newVersion.id
-                    ? { ...v, status: 'completed' as const, optimizedPrompt }
-                    : v
-            );
-
-            // 更新组状态
-            const updatedGroup = {
-                ...this.state.groups[groupId],
-                status: 'completed' as const
-            };
-
-            this._updateState({
-                versions: {
-                    ...this.state.versions,
-                    [groupId]: updatedVersions
-                },
-                groups: {
-                    ...this.state.groups,
-                    [groupId]: updatedGroup
-                },
-                isProcessing: false
-            });
-
-            this.isStreamingResponse = false;
-            this.saveToStorage();
-
-            return {
-                groupId,
-                versionId: newVersion.id,
-                versionNumber: newVersion.number,
-                optimizedPrompt,
-                reasoning: '' // 本次迭代没有返回理由
-            };
-        } catch (error) {
-            this.isStreamingResponse = false;
-            // 处理错误
-            console.error('提示词迭代失败:', error);
-            const errorMessage = error instanceof Error ? error.message : String(error);
-
-            this._updateState({
-                error: errorMessage,
-                isProcessing: false
-            });
-
-            throw error;
-        } finally {
-            this.isStreamingResponse = false; // 确保标志被重置
-        }
+  static getInstance(): PromptService {
+    if (!PromptService.instance) {
+      PromptService.instance = new PromptService();
     }
-
-    /**
- * 保存用户手动修改的提示词为新版本
- * @param groupId 提示词组ID
- * @param modifiedPrompt 用户修改后的提示词
- * @returns 迭代结果
- */
-    public async saveUserModification(groupId: string, modifiedPrompt: string): Promise<IterateResult> {
-        if (!this.state.groups[groupId]) {
-            throw new Error(`提示词组 ${groupId} 不存在`);
-        }
-
-        if (!modifiedPrompt || !modifiedPrompt.trim()) {
-            throw new Error('修改后的提示词不能为空');
-        }
-
-        try {
-            // 获取当前版本
-            const group = this.state.groups[groupId];
-            const versions = this.state.versions[groupId] || [];
-            const currentVersion = versions.find(v => v.number === group.currentVersionNumber);
-
-            if (!currentVersion) {
-                throw new Error('无法找到当前版本');
-            }
-
-            // 创建新的版本
-            const nextVersionNumber = Math.max(...versions.map(v => v.number)) + 1;
-            const modelStore = useModelStore.getState();
-            const modelId = currentVersion.modelId || modelStore.activeModel;
-
-            // 创建新版本对象
-            const newVersion: PromptVersion = {
-                id: generateId(),
-                number: nextVersionNumber,
-                groupId,
-                originalPrompt: currentVersion.originalPrompt,
-                optimizedPrompt: modifiedPrompt,
-                modelId: modelId,
-                provider: '用户编辑',
-                modelName: '',
-                iterationDirection: '用户手动修改',
-                status: 'completed',
-                timestamp: Date.now()
-            };
-
-            console.log("保存用户修改版本:", {
-                groupId,
-                versionNumber: newVersion.number,
-                modelId: newVersion.modelId,
-                provider: newVersion.provider,
-                modelName: newVersion.modelName
-            });
-
-            // 更新状态
-            this._updateState({
-                versions: {
-                    ...this.state.versions,
-                    [groupId]: [...versions, newVersion]
-                },
-                groups: {
-                    ...this.state.groups,
-                    [groupId]: {
-                        ...group,
-                        currentVersionNumber: nextVersionNumber,
-                        updatedAt: Date.now(),
-                        status: 'completed'
-                    }
-                },
-                activeGroupId: groupId,
-                activeVersionNumber: nextVersionNumber
-            });
-
-            // 保存到存储
-            this.saveToStorage();
-
-            return {
-                groupId,
-                versionId: newVersion.id,
-                versionNumber: newVersion.number,
-                optimizedPrompt: modifiedPrompt,
-                reasoning: ''
-            };
-        } catch (error) {
-            console.error('保存用户修改失败:', error);
-            throw error;
-        }
-    }
-
-    /**
-     * 重置活跃会话
-     */
-    public resetActiveSession(): void {
-        this._updateState({
-            activeGroupId: null,
-            activeVersionNumber: null
-        });
-    }
-
-    /**
-     * 从历史记录加载
-     * @param groupId 组ID
-     * @param versionNumber 可选的版本号
-     */
-    public loadFromHistory(groupId: string, versionNumber?: number): void {
-        if (!this.state.groups[groupId]) {
-            throw new Error(`提示词组 ${groupId} 不存在`);
-        }
-
-        const group = this.state.groups[groupId];
-        const targetVersion = versionNumber || group.currentVersionNumber;
-
-        this._updateState({
-            activeGroupId: groupId,
-            activeVersionNumber: targetVersion
-        });
-    }
-
-    /**
-     * 检查状态一致性
-     */
-    public ensureValidState(): void {
-        // 检查活跃组ID是否有效
-        if (this.state.activeGroupId && !this.state.groups[this.state.activeGroupId]) {
-            this._updateState({
-                activeGroupId: null,
-                activeVersionNumber: null
-            });
-        }
-
-        // 检查活跃版本是否有效
-        if (this.state.activeGroupId && this.state.activeVersionNumber) {
-            const versions = this.state.versions[this.state.activeGroupId] || [];
-            const versionExists = versions.some(v => v.number === this.state.activeVersionNumber);
-
-            if (!versionExists) {
-                const group = this.state.groups[this.state.activeGroupId];
-                this._updateState({
-                    activeVersionNumber: group.currentVersionNumber
-                });
-            }
-        }
-    }
-
-    /**
-     * 单例实例
-     */
-    private static instance: PromptGroupService;
-
-    /**
-     * 获取单例实例
-     */
-    public static getInstance(): PromptGroupService {
-        if (!PromptGroupService.instance) {
-            PromptGroupService.instance = new PromptGroupService();
-        }
-
-        return PromptGroupService.instance;
-    }
-
+    return PromptService.instance;
+  }
 }
 
-// 导出单例实例
-export const promptGroupService = PromptGroupService.getInstance();
+// 导出单例
+export const promptService = PromptService.getInstance();

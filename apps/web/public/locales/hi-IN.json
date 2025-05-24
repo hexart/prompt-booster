@@ -156,6 +156,7 @@
         "deleteGroup": "समूह हटाएं",
         "originalPrompt": "मूल प्रॉम्प्ट:",
         "usingModel": "उपयोग किया गया मॉडल:",
+        "userEdit": "उपयोगकर्ता संपादन",
         "iterationDirection": "पुनरावृत्ति दिशा:",
         "enhancedPrompt": "बेहतर प्रॉम्प्ट:",
         "loadVersion": "इस संस्करण को लोड करें",

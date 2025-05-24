@@ -1,196 +1,210 @@
-// packages/core/src/hooks/usePromptGroup.ts
-import { useState, useEffect, useCallback } from 'react';
-import { promptGroupService } from '../services/promptService';
-import {
-    PromptGroup,
-    PromptVersion,
-    EnhancePromptParams,
-    EnhanceResult,
-    IteratePromptParams,
-    IterateResult,
-    PromptGroupServiceState
+// packages/core/src/hooks/usePrompt.ts
+
+/**
+ * 提示词管理Hook
+ * 提供对提示词服务的React集成
+ */
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { promptService } from '../services/promptService';
+import { useMemoryStore } from '../../storage/memoryStorage';
+import { 
+  PromptGroup, 
+  PromptVersion,
+  EnhancePromptParams,
+  IteratePromptParams 
 } from '../models/prompt';
-import { useMemoryStore } from '../../storage';
 
-/**
- * 提示词组钩子的返回值接口
- */
-export interface UsePromptGroupResult {
-    // 状态
-    activeGroup: PromptGroup | null;
-    activeVersion: PromptVersion | null;
-    activeVersionNumber: number | null;
-    isProcessing: boolean;
-    error: string | null;
+export interface UsePromptResult {
+  // 状态
+  activeGroup: PromptGroup | null;
+  activeVersion: PromptVersion | null;
+  isProcessing: boolean;
+  error: string | null;
+  
+  // 组操作
+  groups: PromptGroup[];
+  deleteGroup: (groupId: string) => void;
+  selectGroup: (groupId: string) => void;  // 添加这个方法
+  
+  // 版本操作
+  versions: PromptVersion[];
+  switchVersion: (groupId: string, versionNumber: number) => void;
+  selectVersion: (versionNumber: number) => void;  // 添加这个方法
+  
+  // 增强操作
+  enhancePrompt: (params: EnhancePromptParams) => Promise<void>;
+  iteratePrompt: (params: IteratePromptParams) => Promise<void>;
+  saveUserModification: (groupId: string, modifiedPrompt: string) => Promise<void>;
+  
+  // 直接获取内容
+  originalPrompt: string;
+  optimizedPrompt: string;
 
-    // 组操作
-    getAllGroups: () => PromptGroup[];
-    setActiveGroup: (groupId: string) => void;
-    deleteGroup: (groupId: string) => void;
-    findGroupByContent: (content: string) => PromptGroup | null;
-
-    // 版本操作
-    getGroupVersions: (groupId: string) => PromptVersion[];
-    switchVersion: (groupId: string, versionNumber: number) => void;
-
-    // LLM 操作
-    enhancePrompt: (params: EnhancePromptParams) => Promise<EnhanceResult>;
-    iteratePrompt: (params: IteratePromptParams) => Promise<IterateResult>;
-
-    // 会话管理
-    resetSession: () => void;
-    loadFromHistory: (groupId: string, versionNumber?: number) => void;
-
-    // 同步操作
-    syncToMemoryStore: () => void;
+  // 会话管理
+  resetSession: () => void;
+  
+  // 历史记录
+  loadFromHistory: (groupId: string, versionNumber?: number) => void;
+  
+  // 获取组版本
+  getGroupVersions: (groupId: string) => PromptVersion[];
 }
 
-/**
- * 提示词组钩子，提供对提示词组服务的便捷访问
- */
-export function usePromptGroup(): UsePromptGroupResult {
-    // 获取内存存储
-    const memoryStore = useMemoryStore.getState();
+export function usePrompt(): UsePromptResult {
+  const [state, setState] = useState(promptService.getState());
 
-    // 从服务获取初始状态
-    const initialState = promptGroupService.getState();
+  // 订阅状态变化
+  useEffect(() => {
+    const unsubscribe = promptService.subscribe((newState) => {
+      setState(newState);
+    });
+    return unsubscribe;
+  }, []);
 
-    // 本地状态
-    const [state, setState] = useState<PromptGroupServiceState>(initialState);
+  // 直接从 service 获取当前内容
+  const currentContent = useMemo(() => {
+    return promptService.getCurrentDisplayContent();
+  }, [state.activeGroupId, state.activeVersionNumber, state.versions]);
 
-    // 更新本地状态的回调
-    const handleStateChange = useCallback((newState: PromptGroupServiceState) => {
-        setState(newState);
-    }, []);
 
-    // 订阅服务状态变更
-    useEffect(() => {
-        const unsubscribe = promptGroupService.subscribe(handleStateChange);
-        return unsubscribe;
-    }, [handleStateChange]);
+  // 获取当前组和版本
+  const activeGroup = state.activeGroupId ? state.groups[state.activeGroupId] : null;
+  
+  // 获取当前版本
+  const activeVersion = (() => {
+    if (!activeGroup || !state.activeVersionNumber || !state.activeGroupId) {
+      return null;
+    }
+    const versions = state.versions[state.activeGroupId];
+    if (!versions) {
+      return null;
+    }
+    return versions.find((v: PromptVersion) => v.number === state.activeVersionNumber) || null;
+  })();
 
-    // 获取当前活跃的组和版本
-    const activeGroup = state.activeGroupId ? state.groups[state.activeGroupId] : null;
-    const activeVersion = useCallback(() => {
-        if (!state.activeGroupId || !state.activeVersionNumber) return null;
+  // 获取所有组
+  const groups = Object.values(state.groups);
 
-        const versions = state.versions[state.activeGroupId] || [];
-        return versions.find(v => v.number === state.activeVersionNumber) || null;
-    }, [state.activeGroupId, state.activeVersionNumber, state.versions]);
+  // 获取当前组的版本
+  const versions = state.activeGroupId ? (state.versions[state.activeGroupId] || []) : [];
 
-    // 获取所有组
-    const getAllGroups = useCallback((): PromptGroup[] => {
-        return Object.values(state.groups);
-    }, [state.groups]);
+  // 获取指定组的版本
+  const getGroupVersions = useCallback((groupId: string): PromptVersion[] => {
+    return promptService.getGroupVersions(groupId);
+  }, []);
 
-    // 设置活跃组
-    const setActiveGroup = useCallback((groupId: string): void => {
-        promptGroupService.setActivePromptGroup(groupId);
-    }, []);
+  // 增强提示词
+  const enhancePrompt = useCallback(async (params: EnhancePromptParams) => {
+    try {
+      await promptService.enhancePrompt(params);
+    } catch (error) {
+      console.error('Enhance prompt failed:', error);
+      throw error;
+    }
+  }, []);
 
-    // 删除组
-    const deleteGroup = useCallback((groupId: string): void => {
-        promptGroupService.deletePromptGroup(groupId);
-    }, []);
+  // 迭代提示词
+  const iteratePrompt = useCallback(async (params: IteratePromptParams) => {
+    try {
+      await promptService.iteratePrompt(params);
+    } catch (error) {
+      console.error('Iterate prompt failed:', error);
+      throw error;
+    }
+  }, []);
 
-    /**
-     * 查找组
-     * @param content 组内容
-     * @returns 组对象
-     * @deprecated
-     */
-    const findGroupByContent = useCallback((content: string): PromptGroup | null => {
-        return promptGroupService.findPromptGroupByContent(content);
-    }, []);
+  // 保存用户修改
+  const saveUserModification = useCallback(async (groupId: string, modifiedPrompt: string) => {
+    try {
+      await promptService.saveUserModification(groupId, modifiedPrompt);
+    } catch (error) {
+      console.error('Save user modification failed:', error);
+      throw error;
+    }
+  }, []);
 
-    // 获取组的所有版本
-    const getGroupVersions = useCallback((groupId: string): PromptVersion[] => {
-        return promptGroupService.getGroupVersions(groupId);
-    }, []);
-
-    // 切换版本
-    const switchVersion = useCallback((groupId: string, versionNumber: number): void => {
-        promptGroupService.switchVersion(groupId, versionNumber);
-    }, []);
-
-    // 增强提示词
-    const enhancePrompt = useCallback(async (params: EnhancePromptParams): Promise<EnhanceResult> => {
-        return promptGroupService.enhancePrompt(params);
-    }, []);
-
-    // 迭代提示词
-    const iteratePrompt = useCallback(async (params: IteratePromptParams): Promise<IterateResult> => {
-        return promptGroupService.iteratePrompt(params);
-    }, []);
-
-    // 重置会话
-    const resetSession = useCallback((): void => {
-        promptGroupService.resetActiveSession();
-
-        // 同时重置内存存储
-        memoryStore.setOriginalPrompt('');
-        memoryStore.setOptimizedPrompt('');
+  // 从历史记录加载
+  const loadFromHistory = useCallback((groupId: string, versionNumber?: number) => {
+    try {
+      promptService.loadFromHistory(groupId, versionNumber);
+      
+      // 只设置加载标志
+      const memoryStore = useMemoryStore.getState();
+      memoryStore.setIsLoadingFromHistory(true);
+      
+      setTimeout(() => {
         memoryStore.setIsLoadingFromHistory(false);
-    }, [memoryStore]);
+      }, 500);
+    } catch (error) {
+      console.error('Load from history failed:', error);
+    }
+  }, []);
 
-    // 从历史记录加载
-    const loadFromHistory = useCallback((groupId: string, versionNumber?: number): void => {
-        promptGroupService.loadFromHistory(groupId, versionNumber);
+  // 选择组 - 添加这个方法
+  const selectGroup = useCallback((groupId: string) => {
+    loadFromHistory(groupId);
+  }, [loadFromHistory]);
 
-        // 同步到内存存储
-        syncToMemoryStore();
-    }, []);
+  // 选择版本 - 添加这个方法
+  const selectVersion = useCallback((versionNumber: number) => {
+    if (state.activeGroupId) {
+      loadFromHistory(state.activeGroupId, versionNumber);
+    }
+  }, [state.activeGroupId, loadFromHistory]);
 
-    // 同步到内存存储
-    // 优化同步函数
-    const syncToMemoryStore = useCallback(() => {
-        const currentVersion = activeVersion();
-        // 只有当版本不同或内容不同时才更新
-        if (currentVersion &&
-            (currentVersion.originalPrompt !== memoryStore.originalPrompt ||
-                currentVersion.optimizedPrompt !== memoryStore.optimizedPrompt)) {
+  // 切换版本
+  const switchVersion = useCallback((groupId: string, versionNumber: number) => {
+    promptService.switchVersion(groupId, versionNumber);
+  }, []);
 
-            memoryStore.setOriginalPrompt(currentVersion.originalPrompt);
-            memoryStore.setOptimizedPrompt(currentVersion.optimizedPrompt);
-        }
-    }, [activeVersion, memoryStore]);
+  // 删除组
+  const deleteGroup = useCallback((groupId: string) => {
+    promptService.deleteGroup(groupId);
+  }, []);
 
-    // 确保状态一致性
-    useEffect(() => {
-        promptGroupService.ensureValidState();
-    }, []);
+  // 重置会话
+  const resetSession = useCallback(() => {
+    promptService.resetSession();
+    const memoryStore = useMemoryStore.getState();
+    memoryStore.clearAll();
+  }, []);
 
-    // 在活跃组或版本变化时同步到内存存储
-    useEffect(() => {
-        if (state.activeGroupId && state.activeVersionNumber) {
-            syncToMemoryStore();
-        }
-    }, [state.activeGroupId, state.activeVersionNumber, syncToMemoryStore]);
+  return {
+    // 状态
+    activeGroup,
+    activeVersion,
+    isProcessing: state.isProcessing,
+    error: state.error,
+    
+    // 组操作
+    groups,
+    deleteGroup,
+    selectGroup,  // 添加导出
+    
+    // 版本操作  
+    versions,
+    switchVersion,
+    selectVersion,  // 添加导出
+    
+    // 增强操作
+    enhancePrompt,
+    iteratePrompt,
+    saveUserModification,
 
-    return {
-        activeGroup,
-        activeVersion: activeVersion(),
-        activeVersionNumber: state.activeVersionNumber,
-        isProcessing: state.isProcessing,
-        error: state.error,
-
-        getAllGroups,
-        setActiveGroup,
-        deleteGroup,
-        findGroupByContent,
-
-        getGroupVersions,
-        switchVersion,
-
-        enhancePrompt,
-        iteratePrompt,
-
-        resetSession,
-        loadFromHistory,
-
-        syncToMemoryStore,
-    };
+    // 直接获取内容的属性
+    originalPrompt: currentContent.originalPrompt,
+    optimizedPrompt: currentContent.optimizedPrompt,
+    
+    // 会话管理
+    resetSession,
+    
+    // 历史记录
+    loadFromHistory,
+    
+    // 工具函数
+    getGroupVersions
+  };
 }
 
-// 导出单例服务，以便在非React上下文中使用
-export { promptGroupService };
+// 导出服务实例，以便在非React环境中使用
+export { promptService };
