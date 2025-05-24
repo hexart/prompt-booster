@@ -1,5 +1,5 @@
 // packages/core/src/utils/prompt-utils.ts
-import { callLLMWithCurrentModel } from '../services/promptService';
+import { llmService } from '../services/llmService';
 
 /**
  * 根据语言代码生成对应的语言指令
@@ -7,40 +7,40 @@ import { callLLMWithCurrentModel } from '../services/promptService';
  * @returns 对应语言的输出指令
  */
 export function getLanguageInstruction(language?: string): string {
-    if (!language) return '';
+  if (!language) return '';
 
-    if (language.includes('zh')) {
-        if (language.includes('Hant')) {
-            return '請使用繁體中文輸出結果。';
-        } else {
-            return '请使用中文输出结果。';
-        }
-    } else if (language.includes('en')) {
-        return 'Please output the result in English.';
-    } else if (language.includes('ja')) {
-        return '結果を日本語で出力してください。';
-    } else if (language.includes('ko')) {
-        return '결과를 한국어로 출력해 주세요.';
-    } else if (language.includes('de')) {
-        return 'Bitte geben Sie das Ergebnis auf Deutsch aus.';
-    } else if (language.includes('nl')) {
-        return 'Geef het resultaat in het Nederlands weer.';
-    } else if (language.includes('ru')) {
-        return 'Пожалуйста, выведите результат на русском языке.';
-    } else if (language.includes('es')) {
-        return 'Por favor, muestre el resultado en español.';
-    } else if (language.includes('fr')) {
-        return 'Veuillez afficher le résultat en français.';
-    } else if (language.includes('ar')) {
-        return 'الرجاء إظهار النتيجة باللغة العربية.';
-    } else if (language.includes('pt')) {
-        return 'Por favor, apresente o resultado em português.';
-    } else if (language.includes('hi')) {
-        return 'कृपया परिणाम हिंदी में प्रदर्शित करें।';
+  if (language.includes('zh')) {
+    if (language.includes('Hant')) {
+      return '請使用繁體中文輸出結果。';
     } else {
-        // 默认使用英语
-        return 'Please output the result in English.';
+      return '请使用中文输出结果。';
     }
+  } else if (language.includes('en')) {
+    return 'Please output the result in English.';
+  } else if (language.includes('ja')) {
+    return '結果を日本語で出力してください。';
+  } else if (language.includes('ko')) {
+    return '결과를 한국어로 출력해 주세요.';
+  } else if (language.includes('de')) {
+    return 'Bitte geben Sie das Ergebnis auf Deutsch aus.';
+  } else if (language.includes('nl')) {
+    return 'Geef het resultaat in het Nederlands weer.';
+  } else if (language.includes('ru')) {
+    return 'Пожалуйста, выведите результат на русском языке.';
+  } else if (language.includes('es')) {
+    return 'Por favor, muestre el resultado en español.';
+  } else if (language.includes('fr')) {
+    return 'Veuillez afficher le résultat en français.';
+  } else if (language.includes('ar')) {
+    return 'الرجاء إظهار النتيجة باللغة العربية.';
+  } else if (language.includes('pt')) {
+    return 'Por favor, apresente o resultado em português.';
+  } else if (language.includes('hi')) {
+    return 'कृपया परिणाम हिंदी में प्रदर्शित करें।';
+  } else {
+    // 默认使用英语
+    return 'Please output the result in English.';
+  }
 }
 
 /**
@@ -49,11 +49,11 @@ export function getLanguageInstruction(language?: string): string {
  * @returns 清理后的文本
  */
 export function removeThinkTags(text: string): string {
-    if (!text) return text;
+  if (!text) return text;
 
-    // 使用正则表达式移除<think>标签及其内容
-    // [\s\S]*? 匹配任意字符(包括换行符)，非贪婪模式
-    return text.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
+  // 使用正则表达式移除<think>标签及其内容
+  // [\s\S]*? 匹配任意字符(包括换行符)，非贪婪模式
+  return text.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
 }
 
 /**
@@ -62,15 +62,15 @@ export function removeThinkTags(text: string): string {
  * @returns 清理<think>后的可用作系统提示词的内容
  */
 export function cleanOptimizedPrompt(optimizedPrompt: string): string {
-    if (!optimizedPrompt) return '';
+  if (!optimizedPrompt) return '';
 
-    const cleaned = removeThinkTags(optimizedPrompt);
+  const cleaned = removeThinkTags(optimizedPrompt);
 
-    // 移除其他常见的元标签
-    return cleaned
-        // .replace(/^```[\s\S]*?```/g, '') // 移除代码块
-        .replace(/<!--[\s\S]*?-->/g, '') // 移除HTML注释
-        .trim();
+  // 移除其他常见的元标签
+  return cleaned
+    // .replace(/^```[\s\S]*?```/g, '') // 移除代码块
+    .replace(/<!--[\s\S]*?-->/g, '') // 移除HTML注释
+    .trim();
 }
 
 /**
@@ -79,12 +79,12 @@ export function cleanOptimizedPrompt(optimizedPrompt: string): string {
  * 用于前端展示和最终分析结果
  */
 export interface CriterionItem {
-    label: string;         // 维度名称（如"任务目标明确性"）
-    passed: boolean;       // 该维度是否通过评估
-    feedback: string;      // 对该维度的具体评价内容
-    suggestion?: string;   // 针对该维度的改进建议（可选）
-    points: number;        // 该维度获得的分数
-    maxPoints?: number;    // 该维度的最高可能分数（可选）
+  label: string;         // 维度名称（如"任务目标明确性"）
+  passed: boolean;       // 该维度是否通过评估
+  feedback: string;      // 对该维度的具体评价内容
+  suggestion?: string;   // 针对该维度的改进建议（可选）
+  points: number;        // 该维度获得的分数
+  maxPoints?: number;    // 该维度的最高可能分数（可选）
 }
 
 /**
@@ -94,10 +94,10 @@ export interface CriterionItem {
  * 用作前端组件的状态类型
  */
 export interface PromptAnalysisResult {
-    score: number;              // 总评分（0-10分）
-    criteria: CriterionItem[];  // 各评估维度的详细信息
-    suggestions?: string[];     // 综合优化建议（可选）
-    encouragement?: string;     // 鼓励性评语（可选）
+  score: number;              // 总评分（0-10分）
+  criteria: CriterionItem[];  // 各评估维度的详细信息
+  suggestions?: string[];     // 综合优化建议（可选）
+  encouragement?: string;     // 鼓励性评语（可选）
 }
 
 /**
@@ -106,10 +106,10 @@ export interface PromptAnalysisResult {
  * 用于解析LLM原始返回内容
  */
 export interface LLMCriterionResponse {
-    label: string;        // 维度名称
-    passed: boolean;      // 该维度是否通过评估
-    feedback: string;     // 对该维度的具体评价内容
-    suggestion?: string;  // 针对该维度的改进建议（可选）
+  label: string;        // 维度名称
+  passed: boolean;      // 该维度是否通过评估
+  feedback: string;     // 对该维度的具体评价内容
+  suggestion?: string;  // 针对该维度的改进建议（可选）
 }
 
 /**
@@ -118,18 +118,18 @@ export interface LLMCriterionResponse {
  * 用于解析和处理LLM的JSON响应
  */
 export interface LLMAnalysisResponse {
-    criteria?: LLMCriterionResponse[];  // 评估维度数组（可能不存在）
-    score?: number;                     // LLM可能返回的分数（我们会忽略它）
-    suggestions?: string[];             // LLM提供的综合建议（可选）
+  criteria?: LLMCriterionResponse[];  // 评估维度数组（可能不存在）
+  score?: number;                     // LLM可能返回的分数（我们会忽略它）
+  suggestions?: string[];             // LLM提供的综合建议（可选）
 }
 
 export async function analyzePromptWithLLM(
-    prompt: string,
-    currentLanguage?: string
+  prompt: string,
+  currentLanguage?: string
 ): Promise<PromptAnalysisResult> {
-    const cleanedPrompt = removeThinkTags(prompt);
-    let languageInstruction = getLanguageInstruction(currentLanguage);
-    const systemPrompt = `
+  const cleanedPrompt = removeThinkTags(prompt);
+  let languageInstruction = getLanguageInstruction(currentLanguage);
+  const systemPrompt = `
 你是一个专业的提示词（Prompt）质量评估助手，你将对用户提供的提示词进行公正、创造性且全面的评估。
 
 # 评估原则：
@@ -176,75 +176,75 @@ export async function analyzePromptWithLLM(
 
 ${languageInstruction}
 `;
-    console.log(languageInstruction);
-    const userMessage = `请对以下提示词进行质量分析。如果它确实表现优秀，请给予高分评价；如果有不足，请如实指出并提供改进建议，${languageInstruction}：\n\n${cleanedPrompt}`;
+  console.log(languageInstruction);
+  const userMessage = `请对以下提示词进行质量分析。如果它确实表现优秀，请给予高分评价；如果有不足，请如实指出并提供改进建议，${languageInstruction}：\n\n${cleanedPrompt}`;
 
-    const result = await callLLMWithCurrentModel({
-        userMessage,
-        systemMessage: systemPrompt,
-        stream: false
-    });
+  const result = await llmService.callLLM({
+    userMessage,
+    systemMessage: systemPrompt,
+    stream: false
+  });
 
-    try {
-        const withoutThinkTags = removeThinkTags(result);
-        const cleaned = withoutThinkTags.trim().replace(/^```json[\s\r\n]*|```$/g, '');
-        const parsed = JSON.parse(cleaned) as {
-            criteria?: Array<{
-                label: string;
-                points: number;
-                feedback: string;
-                suggestion?: string;
-            }>;
-            score?: number;
-            suggestions?: string[];
-            encouragement?: string;
-        };
+  try {
+    const withoutThinkTags = removeThinkTags(result);
+    const cleaned = withoutThinkTags.trim().replace(/^```json[\s\r\n]*|```$/g, '');
+    const parsed = JSON.parse(cleaned) as {
+      criteria?: Array<{
+        label: string;
+        points: number;
+        feedback: string;
+        suggestion?: string;
+      }>;
+      score?: number;
+      suggestions?: string[];
+      encouragement?: string;
+    };
 
-        // 验证并调整评分逻辑
-        const criteria = parsed.criteria || [];
+    // 验证并调整评分逻辑
+    const criteria = parsed.criteria || [];
 
-        // 确保每个criterion都有正确的字段
-        const enhancedCriteria: CriterionItem[] = criteria.map((c: {
-            label: string;
-            points: number;
-            feedback: string;
-            suggestion?: string;
-        }) => ({
-            label: c.label,
-            points: typeof c.points === 'number' ? c.points : 0,
-            feedback: c.feedback,
-            suggestion: c.suggestion,
-            maxPoints: 3, // 每个维度的最高分为3分
-            passed: (typeof c.points === 'number' ? c.points : 0) > 0 // 只要得分大于0就算通过
-        }));
+    // 确保每个criterion都有正确的字段
+    const enhancedCriteria: CriterionItem[] = criteria.map((c: {
+      label: string;
+      points: number;
+      feedback: string;
+      suggestion?: string;
+    }) => ({
+      label: c.label,
+      points: typeof c.points === 'number' ? c.points : 0,
+      feedback: c.feedback,
+      suggestion: c.suggestion,
+      maxPoints: 3, // 每个维度的最高分为3分
+      passed: (typeof c.points === 'number' ? c.points : 0) > 0 // 只要得分大于0就算通过
+    }));
 
-        // 计算总分
-        let calculatedScore: number = enhancedCriteria.reduce((sum: number, c: CriterionItem) => sum + c.points, 0);
+    // 计算总分
+    let calculatedScore: number = enhancedCriteria.reduce((sum: number, c: CriterionItem) => sum + c.points, 0);
 
-        // 如果总分超过10分，按比例缩减
-        if (calculatedScore > 10) {
-            const scaleFactor: number = 10 / calculatedScore;
-            enhancedCriteria.forEach((c: CriterionItem) => {
-                c.points = Math.round(c.points * scaleFactor * 10) / 10; // 保留一位小数
-                // 确保缩放后分数为0的项也更新passed状态
-                c.passed = c.points > 0;
-            });
-            calculatedScore = 10; // 确保总分为10
-        }
-
-        // 直接使用大模型提供的鼓励语
-        const finalResult: PromptAnalysisResult = {
-            score: Math.round(calculatedScore * 10) / 10, // 保留一位小数
-            criteria: enhancedCriteria,
-            suggestions: parsed.suggestions || [],
-            encouragement: parsed.encouragement
-        };
-
-        return finalResult;
-    } catch (e) {
-        console.error('[LLM❌Parse Error]', e);
-        throw new Error('LLM 评分结果解析失败');
+    // 如果总分超过10分，按比例缩减
+    if (calculatedScore > 10) {
+      const scaleFactor: number = 10 / calculatedScore;
+      enhancedCriteria.forEach((c: CriterionItem) => {
+        c.points = Math.round(c.points * scaleFactor * 10) / 10; // 保留一位小数
+        // 确保缩放后分数为0的项也更新passed状态
+        c.passed = c.points > 0;
+      });
+      calculatedScore = 10; // 确保总分为10
     }
+
+    // 直接使用大模型提供的鼓励语
+    const finalResult: PromptAnalysisResult = {
+      score: Math.round(calculatedScore * 10) / 10, // 保留一位小数
+      criteria: enhancedCriteria,
+      suggestions: parsed.suggestions || [],
+      encouragement: parsed.encouragement
+    };
+
+    return finalResult;
+  } catch (e) {
+    console.error('[LLM❌Parse Error]', e);
+    throw new Error('LLM 评分结果解析失败');
+  }
 }
 
 /**
@@ -281,11 +281,11 @@ export const handleTemplateLocalization = (
 } => {
   // 提取简化的语言代码
   const simpleLang = currentLanguage.split('-')[0];
-  
+
   // 创建返回的结果对象
   const displayTemplates: Record<string, any> = {};
   const templateIdMap: Record<string, string> = {};
-  
+
   // 第一步：收集所有不带语言后缀的模板（默认英文版）
   Object.entries(templates).forEach(([id, template]) => {
     if (!id.includes('-')) {
@@ -293,7 +293,7 @@ export const handleTemplateLocalization = (
       templateIdMap[id] = id;
     }
   });
-  
+
   // 第二步：尝试替换为当前语言的模板
   if (simpleLang !== 'en') {
     Object.entries(templates).forEach(([id, template]) => {
@@ -306,7 +306,7 @@ export const handleTemplateLocalization = (
       }
     });
   }
-  
+
   return {
     displayTemplates,
     getActualTemplateId: (id) => templateIdMap[id] || id
