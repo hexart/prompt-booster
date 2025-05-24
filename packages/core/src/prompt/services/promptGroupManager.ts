@@ -1,3 +1,4 @@
+// packages/core/src/prompt/services/promptGroupManager.ts
 /**
  * 提示词组管理器
  * 专门负责提示词组的CRUD操作
@@ -5,6 +6,7 @@
 import { PromptGroup, PromptVersion } from '../models/prompt';
 import { generateId } from '../../utils';
 
+export const PROMPT_PENDING_MARKER = '__PENDING__';
 export class PromptGroupManager {
   private groups: Record<string, PromptGroup> = {};
   private versions: Record<string, PromptVersion[]> = {};
@@ -137,7 +139,7 @@ export class PromptGroupManager {
       number: versionNumber,
       groupId,
       originalPrompt: group.originalPrompt,
-      optimizedPrompt: '优化中...',
+      optimizedPrompt: PROMPT_PENDING_MARKER,
       modelId: modelInfo.modelId,
       provider: modelInfo.provider,
       modelName: modelInfo.modelName,

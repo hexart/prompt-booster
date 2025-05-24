@@ -156,6 +156,7 @@
         "deleteGroup": "그룹 삭제",
         "originalPrompt": "원본 프롬프트:",
         "usingModel": "사용 모델:",
+        "userEdit": "사용자 편집",
         "iterationDirection": "반복 방향:",
         "enhancedPrompt": "향상된 프롬프트:",
         "loadVersion": "이 버전 로드",

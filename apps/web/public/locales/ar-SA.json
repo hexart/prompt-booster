@@ -164,6 +164,7 @@
         "deleteGroup": "حذف المجموعة",
         "originalPrompt": "النص الأصلي:",
         "usingModel": "النموذج المستخدم:",
+        "userEdit": "تحرير المستخدم",
         "iterationDirection": "اتجاه التكرار:",
         "enhancedPrompt": "النص المحسّن:",
         "loadVersion": "تحميل هذا الإصدار",

@@ -11,64 +11,81 @@
   - [核心功能](#核心功能)
     - [模型管理](#模型管理)
       - [示例：配置模型](#示例配置模型)
-    - [提示管理](#提示管理)
-      - [提示优化](#提示优化)
+    - [提示词管理](#提示词管理)
+      - [提示词优化](#提示词优化)
     - [存储管理](#存储管理)
   - [关键组件](#关键组件)
     - [配置](#配置)
     - [模型服务](#模型服务)
-    - [提示服务](#提示服务)
+    - [提示词服务](#提示词服务)
+      - [PromptService（主协调器）](#promptservice主协调器)
+      - [PromptGroupManager（数据管理）](#promptgroupmanager数据管理)
+      - [LLMService（LLM 接口）](#llmservicellm-接口)
     - [模板服务](#模板服务)
   - [钩子](#钩子)
     - [`useModelStore`](#usemodelstore)
-    - [`usePromptGroup`](#usepromptgroup)
-    - [`usePromptHistory`](#useprompthistory)
+    - [`usePrompt`](#useprompt)
     - [`useMemoryStore`](#usememorystore)
   - [实用工具](#实用工具)
     - [ID生成](#id生成)
-    - [提示工具](#提示工具)
+    - [提示词工具](#提示词工具)
   - [使用示例](#使用示例)
     - [基本模型配置](#基本模型配置)
-    - [优化提示](#优化提示)
-    - [使用提示历史](#使用提示历史)
-    - [分析提示质量](#分析提示质量)
+    - [优化提示词](#优化提示词)
+    - [使用提示词历史](#使用提示词历史)
+    - [分析提示词质量](#分析提示词质量)
     - [自定义API集成](#自定义api集成)
+  - [重构亮点](#重构亮点)
 
 ## 概述
 
 `@prompt-booster/core` 包是 Prompt Booster 应用程序的基础，提供：
 
-- **模型配置管理**：支持多种AI模型（OpenAI、Gemini、DeepSeek、Hunyuan、Siliconflow、Ollama）
-- **提示管理**：版本化提示组、历史跟踪和优化服务
-- **模板系统**：基于模板的提示优化和生成
-- **状态管理**：基于Zustand的响应式存储，用于应用程序状态
-- **存储工具**：持久性和基于内存的存储选项
-- **核心服务**：提示优化和AI模型通信的接口
+- **统一模型配置管理**：支持多种AI模型（OpenAI、Gemini、DeepSeek、Hunyuan、Siliconflow、Ollama）
+- **提示词管理**：版本化提示词组、历史跟踪和优化服务
+- **模板系统**：基于模板的提示词优化和生成
+- **单一数据源设计**：通过服务层统一管理所有提示词数据
+- **存储工具**：灵活的存储选项，支持持久化和内存存储
+- **核心服务**：模块化的服务架构，实现关注点分离
 
 ## 架构
 
-该包组织为几个关键模块：
+该包采用清晰的模块化架构：
 
 ```markdown
 core/
-├── config/        # 常量和默认配置
-├── model/         # 模型配置和服务
-├── prompt/        # 提示管理和优化
-├── storage/       # 存储服务
-└── utils/         # 实用函数
+├── config/         # 常量和默认配置
+├── model/          # 模型配置和服务
+│   ├── models/     # 类型定义
+│   ├── services/   # 模型服务
+│   ├── store/      # 模型状态管理
+│   └── unifiedModelConfig.ts  # 统一模型配置
+├── prompt/         # 提示词管理和优化
+│   ├── hooks/      # React 钩子
+│   ├── models/     # 类型定义
+│   ├── services/   # 核心服务
+│   │   ├── promptService.ts       # 主服务协调器
+│   │   ├── promptGroupManager.ts  # 数据管理
+│   │   ├── llmService.ts          # LLM调用接口
+│   │   └── templateService.ts     # 模板管理
+│   ├── templates/  # 提示词模板
+│   └── utils/      # 工具函数
+├── storage/        # 存储服务
+└── utils/          # 通用工具
 ```
 
 ## 核心功能
 
 ### 模型管理
 
-模型管理系统提供了一个灵活的框架，用于与不同的AI提供商合作：
+模型管理系统通过 `unifiedModelConfig.ts` 提供统一的配置管理：
 
-- **支持的提供商**：OpenAI、Gemini、DeepSeek、Hunyuan、Siliconflow和Ollama
-- **自定义接口**：支持添加和配置自定义API端点
-- **模型配置**：API密钥、基础URL、模型选择和超时设置
-- **连接测试**：在提交到模型前测试API连接
-- **安全密钥管理**：API密钥遮蔽以增强安全性
+- **统一配置注册表**：通过 `MODEL_REGISTRY` 集中管理所有模型配置
+- **支持的提供商**：OpenAI、Gemini、DeepSeek、Hunyuan、Siliconflow 和 Ollama
+- **自定义接口**：支持添加兼容 OpenAI 接口规范的自定义 API
+- **智能识别**：自动识别 OpenAI 兼容接口并使用相应的处理逻辑
+- **连接测试**：提交前验证 API 连接
+- **安全管理**：API 密钥遮蔽以增强安全性
 
 #### 示例：配置模型
 
@@ -88,87 +105,106 @@ function ModelConfig() {
 }
 ```
 
-### 提示管理
+### 提示词管理
 
-提示管理为处理AI提示提供了全面的工具：
+重构后的提示词管理采用单一数据源设计：
 
-- **提示组**：将提示组织到具有版本历史的组中
-- **版本控制**：通过顺序版本跟踪提示的变化
-- **优化**：使用AI驱动的模板增强提示
-- **迭代**：基于反馈逐步改进提示
-- **历史**：浏览和恢复以前的提示版本
-- **分析**：通过AI反馈分析提示质量
+- **服务分层**：
+  - `PromptService`：主服务协调器，管理整体流程
+  - `PromptGroupManager`：专注于数据的 CRUD 操作
+  - `LLMService`：统一的 LLM 调用接口
+- **版本控制**：完整的版本历史记录和切换功能
+- **实时更新**：流式响应直接更新版本内容，UI 自动响应
+- **优化流程**：使用 AI 驱动的模板增强提示词
+- **迭代改进**：基于用户反馈逐步优化提示词
+- **用户编辑**：支持手动编辑并保存为新版本
 
-#### 提示优化
+#### 提示词优化
 
-提示优化系统使用模板生成更好的提示：
+提示词优化系统使用模板生成更好的提示词：
 
 ```typescript
-import { usePromptGroup } from '@prompt-booster/core';
+import { usePrompt } from '@prompt-booster/core';
 
 function PromptOptimizer() {
-  const { enhancePrompt } = usePromptGroup();
+  const { enhancePrompt, originalPrompt, optimizedPrompt } = usePrompt();
   
   const optimizeMyPrompt = async () => {
     const result = await enhancePrompt({
       originalPrompt: "编写一个关于机器人的故事",
-      templateId: "default-optimizer"
+      templateId: "general-optimize",
+      language: "zh-CN"
     });
     
-    console.log(result.optimizedPrompt);
+    // 优化后的内容会自动更新到 optimizedPrompt
+    console.log(optimizedPrompt);
   };
 }
 ```
 
 ### 存储管理
 
-该包提供灵活的存储解决方案：
+简化后的存储架构：
 
-- **本地存储**：持久性浏览器存储
-- **会话存储**：临时浏览器会话存储
-- **内存存储**：用于临时数据的内存存储
-- **Zustand集成**：与Zustand状态管理的无缝集成
+- **提示词数据**：完全由 `PromptService` 管理，通过 localStorage 持久化
+- **临时数据**：`MemoryStore` 仅管理测试相关的临时数据
+- **存储类型**：
+  - 本地存储：持久化浏览器存储
+  - 会话存储：临时浏览器会话存储
+  - 内存存储：用于临时数据，页面刷新自动清除
+- **自动同步**：通过订阅机制，UI 自动获取最新状态
 
 ## 关键组件
 
 ### 配置
 
-位于 `config/` 目录中，配置模块定义了常量和默认设置：
+统一的模型配置管理：
 
-- **常量**：API端点、模型名称、存储键、错误消息
-- **默认值**：默认模型配置和优化设置
+- **MODEL_REGISTRY**：所有模型的中央配置注册表
+- **默认配置**：每个模型的预设配置
+- **动态创建**：基于注册表自动生成默认配置
 
 ### 模型服务
 
-模型服务（`model/services/modelService.ts`）提供以下工具：
+模型服务（`model/services/modelService.ts`）提供：
 
-- **连接测试**：验证API凭据和连接性
-- **API密钥安全**：遮蔽敏感API密钥以供显示
-- **模型验证**：验证模型配置
-- **UI准备**：格式化模型数据以在UI中显示
+- **连接测试**：验证 API 凭据和连接性
+- **配置验证**：确保模型配置完整有效
+- **API 密钥安全**：遮蔽敏感信息
+- **统一处理**：标准化不同提供商的配置
 
-### 提示服务
+### 提示词服务
 
-提示服务（`prompt/services/promptService.ts`）是提示管理的核心引擎：
+重构后的提示词服务采用模块化设计：
 
-- **LLM通信**：用于调用AI模型的通用函数
-- **提示组管理**：创建、更新和删除提示组
-- **版本控制**：随时间跟踪提示的变化
-- **优化**：使用AI增强提示
-- **迭代**：基于特定方向改进提示
-- **状态管理**：在整个应用程序中维持提示状态
+#### PromptService（主协调器）
+- 管理整体业务流程
+- 协调各个子服务
+- 处理状态更新和通知
+- 实现页面刷新检测
+
+#### PromptGroupManager（数据管理）
+- 提示词组的 CRUD 操作
+- 版本管理
+- 数据导入/导出
+- 预创建版本支持实时更新
+
+#### LLMService（LLM 接口）
+- 统一的 LLM 调用接口
+- 自动识别模型配置
+- 支持流式和非流式响应
+- 处理自定义接口的 provider 映射
 
 ### 模板服务
 
-模板服务（`prompt/services/templateService.ts`）管理提示模板：
+模板服务（`prompt/services/templateService.ts`）管理提示词模板：
 
-- **模板检索**：通过ID或类型获取模板
-- **默认模板**：用于常见优化场景的内置模板
-- **模板内容**：从模板中提取内容以用于提示优化
+- **模板检索**：通过 ID 或类型获取模板
+- **多语言支持**：模板本地化处理
+- **默认模板**：内置优化和迭代模板
+- **动态加载**：支持从文件系统加载模板
 
 ## 钩子
-
-该包提供了几个用于状态管理的React钩子：
 
 ### `useModelStore`
 
@@ -182,51 +218,63 @@ const {
   setActiveModel,       // 设置活动模型
   updateConfig,         // 更新模型配置
   addCustomInterface,   // 添加新的自定义接口
-  getEnabledModels      // 获取所有启用的模型
+  getEnabledModels,     // 获取所有启用的模型
+  isCustomInterface,    // 检查是否为自定义接口
+  getCustomInterface    // 获取自定义接口配置
 } = useModelStore();
 ```
 
-### `usePromptGroup`
+### `usePrompt`
 
-管理提示组和版本：
+统一的提示词管理钩子，提供单一数据源：
 
 ```typescript
 const {
-  activeGroup,          // 当前活动提示组
+  // 状态
+  activeGroup,          // 当前活动提示词组
   activeVersion,        // 当前活动版本
-  enhancePrompt,        // 使用AI增强提示
-  iteratePrompt,        // 迭代现有提示
-  getAllGroups,         // 获取所有提示组
-  getGroupVersions,     // 获取组的版本
-  loadFromHistory       // 从历史记录加载提示
-} = usePromptGroup();
-```
-
-### `usePromptHistory`
-
-管理提示历史导航：
-
-```typescript
-const {
-  expandedGroupId,      // 当前展开的组
-  selectedVersions,     // 按组选择的版本
-  toggleExpand,         // 切换组的展开
-  loadGroup,            // 加载提示组
-  loadVersion           // 加载特定版本
-} = usePromptHistory();
+  isProcessing,         // 是否正在处理
+  error,                // 错误信息
+  
+  // 数据
+  originalPrompt,       // 原始提示词（直接从服务获取）
+  optimizedPrompt,      // 优化后的提示词（直接从服务获取）
+  
+  // 组操作
+  groups,               // 所有提示词组
+  deleteGroup,          // 删除组
+  
+  // 版本操作
+  versions,             // 当前组的所有版本
+  switchVersion,        // 切换版本
+  getGroupVersions,     // 获取指定组的版本
+  
+  // 增强操作
+  enhancePrompt,        // 使用AI增强提示词
+  iteratePrompt,        // 迭代现有提示词
+  saveUserModification, // 保存用户修改
+  
+  // 会话管理
+  resetSession,         // 重置当前会话
+  loadFromHistory       // 从历史记录加载
+} = usePrompt();
 ```
 
 ### `useMemoryStore`
 
-管理内存中的提示数据：
+管理临时测试数据：
 
 ```typescript
 const {
-  originalPrompt,       // 原始提示文本
-  optimizedPrompt,      // 优化后的提示文本
-  setOriginalPrompt,    // 设置原始提示
-  setOptimizedPrompt,   // 设置优化后的提示
-  clearAll              // 清除所有存储的数据
+  userTestPrompt,       // 用户测试输入
+  originalResponse,     // 原始提示词的响应
+  optimizedResponse,    // 优化提示词的响应
+  isLoadingFromHistory, // 是否正在加载历史
+  
+  setUserTestPrompt,    // 设置测试输入
+  setOriginalResponse,  // 设置原始响应
+  setOptimizedResponse, // 设置优化响应
+  clearAll              // 清除所有数据
 } = useMemoryStore();
 ```
 
@@ -234,7 +282,7 @@ const {
 
 ### ID生成
 
-用于生成唯一标识符的工具：
+用于生成唯一标识符：
 
 ```typescript
 import { generateId, generatePrefixedId } from '@prompt-booster/core';
@@ -243,19 +291,30 @@ const uniqueId = generateId();                  // 例如："lq1aef3kj2"
 const prefixedId = generatePrefixedId('user');  // 例如："user-lq1aef3kj2"
 ```
 
-### 提示工具
+### 提示词工具
 
-处理提示的辅助函数：
+处理提示词的辅助函数：
 
 ```typescript
-import { removeThinkTags, analyzePromptQuality } from '@prompt-booster/core';
+import { 
+  removeThinkTags, 
+  cleanOptimizedPrompt,
+  getLanguageInstruction,
+  handleTemplateLocalization 
+} from '@prompt-booster/core';
 
-// 从提示中删除<think>标签
+// 从提示词中删除 <think> 标签
 const cleanedPrompt = removeThinkTags(originalPrompt);
 
-// 分析提示质量
-const analysis = analyzePromptQuality(myPrompt);
-console.log(`质量得分：${analysis.score}/10`);
+// 清理优化后的提示词
+const cleaned = cleanOptimizedPrompt(optimizedPrompt);
+
+// 获取语言指令
+const instruction = getLanguageInstruction('zh-CN');
+
+// 处理模板本地化
+const { displayTemplates, getActualTemplateId } = 
+  handleTemplateLocalization(templates, 'zh-CN');
 ```
 
 ## 使用示例
@@ -266,93 +325,137 @@ console.log(`质量得分：${analysis.score}/10`);
 import { useModelStore } from '@prompt-booster/core';
 
 function SetupModels() {
-  const { updateConfig, setActiveModel } = useModelStore();
+  const { updateConfig, setActiveModel, addCustomInterface } = useModelStore();
   
-  // 配置OpenAI
+  // 配置 OpenAI
   updateConfig('openai', {
     apiKey: 'sk-your-openai-key',
     model: 'gpt-4-turbo',
     enabled: true
   });
   
-  // 将OpenAI设置为活动模型
+  // 添加自定义接口（OpenAI 兼容）
+  const customId = addCustomInterface({
+    name: "本地 Ollama",
+    providerName: "ollama",
+    apiKey: "not-needed",
+    baseUrl: "http://localhost:11434",
+    model: "qwen2.5:32b",
+    endpoint: "/api/chat",
+    enabled: true
+  });
+  
+  // 设置为活动模型
   setActiveModel('openai');
 }
 ```
 
-### 优化提示
+### 优化提示词
 
 ```typescript
-import { usePromptGroup, useMemoryStore } from '@prompt-booster/core';
+import { usePrompt } from '@prompt-booster/core';
 
-async function OptimizePrompt() {
-  const { enhancePrompt } = usePromptGroup();
-  const { setOriginalPrompt, setOptimizedPrompt } = useMemoryStore();
+function PromptOptimizer() {
+  const { 
+    enhancePrompt, 
+    originalPrompt, 
+    optimizedPrompt,
+    isProcessing 
+  } = usePrompt();
   
-  const originalPrompt = "编写一个关于机器人的故事。";
-  setOriginalPrompt(originalPrompt);
+  const handleOptimize = async () => {
+    try {
+      await enhancePrompt({
+        originalPrompt: "编写一个关于机器人的故事",
+        templateId: 'general-optimize',
+        modelId: 'openai',
+        language: 'zh-CN'
+      });
+      
+      // 优化完成后，optimizedPrompt 会自动更新
+      console.log("优化完成！", optimizedPrompt);
+    } catch (error) {
+      console.error("优化失败:", error);
+    }
+  };
   
-  try {
-    const result = await enhancePrompt({
-      originalPrompt,
-      templateId: 'default-optimizer'
-    });
-    
-    setOptimizedPrompt(result.optimizedPrompt);
-    console.log("优化完成！");
-  } catch (error) {
-    console.error("优化失败:", error);
-  }
+  return (
+    <div>
+      <button onClick={handleOptimize} disabled={isProcessing}>
+        {isProcessing ? '优化中...' : '开始优化'}
+      </button>
+    </div>
+  );
 }
 ```
 
-### 使用提示历史
+### 使用提示词历史
 
 ```typescript
-import { usePromptGroup, usePromptHistory } from '@prompt-booster/core';
+import { usePrompt } from '@prompt-booster/core';
 
 function PromptHistoryBrowser() {
-  const { getAllGroups, getGroupVersions } = usePromptGroup();
-  const { loadGroup, loadVersion } = usePromptHistory();
+  const { 
+    groups, 
+    loadFromHistory,
+    switchVersion,
+    getGroupVersions 
+  } = usePrompt();
   
-  // 获取所有提示组
-  const groups = getAllGroups();
-  
-  // 加载第一个组
-  if (groups.length > 0) {
-    // 获取第一个组的所有版本
-    const versions = getGroupVersions(groups[0].id);
-    
-    // 加载最新版本
-    loadGroup(groups[0], () => {
-      console.log("组加载成功！");
-    });
-    
-    // 或加载特定版本
-    if (versions.length > 1) {
-      loadVersion(groups[0].id, versions[1].number, () => {
-        console.log("版本加载成功！");
-      });
-    }
-  }
+  // 显示所有组
+  return (
+    <div>
+      {groups.map(group => {
+        const versions = getGroupVersions(group.id);
+        
+        return (
+          <div key={group.id}>
+            <h3>{group.originalPrompt.slice(0, 50)}...</h3>
+            <button onClick={() => loadFromHistory(group.id)}>
+              加载此组
+            </button>
+            
+            {/* 显示版本 */}
+            <div>
+              {versions.map(version => (
+                <button 
+                  key={version.id}
+                  onClick={() => switchVersion(group.id, version.number)}
+                >
+                  v{version.number}
+                </button>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
 }
 ```
 
-### 分析提示质量
+### 分析提示词质量
 
 ```typescript
-import { analyzePromptWithLLM } from '@prompt-booster/core';
+import { analyzePromptWithLLM, analyzePromptQuality } from '@prompt-booster/core';
 
 async function AnalyzePrompt() {
   const myPrompt = "编写一个关于能感受情感的机器人的故事。";
   
   try {
-    const analysis = await analyzePromptWithLLM(myPrompt);
+    // 使用 LLM 分析（需要配置模型）
+    const llmAnalysis = await analyzePromptWithLLM(myPrompt, 'zh-CN');
     
-    console.log(`质量得分：${analysis.score}/10`);
-    console.log("需要改进的方面：");
+    console.log(`LLM 评分：${llmAnalysis.score}/10`);
+    console.log(`鼓励语：${llmAnalysis.encouragement}`);
     
-    analysis.criteria
+    // 或使用本地分析（无需 API）
+    const localAnalysis = analyzePromptQuality(myPrompt, 'zh-CN');
+    
+    console.log(`本地评分：${localAnalysis.score}/10`);
+    
+    // 显示改进建议
+    localAnalysis.criteria
       .filter(c => !c.passed)
       .forEach(criterion => {
         console.log(`- ${criterion.label}：${criterion.feedback}`);
@@ -372,20 +475,43 @@ async function AnalyzePrompt() {
 import { useModelStore } from '@prompt-booster/core';
 
 function AddCustomModel() {
-  const { addCustomInterface, setActiveModel } = useModelStore();
+  const { addCustomInterface, setActiveModel, testModelConnection } = useModelStore();
   
-  // 添加自定义模型接口
-  const customId = addCustomInterface({
-    name: "我的自定义AI",
-    providerName: "CustomProvider",
-    apiKey: "custom-api-key",
-    baseUrl: "https://api.custom-ai-provider.com",
-    model: "custom-model-v1",
-    timeout: 60000,
+  // 添加兼容 OpenAI 的自定义接口
+  const customInterface = {
+    name: "FastGPT API",
+    providerName: "fastgpt",
+    apiKey: "fastgpt-api-key",
+    baseUrl: "https://api.fastgpt.in",
+    model: "gpt-4-vision-preview",
+    endpoint: "/v1/chat/completions", // OpenAI 兼容
+    timeout: 120000,
     enabled: true
-  });
+  };
   
-  // 设置为活动模型
-  setActiveModel(customId);
+  // 测试连接
+  const testResult = await testModelConnection(
+    customInterface.providerName,
+    customInterface.apiKey,
+    customInterface.baseUrl,
+    customInterface.model,
+    customInterface.endpoint
+  );
+  
+  if (testResult.success) {
+    const customId = addCustomInterface(customInterface);
+    setActiveModel(customId);
+    console.log("自定义模型添加成功！");
+  } else {
+    console.error("连接测试失败:", testResult.message);
+  }
 }
 ```
+
+## 重构亮点
+
+1. **单一数据源**：所有提示词数据由 `PromptService` 统一管理，消除了状态同步的复杂性
+2. **模块化设计**：服务层清晰分离，每个服务专注于单一职责
+3. **统一配置**：通过 `MODEL_REGISTRY` 集中管理所有模型配置，减少重复代码
+4. **实时更新**：流式响应直接更新服务层数据，UI 通过订阅自动响应
+5. **类型安全**：完整的 TypeScript 类型定义，提供更好的开发体验

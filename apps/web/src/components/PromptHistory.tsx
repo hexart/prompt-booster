@@ -5,11 +5,19 @@ import { PromptGroup } from '@prompt-booster/core/prompt/models/prompt';
 import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
 import { Trash2Icon, ChevronsDownIcon, ChevronsUpIcon, RotateCcwIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { PROVIDER_USER_EDIT } from '@prompt-booster/core/prompt/services/promptService';
 
 interface PromptHistoryProps {
   onNavigateToEditor?: () => void;
 }
 
+// 处理"用户编辑"文本
+export const getDisplayProviderName = (provider: string, t: (key: string) => string): string => {
+  if (provider === PROVIDER_USER_EDIT) {
+    return t('history.userEdit');
+  }
+  return provider;
+};
 export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor }) => {
   const { t } = useTranslation();
 
@@ -155,7 +163,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
 
           return (
             <div key={group.id} className="border rounded-lg p-3 shadow-2xs hover:shadow-md listcard-container">
-              <div className="flex justify-between items-center mb-2">
+              <div className="flex justify-between items-center mb-2 hover:cursor-pointer" onClick={() => toggleExpand(group.id)}>
                 <div className="flex items-center gap-2">
                   <span className="text-sm listcard-description">
                     {formatTimestamp(group.updatedAt)}
@@ -213,7 +221,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                         {/* 版本列表 */}
                         <div className="flex space-x-2 overflow-y-visible overflow-x-auto py-2 [&::-webkit-scrollbar]:h-1">
                           {versions.map(version => (
-                            <Tooltip key={version.id} text={`${t('history.usingModel')}\n${version.provider ? `${version.provider} - ` : ''}${version.modelName || version.modelId || '未知模型'}`}>
+                            <Tooltip key={version.id} text={`${t('history.usingModel')}\n${version.provider ? `${getDisplayProviderName(version.provider, t)}` : ''}${version.modelName}`}>
                               <button
                                 key={version.id}
                                 onClick={() => handleSelectVersion(group.id, version.number)}
@@ -262,11 +270,8 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
 
               {/* 未展开时只显示原始提示词 */}
               {expandedGroupId !== group.id && (
-                <div>
-                  <div className="text-sm font-medium mb-1 listcard-description">{t('history.originalPrompt')}</div>
-                  <div className="truncate p-2 text-sm listcard-description">
-                    {truncateText(group.originalPrompt)}
-                  </div>
+                <div className="truncate text-sm font-medium mb-1 listcard-description">
+                  {t('history.originalPrompt')} {truncateText(group.originalPrompt)}
                 </div>
               )}
             </div>

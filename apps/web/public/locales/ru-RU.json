@@ -159,6 +159,7 @@
         "deleteGroup": "Удалить группу",
         "originalPrompt": "Исходный запрос:",
         "usingModel": "Используемая модель:",
+        "userEdit": "Пользовательское Редактирование",
         "iterationDirection": "Направление итерации:",
         "enhancedPrompt": "Улучшенный запрос:",
         "loadVersion": "Загрузить эту версию",

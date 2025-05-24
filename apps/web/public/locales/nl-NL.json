@@ -156,6 +156,7 @@
         "deleteGroup": "Groep verwijderen",
         "originalPrompt": "Originele prompt:",
         "usingModel": "Gebruikt model:",
+        "userEdit": "Gebruikersbewerking",
         "iterationDirection": "Iteratierichting:",
         "enhancedPrompt": "Verbeterde prompt:",
         "loadVersion": "Deze versie laden",

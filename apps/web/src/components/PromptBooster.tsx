@@ -39,6 +39,7 @@ import { usePrompt } from "@prompt-booster/core/prompt/hooks/usePrompt";
 import { useModelStore } from "@prompt-booster/core/model/store/modelStore";
 import { PromptVersion } from "@prompt-booster/core/prompt/models/prompt";
 import { useTranslation } from "react-i18next";
+import { PROMPT_PENDING_MARKER } from '@prompt-booster/core/prompt/services/promptGroupManager';
 
 export const PromptBooster: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -60,6 +61,15 @@ export const PromptBooster: React.FC = () => {
   const [localOriginalPrompt, setLocalOriginalPrompt] = useState("");
   const [editablePrompt, setEditablePrompt] = useState("");
   const [isEditMode, setIsEditMode] = useState(false);
+
+  // 处理"增强中..."文本
+  const getDisplayOptimizedPrompt = () => {
+    if (optimizedPrompt === PROMPT_PENDING_MARKER ||
+      (activeVersion?.status === 'pending' && !optimizedPrompt)) {
+      return t('promptBooster.enhancing');
+    }
+    return optimizedPrompt;
+  };
 
   // 监听原始提示词变化
   useEffect(() => {
@@ -556,8 +566,8 @@ export const PromptBooster: React.FC = () => {
                         setIsEditMode(false);
                       }}
                       className={`flex-none px-2 py-1 text-xs rounded-full min-w-[32px] ${version.number === activeVersion?.number
-                          ? "version-tag-active"
-                          : "version-tag-inactive"
+                        ? "version-tag-active"
+                        : "version-tag-inactive"
                         }`}
                     >
                       v{version.number}
@@ -644,7 +654,7 @@ export const PromptBooster: React.FC = () => {
                 ? "flex justify-center items-center text-center"
                 : ""
               }`}
-            value={isEditMode ? editablePrompt : optimizedPrompt}
+            value={isEditMode ? editablePrompt : getDisplayOptimizedPrompt()}
             onChange={handleOptimizedPromptChange}
             placeholder={
               isProcessing

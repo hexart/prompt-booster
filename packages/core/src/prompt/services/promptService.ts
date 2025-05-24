@@ -17,6 +17,7 @@ import {
   IterateResult,
 } from "../models/prompt";
 
+export const PROVIDER_USER_EDIT = '__USEREDIT__';
 export class PromptService {
   private groupManager = new PromptGroupManager();
   private listeners: Array<(state: PromptGroupServiceState) => void> = [];
@@ -360,7 +361,7 @@ export class PromptService {
       const modelStore = useModelStore.getState();
       const modelInfo = {
         modelId: modelStore.activeModel,
-        provider: "用户编辑",
+        provider: PROVIDER_USER_EDIT,
         modelName: "",
       };
 

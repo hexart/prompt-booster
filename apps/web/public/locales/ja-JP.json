@@ -156,6 +156,7 @@
         "deleteGroup": "グループを削除",
         "originalPrompt": "元のプロンプト：",
         "usingModel": "使用モデル：",
+        "userEdit": "ユーザー編集",
         "iterationDirection": "反復方向：",
         "enhancedPrompt": "強化されたプロンプト：",
         "loadVersion": "このバージョンを読み込む",
