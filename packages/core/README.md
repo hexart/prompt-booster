@@ -2,9 +2,7 @@
 
 [中文文档](README-zh.md)
 
-   Core package for Prompt Booster providing essential state management, model configurations, prompt optimization services, and utility functions.
-
-   ## Table of Contents
+## Table of Contents
 
 - [@prompt-booster/core](#prompt-boostercore)
   - [Table of Contents](#table-of-contents)
@@ -12,382 +10,508 @@
   - [Architecture](#architecture)
   - [Core Features](#core-features)
     - [Model Management](#model-management)
-      - [Example: Configuring a Model](#example-configuring-a-model)
+      - [Example: Configuring Models](#example-configuring-models)
     - [Prompt Management](#prompt-management)
       - [Prompt Optimization](#prompt-optimization)
     - [Storage Management](#storage-management)
   - [Key Components](#key-components)
     - [Configuration](#configuration)
     - [Model Service](#model-service)
-    - [Prompt Service](#prompt-service)
+    - [Prompt Services](#prompt-services)
+      - [PromptService (Main Coordinator)](#promptservice-main-coordinator)
+      - [PromptGroupManager (Data Management)](#promptgroupmanager-data-management)
+      - [LLMService (LLM Interface)](#llmservice-llm-interface)
     - [Template Service](#template-service)
   - [Hooks](#hooks)
     - [`useModelStore`](#usemodelstore)
-    - [`usePromptGroup`](#usepromptgroup)
-    - [`usePromptHistory`](#useprompthistory)
+    - [`usePrompt`](#useprompt)
     - [`useMemoryStore`](#usememorystore)
   - [Utilities](#utilities)
     - [ID Generation](#id-generation)
-    - [Prompt Utilities](#prompt-utilities)
+    - [Prompt Tools](#prompt-tools)
   - [Usage Examples](#usage-examples)
     - [Basic Model Configuration](#basic-model-configuration)
-    - [Optimizing a Prompt](#optimizing-a-prompt)
-    - [Working with Prompt History](#working-with-prompt-history)
+    - [Optimizing Prompts](#optimizing-prompts)
+    - [Using Prompt History](#using-prompt-history)
     - [Analyzing Prompt Quality](#analyzing-prompt-quality)
     - [Custom API Integration](#custom-api-integration)
-
-   ## Overview
-
-   The `@prompt-booster/core` package serves as the foundation for the Prompt Booster application, providing:
-
-   - **Model Configuration Management**: Support for multiple AI models (OpenAI, Gemini, DeepSeek, Hunyuan, Siliconflow, Ollama)
-   - **Prompt Management**: Versioned prompt groups, history tracking, and optimization services
-   - **Template System**: Template-based prompt optimization and generation
-   - **State Management**: Zustand-based reactive stores for application state
-   - **Storage Utilities**: Persistent and memory-based storage options
-   - **Core Services**: Interfaces for prompt optimization and AI model communication
-
-   ## Architecture
-
-   The package is organized into several key modules:
-
-   ```markdown
-   core/
-   ├── config/        # Constants and default configurations
-   ├── model/         # Model configuration and services
-   ├── prompt/        # Prompt management and optimization
-   ├── storage/       # Storage services
-   └── utils/         # Utility functions
-   ```
-
-   ## Core Features
-
-   ### Model Management
-
-   The model management system provides a flexible framework for working with different AI providers:
-
-   - **Supported Providers**: OpenAI, Gemini, DeepSeek, Hunyuan, Siliconflow, and Ollama
-   - **Custom Interfaces**: Support for adding and configuring custom API endpoints
-   - **Model Configuration**: API keys, base URLs, model selection, and timeout settings
-   - **Connection Testing**: Test API connections before committing to a model
-   - **Secure Key Management**: API key masking for enhanced security
-
-   #### Example: Configuring a Model
-
-   ```typescript
-   import { useModelStore } from '@prompt-booster/core';
-   
-   function ModelConfig() {
-     const { configs, updateConfig } = useModelStore();
-     
-     const configureOpenAI = () => {
-       updateConfig('openai', {
-         apiKey: 'your-api-key',
-         model: 'gpt-4-turbo',
-         enabled: true
-       });
-     };
-   }
-   ```
-
-   ### Prompt Management
-
-   Prompt management provides comprehensive tools for working with AI prompts:
-
-   - **Prompt Groups**: Organize prompts into groups with version history
-   - **Versioning**: Track changes to prompts with sequential versions
-   - **Optimization**: Enhance prompts using AI-driven templates
-   - **Iteration**: Incrementally improve prompts based on feedback
-   - **History**: Browse and recover previous prompt versions
-   - **Analysis**: Analyze prompt quality with AI feedback
-
-   #### Prompt Optimization
-
-   The prompt optimization system uses templates to generate better prompts:
-
-   ```typescript
-   import { usePromptGroup } from '@prompt-booster/core';
-   
-   function PromptOptimizer() {
-     const { enhancePrompt } = usePromptGroup();
-     
-     const optimizeMyPrompt = async () => {
-       const result = await enhancePrompt({
-         originalPrompt: "Write a story about a robot",
-         templateId: "default-optimizer"
-       });
-       
-       console.log(result.optimizedPrompt);
-     };
-   }
-   ```
-
-   ### Storage Management
-
-   The package offers flexible storage solutions:
-
-   - **Local Storage**: Persistent browser storage
-   - **Session Storage**: Temporary browser session storage
-   - **Memory Storage**: In-memory storage for ephemeral data
-   - **Zustand Integration**: Seamless integration with Zustand state management
-
-   ## Key Components
-
-   ### Configuration
-
-   Located in the `config/` directory, the configuration module defines constants and default settings:
-
-   - **Constants**: API endpoints, model names, storage keys, error messages
-   - **Defaults**: Default model configurations and optimization settings
-
-   ### Model Service
-
-   The model service (`model/services/modelService.ts`) provides utilities for:
-
-   - **Connection Testing**: Verify API credentials and connectivity
-   - **API Key Security**: Mask sensitive API keys for display
-   - **Model Validation**: Validate model configurations
-   - **UI Preparation**: Format model data for display in the UI
-
-   ### Prompt Service
-
-   The prompt service (`prompt/services/promptService.ts`) is the core engine for prompt management:
-
-   - **LLM Communication**: Generic function for calling AI models
-   - **Prompt Group Management**: Create, update, and delete prompt groups
-   - **Version Control**: Track changes to prompts over time
-   - **Optimization**: Enhance prompts using AI
-   - **Iteration**: Improve prompts based on specific directions
-   - **State Management**: Maintain prompt state across the application
-
-   ### Template Service
-
-   The template service (`prompt/services/templateService.ts`) manages prompt templates:
-
-   - **Template Retrieval**: Get templates by ID or type
-   - **Default Templates**: Built-in templates for common optimization scenarios
-   - **Template Content**: Extract content from templates for use in prompt optimization
-
-   ## Hooks
-
-   The package provides several React hooks for state management:
-
-   ### `useModelStore`
-
-   Manages model configuration state:
-
-   ```typescript
-   const {
-     activeModel,          // Current active model ID
-     configs,              // Model configurations
-     customInterfaces,     // Custom API interfaces
-     setActiveModel,       // Set the active model
-     updateConfig,         // Update a model configuration
-     addCustomInterface,   // Add a new custom interface
-     getEnabledModels      // Get all enabled models
-   } = useModelStore();
-   ```
-
-   ### `usePromptGroup`
-
-   Manages prompt groups and versions:
-
-   ```typescript
-   const {
-     activeGroup,          // Current active prompt group
-     activeVersion,        // Current active version
-     enhancePrompt,        // Enhance a prompt using AI
-     iteratePrompt,        // Iterate on an existing prompt
-     getAllGroups,         // Get all prompt groups
-     getGroupVersions,     // Get versions for a group
-     loadFromHistory       // Load a prompt from history
-   } = usePromptGroup();
-   ```
-
-   ### `usePromptHistory`
-
-   Manages prompt history navigation:
-
-   ```typescript
-   const {
-     expandedGroupId,      // Currently expanded group
-     selectedVersions,     // Selected versions by group
-     toggleExpand,         // Toggle expansion of a group
-     loadGroup,            // Load a prompt group
-     loadVersion           // Load a specific version
-   } = usePromptHistory();
-   ```
-
-   ### `useMemoryStore`
-
-   Manages in-memory prompt data:
-
-   ```typescript
-   const {
-     originalPrompt,       // Original prompt text
-     optimizedPrompt,      // Optimized prompt text
-     setOriginalPrompt,    // Set original prompt
-     setOptimizedPrompt,   // Set optimized prompt
-     clearAll              // Clear all stored data
-   } = useMemoryStore();
-   ```
-
-   ## Utilities
-
-   ### ID Generation
-
-   Utilities for generating unique identifiers:
-
-   ```typescript
-   import { generateId, generatePrefixedId } from '@prompt-booster/core';
-   
-   const uniqueId = generateId();                  // e.g., "lq1aef3kj2"
-   const prefixedId = generatePrefixedId('user');  // e.g., "user-lq1aef3kj2"
-   ```
-
-   ### Prompt Utilities
-
-   Helper functions for working with prompts:
-
-   ```typescript
-   import { removeThinkTags, analyzePromptQuality } from '@prompt-booster/core';
-   
-   // Remove <think> tags from a prompt
-   const cleanedPrompt = removeThinkTags(originalPrompt);
-   
-   // Analyze prompt quality
-   const analysis = analyzePromptQuality(myPrompt);
-   console.log(`Quality score: ${analysis.score}/10`);
-   ```
-
-   ## Usage Examples
-
-   ### Basic Model Configuration
-
-   ```typescript
-   import { useModelStore } from '@prompt-booster/core';
-   
-   function SetupModels() {
-     const { updateConfig, setActiveModel } = useModelStore();
-     
-     // Configure OpenAI
-     updateConfig('openai', {
-       apiKey: 'sk-your-openai-key',
-       model: 'gpt-4-turbo',
-       enabled: true
-     });
-     
-     // Set OpenAI as active model
-     setActiveModel('openai');
-   }
-   ```
-
-   ### Optimizing a Prompt
-
-   ```typescript
-   import { usePromptGroup, useMemoryStore } from '@prompt-booster/core';
-   
-   async function OptimizePrompt() {
-     const { enhancePrompt } = usePromptGroup();
-     const { setOriginalPrompt, setOptimizedPrompt } = useMemoryStore();
-     
-     const originalPrompt = "Write a story about a robot.";
-     setOriginalPrompt(originalPrompt);
-     
-     try {
-       const result = await enhancePrompt({
-         originalPrompt,
-         templateId: 'default-optimizer'
-       });
-       
-       setOptimizedPrompt(result.optimizedPrompt);
-       console.log("Optimization complete!");
-     } catch (error) {
-       console.error("Optimization failed:", error);
-     }
-   }
-   ```
-
-   ### Working with Prompt History
-
-   ```typescript
-   import { usePromptGroup, usePromptHistory } from '@prompt-booster/core';
-   
-   function PromptHistoryBrowser() {
-     const { getAllGroups, getGroupVersions } = usePromptGroup();
-     const { loadGroup, loadVersion } = usePromptHistory();
-     
-     // Get all prompt groups
-     const groups = getAllGroups();
-     
-     // Load the first group
-     if (groups.length > 0) {
-       // Get all versions for the first group
-       const versions = getGroupVersions(groups[0].id);
-       
-       // Load the latest version
-       loadGroup(groups[0], () => {
-         console.log("Group loaded successfully!");
-       });
-       
-       // Or load a specific version
-       if (versions.length > 1) {
-         loadVersion(groups[0].id, versions[1].number, () => {
-           console.log("Version loaded successfully!");
-         });
-       }
-     }
-   }
-   ```
-
-   ### Analyzing Prompt Quality
-
-   ```typescript
-   import { analyzePromptWithLLM } from '@prompt-booster/core';
-   
-   async function AnalyzePrompt() {
-     const myPrompt = "Write a story about a robot that feels emotions.";
-     
-     try {
-       const analysis = await analyzePromptWithLLM(myPrompt);
-       
-       console.log(`Quality score: ${analysis.score}/10`);
-       console.log("Areas for improvement:");
-       
-       analysis.criteria
-         .filter(c => !c.passed)
-         .forEach(criterion => {
-           console.log(`- ${criterion.label}: ${criterion.feedback}`);
-           if (criterion.suggestion) {
-             console.log(`  Suggestion: ${criterion.suggestion}`);
-           }
-         });
-     } catch (error) {
-       console.error("Analysis failed:", error);
-     }
-   }
-   ```
-
-   ### Custom API Integration
-
-   ```typescript
-   import { useModelStore } from '@prompt-booster/core';
-   
-   function AddCustomModel() {
-     const { addCustomInterface, setActiveModel } = useModelStore();
-     
-     // Add a custom model interface
-     const customId = addCustomInterface({
-       name: "My Custom AI",
-       providerName: "CustomProvider",
-       apiKey: "custom-api-key",
-       baseUrl: "https://api.custom-ai-provider.com",
-       model: "custom-model-v1",
-       timeout: 60000,
-       enabled: true
-     });
-     
-     // Set as active model
-     setActiveModel(customId);
-   }
-   ```
+  - [Refactoring Highlights](#refactoring-highlights)
+
+## Overview
+
+The `@prompt-booster/core` package is the foundation of the Prompt Booster application, providing:
+
+- **Unified Model Configuration Management**: Support for multiple AI models (OpenAI, Gemini, DeepSeek, Hunyuan, Siliconflow, Ollama)
+- **Prompt Management**: Versioned prompt groups, history tracking, and optimization services
+- **Template System**: Template-based prompt optimization and generation
+- **Single Source of Truth Design**: Unified management of all prompt data through service layers
+- **Storage Utilities**: Flexible storage options supporting both persistence and in-memory storage
+- **Core Services**: Modular service architecture implementing separation of concerns
+
+## Architecture
+
+The package adopts a clear modular architecture:
+
+```markdown
+core/
+├── config/         # Constants and default configurations
+├── model/          # Model configuration and services
+│   ├── models/     # Type definitions
+│   ├── services/   # Model services
+│   ├── store/      # Model state management
+│   └── unifiedModelConfig.ts  # Unified model configuration
+├── prompt/         # Prompt management and optimization
+│   ├── hooks/      # React hooks
+│   ├── models/     # Type definitions
+│   ├── services/   # Core services
+│   │   ├── promptService.ts       # Main service coordinator
+│   │   ├── promptGroupManager.ts  # Data management
+│   │   ├── llmService.ts          # LLM call interface
+│   │   └── templateService.ts     # Template management
+│   ├── templates/  # Prompt templates
+│   └── utils/      # Utility functions
+├── storage/        # Storage services
+└── utils/          # Common utilities
+```
+
+## Core Features
+
+### Model Management
+
+The model management system provides unified configuration management through `unifiedModelConfig.ts`:
+
+- **Unified Configuration Registry**: Centralized management of all model configurations through `MODEL_REGISTRY`
+- **Supported Providers**: OpenAI, Gemini, DeepSeek, Hunyuan, Siliconflow, and Ollama
+- **Custom Interfaces**: Support for adding custom APIs compatible with OpenAI interface specifications
+- **Smart Recognition**: Automatic identification of OpenAI-compatible interfaces with appropriate processing logic
+- **Connection Testing**: Validate API connections before submission
+- **Security Management**: API key masking for enhanced security
+
+#### Example: Configuring Models
+
+```typescript
+import { useModelStore } from '@prompt-booster/core';
+
+function ModelConfig() {
+  const { configs, updateConfig } = useModelStore();
+  
+  const configureOpenAI = () => {
+    updateConfig('openai', {
+      apiKey: 'your-api-key',
+      model: 'gpt-4-turbo',
+      enabled: true
+    });
+  };
+}
+```
+
+### Prompt Management
+
+The refactored prompt management adopts a single source of truth design:
+
+- **Service Layering**:
+  - `PromptService`: Main service coordinator managing overall processes
+  - `PromptGroupManager`: Focused on data CRUD operations
+  - `LLMService`: Unified LLM call interface
+- **Version Control**: Complete version history recording and switching functionality
+- **Real-time Updates**: Streaming responses directly update version content, UI automatically responds
+- **Optimization Process**: Use AI-driven templates to enhance prompts
+- **Iterative Improvement**: Gradual prompt optimization based on user feedback
+- **User Editing**: Support manual editing and saving as new versions
+
+#### Prompt Optimization
+
+The prompt optimization system uses templates to generate better prompts:
+
+```typescript
+import { usePrompt } from '@prompt-booster/core';
+
+function PromptOptimizer() {
+  const { enhancePrompt, originalPrompt, optimizedPrompt } = usePrompt();
+  
+  const optimizeMyPrompt = async () => {
+    const result = await enhancePrompt({
+      originalPrompt: "Write a story about robots",
+      templateId: "general-optimize",
+      language: "en-US"
+    });
+    
+    // Optimized content will automatically update to optimizedPrompt
+    console.log(optimizedPrompt);
+  };
+}
+```
+
+### Storage Management
+
+Simplified storage architecture:
+
+- **Prompt Data**: Completely managed by `PromptService`, persisted through localStorage
+- **Temporary Data**: `MemoryStore` only manages test-related temporary data
+- **Storage Types**:
+  - Local Storage: Persistent browser storage
+  - Session Storage: Temporary browser session storage
+  - Memory Storage: For temporary data, automatically cleared on page refresh
+- **Auto Sync**: Through subscription mechanisms, UI automatically receives latest state
+
+## Key Components
+
+### Configuration
+
+Unified model configuration management:
+
+- **MODEL_REGISTRY**: Central configuration registry for all models
+- **Default Configurations**: Preset configurations for each model
+- **Dynamic Creation**: Automatic generation of default configurations based on registry
+
+### Model Service
+
+Model service (`model/services/modelService.ts`) provides:
+
+- **Connection Testing**: Validate API credentials and connectivity
+- **Configuration Validation**: Ensure model configurations are complete and valid
+- **API Key Security**: Mask sensitive information
+- **Unified Processing**: Standardized configuration handling for different providers
+
+### Prompt Services
+
+The refactored prompt services adopt a modular design:
+
+#### PromptService (Main Coordinator)
+- Manages overall business processes
+- Coordinates various sub-services
+- Handles state updates and notifications
+- Implements page refresh detection
+
+#### PromptGroupManager (Data Management)
+- CRUD operations for prompt groups
+- Version management
+- Data import/export
+- Pre-created version support for real-time updates
+
+#### LLMService (LLM Interface)
+- Unified LLM call interface
+- Automatic model configuration recognition
+- Support for both streaming and non-streaming responses
+- Handle provider mapping for custom interfaces
+
+### Template Service
+
+Template service (`prompt/services/templateService.ts`) manages prompt templates:
+
+- **Template Retrieval**: Get templates by ID or type
+- **Multi-language Support**: Template localization handling
+- **Default Templates**: Built-in optimization and iteration templates
+- **Dynamic Loading**: Support loading templates from file system
+
+## Hooks
+
+### `useModelStore`
+
+Manages model configuration state:
+
+```typescript
+const {
+  activeModel,          // Current active model ID
+  configs,              // Model configurations
+  customInterfaces,     // Custom API interfaces
+  setActiveModel,       // Set active model
+  updateConfig,         // Update model configuration
+  addCustomInterface,   // Add new custom interface
+  getEnabledModels,     // Get all enabled models
+  isCustomInterface,    // Check if it's a custom interface
+  getCustomInterface    // Get custom interface configuration
+} = useModelStore();
+```
+
+### `usePrompt`
+
+Unified prompt management hook providing single source of truth:
+
+```typescript
+const {
+  // State
+  activeGroup,          // Current active prompt group
+  activeVersion,        // Current active version
+  isProcessing,         // Whether processing
+  error,                // Error message
+  
+  // Data
+  originalPrompt,       // Original prompt (directly from service)
+  optimizedPrompt,      // Optimized prompt (directly from service)
+  
+  // Group operations
+  groups,               // All prompt groups
+  deleteGroup,          // Delete group
+  
+  // Version operations
+  versions,             // All versions of current group
+  switchVersion,        // Switch version
+  getGroupVersions,     // Get versions of specified group
+  
+  // Enhancement operations
+  enhancePrompt,        // Use AI to enhance prompt
+  iteratePrompt,        // Iterate existing prompt
+  saveUserModification, // Save user modifications
+  
+  // Session management
+  resetSession,         // Reset current session
+  loadFromHistory       // Load from history
+} = usePrompt();
+```
+
+### `useMemoryStore`
+
+Manages temporary test data:
+
+```typescript
+const {
+  userTestPrompt,       // User test input
+  originalResponse,     // Response from original prompt
+  optimizedResponse,    // Response from optimized prompt
+  isLoadingFromHistory, // Whether loading from history
+  
+  setUserTestPrompt,    // Set test input
+  setOriginalResponse,  // Set original response
+  setOptimizedResponse, // Set optimized response
+  clearAll              // Clear all data
+} = useMemoryStore();
+```
+
+## Utilities
+
+### ID Generation
+
+For generating unique identifiers:
+
+```typescript
+import { generateId, generatePrefixedId } from '@prompt-booster/core';
+
+const uniqueId = generateId();                  // e.g.: "lq1aef3kj2"
+const prefixedId = generatePrefixedId('user');  // e.g.: "user-lq1aef3kj2"
+```
+
+### Prompt Tools
+
+Helper functions for handling prompts:
+
+```typescript
+import { 
+  removeThinkTags, 
+  cleanOptimizedPrompt,
+  getLanguageInstruction,
+  handleTemplateLocalization 
+} from '@prompt-booster/core';
+
+// Remove <think> tags from prompt
+const cleanedPrompt = removeThinkTags(originalPrompt);
+
+// Clean optimized prompt
+const cleaned = cleanOptimizedPrompt(optimizedPrompt);
+
+// Get language instruction
+const instruction = getLanguageInstruction('en-US');
+
+// Handle template localization
+const { displayTemplates, getActualTemplateId } = 
+  handleTemplateLocalization(templates, 'en-US');
+```
+
+## Usage Examples
+
+### Basic Model Configuration
+
+```typescript
+import { useModelStore } from '@prompt-booster/core';
+
+function SetupModels() {
+  const { updateConfig, setActiveModel, addCustomInterface } = useModelStore();
+  
+  // Configure OpenAI
+  updateConfig('openai', {
+    apiKey: 'sk-your-openai-key',
+    model: 'gpt-4-turbo',
+    enabled: true
+  });
+  
+  // Add custom interface (OpenAI compatible)
+  const customId = addCustomInterface({
+    name: "Local Ollama",
+    providerName: "ollama",
+    apiKey: "not-needed",
+    baseUrl: "http://localhost:11434",
+    model: "qwen2.5:32b",
+    endpoint: "/api/chat",
+    enabled: true
+  });
+  
+  // Set as active model
+  setActiveModel('openai');
+}
+```
+
+### Optimizing Prompts
+
+```typescript
+import { usePrompt } from '@prompt-booster/core';
+
+function PromptOptimizer() {
+  const { 
+    enhancePrompt, 
+    originalPrompt, 
+    optimizedPrompt,
+    isProcessing 
+  } = usePrompt();
+  
+  const handleOptimize = async () => {
+    try {
+      await enhancePrompt({
+        originalPrompt: "Write a story about robots",
+        templateId: 'general-optimize',
+        modelId: 'openai',
+        language: 'en-US'
+      });
+      
+      // After optimization completes, optimizedPrompt will update automatically
+      console.log("Optimization complete!", optimizedPrompt);
+    } catch (error) {
+      console.error("Optimization failed:", error);
+    }
+  };
+  
+  return (
+    <div>
+      <button onClick={handleOptimize} disabled={isProcessing}>
+        {isProcessing ? 'Optimizing...' : 'Start Optimization'}
+      </button>
+    </div>
+  );
+}
+```
+
+### Using Prompt History
+
+```typescript
+import { usePrompt } from '@prompt-booster/core';
+
+function PromptHistoryBrowser() {
+  const { 
+    groups, 
+    loadFromHistory,
+    switchVersion,
+    getGroupVersions 
+  } = usePrompt();
+  
+  // Display all groups
+  return (
+    <div>
+      {groups.map(group => {
+        const versions = getGroupVersions(group.id);
+        
+        return (
+          <div key={group.id}>
+            <h3>{group.originalPrompt.slice(0, 50)}...</h3>
+            <button onClick={() => loadFromHistory(group.id)}>
+              Load This Group
+            </button>
+            
+            {/* Display versions */}
+            <div>
+              {versions.map(version => (
+                <button 
+                  key={version.id}
+                  onClick={() => switchVersion(group.id, version.number)}
+                >
+                  v{version.number}
+                </button>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+```
+
+### Analyzing Prompt Quality
+
+```typescript
+import { analyzePromptWithLLM, analyzePromptQuality } from '@prompt-booster/core';
+
+async function AnalyzePrompt() {
+  const myPrompt = "Write a story about a robot that can feel emotions.";
+  
+  try {
+    // Use LLM analysis (requires configured model)
+    const llmAnalysis = await analyzePromptWithLLM(myPrompt, 'en-US');
+    
+    console.log(`LLM Score: ${llmAnalysis.score}/10`);
+    console.log(`Encouragement: ${llmAnalysis.encouragement}`);
+    
+    // Or use local analysis (no API required)
+    const localAnalysis = analyzePromptQuality(myPrompt, 'en-US');
+    
+    console.log(`Local Score: ${localAnalysis.score}/10`);
+    
+    // Display improvement suggestions
+    localAnalysis.criteria
+      .filter(c => !c.passed)
+      .forEach(criterion => {
+        console.log(`- ${criterion.label}: ${criterion.feedback}`);
+        if (criterion.suggestion) {
+          console.log(`  Suggestion: ${criterion.suggestion}`);
+        }
+      });
+  } catch (error) {
+    console.error("Analysis failed:", error);
+  }
+}
+```
+
+### Custom API Integration
+
+```typescript
+import { useModelStore } from '@prompt-booster/core';
+
+function AddCustomModel() {
+  const { addCustomInterface, setActiveModel, testModelConnection } = useModelStore();
+  
+  // Add OpenAI-compatible custom interface
+  const customInterface = {
+    name: "FastGPT API",
+    providerName: "fastgpt",
+    apiKey: "fastgpt-api-key",
+    baseUrl: "https://api.fastgpt.in",
+    model: "gpt-4-vision-preview",
+    endpoint: "/v1/chat/completions", // OpenAI compatible
+    timeout: 120000,
+    enabled: true
+  };
+  
+  // Test connection
+  const testResult = await testModelConnection(
+    customInterface.providerName,
+    customInterface.apiKey,
+    customInterface.baseUrl,
+    customInterface.model,
+    customInterface.endpoint
+  );
+  
+  if (testResult.success) {
+    const customId = addCustomInterface(customInterface);
+    setActiveModel(customId);
+    console.log("Custom model added successfully!");
+  } else {
+    console.error("Connection test failed:", testResult.message);
+  }
+}
+```
+
+## Refactoring Highlights
+
+1. **Single Source of Truth**: All prompt data is unified under `PromptService` management, eliminating the complexity of state synchronization
+2. **Modular Design**: Service layers are clearly separated, with each service focusing on a single responsibility
+3. **Unified Configuration**: Centralized management of all model configurations through `MODEL_REGISTRY`, reducing code duplication
+4. **Real-time Updates**: Streaming responses directly update service layer data, UI automatically responds through subscriptions
+5. **Type Safety**: Complete TypeScript type definitions providing better development experience

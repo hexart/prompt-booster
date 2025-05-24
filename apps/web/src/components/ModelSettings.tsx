@@ -8,7 +8,7 @@ import { useModal } from '@prompt-booster/ui';
 import { ListPlus, Power, Link2, FileCog, Trash2 } from 'lucide-react';
 import { useModelConnection, useModelData, useModelEdit } from '../modelhooks/model-hooks';
 import { ModelModal } from './ModelModal';
-import { disableApiClientLogs } from '@prompt-booster/api/utils/connection';
+import { disableApiClientLogs } from '@prompt-booster/api/utils/apiLogging';
 import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
 import { useTranslation } from 'react-i18next';
 

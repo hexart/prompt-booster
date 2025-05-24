@@ -1,10 +1,16 @@
 // packages/core/src/model/services/modelService.ts
-import { createClient, testConnection } from '@prompt-booster/api';
+import { createClient } from '@prompt-booster/api';
 import { ModelConfig, CustomInterface, StandardModelType } from '../models/config';
 import { getDefaultModelConfig } from '../unifiedModelConfig';
 
 /**
- * 测试模型连接
+ * 测试模型连接 - 简化版本，单次测试
+ * @param provider 提供商
+ * @param apiKey API密钥  
+ * @param baseUrl 基础URL
+ * @param model 模型名称
+ * @param endpoint 端点
+ * @returns 测试结果
  */
 export async function testModelConnection(
   provider: string,
@@ -12,24 +18,16 @@ export async function testModelConnection(
   baseUrl: string,
   model: string,
   endpoint?: string
-) {
-  if (!apiKey) {
-    return {
-      success: false,
-      message: '缺少API Key，无法测试连接'
-    };
-  }
+): Promise<{ success: boolean; message: string }> {
 
-  if (!baseUrl || baseUrl.trim() === '') {
-    return {
-      success: false,
-      message: '缺少API基础URL，无法测试连接'
-    };
-  }
+  // 参数验证
+  if (!provider) return { success: false, message: '模型提供商不能为空' };
+  if (!apiKey || apiKey.trim() === '') return { success: false, message: '缺少API Key，无法测试连接' };
+  if (!baseUrl || baseUrl.trim() === '') return { success: false, message: '缺少API基础URL，无法测试连接' };
+  if (!model || model.trim() === '') return { success: false, message: '缺少模型名称，无法测试连接' };
 
   try {
-    const modelsEndpoint = '/v1/models';
-
+    // 创建API客户端
     const client = createClient({
       provider,
       apiKey,
@@ -37,13 +35,41 @@ export async function testModelConnection(
       model,
       endpoints: {
         chat: endpoint || '/v1/chat/completions',
-        models: modelsEndpoint
+        models: '/v1/models'
       }
     });
 
-    return await testConnection(client, 3);
+    // 发送测试消息
+    const response = await client.chat({
+      userMessage: '请回答ok',
+      options: {
+        maxTokens: 10,
+        temperature: 0
+      }
+    });
+
+    // 极简判断逻辑
+    if (response.error) {
+      return {
+        success: false,
+        message: `连接测试失败: ${response.error}`
+      };
+    }
+
+    if (response.data !== null && response.data !== undefined) {
+      return {
+        success: true,
+        message: '连接测试成功，模型响应正常'
+      };
+    }
+
+    return {
+      success: false,
+      message: '未收到响应数据'
+    };
+
   } catch (error: any) {
-    const errorMessage = error instanceof Error ? (error.message || '未知错误') : '未知错误';
+    const errorMessage = error instanceof Error ? error.message : '未知错误';
     return {
       success: false,
       message: `连接测试出错: ${errorMessage}`
@@ -56,10 +82,7 @@ export async function testModelConnection(
  */
 export function maskApiKey(key: string): string {
   if (!key) return '';
-
-  if (key.length <= 8) {
-    return '*'.repeat(key.length);
-  }
+  if (key.length <= 8) return '*'.repeat(key.length);
 
   const visiblePart = 3;
   const prefix = key.substring(0, visiblePart);

@@ -51,8 +51,7 @@ api/
 │   └── response.ts# 响应解析策略
 ├── types/         # TypeScript类型定义
 ├── utils/         # 工具函数
-│   ├── connection.ts # 连接测试工具
-│   ├── retry.ts      # 重试逻辑
+│   ├── apiLogging.ts # API日志控制工具
 │   └── stream.ts     # 流处理工具
 └── factory.ts     # 客户端工厂函数
 ```
@@ -62,6 +61,7 @@ api/
 - 添加对新LLM提供商的支持
 - 自定义请求/响应处理
 - 实现自定义认证策略
+- 控制API层的日志输出
 
 ## 主要特性
 
@@ -71,6 +71,7 @@ api/
 - **认证**：多种认证策略（Bearer令牌、查询参数、自定义）
 - **错误处理**：标准化的错误处理和报告
 - **重试逻辑**：内置的临时故障重试机制
+- **日志控制**：可控制的API层日志输出
 - **类型安全**：全面的TypeScript类型定义
 
 ## 支持的LLM提供商
@@ -201,32 +202,6 @@ async function askQuestion() {
 askQuestion();
 ```
 
-### 测试连接
-
-测试与LLM提供商的连接是否正常工作：
-
-```typescript
-import { createClient, testConnection } from '@prompt-booster/api';
-
-async function testLLMConnection() {
-  const client = createClient({
-    provider: 'openai',
-    apiKey: 'your-api-key',
-    model: 'gpt-4-turbo'
-  });
-  
-  const result = await testConnection(client);
-  
-  if (result.data.success) {
-    console.log('连接成功');
-  } else {
-    console.error('连接失败:', result.error || result.data.message);
-  }
-}
-
-testLLMConnection();
-```
-
 ## API参考
 
 ### 主要工厂函数
@@ -286,9 +261,6 @@ interface LLMClient {
   
   // 发送流式聊天请求
   streamChat(request: ChatRequest, streamHandler: StreamHandler): Promise<void>;
-  
-  // 测试API连接
-  testConnection(): Promise<ClientResponse<{ success: boolean; message?: string }>>;
   
   // 从提供商获取可用模型
   getModels(): Promise<Array<{ id: string; name?: string }>>;
@@ -514,60 +486,40 @@ async function advancedStreaming() {
 
 该包包含几个有用的工具函数：
 
-### 连接测试
 
-```typescript
-import { createClient, testConnection } from '@prompt-booster/api';
-
-async function testWithRetry() {
-  const client = createClient({
-    // 基本配置...
-  });
-  
-  // 使用5次重试进行测试
-  const result = await testConnection(client, 5);
-  console.log('连接结果:', result.data.success);
-}
-```
-
-### 重试逻辑
-
-```typescript
-import { withRetry } from '@prompt-booster/api';
-
-async function functionWithRetry() {
-  // 使用重试逻辑执行
-  const result = await withRetry(
-    async () => {
-      // 可能失败的函数
-      const response = await fetch('https://api.example.com/data');
-      if (!response.ok) throw new Error('API错误');
-      return await response.json();
-    },
-    3,        // 最大重试次数
-    1000,     // 初始延迟(毫秒)
-    1.5       // 延迟乘数
-  );
-  
-  return result;
-}
-```
-
-### 日志控制
+### API日志控制
 
 ```typescript
 import { 
   enableApiClientLogs,
-  disableApiClientLogs
+  disableApiClientLogs,
+  isLoggingEnabled
 } from '@prompt-booster/api';
 
-// 启用调试日志
+// 检查当前日志状态
+console.log('日志已启用:', isLoggingEnabled());
+
+// 启用API客户端调试日志
 enableApiClientLogs();
 
-// 执行操作...
+// 执行API操作，将显示详细日志
+const client = createClient({
+  provider: 'openai',
+  apiKey: 'your-api-key',
+  model: 'gpt-4-turbo'
+});
+
+await client.chat({
+  userMessage: '你好'
+});
 
 // 为生产环境禁用日志
 disableApiClientLogs();
+
+// 再次执行操作，不会显示调试日志
+await client.chat({
+  userMessage: '再次你好'
+});
 ```
 
 ### 模型令牌限制
@@ -584,49 +536,46 @@ const unknownModelLimit = getMaxTokensForModel('unknown-model', 4096);
 console.log(`未知模型令牌限制: ${unknownModelLimit}`);
 ```
 
-### React集成
+## 日志控制说明
 
-该包提供了一个用于React应用程序的流处理器创建函数：
+API包提供了细粒度的日志控制功能，允许您在开发和生产环境中灵活控制日志输出：
 
+### 日志控制函数
+
+- **`enableApiClientLogs()`** - 启用API客户端的详细调试日志
+- **`disableApiClientLogs()`** - 禁用API客户端的调试日志
+- **`isLoggingEnabled()`** - 检查当前日志启用状态
+
+### 使用场景
+
+**开发环境**: 启用日志以便调试和监控API调用
 ```typescript
-import { createDefaultStreamHandlers } from '@prompt-booster/api';
-import { useState, useRef } from 'react';
+enableApiClientLogs();
+// 执行开发和测试操作
+```
 
-function ChatComponent() {
-  const [output, setOutput] = useState('');
-  const [isStreaming, setIsStreaming] = useState(false);
-  const abortControllerRef = useRef(null);
-  
-  async function handleChat() {
-    const client = createClient({
-      // 客户端配置...
-    });
-    
-    const streamHandlers = createDefaultStreamHandlers(
-      setOutput,
-      setIsStreaming,
-      abortControllerRef
-    );
-    
-    await client.streamChat({
-      userMessage: '用户输入的消息'
-    }, streamHandlers);
-  }
-  
-  function handleCancel() {
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-  }
-  
-  return (
-    <div>
-      <div>{output}</div>
-      <button onClick={handleChat}>开始聊天</button>
-      {isStreaming && <button onClick={handleCancel}>取消</button>}
-    </div>
-  );
+**生产环境**: 禁用日志以减少控制台输出和提高性能
+```typescript
+disableApiClientLogs();
+// 执行生产操作
+```
+
+**条件日志**: 根据环境变量或配置动态控制
+```typescript
+if (process.env.NODE_ENV === 'development') {
+  enableApiClientLogs();
+} else {
+  disableApiClientLogs();
 }
 ```
 
-> 注意：`createDefaultStreamHandlers`函数已被标记为废弃，将在未来版本中移除。建议使用`createStreamHandler`函数并手动管理状态更新。
+### 注意事项
+
+- 日志控制是全局的，影响所有API客户端实例
+- 日志状态在应用程序生命周期内保持，除非显式更改
+- 日志输出包括请求详情、响应状态和错误信息
+- 建议在生产环境中禁用日志以避免敏感信息泄露
+
+## 许可证
+
+本项目采用MIT许可证和Apache许可证2.0的双重许可。详情请参阅项目根目录的许可证文件。
