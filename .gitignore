@@ -6,7 +6,6 @@ venv
 .venv
 .DS_Store
 .idea
-.vscode
 .lingma
 release
 .VSCodeCounter
