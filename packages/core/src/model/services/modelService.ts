@@ -3,6 +3,7 @@ import { createClient } from '@prompt-booster/api';
 import { ModelConfig, CustomInterface, StandardModelType } from '../models/config';
 import { getDefaultModelConfig } from '../unifiedModelConfig';
 
+type TranslationFunction = (key: string, options?: any) => string;
 /**
  * 测试模型连接 - 简化版本，单次测试
  * @param provider 提供商
@@ -17,14 +18,28 @@ export async function testModelConnection(
   apiKey: string,
   baseUrl: string,
   model: string,
-  endpoint?: string
+  endpoint?: string,
+  t?: TranslationFunction
+
 ): Promise<{ success: boolean; message: string }> {
 
   // 参数验证
-  if (!provider) return { success: false, message: '模型提供商不能为空' };
-  if (!apiKey || apiKey.trim() === '') return { success: false, message: '缺少API Key，无法测试连接' };
-  if (!baseUrl || baseUrl.trim() === '') return { success: false, message: '缺少API基础URL，无法测试连接' };
-  if (!model || model.trim() === '') return { success: false, message: '缺少模型名称，无法测试连接' };
+  if (!provider) return {
+    success: false,
+    message: t ? t('toast.validation.providerRequired') : 'Provider required'
+  };
+  if (!apiKey || apiKey.trim() === '') return {
+    success: false,
+    message: t ? t('toast.validation.apiKeyRequired') : 'API Key required'
+  };
+  if (!baseUrl || baseUrl.trim() === '') return {
+    success: false,
+    message: t ? t('toast.validation.baseUrlRequired') : 'Base URL required'
+  };
+  if (!model || model.trim() === '') return {
+    success: false,
+    message: t ? t('toast.validation.modelNameRequired') : 'Model name required'
+  };
 
   try {
     // 创建API客户端
@@ -52,27 +67,29 @@ export async function testModelConnection(
     if (response.error) {
       return {
         success: false,
-        message: `连接测试失败: ${response.error}`
+        message: t?.('toast.connection.failed', { error: response.error }) ||
+          `Connection failed: ${response.error}`
       };
     }
 
     if (response.data !== null && response.data !== undefined) {
       return {
         success: true,
-        message: '连接测试成功，模型响应正常'
+        message: t?.('toast.connection.successGeneric') || 'Connection test successful'
       };
     }
 
     return {
       success: false,
-      message: '未收到响应数据'
+      message: t?.('toast.connection.noResponseData') || 'No response data received'
     };
 
   } catch (error: any) {
-    const errorMessage = error instanceof Error ? error.message : '未知错误';
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return {
       success: false,
-      message: `连接测试出错: ${errorMessage}`
+      message: t?.('toast.connection.error', { errorMessage }) ||
+        `Connection error: ${errorMessage}`
     };
   }
 }
@@ -95,24 +112,36 @@ export function maskApiKey(key: string): string {
 /**
  * 检查模型配置是否有效
  */
-export function validateModelConfig(config: ModelConfig | CustomInterface): {
+export function validateModelConfig(config: ModelConfig | CustomInterface, t?: TranslationFunction): {
   valid: boolean;
   message?: string
 } {
   if (!config.apiKey) {
-    return { valid: false, message: '请输入API Key' };
+    return {
+      valid: false,
+      message: t?.('toast.validation.apiKeyRequired') || 'API Key required'
+    };
   }
 
   if ('providerName' in config && !config.providerName) {
-    return { valid: false, message: '请输入供应商名称' };
+    return {
+      valid: false,
+      message: t?.('toast.validation.providerNameRequired') || 'Provider name required'
+    };
   }
 
   if (!config.model) {
-    return { valid: false, message: '请输入模型名称' };
+    return {
+      valid: false,
+      message: t?.('toast.validation.modelNameRequired') || 'Model name required'
+    };
   }
 
   if (!config.baseUrl || config.baseUrl.trim() === '') {
-    return { valid: false, message: '请配置 API 基础 URL' };
+    return {
+      valid: false,
+      message: t?.('toast.validation.baseUrlRequired') || 'Base URL required'
+    };
   }
 
   return { valid: true };

@@ -25,28 +25,26 @@ export function useModelConnection() {
             const provider = model.isStandard ? model.id : (model.providerName || model.id);
             const { apiKey, baseUrl, model: modelName, endpoint } = model.config;
 
-            toast.info(t('toast.testingConnection', { modelName }));
+            toast.info(t('toast.connection.testing', { modelName }));
 
+            // 返回格式为 { success: boolean; message: string }
             const result = await testModelConnection(
                 provider,
                 apiKey,
                 baseUrl,
                 modelName,
-                endpoint
+                endpoint,
+                t
             );
 
-            if ('data' in result && result.data.success) {
-                toast.success(t('toast.connectionSuccess', { modelName }));
-            } else if ('success' in result && result.success) {
-                toast.success(t('toast.connectionSuccess', { modelName }));
+            if (result.success) {
+                toast.success(result.message);
             } else {
-                const errorMsg = 'data' in result ? result.data.message :
-                    ('message' in result ? result.message : t('toast.connectionFailed'));
-                toast.error(errorMsg);
+                toast.error(result.message);
             }
         } catch (error) {
             const errorMessage = error instanceof Error ? (error.message || '未知错误') : '未知错误';
-            toast.error(t('toast.connectionError', { errorMessage }));
+            toast.error(t('toast.connection.error', { errorMessage }));
         } finally {
             // 清除加载状态
             setTestingModels(prev => {
@@ -143,13 +141,13 @@ export function useModelData() {
 
             // 检查 apiKey 是否填写
             if (!modelConfig.apiKey || modelConfig.apiKey.trim() === '') {
-                toast.error(t('toast.enableModelFailed', { modelName: id, reason: t('toast.reasonNoApiKey') }));
+                toast.error(t('toast.enableModelFailed', { modelName: id, reason: t('toast.validation.apiKeyRequired') }));
                 return;
             }
 
             // 检查 baseUrl 是否填写（对于需要 baseUrl 的模型）
             if (id === 'hunyuan' && (!modelConfig.baseUrl || modelConfig.baseUrl.trim() === '')) {
-                toast.error(t('toast.enableModelFailed', { modelName: id, reason: t('toast.reasonNoBaseUrl') }));
+                toast.error(t('toast.enableModelFailed', { modelName: id, reason: t('toast.validation.baseUrlRequired') }));
                 return;
             }
         }
