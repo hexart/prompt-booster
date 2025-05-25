@@ -171,6 +171,7 @@
     "usingModel": "Используемая модель:",
     "userEdit": "Пользовательское Редактирование",
     "iterationDirection": "Направление итерации:",
+    "initialVersion": "Начальная версия",
     "enhancedPrompt": "Улучшенный запрос:",
     "loadVersion": "Загрузить эту версию",
     "confirmDeleteTitle": "Подтвердить удаление всей группы запросов",

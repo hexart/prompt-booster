@@ -165,6 +165,7 @@
     "usingModel": "使用モデル：",
     "userEdit": "ユーザー編集",
     "iterationDirection": "反復方向：",
+    "initialVersion": "初期バージョン",
     "enhancedPrompt": "強化されたプロンプト：",
     "loadVersion": "このバージョンを読み込む",
     "confirmDeleteTitle": "プロンプトグループ全体の削除確認",

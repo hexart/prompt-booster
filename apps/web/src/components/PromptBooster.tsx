@@ -40,6 +40,8 @@ import { useModelStore } from "@prompt-booster/core/model/store/modelStore";
 import { PromptVersion } from "@prompt-booster/core/prompt/models/prompt";
 import { useTranslation } from "react-i18next";
 import { PROMPT_PENDING_MARKER } from '@prompt-booster/core/prompt/services/promptGroupManager';
+import { getDisplayProviderName } from './PromptHistory';
+import { PROVIDER_USER_EDIT } from '@prompt-booster/core/prompt/services/promptService';
 
 export const PromptBooster: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -559,19 +561,26 @@ export const PromptBooster: React.FC = () => {
               >
                 {getGroupVersions(activeGroup.id).map(
                   (version: PromptVersion) => (
-                    <button
+                    <Tooltip
                       key={version.id}
-                      onClick={() => {
-                        switchVersion(activeGroup.id, version.number);
-                        setIsEditMode(false);
-                      }}
-                      className={`flex-none px-2 py-1 text-xs rounded-full min-w-[32px] ${version.number === activeVersion?.number
-                        ? "version-tag-active"
-                        : "version-tag-inactive"
-                        }`}
+                      text={version.provider === PROVIDER_USER_EDIT
+                        ? getDisplayProviderName(version.provider, t)
+                        : `${t('history.usingModel')}\n${getDisplayProviderName(version.provider, t)}${version.modelName ? ` - ${version.modelName}` : ''}`
+                      }
                     >
-                      v{version.number}
-                    </button>
+                      <button
+                        onClick={() => {
+                          switchVersion(activeGroup.id, version.number);
+                          setIsEditMode(false);
+                        }}
+                        className={`flex-none px-2 py-1 text-xs rounded-full min-w-[32px] ${version.number === activeVersion?.number
+                          ? "version-tag-active"
+                          : "version-tag-inactive"
+                          }`}
+                      >
+                        v{version.number}
+                      </button>
+                    </Tooltip>
                   )
                 )}
               </div>

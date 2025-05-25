@@ -369,7 +369,7 @@ export class PromptService {
         groupId,
         modifiedPrompt,
         modelInfo,
-        "用户手动修改"
+        PROVIDER_USER_EDIT
       );
 
       // 更新状态

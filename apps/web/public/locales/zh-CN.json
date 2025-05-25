@@ -165,6 +165,7 @@
     "usingModel": "使用模型：",
     "userEdit": "用户编辑",
     "iterationDirection": "迭代方向：",
+    "initialVersion": "初始版本",
     "enhancedPrompt": "增强后提示词：",
     "loadVersion": "加载此版本",
     "confirmDeleteTitle": "确认删除整组提示词",

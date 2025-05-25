@@ -224,7 +224,10 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                         {/* 版本列表 */}
                         <div className="flex space-x-2 overflow-y-visible overflow-x-auto py-2 [&::-webkit-scrollbar]:h-1">
                           {versions.map(version => (
-                            <Tooltip key={version.id} text={`${t('history.usingModel')}\n${getDisplayProviderName(version.provider, t)}${version.modelName ? ` - ${version.modelName}` : ''}`}>
+                            <Tooltip key={version.id} text={version.provider === PROVIDER_USER_EDIT
+                              ? getDisplayProviderName(version.provider, t)
+                              : `${t('history.usingModel')}\n${getDisplayProviderName(version.provider, t)}${version.modelName ? ` - ${version.modelName}` : ''}`
+                            }>
                               <button
                                 key={version.id}
                                 onClick={() => handleSelectVersion(group.id, version.number)}
@@ -242,7 +245,10 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                         <div>
                           <h3 className="text-sm font-medium mb-1 listcard-description">{t('history.iterationDirection')}</h3>
                           <div className="p-2 rounded-md text-sm whitespace-pre-wrap iteration-prompt-container">
-                            {displayVersion.iterationDirection || "无"}
+                            {displayVersion.iterationDirection
+                              ? getDisplayProviderName(displayVersion.iterationDirection, t)
+                              : t('history.initialVersion')
+                            }
                           </div>
                         </div>
 

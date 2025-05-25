@@ -168,6 +168,7 @@
     "usingModel": "Verwendetes Modell:",
     "userEdit": "Benutzerbearbeitung",
     "iterationDirection": "Iterationsrichtung:",
+    "initialVersion": "Anfangsversion",
     "enhancedPrompt": "Verbesserter Prompt:",
     "loadVersion": "Diese Version laden",
     "confirmDeleteTitle": "Löschen der gesamten Prompt-Gruppe bestätigen",

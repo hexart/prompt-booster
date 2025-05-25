@@ -168,6 +168,7 @@
     "usingModel": "Modelo usado:",
     "userEdit": "Edição do Usuário",
     "iterationDirection": "Direção de iteração:",
+    "initialVersion": "Versão inicial",
     "enhancedPrompt": "Prompt aprimorado:",
     "loadVersion": "Carregar esta versão",
     "confirmDeleteTitle": "Confirmar exclusão do grupo inteiro de prompts",
