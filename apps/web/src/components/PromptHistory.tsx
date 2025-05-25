@@ -176,7 +176,10 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                 </div>
                 <div className="flex space-x-2 items-center">
                   <button
-                    onClick={() => toggleExpand(group.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleExpand(group.id);
+                    }}
                     className="flex items-center gap-1 text-sm px-3 py-2 rounded-md button-secondary"
                   >
                     {expandedGroupId === group.id ? <ChevronsUpIcon size={15} /> : <ChevronsDownIcon size={15} />}
@@ -221,7 +224,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                         {/* 版本列表 */}
                         <div className="flex space-x-2 overflow-y-visible overflow-x-auto py-2 [&::-webkit-scrollbar]:h-1">
                           {versions.map(version => (
-                            <Tooltip key={version.id} text={`${t('history.usingModel')}\n${version.provider ? `${getDisplayProviderName(version.provider, t)}` : ''}${version.modelName}`}>
+                            <Tooltip key={version.id} text={`${t('history.usingModel')}\n${getDisplayProviderName(version.provider, t)}${version.modelName ? ` - ${version.modelName}` : ''}`}>
                               <button
                                 key={version.id}
                                 onClick={() => handleSelectVersion(group.id, version.number)}

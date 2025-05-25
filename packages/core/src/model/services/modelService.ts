@@ -41,7 +41,7 @@ export async function testModelConnection(
 
     // 发送测试消息
     const response = await client.chat({
-      userMessage: '请回答ok',
+      userMessage: 'Say hi',
       options: {
         maxTokens: 10,
         temperature: 0
