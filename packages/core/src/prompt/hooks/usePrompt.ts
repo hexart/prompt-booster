@@ -1,4 +1,4 @@
-// packages/core/src/hooks/usePrompt.ts
+// packages/core/src/prompt/hooks/usePrompt.ts
 
 /**
  * 提示词管理Hook

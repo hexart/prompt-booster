@@ -1,3 +1,4 @@
+// packages/core/src/prompt/services/llmService.ts
 /**
  * LLM服务
  * 统一处理所有LLM调用
@@ -5,6 +6,7 @@
 import { createClient, StreamHandler } from "@prompt-booster/api";
 import { useModelStore } from "../../model/store";
 
+// 接口定义
 export interface LLMServiceParams {
   userMessage: string;
   systemMessage: string;
@@ -13,10 +15,27 @@ export interface LLMServiceParams {
   onData?: (chunk: string) => void;
   onComplete?: () => void;
   onError?: (error: Error) => void;
+  abortController?: AbortController;
+}
+
+// 对比测试参数
+export interface ComparisonTestParams {
+  userMessage: string;
+  originalSystemMessage: string;
+  optimizedSystemMessage: string;
+  modelId?: string;
+  onOriginalData?: (chunk: string) => void;
+  onOptimizedData?: (chunk: string) => void;
+  onOriginalComplete?: () => void;
+  onOptimizedComplete?: () => void;
+  onOriginalError?: (error: Error) => void;
+  onOptimizedError?: (error: Error) => void;
+  originalAbortController?: AbortController;
+  optimizedAbortController?: AbortController;
 }
 
 export class LLMService {
-  // 调用LLM
+  // 基础调用LLM方法（保持兼容）
   async callLLM(params: LLMServiceParams): Promise<string> {
     const {
       userMessage,
@@ -26,6 +45,7 @@ export class LLMService {
       onData,
       onComplete,
       onError,
+      abortController,
     } = params;
 
     // 获取模型配置
@@ -65,10 +85,62 @@ export class LLMService {
       onError: (error: Error) => {
         onError?.(error);
       },
+      abortController: abortController,
     };
 
     await client.streamChat(request, handler);
     return fullResponse;
+  }
+
+  // 专门的对比测试方法
+  async runComparisonTest(params: ComparisonTestParams): Promise<void> {
+    const {
+      userMessage,
+      originalSystemMessage,
+      optimizedSystemMessage,
+      modelId,
+      onOriginalData,
+      onOptimizedData,
+      onOriginalComplete,
+      onOptimizedComplete,
+      onOriginalError,
+      onOptimizedError,
+      originalAbortController,
+      optimizedAbortController
+    } = params;
+
+    // 原始提示词测试
+    const originalPromise = this.callLLM({
+      userMessage,
+      systemMessage: originalSystemMessage,
+      modelId,
+      stream: true,
+      onData: onOriginalData,
+      onComplete: onOriginalComplete,
+      onError: onOriginalError,
+      abortController: originalAbortController,
+    });
+
+    // 优化提示词测试
+    const optimizedPromise = this.callLLM({
+      userMessage,
+      systemMessage: optimizedSystemMessage,
+      modelId,
+      stream: true,
+      onData: onOptimizedData,
+      onComplete: onOptimizedComplete,
+      onError: onOptimizedError,
+      abortController: optimizedAbortController,
+    });
+
+    // 启动两个独立的请求，不等待结果
+    originalPromise.catch(() => {
+      // 错误已在 onError 中处理
+    });
+
+    optimizedPromise.catch(() => {
+      // 错误已在 onError 中处理
+    });
   }
 
   // 获取模型配置

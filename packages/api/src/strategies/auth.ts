@@ -1,3 +1,4 @@
+// packages/api/src/strategies/auth.ts
 /**
  * 认证策略实现
  * 实现不同类型的API认证方法

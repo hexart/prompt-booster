@@ -1,3 +1,4 @@
+// packages/api/src/utils/stream.ts
 /**
  * 流处理工具
  * 处理流式响应数据

@@ -1,3 +1,4 @@
+// packages/api/src/strategies/response.ts
 /**
  * 响应解析策略实现
  * 实现不同LLM服务的响应解析

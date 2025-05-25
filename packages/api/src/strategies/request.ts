@@ -1,3 +1,4 @@
+// packages/api/src/strategies/request.ts
 /**
  * 请求格式化策略实现
  * 实现不同LLM服务的请求格式化

@@ -1,3 +1,4 @@
+// packages/api/src/client/errors.ts
 /**
  * 错误类定义
  * 定义API客户端可能遇到的错误

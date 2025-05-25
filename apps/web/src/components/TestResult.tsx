@@ -5,8 +5,7 @@ import { useModelStore } from '@prompt-booster/core/model/store/modelStore';
 import { cleanOptimizedPrompt } from '@prompt-booster/core/prompt/utils/promptUtils';
 import { usePrompt } from '@prompt-booster/core/prompt/hooks/usePrompt';
 import { useMemoryStore } from '@prompt-booster/core/storage/memoryStorage';
-import { createClient } from '@prompt-booster/api/factory';
-import { createStreamHandler } from '@prompt-booster/api/utils/stream';
+import { llmService } from '@prompt-booster/core/prompt/services/llmService';
 import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
 import { RocketIcon, MinimizeIcon, MaximizeIcon, ArrowLeftFromLineIcon, ArrowRightFromLineIcon, ArrowDownFromLineIcon, ArrowUpFromLineIcon } from 'lucide-react';
 import LoadingIcon from '@prompt-booster/ui/components/LoadingIcon';
@@ -200,18 +199,6 @@ export const TestResult: React.FC = () => {
       // 使用selectedTestModelId模型配置进行两次测试
       const clientConfig = getClientConfig(selectedTestModelId);
 
-      // 创建原始提示词配置
-      const originalClient = createClient({
-        ...clientConfig,
-        // 如果需要覆盖任何特定配置
-      });
-
-      // 创建增强提示词配置
-      const optimizedClient = createClient({
-        ...clientConfig,
-        // 如果需要覆盖任何特定配置
-      });
-
       // 添加调试日志
       console.log('开始对比测试，使用模型:', clientConfig.model);
 
@@ -230,62 +217,53 @@ export const TestResult: React.FC = () => {
       console.log('User prompt (前100字符):', userTestPrompt.substring(0, 100));
 
       // 并行执行两个测试
-      await Promise.all([
-        // 原始提示词测试
-        originalClient.streamChat({
+      await Promise.allSettled([
+        llmService.callLLM({
           userMessage: userTestPrompt,
-          systemMessage: originalPrompt
-        }, createStreamHandler(
-          // 确保每次都是累加内容
-          (chunk: string) => {
-            // console.log(`原始提示词收到数据: ${chunk.length}字符`);
-            appendToOriginalResponse(chunk);
-          },
-          // 错误处理
-          (error: Error) => {
-            console.error('原始提示词错误:', error);
-            setIsTestingOriginal(false);
-            setError(`原始提示词测试错误: ${error.message}`);
-          },
-          // 完成处理
-          () => {
+          systemMessage: originalPrompt,
+          modelId: selectedTestModelId,
+          stream: true,
+          onData: appendToOriginalResponse,
+          onComplete: () => {
             setIsTestingOriginal(false);
             toast.success(t('toast.originalResponseCompleted'));
+          },
+          onError: (error: Error) => {
+            console.error('原始提示词错误:', error);
+            setIsTestingOriginal(false);
+            toast.error(`原始提示词测试错误: ${error.message}`);
           }
-        )),
+        }),
 
-        // 增强提示词测试
-        optimizedClient.streamChat({
+        llmService.callLLM({
           userMessage: userTestPrompt,
-          systemMessage: cleanedOptimizedPrompt
-        }, createStreamHandler(
-          // 同样确保累加内容
-          (chunk: string) => {
-            // console.log(`增强提示词收到数据: ${chunk.length}字符`);
-            appendToOptimizedResponse(chunk);
-          },
-          // 错误处理
-          (error: Error) => {
-            console.error('增强提示词错误:', error);
-            setIsTestingOptimized(false);
-            setError(`增强提示词测试错误: ${error.message}`);
-          },
-          // 完成处理
-          () => {
+          systemMessage: cleanedOptimizedPrompt,
+          modelId: selectedTestModelId,
+          stream: true,
+          onData: appendToOptimizedResponse,
+          onComplete: () => {
             setIsTestingOptimized(false);
             toast.success(t('toast.enhancedResponseCompleted'));
+          },
+          onError: (error: Error) => {
+            console.error('优化提示词错误:', error);
+            setIsTestingOptimized(false);
+            toast.error(`优化提示词测试错误: ${error.message}`);
           }
-        ))
+        })
       ]);
 
-    } catch (error) {
-      console.error('对比测试错误:', error);
-      const errorMessage = error instanceof Error ?
-        error.message :
-        (typeof error === 'string' ? error : '对比测试过程中发生网络连接错误');
+      // 两个测试都完成后的统一处理
+      console.log('🎉 对比测试全部完成');
 
-      setError(errorMessage);
-    } finally {
+      // 检查是否还有正在运行的测试（防止竞态条件）
+      if (!isTestingOriginal && !isTestingOptimized) {
+        toast.success(t('toast.comparisonTestAllCompleted') || '对比测试全部完成');
+      }
+
+    } catch (error) {
+      console.error('对比测试意外错误:', error);
+      setError('对比测试过程中发生意外错误');
       setIsTestingOriginal(false);
       setIsTestingOptimized(false);
     }
@@ -463,13 +441,10 @@ export const TestResult: React.FC = () => {
           {/* 运行对比测试按钮 */}
           <Tooltip text={t('testResult.runComparisonTest')}>
             <button
-              className={`flex gap-2 items-center px-3 py-2 rounded-md h-10 min-w-[30%] truncate transition-colors duration-500 button-confirm
-                                ${isTestingOriginal || isTestingOptimized
-                  ? 'cursor-not-allowed opacity-50'
-                  : ''
+              className={`flex gap-2 items-center px-3 py-2 rounded-md h-10 min-w-[30%] truncate transition-colors duration-500 button-confirm ${isTestingOriginal || isTestingOptimized ? 'cursor-not-allowed opacity-50' : ''
                 }`}
-              onClick={isTestingOriginal || isTestingOptimized ? stopStreaming : runComparisonTest}
-              disabled={!isTestingOriginal && !isTestingOptimized && (
+              onClick={runComparisonTest}
+              disabled={isTestingOriginal || isTestingOptimized || (
                 !originalPrompt?.trim() ||
                 (!optimizedPrompt?.trim() && !isProcessing) ||
                 !userTestPrompt.trim() ||
