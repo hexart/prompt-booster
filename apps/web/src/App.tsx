@@ -9,6 +9,7 @@ import Header, { TabType } from './components/Header';
 import { ThemeProvider } from '@prompt-booster/ui/components/ThemeContext';
 import { Toaster } from '@prompt-booster/ui';
 import { useTranslation } from 'react-i18next';
+import { setDirectionByLanguage } from './rtl';
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -19,6 +20,8 @@ function App() {
   useEffect(() => {
     document.documentElement.lang = i18n.language;
     document.title = t('common.appName');
+
+    setDirectionByLanguage(i18n.language);
   }, [t, i18n.language]);
 
   // 检测窗口大小变化以适应响应式布局
