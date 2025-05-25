@@ -730,9 +730,15 @@ export const PromptBooster: React.FC = () => {
                       {/* 三条维度骨架 */}
                       <div className="p-4 drawer-analysis-container rounded-lg">
                         {[1, 2, 3].map((i) => (
-                          <div key={i} className="space-y-2 mb-4 last:mb-0">
-                            <div className="h-4 drawer-skeleton rounded w-3/4" />
-                            <div className="h-3 drawer-skeleton rounded w-1/2" />
+                          <div key={i} className="flex gap-2 items-start justify-between mb-4 last:mb-0">
+                            <div className="flex items-start gap-2 w-[85%]">
+                              <div className="h-4 w-4 drawer-skeleton rounded mt-0.5 flex-shrink-0" />
+                              <div className="space-y-2 flex-1">
+                                <div className="h-4 drawer-skeleton rounded w-3/4" />
+                                <div className="h-3 drawer-skeleton rounded w-1/2" />
+                              </div>
+                            </div>
+                            <div className="h-3 drawer-skeleton rounded w-12 flex-shrink-0" />
                           </div>
                         ))}
                       </div>
