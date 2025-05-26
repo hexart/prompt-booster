@@ -28,7 +28,8 @@
       "collapse": "접기",
       "copy": "복사"
     },
-    "dropdownNull": "사용 가능한 옵션 없음"
+    "dropdownNull": "사용 가능한 옵션 없음",
+    "newVersinFound": "새 버전 발견: {{version}}"
   },
   "toast": {
     "copySuccess": "클립보드에 복사됨",

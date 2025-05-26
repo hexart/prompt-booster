@@ -28,7 +28,8 @@
       "collapse": "Einklappen",
       "copy": "Kopieren"
     },
-    "dropdownNull": "Keine Optionen verfügbar"
+    "dropdownNull": "Keine Optionen verfügbar",
+    "newVersinFound": "Neue Version gefunden: {{version}}"
   },
   "toast": {
     "copySuccess": "In die Zwischenablage kopiert",

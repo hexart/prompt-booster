@@ -28,7 +28,8 @@
       "collapse": "संकुचित करें",
       "copy": "कॉपी करें"
     },
-    "dropdownNull": "कोई विकल्प उपलब्ध नहीं"
+    "dropdownNull": "कोई विकल्प उपलब्ध नहीं",
+    "newVersinFound": "नया संस्करण मिला: {{version}}"
   },
   "toast": {
     "copySuccess": "क्लिपबोर्ड पर कॉपी किया गया",

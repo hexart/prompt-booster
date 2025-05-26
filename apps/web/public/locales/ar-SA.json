@@ -28,7 +28,8 @@
       "collapse": "طي",
       "copy": "نسخ"
     },
-    "dropdownNull": "لا توجد خيارات متاحة"
+    "dropdownNull": "لا توجد خيارات متاحة",
+    "newVersinFound": "تم العثور على إصدار جديد: {{version}}"
   },
   "toast": {
     "copySuccess": "تم النسخ إلى الحافظة",

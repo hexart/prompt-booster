@@ -28,7 +28,8 @@
       "collapse": "折りたたむ",
       "copy": "コピー"
     },
-    "dropdownNull": "選択肢がありません"
+    "dropdownNull": "選択肢がありません",
+    "newVersinFound": "新しいバージョンが見つかりました：{{version}}"
   },
   "toast": {
     "copySuccess": "クリップボードにコピーしました",

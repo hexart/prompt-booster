@@ -74,7 +74,7 @@ function App() {
                 Hexart Studio © 2025
               </span>
               {versionInfo.hasUpdate ? (
-                <Tooltip text={`New version available: ${versionInfo.latest} (Click to view updates)`}>
+                <Tooltip text={t('common.newVersionFound', { version: versionInfo.latest })}>
                   <a
                     href="https://github.com/hexart/prompt-booster"
                     target="_blank"
@@ -86,13 +86,11 @@ function App() {
                   </a>
                 </Tooltip>
               ) : (
-                <Tooltip text={`Current version: ${versionInfo.current}`}>
                 <span
                   className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium version-badge"
                 >
                   v{versionInfo.current}
                 </span>
-                </Tooltip>
               )}
               <a href="https://hits.sh/hexart.github.io/prompt-booster/">
                 <img alt="Hits" src="https://hits.sh/hexart.github.io/prompt-booster.svg?color=1196cc" />

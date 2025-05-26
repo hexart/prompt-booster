@@ -28,7 +28,8 @@
       "collapse": "收缩",
       "copy": "复制"
     },
-    "dropdownNull": "没有可选项"
+    "dropdownNull": "没有可选项",
+    "newVersinFound": "发现新版本：{{version}}"
   },
   "toast": {
     "copySuccess": "已复制到剪贴板",

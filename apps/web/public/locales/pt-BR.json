@@ -28,7 +28,8 @@
       "collapse": "Recolher",
       "copy": "Copiar"
     },
-    "dropdownNull": "Nenhuma opção disponível"
+    "dropdownNull": "Nenhuma opção disponível",
+    "newVersinFound": "Nova versão encontrada: {{version}}"
   },
   "toast": {
     "copySuccess": "Copiado para a área de transferência",

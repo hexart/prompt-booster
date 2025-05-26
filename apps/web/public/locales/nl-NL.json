@@ -28,7 +28,8 @@
       "collapse": "Invouwen",
       "copy": "Kopiëren"
     },
-    "dropdownNull": "Geen opties beschikbaar"
+    "dropdownNull": "Geen opties beschikbaar",
+    "newVersinFound": "Nieuwe versie gevonden: {{version}}"
   },
   "toast": {
     "copySuccess": "Gekopieerd naar klembord",

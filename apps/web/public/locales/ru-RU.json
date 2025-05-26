@@ -28,7 +28,8 @@
       "collapse": "Свернуть",
       "copy": "Копировать"
     },
-    "dropdownNull": "Нет доступных вариантов"
+    "dropdownNull": "Нет доступных вариантов",
+    "newVersinFound": "Найдена новая версия: {{version}}"
   },
   "toast": {
     "copySuccess": "Скопировано в буфер обмена",
