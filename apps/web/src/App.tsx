@@ -10,12 +10,14 @@ import { ThemeProvider } from '@prompt-booster/ui/components/ThemeContext';
 import { Toaster } from '@prompt-booster/ui';
 import { useTranslation } from 'react-i18next';
 import { setDirectionByLanguage } from './rtl';
+import { useVersionChecker } from './hooks/useVersionChecker';
 
 function App() {
   const { t, i18n } = useTranslation();
   const [activeTab, setActiveTab] = useState<TabType>('booster');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const versionInfo = useVersionChecker();
 
   useEffect(() => {
     document.documentElement.lang = i18n.language;
@@ -68,8 +70,27 @@ function App() {
           <div className="w-full max-w-(--breakpoint-2xl) mx-auto px-4 sm:px-6 lg:px-8 py-2 md:py-3">
             <div className="text-center text-sm flex items-center justify-center space-x-3">
               <span>
-                Hexart Studio © 2025 · MIT/Apache
+                Hexart Studio © 2025
               </span>
+              {versionInfo.hasUpdate ? (
+                <a
+                  href="https://github.com/hexart/prompt-booster"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium transition-colors duration-200 version-badge"
+                  title={`New version available: ${versionInfo.latest} (Click to view updates)`}
+                >
+                  v{versionInfo.current}
+                  <span className="w-2 h-2 rounded-full animate-pulse version-update-dot" />
+                </a>
+              ) : (
+                <span
+                  className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium version-badge"
+                  title={`Current version: ${versionInfo.current}`}
+                >
+                  v{versionInfo.current}
+                </span>
+              )}
               <a href="https://hits.sh/hexart.github.io/prompt-booster/">
                 <img alt="Hits" src="https://hits.sh/hexart.github.io/prompt-booster.svg?color=1196cc" />
               </a>

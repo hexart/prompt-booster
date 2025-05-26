@@ -217,6 +217,14 @@ button:disabled {
   .footer {
     @apply font-latin border-t border-gray-200 bg-white dark:bg-gray-950/30 dark:border-gray-800 text-gray-500 dark:text-gray-400;
   }
+  /* 版本号颜色样式 */
+  .version-badge {
+    @apply bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400;
+  }
+
+  .version-update-dot {
+    @apply bg-orange-500;
+  }
   .mask {
     @apply bg-white/40 dark:bg-black/40 backdrop-blur-md z-50;
     .dialog {

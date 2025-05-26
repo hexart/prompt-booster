@@ -2,8 +2,11 @@
 import { defineConfig } from 'vite';
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react';
+import { readFileSync } from 'fs'
 import path from 'path';
 import { resolve } from 'path';
+
+const packageJson = JSON.parse(readFileSync('./package.json', 'utf-8'))
 
 export default defineConfig({
   base: './',
@@ -14,7 +17,8 @@ export default defineConfig({
   define: {
     'process.env': '{}',
     'global': 'globalThis',
-    'Buffer': ['buffer', 'Buffer']
+    'Buffer': ['buffer', 'Buffer'],
+    __APP_VERSION__: JSON.stringify(packageJson.version)
   },
   resolve: {
     alias: {

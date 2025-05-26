@@ -4,7 +4,7 @@ import { type StandardModelType, type ModelConfig, type CustomInterface } from '
 import { createClient } from '@prompt-booster/api/factory';
 import { validateModelConfig, getDefaultBaseUrl } from '@prompt-booster/core/model/services/modelService';
 import { Dialog, ModelSelector, toast } from '@prompt-booster/ui';
-import { useModelForm } from '../modelhooks/model-hooks';
+import { useModelForm } from '../hooks/model-hooks';
 import { EyeIcon, EyeClosedIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
