@@ -11,6 +11,7 @@ import { Toaster } from '@prompt-booster/ui';
 import { useTranslation } from 'react-i18next';
 import { setDirectionByLanguage } from './rtl';
 import { useVersionChecker } from './hooks/useVersionChecker';
+import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
 
 function App() {
   const { t, i18n } = useTranslation();
@@ -73,23 +74,25 @@ function App() {
                 Hexart Studio © 2025
               </span>
               {versionInfo.hasUpdate ? (
-                <a
-                  href="https://github.com/hexart/prompt-booster"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium transition-colors duration-200 version-badge"
-                  title={`New version available: ${versionInfo.latest} (Click to view updates)`}
-                >
-                  v{versionInfo.current}
-                  <span className="w-2 h-2 rounded-full animate-pulse version-update-dot" />
-                </a>
+                <Tooltip text={`New version available: ${versionInfo.latest} (Click to view updates)`}>
+                  <a
+                    href="https://github.com/hexart/prompt-booster"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium transition-colors duration-200 version-badge"
+                  >
+                    v{versionInfo.current}
+                    <span className="w-2 h-2 rounded-full animate-pulse version-update-dot" />
+                  </a>
+                </Tooltip>
               ) : (
+                <Tooltip text={`Current version: ${versionInfo.current}`}>
                 <span
                   className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium version-badge"
-                  title={`Current version: ${versionInfo.current}`}
                 >
                   v{versionInfo.current}
                 </span>
+                </Tooltip>
               )}
               <a href="https://hits.sh/hexart.github.io/prompt-booster/">
                 <img alt="Hits" src="https://hits.sh/hexart.github.io/prompt-booster.svg?color=1196cc" />
