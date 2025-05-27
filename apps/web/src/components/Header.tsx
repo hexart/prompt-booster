@@ -8,6 +8,7 @@ import logo from '../assets/logo.svg';
 import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
 import { LanguageSwitcher } from '@prompt-booster/ui/components/LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
+import { getDocumentDirection } from '../rtl';
 
 // 为 Electron 的拖动区域属性创建类型声明
 declare module 'react' {
@@ -81,7 +82,7 @@ const Header: React.FC<HeaderProps> = ({
 
                         <div className="flex items-center" style={nonDraggableStyle}>
                             {/* 桌面端卡片导航 */}
-                            <div className="hidden md:flex tab-container rounded-lg p-1 mr-2">
+                            <div className="hidden md:flex tab-container rounded-lg p-1">
                                 {tabs.map((tab) => {
                                     const Icon = tab.icon;
                                     return (
@@ -112,10 +113,10 @@ const Header: React.FC<HeaderProps> = ({
                             <LanguageSwitcher />
 
                             {/* 移动端菜单按钮 */}
-                            <div className='md:hidden ml-2 p-1 rounded-lg mobile-menu-button-container'>
+                            <div className={`md:hidden ${getDocumentDirection() === 'rtl' ? 'mr-2' : ''} p-1 rounded-lg mobile-menu-button-container`}>
                                 <button
                                     ref={menuButtonRef}
-                                    className="p-2 rounded-md mobile-menu-button"
+                                    className="w-10 h-10 p-2 rounded-md mobile-menu-button"
                                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                                     aria-label={isMobileMenuOpen ? t('aria.closeMenu') : t('aria.openMenu')}
                                     aria-expanded={isMobileMenuOpen}

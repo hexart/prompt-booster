@@ -11,6 +11,7 @@ import { ModelModal } from './ModelModal';
 import { disableApiClientLogs } from '@prompt-booster/api/utils/apiLogging';
 import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
 import { useTranslation } from 'react-i18next';
+import { getDocumentDirection } from '../rtl';
 
 // 在应用初始化时禁用 API 客户端日志
 disableApiClientLogs();
@@ -267,7 +268,8 @@ export const ModelSettings: React.FC = () => {
                                 {!model.isStandard && (
                                     <button
                                         onClick={() => handleDeleteCustomInterface(model.id)}
-                                        className="px-3 py-2 rounded-md text-sm inline-flex items-center gap-1 button-secondary-danger"
+                                        className={`${getDocumentDirection() === 'rtl' ? 'mr-2' : ''} px-3 py-2 rounded-md text-sm inline-flex items-center gap-1 button-secondary-danger`}
+
                                     >
                                         <Trash2 size={14} />
                                         <span className="hidden md:inline whitespace-nowrap">{t('common.buttons.delete')}</span>

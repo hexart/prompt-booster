@@ -245,7 +245,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
         : 'theme-dropdown-inactive';
     
     return (
-        <div className={`ml-2 relative inline-block ${className}`} ref={dropdownRef}>
+        <div className={`relative inline-block ${className}`} ref={dropdownRef}>
             <div className="theme-container">
                 <Tooltip 
                     text={enableHotkeys 

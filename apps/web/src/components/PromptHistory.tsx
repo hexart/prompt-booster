@@ -163,8 +163,8 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
 
           return (
             <div key={group.id} className="border rounded-lg p-3 shadow-2xs hover:shadow-md listcard-container">
-              <div className="flex justify-between items-center mb-2 hover:cursor-pointer" onClick={() => toggleExpand(group.id)}>
-                <div className="flex items-center gap-2">
+              <div className="flex justify-between items-center mb-2 hover:cursor-pointer listcard-title-container" onClick={() => toggleExpand(group.id)}>
+                <div className="flex items-center gap-2 listcard-text-container">
                   <span className="text-sm listcard-description">
                     {formatTimestamp(group.updatedAt)}
                   </span>
@@ -174,7 +174,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                     </span>
                   )}
                 </div>
-                <div className="flex space-x-2 items-center">
+                <div className="flex gap-2 items-center listcard-button-container">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -222,7 +222,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                         </div>
 
                         {/* 版本列表 */}
-                        <div className="flex space-x-2 overflow-y-visible overflow-x-auto py-2 [&::-webkit-scrollbar]:h-1">
+                        <div className="flex gap-2 overflow-y-visible overflow-x-auto py-2 [&::-webkit-scrollbar]:h-1">
                           {versions.map(version => (
                             <Tooltip key={version.id} text={version.provider === PROVIDER_USER_EDIT
                               ? getDisplayProviderName(version.provider, t)

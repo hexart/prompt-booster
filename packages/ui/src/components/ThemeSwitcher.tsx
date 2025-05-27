@@ -12,7 +12,7 @@ type ThemeType = 'light' | 'dark' | 'system';
 // 样式类名
 const THEME_CLASSES = {
     container: 'theme-container',
-    button: 'theme-button',
+    button: 'w-10 h-10 theme-button',
     dropdownContainer: 'theme-dropdown-container',
     light: {
         active: 'theme-light-active',
@@ -187,7 +187,7 @@ const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
         : 'theme-dropdown-inactive';
 
     return (
-        <div className="relative inline-block" ref={dropdownRef}>
+        <div className="mx-2 relative inline-block" ref={dropdownRef}>
             {/* 大屏幕按钮组 */}
             <div className={`hidden lg:!flex gap-1 ${THEME_CLASSES.container}`}>
                 {Object.keys(themeConfig).map(key => renderThemeButton(key as ThemeType))}
