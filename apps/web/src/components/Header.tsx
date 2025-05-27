@@ -1,5 +1,5 @@
 // src/components/Header.tsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { RocketIcon, Columns2Icon, GalleryVerticalEndIcon, CogIcon } from 'lucide-react';
 import ThemeSwitcher from '@prompt-booster/ui/components/ThemeSwitcher';
@@ -8,7 +8,7 @@ import logo from '../assets/logo.svg';
 import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
 import { LanguageSwitcher } from '@prompt-booster/ui/components/LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
-import { getDocumentDirection } from '../rtl';
+import { getTooltipPosition, isRTL } from '../rtl';
 
 // 为 Electron 的拖动区域属性创建类型声明
 declare module 'react' {
@@ -34,7 +34,36 @@ const Header: React.FC<HeaderProps> = ({
     setIsMobileMenuOpen,
     menuButtonRef
 }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
+    
+    // 计算 Tooltip 位置的辅助函数
+    const calculateTooltipPositions = () => ({
+        mobile: getTooltipPosition('left'), // 使用自动镜像逻辑
+        mobileMenu: getTooltipPosition('left')
+    });
+    
+    // 使用状态管理 Tooltip 位置，确保能实时更新
+    const [tooltipPositions, setTooltipPositions] = useState(calculateTooltipPositions);
+    
+    // 监听语言变化和初始化，自动更新 Tooltip 位置
+    useEffect(() => {
+        const updateTooltipPositions = () => {
+            requestAnimationFrame(() => {
+                setTooltipPositions(calculateTooltipPositions());
+            });
+        };
+
+        // 初始化时也需要计算一次，以防页面加载时就是 RTL 语言
+        updateTooltipPositions();
+
+        // 监听语言变化
+        i18n.on('languageChanged', updateTooltipPositions);
+        
+        return () => {
+            i18n.off('languageChanged', updateTooltipPositions);
+        };
+    }, [i18n]);
+    
     const tabs = [
         { id: 'booster', icon: RocketIcon, label: t('common.tabs.booster'), shortcut: '⌥+1' },
         { id: 'test', icon: Columns2Icon, label: t('common.tabs.test'), shortcut: '⌥+2' },
@@ -64,7 +93,7 @@ const Header: React.FC<HeaderProps> = ({
                 className="sticky top-0 w-full z-40 shadow-2xs header"
                 style={{ WebkitAppRegion: 'drag' as const }}
             >
-                <div className="w-full max-w-(--breakpoint-2xl) mx-auto px-4 md:px-6 py-4">
+                <div className="w-full max-w-(--breakpoint-2xl) mx-auto px-2 md:px-6 py-4">
                     <div className="flex justify-between items-center">
                         <div className="flex items-center min-w-24">
                             <Tooltip text={t('common.wuKong')} position='bottom'>
@@ -80,7 +109,7 @@ const Header: React.FC<HeaderProps> = ({
                             </h1>
                         </div>
 
-                        <div className="flex items-center" style={nonDraggableStyle}>
+                        <div className="flex items-center gap-2" style={nonDraggableStyle}>
                             {/* 桌面端卡片导航 */}
                             <div className="hidden md:flex tab-container rounded-lg p-1">
                                 {tabs.map((tab) => {
@@ -106,14 +135,21 @@ const Header: React.FC<HeaderProps> = ({
                                 })}
                             </div>
 
-                            {/* 主题切换按钮 - 使用断点控制内部渲染模式 */}
-                            <ThemeSwitcher />
+                            {/* 主题切换按钮 */}
+                            <ThemeSwitcher 
+                                mobileTooltipPosition={tooltipPositions.mobile}
+                                mobileMenuTooltipPosition={tooltipPositions.mobileMenu}
+                                desktopTooltipPosition="bottom"
+                            />
 
-                            {/* 添加语言切换器 */}
-                            <LanguageSwitcher />
+                            {/* 语言切换器 */}
+                            <LanguageSwitcher 
+                                tooltipPosition={tooltipPositions.mobile}
+                                menuTooltipPosition={tooltipPositions.mobileMenu}
+                            />
 
                             {/* 移动端菜单按钮 */}
-                            <div className={`md:hidden ${getDocumentDirection() === 'rtl' ? 'mr-2' : ''} p-1 rounded-lg mobile-menu-button-container`}>
+                            <div className={`md:hidden p-1 rounded-lg mobile-menu-button-container`}>
                                 <button
                                     ref={menuButtonRef}
                                     className="w-10 h-10 p-2 rounded-md mobile-menu-button"
@@ -161,6 +197,7 @@ const Header: React.FC<HeaderProps> = ({
                 activeTab={activeTab}
                 onTabChange={(tabId) => setActiveTab(tabId as TabType)}
                 toggleButtonRef={menuButtonRef}
+                isRTL={isRTL()}
             />
         </>
     );

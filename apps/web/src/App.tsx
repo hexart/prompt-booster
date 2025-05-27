@@ -72,7 +72,7 @@ function App() {
 
         <footer className="mt-auto footer">
           <div className="w-full max-w-(--breakpoint-2xl) mx-auto px-4 sm:px-6 lg:px-8 py-2 md:py-3">
-            <div className="text-center text-sm flex items-center justify-center space-x-3">
+            <div className="flex text-center text-sm items-center justify-center gap-2">
               <span>
                 Hexart Studio © 2025
               </span>
@@ -81,7 +81,7 @@ function App() {
                   href="https://hexart.github.io/prompt-booster/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium version-badge"
+                  className="inline-flex items-center gap-1 px-1 py-0.5 rounded text-xs font-medium version-badge"
                 >
                   v{__APP_VERSION__}
                 </a>

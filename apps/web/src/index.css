@@ -78,7 +78,9 @@
   animation: menuScaleIn 0.25s ease-out forwards;
   transform-origin: top right;
 }
-
+.menu-container-animation.rtl {
+    transform-origin: top left;
+}
 .menu-item-animation {
   animation: slideIn 0.8s ease-out forwards;
 }
@@ -197,7 +199,7 @@ button:disabled {
     @apply bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500;
   }
   .listcard-container {
-    @apply bg-white border-gray-200 dark:bg-gray-700 dark:border-gray-600;
+    @apply mx-1 bg-white border-gray-200 dark:bg-gray-700 dark:border-gray-600;
     .listcard-title {
       @apply text-gray-500 dark:text-white;
     }
@@ -219,7 +221,7 @@ button:disabled {
   }
   /* 版本号颜色样式 */
   .version-badge {
-    @apply bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400;
+    @apply bg-gray-100 hover:bg-gray-200 text-gray-500 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-400;
   }
   .mask {
     @apply bg-white/40 dark:bg-black/40 backdrop-blur-md z-50;

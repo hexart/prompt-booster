@@ -10,6 +10,7 @@ import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
 import { RocketIcon, MinimizeIcon, MaximizeIcon, ArrowLeftFromLineIcon, ArrowRightFromLineIcon, ArrowDownFromLineIcon, ArrowUpFromLineIcon } from 'lucide-react';
 import LoadingIcon from '@prompt-booster/ui/components/LoadingIcon';
 import { useTranslation } from 'react-i18next';
+import { isRTL } from '../rtl';
 
 export const TestResult: React.FC = () => {
   const { t } = useTranslation();
@@ -385,6 +386,7 @@ export const TestResult: React.FC = () => {
               ]}
               onClose={() => setShowRequirements(false)}
               className='w-60 backdrop-blur-md shadow-lg rounded-lg dragable-notice-container'
+              isRTL={isRTL()}
             />
           )}
           {/* textarea区域 */}

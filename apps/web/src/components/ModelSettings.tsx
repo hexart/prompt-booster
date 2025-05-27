@@ -11,7 +11,6 @@ import { ModelModal } from './ModelModal';
 import { disableApiClientLogs } from '@prompt-booster/api/utils/apiLogging';
 import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
 import { useTranslation } from 'react-i18next';
-import { getDocumentDirection } from '../rtl';
 
 // 在应用初始化时禁用 API 客户端日志
 disableApiClientLogs();
@@ -226,10 +225,10 @@ export const ModelSettings: React.FC = () => {
                             <div className="text-sm mt-1 truncate listcard-description">{desc}</div>
                         )}
                         actions={(
-                            <div className="flex items-center">
+                            <div className="flex items-center gap-2">
                                 <button
                                     onClick={() => toggleModelStatus(model.id, model.isStandard, !model.isEnabled)}
-                                    className={`mr-2 px-3 py-2 rounded-md text-sm whitespace-nowrap inline-flex items-center gap-1 ${model.isEnabled
+                                    className={`px-3 py-2 rounded-md text-sm whitespace-nowrap inline-flex items-center gap-1 ${model.isEnabled
                                         ? "button-secondary-enabled"
                                         : "button-secondary-disabled"
                                         }`}
@@ -244,7 +243,7 @@ export const ModelSettings: React.FC = () => {
 
                                 <button
                                     onClick={() => testConnection(model)}
-                                    className="mr-2 px-3 py-2 rounded-md text-sm inline-flex items-center gap-1 button-secondary-testlink"
+                                    className="px-3 py-2 rounded-md text-sm inline-flex items-center gap-1 button-secondary-testlink"
                                     disabled={isTestingConnection(model.id)}
                                 >
                                     <div className="w-4 h-4 flex items-center justify-center">
@@ -259,7 +258,7 @@ export const ModelSettings: React.FC = () => {
 
                                 <button
                                     onClick={() => handleEditModel(model.id, model.isStandard)}
-                                    className={`${!model.isStandard ? "mr-2" : ""} px-3 py-2 rounded-md text-sm inline-flex items-center gap-1 button-secondary-edit`}
+                                    className="px-3 py-2 rounded-md text-sm inline-flex items-center gap-1 button-secondary-edit"
                                 >
                                     <FileCog size={14} />
                                     <span className="hidden md:inline whitespace-nowrap">{t('common.buttons.edit')}</span>
@@ -268,7 +267,7 @@ export const ModelSettings: React.FC = () => {
                                 {!model.isStandard && (
                                     <button
                                         onClick={() => handleDeleteCustomInterface(model.id)}
-                                        className={`${getDocumentDirection() === 'rtl' ? 'mr-2' : ''} px-3 py-2 rounded-md text-sm inline-flex items-center gap-1 button-secondary-danger`}
+                                        className="px-3 py-2 rounded-md text-sm inline-flex items-center gap-1 button-secondary-danger"
 
                                     >
                                         <Trash2 size={14} />
