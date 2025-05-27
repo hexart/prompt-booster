@@ -2,6 +2,7 @@
 import { defineConfig } from 'vite';
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react';
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import { readFileSync } from 'fs'
 import path from 'path';
 import { resolve } from 'path';
@@ -12,12 +13,19 @@ export default defineConfig({
   base: './',
   plugins: [
     tailwindcss(),
-    react()
+    react(),
+    nodePolyfills({
+      include: ['buffer'],
+      // 全局变量
+      globals: {
+        Buffer: true,
+        global: true,
+        process: false,
+      },
+    })
   ],
   define: {
     'process.env': '{}',
-    'global': 'globalThis',
-    'Buffer': ['buffer', 'Buffer'],
     __APP_VERSION__: JSON.stringify(packageJson.version)
   },
   resolve: {
@@ -29,26 +37,9 @@ export default defineConfig({
     }
   },
   optimizeDeps: {
-    esbuildOptions: {
-      define: {
-        global: 'globalThis',
-      },
-      plugins: [
-        {
-          name: 'fix-node-globals-polyfill',
-          setup(build) {
-            build.onResolve({ filter: /_(buffer|events|process|util)/ }, () => {
-              return { external: true }
-            })
-          },
-        },
-      ],
-    },
     include: [
       'crypto-js',
-      'buffer',
-      'process',
-      'stream-browserify'
+      'buffer'
     ],
     exclude: ['']
   },
@@ -56,15 +47,11 @@ export default defineConfig({
     rollupOptions: {
       external: ['fs', 'path'],
       output: {
-        // 添加手动分块配置
         manualChunks: {
-          // React 相关库 - 移除 react-router-dom
           'react-vendor': [
             'react',
             'react-dom'
-            // 'react-router-dom' 移除这一行
           ],
-          // 其他分块保持不变
           'core-api': [
             '@prompt-booster/core',
             '@prompt-booster/api'
@@ -79,8 +66,7 @@ export default defineConfig({
         }
       }
     },
-    // 提高警告阈值，避免不必要的警告
-    chunkSizeWarningLimit: 800, // 从默认的500KB提高到800KB
+    chunkSizeWarningLimit: 800,
     sourcemap: true,
     commonjsOptions: {
       transformMixedEsModules: true,

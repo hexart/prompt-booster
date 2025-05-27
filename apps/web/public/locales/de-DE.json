@@ -34,6 +34,8 @@
   "toast": {
     "copySuccess": "In die Zwischenablage kopiert",
     "copyFailed": "Kopieren fehlgeschlagen",
+    "downloadSuccess": "Datei erfolgreich heruntergeladen",
+    "downloadFailed": "Download fehlgeschlagen",
     "copySuggestionSuccess": "Alle Iterationsvorschläge wurden kopiert",
     "enhancingWithModel": "Prompt wird mit {{modelName}}-Modell verbessert, bitte warten...",
     "enhancePromptSuccess": "Prompt erfolgreich verbessert",

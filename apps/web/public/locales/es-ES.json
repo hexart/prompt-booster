@@ -34,6 +34,8 @@
   "toast": {
     "copySuccess": "Copiado al portapapeles",
     "copyFailed": "Error al copiar",
+    "downloadSuccess": "Archivo descargado exitosamente",
+    "downloadFailed": "Descarga fallida",
     "copySuggestionSuccess": "Todas las sugerencias de iteración han sido copiadas",
     "enhancingWithModel": "Mejorando prompt con el modelo {{modelName}}, por favor espere...",
     "enhancePromptSuccess": "Prompt mejorado con éxito",

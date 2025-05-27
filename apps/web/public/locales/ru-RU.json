@@ -34,6 +34,8 @@
   "toast": {
     "copySuccess": "Скопировано в буфер обмена",
     "copyFailed": "Не удалось скопировать",
+    "downloadSuccess": "Файл успешно загружен",
+    "downloadFailed": "Ошибка загрузки",
     "copySuggestionSuccess": "Все предложения по итерации скопированы",
     "enhancingWithModel": "Улучшение запроса с помощью модели {{modelName}}, пожалуйста, подождите...",
     "enhancePromptSuccess": "Запрос успешно улучшен",

@@ -34,6 +34,8 @@
   "toast": {
     "copySuccess": "Copied to clipboard",
     "copyFailed": "Failed to copy",
+    "downloadSuccess": "File downloaded successfully",
+    "downloadFailed": "Download failed",
     "copySuggestionSuccess": "All iteration suggestions have been copied.",
     "enhancingWithModel": "Enhancing prompt with {{modelName}} model, please wait...",
     "enhancePromptSuccess": "Enhanced prompt success",

@@ -34,6 +34,8 @@
   "toast": {
     "copySuccess": "क्लिपबोर्ड पर कॉपी किया गया",
     "copyFailed": "कॉपी करने में विफल",
+    "downloadSuccess": "फ़ाइल सफलतापूर्वक डाउनलोड हुई",
+    "downloadFailed": "डाउनलोड विफल",
     "copySuggestionSuccess": "सभी पुनरावृत्ति सुझाव कॉपी किए गए हैं",
     "enhancingWithModel": "{{modelName}} मॉडल के साथ प्रॉम्प्ट को बेहतर बना रहा है, कृपया प्रतीक्षा करें...",
     "enhancePromptSuccess": "प्रॉम्प्ट सफलतापूर्वक बेहतर बनाया गया",

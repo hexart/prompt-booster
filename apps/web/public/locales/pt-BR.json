@@ -34,6 +34,8 @@
   "toast": {
     "copySuccess": "Copiado para a área de transferência",
     "copyFailed": "Falha ao copiar",
+    "downloadSuccess": "Arquivo baixado com sucesso",
+    "downloadFailed": "Falha no download",
     "copySuggestionSuccess": "Todas as sugestões de iteração foram copiadas",
     "enhancingWithModel": "Aprimorando prompt com o modelo {{modelName}}, aguarde...",
     "enhancePromptSuccess": "Prompt aprimorado com sucesso",

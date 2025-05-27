@@ -10,7 +10,7 @@ import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
 import { RocketIcon, MinimizeIcon, MaximizeIcon, ArrowLeftFromLineIcon, ArrowRightFromLineIcon, ArrowDownFromLineIcon, ArrowUpFromLineIcon } from 'lucide-react';
 import LoadingIcon from '@prompt-booster/ui/components/LoadingIcon';
 import { useTranslation } from 'react-i18next';
-import { isRTL } from '../rtl';
+import { isRTL, getButtonPosition } from '../rtl';
 
 export const TestResult: React.FC = () => {
   const { t } = useTranslation();
@@ -348,6 +348,7 @@ export const TestResult: React.FC = () => {
             buttonText=""
             threshold={8}
             placeholder={isStreaming ? t('testResult.responding') : t('testResult.noResponseYet')}
+            buttonPosition={getButtonPosition('top-right')}
           />
         </div>
 
@@ -400,6 +401,7 @@ export const TestResult: React.FC = () => {
             rows={4}
             showCharCount={true}
             disabled={isTestingOriginal || isTestingOptimized}
+            buttonPosition={getButtonPosition('top-right')}
           />
         </div>
       )}

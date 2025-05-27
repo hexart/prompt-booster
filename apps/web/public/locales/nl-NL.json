@@ -34,6 +34,8 @@
   "toast": {
     "copySuccess": "Gekopieerd naar klembord",
     "copyFailed": "Kopiëren mislukt",
+    "downloadSuccess": "Bestand succesvol gedownload",
+    "downloadFailed": "Download mislukt",
     "copySuggestionSuccess": "Alle iteratiesuggesties zijn gekopieerd",
     "enhancingWithModel": "Prompt wordt verbeterd met {{modelName}} model, even geduld...",
     "enhancePromptSuccess": "Prompt succesvol verbeterd",

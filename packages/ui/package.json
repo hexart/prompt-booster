@@ -23,6 +23,7 @@
     "clean": "rm -rf .turbo node_modules dist"
   },
   "dependencies": {
+    "@mohtasham/md-to-docx": "^1.4.8",
     "@prompt-booster/api": "workspace:*",
     "@prompt-booster/core": "workspace:*",
     "react-markdown": "^10.1.0",

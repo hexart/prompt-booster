@@ -34,6 +34,8 @@
   "toast": {
     "copySuccess": "클립보드에 복사됨",
     "copyFailed": "복사 실패",
+    "downloadSuccess": "파일 다운로드 성공",
+    "downloadFailed": "다운로드 실패",
     "copySuggestionSuccess": "모든 반복 제안이 복사되었습니다.",
     "enhancingWithModel": "{{modelName}} 모델로 프롬프트를 향상하는 중입니다. 잠시만 기다려주세요...",
     "enhancePromptSuccess": "프롬프트 향상 성공",

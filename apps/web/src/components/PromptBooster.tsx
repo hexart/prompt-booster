@@ -42,6 +42,7 @@ import { useTranslation } from "react-i18next";
 import { PROMPT_PENDING_MARKER } from '@prompt-booster/core/prompt/services/promptGroupManager';
 import { getDisplayProviderName } from './PromptHistory';
 import { PROVIDER_USER_EDIT } from '@prompt-booster/core/prompt/services/promptService';
+import { getButtonPosition } from '../rtl';
 
 export const PromptBooster: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -452,6 +453,7 @@ export const PromptBooster: React.FC = () => {
             rows={5}
             showCharCount={true}
             disabled={isProcessing || Boolean(activeGroup)}
+            buttonPosition={getButtonPosition('top-right')}
           />
         </div>
       )}
@@ -674,6 +676,7 @@ export const PromptBooster: React.FC = () => {
             streaming={isProcessing}
             buttonText=""
             centerPlaceholder={!isProcessing && !optimizedPrompt}
+            buttonPosition={getButtonPosition('top-right')}
           />
           {isEditMode &&
             editablePrompt !== optimizedPrompt &&

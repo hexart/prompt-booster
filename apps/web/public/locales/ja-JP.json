@@ -34,6 +34,8 @@
   "toast": {
     "copySuccess": "クリップボードにコピーしました",
     "copyFailed": "コピーに失敗しました",
+    "downloadSuccess": "ファイルのダウンロードが完了しました",
+    "downloadFailed": "ダウンロードに失敗しました",
     "copySuggestionSuccess": "すべての改善提案をコピーしました",
     "enhancingWithModel": "{{modelName}}モデルでプロンプトを強化中です。お待ちください...",
     "enhancePromptSuccess": "プロンプト強化に成功しました",

@@ -34,6 +34,8 @@
   "toast": {
     "copySuccess": "تم النسخ إلى الحافظة",
     "copyFailed": "فشل النسخ",
+    "downloadSuccess": "تم تنزيل الملف بنجاح",
+    "downloadFailed": "فشل التنزيل",
     "copySuggestionSuccess": "تم نسخ جميع اقتراحات التكرار",
     "enhancingWithModel": "جاري تحسين النص باستخدام نموذج {{modelName}}، يرجى الانتظار...",
     "enhancePromptSuccess": "تم تحسين النص بنجاح",

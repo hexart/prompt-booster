@@ -34,6 +34,8 @@
   "toast": {
     "copySuccess": "已複製到剪貼板",
     "copyFailed": "複製失敗",
+    "downloadSuccess": "檔案下載成功",
+    "downloadFailed": "下載失敗",
     "copySuggestionSuccess": "已複製所有迭代建議",
     "enhancingWithModel": "正在使用{{modelName}}模型增強提示詞，請稍候...",
     "enhancePromptSuccess": "增強提示詞成功",

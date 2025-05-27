@@ -34,6 +34,8 @@
   "toast": {
     "copySuccess": "Copié dans le presse-papiers",
     "copyFailed": "Échec de la copie",
+    "downloadSuccess": "Fichier téléchargé avec succès",
+    "downloadFailed": "Échec du téléchargement",
     "copySuggestionSuccess": "Toutes les suggestions d'itération ont été copiées",
     "enhancingWithModel": "Amélioration du prompt avec le modèle {{modelName}}, veuillez patienter...",
     "enhancePromptSuccess": "Prompt amélioré avec succès",

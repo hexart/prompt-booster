@@ -1,6 +1,5 @@
 // packages/ui/src/index.ts
 export * from './hooks/useAutoscroll'
-export * from './hooks/useScrollFade'
 export * from './components/LoadingIcon'
 export * from './hooks/useModal'
 export * from './components/AutoScrollTextarea';

@@ -33,6 +33,7 @@ export const getDocumentDirection = (): 'ltr' | 'rtl' => {
  * 检查当前是否为RTL方向
  */
 export const isRTL = (): boolean => {
+  if (typeof document === 'undefined') return false;
   return getDocumentDirection() === 'rtl';
 };
 
@@ -121,5 +122,24 @@ export const getTooltipPosition = (
     case 'bottom':
     default:
       return basePosition;
+  }
+};
+
+/**
+ * 获取RTL适配的按钮位置
+ */
+export const getButtonPosition = (
+  ltrPosition: 'top-right' | 'bottom-right' = 'top-right'
+): 'top-right' | 'bottom-right' | 'top-left' | 'bottom-left' => {
+  if (!isRTL()) return ltrPosition;
+  
+  // RTL模式下镜像位置
+  switch (ltrPosition) {
+    case 'top-right':
+      return 'top-left';
+    case 'bottom-right':
+      return 'bottom-left';
+    default:
+      return ltrPosition;
   }
 };
