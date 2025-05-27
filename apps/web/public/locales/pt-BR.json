@@ -29,7 +29,7 @@
       "copy": "Copiar"
     },
     "dropdownNull": "Nenhuma opção disponível",
-    "newVersinFound": "Nova versão encontrada: {{version}}"
+    "checkNewVersion": "Verificar nova versão"
   },
   "toast": {
     "copySuccess": "Copiado para a área de transferência",

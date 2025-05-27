@@ -29,7 +29,7 @@
       "copy": "Kopiëren"
     },
     "dropdownNull": "Geen opties beschikbaar",
-    "newVersinFound": "Nieuwe versie gevonden: {{version}}"
+    "checkNewVersion": "Controleren op nieuwe versie"
   },
   "toast": {
     "copySuccess": "Gekopieerd naar klembord",

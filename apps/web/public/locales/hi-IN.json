@@ -29,7 +29,7 @@
       "copy": "कॉपी करें"
     },
     "dropdownNull": "कोई विकल्प उपलब्ध नहीं",
-    "newVersinFound": "नया संस्करण मिला: {{version}}"
+    "checkNewVersion": "नया संस्करण जांचें"
   },
   "toast": {
     "copySuccess": "क्लिपबोर्ड पर कॉपी किया गया",

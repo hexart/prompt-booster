@@ -728,6 +728,15 @@
 [dir="rtl"] .tooltip {
   text-align: right;
 }
+[dir="rtl"] [role="tooltip"] .border-l,
+[dir="rtl"] [role="tooltip"] .border-r,
+[dir="rtl"] [role="tooltip"] .border-t,
+[dir="rtl"] [role="tooltip"] .border-b {
+  border-color: inherit !important;
+}
+[dir="rtl"] .tooltip-arrow {
+  transform: scaleX(-1) rotate(-45deg) !important;
+}
 
 /* 特殊的绝对定位元素调整 */
 [dir="rtl"] .absolute.right-2 {

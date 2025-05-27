@@ -29,7 +29,7 @@
       "copy": "Kopieren"
     },
     "dropdownNull": "Keine Optionen verfügbar",
-    "newVersinFound": "Neue Version gefunden: {{version}}"
+    "checkNewVersion": "Auf neue Version prüfen"
   },
   "toast": {
     "copySuccess": "In die Zwischenablage kopiert",

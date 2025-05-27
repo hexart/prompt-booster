@@ -221,10 +221,6 @@ button:disabled {
   .version-badge {
     @apply bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400;
   }
-
-  .version-update-dot {
-    @apply bg-orange-500;
-  }
   .mask {
     @apply bg-white/40 dark:bg-black/40 backdrop-blur-md z-50;
     .dialog {

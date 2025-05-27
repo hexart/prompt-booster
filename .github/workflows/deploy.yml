@@ -21,81 +21,27 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-      
+          node-version: "20"
+
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: '10.9.0'
-      
+          version: "10.9.0"
+
       - name: Install dependencies
         run: pnpm install
-      
+
       - name: Build web & packages
         run: pnpm build
-      
-      - name: Generate deployment files
-        run: |
-          cd ./apps/web/dist
-          
-          # 1. Generate version.json
-          VERSION=$(node -p "require('../../../package.json').version")
-          BUILD_TIME=$(date -u +"%Y-%m-%dT%H:%M:%S.%3NZ")
-          
-          cat > version.json << EOF
-          {
-            "version": "$VERSION",
-            "buildTime": "$BUILD_TIME"
-          }
-          EOF
-          
-          # 2. Generate _headers 文件
-          cat > _headers << 'EOF'
-          # CORS headers for version checking
-          /*
-            Access-Control-Allow-Origin: *
-            Access-Control-Allow-Methods: GET, POST, OPTIONS, HEAD
-            Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization, Cache-Control, Pragma
-            Access-Control-Max-Age: 86400
-          
-          # Specific headers for version.json
-          /version.json
-            Access-Control-Allow-Origin: *
-            Access-Control-Allow-Methods: GET, OPTIONS
-            Access-Control-Allow-Headers: Cache-Control, Pragma
-            Cache-Control: no-cache, no-store, must-revalidate
-            Pragma: no-cache
-            Expires: 0
-          
-          # Security headers
-          /*
-            X-Frame-Options: DENY
-            X-Content-Type-Options: nosniff
-            X-XSS-Protection: 1; mode=block
-            Referrer-Policy: strict-origin-when-cross-origin
-          EOF
-          
-          # 3. Generate .nojekyll
-          touch .nojekyll
-          
-          echo "✅ Generated deployment files:"
-          echo "- version.json (version: $VERSION)"
-          echo "- _headers"
-          echo "- .nojekyll"
-          
-          # 验证文件生成
-          ls -la version.json _headers .nojekyll
-          echo "📄 version.json content:"
-          cat version.json
-      
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './apps/web/dist'
+          path: "./apps/web/dist"
 
   # 优先部署Pages
   deploy-pages:
@@ -116,17 +62,17 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.PACKAGE_TOKEN }}
-      
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
@@ -137,7 +83,7 @@ jobs:
           tags: ghcr.io/${{ github.repository }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
-      
+
       - name: Make Docker package public
         run: |
           curl -X PATCH \

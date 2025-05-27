@@ -29,7 +29,7 @@
       "copy": "Копировать"
     },
     "dropdownNull": "Нет доступных вариантов",
-    "newVersinFound": "Найдена новая версия: {{version}}"
+    "checkNewVersion": "Проверить новую версию"
   },
   "toast": {
     "copySuccess": "Скопировано в буфер обмена",

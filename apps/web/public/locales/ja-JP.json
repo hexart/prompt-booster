@@ -29,7 +29,7 @@
       "copy": "コピー"
     },
     "dropdownNull": "選択肢がありません",
-    "newVersinFound": "新しいバージョンが見つかりました：{{version}}"
+    "checkNewVersion": "新しいバージョンを確認"
   },
   "toast": {
     "copySuccess": "クリップボードにコピーしました",

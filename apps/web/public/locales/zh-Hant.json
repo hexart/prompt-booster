@@ -29,7 +29,7 @@
       "copy": "複製"
     },
     "dropdownNull": "沒有可選項",
-    "newVersinFound": "發現新版本：{{version}}"
+    "checkNewVersion": "檢查新版本"
   },
   "toast": {
     "copySuccess": "已複製到剪貼板",
