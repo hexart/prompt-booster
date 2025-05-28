@@ -230,9 +230,9 @@ export const TestResult: React.FC = () => {
             toast.success(t('toast.originalResponseCompleted'));
           },
           onError: (error: Error) => {
-            console.error('原始提示词错误:', error);
+            console.error('原始提示词测试错误:', error);
             setIsTestingOriginal(false);
-            toast.error(`原始提示词测试错误: ${error.message}`);
+            toast.error(`${t('toast.originalResponseFailed')}: ${error.message}`);
           }
         }),
 
@@ -247,18 +247,16 @@ export const TestResult: React.FC = () => {
             toast.success(t('toast.enhancedResponseCompleted'));
           },
           onError: (error: Error) => {
-            console.error('优化提示词错误:', error);
+            console.error('增强提示词测试错误:', error);
             setIsTestingOptimized(false);
-            toast.error(`优化提示词测试错误: ${error.message}`);
+            toast.error(`${t('toast.enhancedResponseFailed')}: ${error.message}`);
           }
         })
       ]);
 
-      // 两个测试都完成后的统一处理
-      console.log('🎉 对比测试全部完成');
-
       // 检查是否还有正在运行的测试（防止竞态条件）
       if (!isTestingOriginal && !isTestingOptimized) {
+        console.log('🎉 对比测试全部完成');
         toast.success(t('toast.comparisonTestAllCompleted') || '对比测试全部完成');
       }
 
