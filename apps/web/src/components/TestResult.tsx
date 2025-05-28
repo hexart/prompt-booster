@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { toast, AutoScrollContent, EnhancedDropdown, DraggableNotice, EnhancedTextarea } from '@prompt-booster/ui';
 import { StandardModelType } from '@prompt-booster/core/model/models/config';
 import { useModelData } from '../hooks/model-hooks';
-import { cleanOptimizedPrompt } from '@prompt-booster/core/prompt/utils/promptUtils';
+import { cleanOptimizedPrompt, getLanguageInstruction } from '@prompt-booster/core/prompt/utils/promptUtils';
 import { usePrompt } from '@prompt-booster/core/prompt/hooks/usePrompt';
 import { useMemoryStore } from '@prompt-booster/core/storage/memoryStorage';
 import { llmService } from '@prompt-booster/core/prompt/services/llmService';
@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { isRTL, getButtonPosition } from '../rtl';
 
 export const TestResult: React.FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { originalPrompt, optimizedPrompt } = usePrompt();
   // 使用memoryStore获取所有需要的状态
   const {
@@ -200,6 +200,24 @@ export const TestResult: React.FC = () => {
       // 使用selectedTestModelId模型配置进行两次测试
       const clientConfig = getClientConfig(selectedTestModelId);
 
+      // 获取当前语言设置
+      const currentLanguage = i18n.language;
+      const languageInstruction = getLanguageInstruction(currentLanguage);
+
+      // 为用户提示词添加语言指令
+      const userPromptWithLang = languageInstruction
+        ? `${userTestPrompt}\n\n${languageInstruction}`
+        : userTestPrompt;
+
+      // 为系统提示词添加语言指令
+      const originalSystemPrompt = languageInstruction
+        ? `${originalPrompt}\n\n${languageInstruction}`
+        : originalPrompt;
+
+      const optimizedSystemPrompt = languageInstruction
+        ? `${cleanedOptimizedPrompt}\n\n${languageInstruction}`
+        : cleanedOptimizedPrompt;
+
       // 添加调试日志
       console.log('开始对比测试，使用模型:', clientConfig.model);
 
@@ -209,19 +227,21 @@ export const TestResult: React.FC = () => {
 
       // 打印原始提示词信息
       console.log('原始提示词测试信息:');
-      console.log('System prompt (前100字符):', originalPrompt.substring(0, 100));
-      console.log('User prompt (前100字符):', userTestPrompt.substring(0, 100));
+      console.log('System prompt (前50字符):', originalPrompt.substring(0, 50));
+      console.log('System prompt (后20字符):', originalSystemPrompt.slice(-20));
+      console.log('User prompt (前50字符):', userTestPrompt.substring(0, 50));
+      console.log('User prompt (后20字符):', userPromptWithLang.slice(-20));
 
       // 打印增强提示词信息
       console.log('增强提示词测试信息:');
-      console.log('System prompt (前100字符):', cleanedOptimizedPrompt.substring(0, 100));
-      console.log('User prompt (前100字符):', userTestPrompt.substring(0, 100));
+      console.log('System prompt (前50字符):', cleanedOptimizedPrompt.substring(0, 50));
+      console.log('System prompt (后20字符):', optimizedSystemPrompt.slice(-20));
 
       // 并行执行两个测试
       await Promise.allSettled([
         llmService.callLLM({
-          userMessage: userTestPrompt,
-          systemMessage: originalPrompt,
+          userMessage: userPromptWithLang,
+          systemMessage: originalSystemPrompt,
           modelId: selectedTestModelId,
           stream: true,
           onData: appendToOriginalResponse,
@@ -237,8 +257,8 @@ export const TestResult: React.FC = () => {
         }),
 
         llmService.callLLM({
-          userMessage: userTestPrompt,
-          systemMessage: cleanedOptimizedPrompt,
+          userMessage: userPromptWithLang,
+          systemMessage: optimizedSystemPrompt,
           modelId: selectedTestModelId,
           stream: true,
           onData: appendToOptimizedResponse,
