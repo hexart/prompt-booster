@@ -26,7 +26,9 @@
       "restore": "元に戻す",
       "expand": "展開",
       "collapse": "折りたたむ",
-      "copy": "コピー"
+      "copy": "コピー",
+      "downloadMd": "Markdownをダウンロード",
+      "downloadDocx": "Word文書をダウンロード"
     },
     "dropdownNull": "選択肢がありません",
     "checkNewVersion": "新しいバージョンを確認"

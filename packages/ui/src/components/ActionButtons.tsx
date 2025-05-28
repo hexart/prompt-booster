@@ -1,6 +1,6 @@
 // packages/ui/src/components/ActionButtons.tsx
 import React, { useState } from 'react';
-import { ClipboardIcon, ClipboardCheckIcon, DownloadIcon, FileTextIcon } from 'lucide-react';
+import { ClipboardIcon, ClipboardCheckIcon, FileTypeIcon, FileTextIcon, FileCheck2Icon } from 'lucide-react';
 import { Tooltip } from './Tooltip';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
@@ -65,6 +65,8 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 }) => {
     const { t } = useTranslation();
     const [copied, setCopied] = useState(false);
+    const [downloadedMd, setDownloadedMd] = useState(false);
+    const [downloadedDocx, setDownloadedDocx] = useState(false);
     const [downloading, setDownloading] = useState<'md' | 'docx' | null>(null);
 
     // 检查是否有内容
@@ -123,8 +125,13 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
             
+            // 显示成功状态
+            setDownloadedMd(true);
             toast.success(t('toast.downloadSuccess'));
             onDownload?.('md', finalFilename);
+            
+            // 2秒后重置状态
+            setTimeout(() => setDownloadedMd(false), 2000);
         } catch (err) {
             console.error('Download MD failed:', err);
             toast.error(t('toast.downloadFailed'));
@@ -176,8 +183,13 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
             
+            // 显示成功状态
+            setDownloadedDocx(true);
             toast.success(t('toast.downloadSuccess'));
             onDownload?.('docx', finalFilename);
+            
+            // 2秒后重置状态
+            setTimeout(() => setDownloadedDocx(false), 2000);
         } catch (err) {
             console.error('Download DOCX failed:', err);
             toast.error(t('toast.downloadFailed'));
@@ -229,8 +241,10 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
                     >
                         {downloading === 'md' ? (
                             <div className="animate-spin w-4 h-4 border-2 border-current border-t-transparent rounded-full" />
+                        ) : downloadedMd ? (
+                            <FileCheck2Icon size={16} />
                         ) : (
-                            <FileTextIcon size={16} />
+                            <FileTypeIcon size={16} />
                         )}
                     </button>
                 </Tooltip>
@@ -246,8 +260,10 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
                     >
                         {downloading === 'docx' ? (
                             <div className="animate-spin w-4 h-4 border-2 border-current border-t-transparent rounded-full" />
+                        ) : downloadedDocx ? (
+                            <FileCheck2Icon size={16} />
                         ) : (
-                            <DownloadIcon size={16} />
+                            <FileTextIcon size={16} />
                         )}
                     </button>
                 </Tooltip>

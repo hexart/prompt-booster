@@ -26,7 +26,9 @@
       "restore": "Restore",
       "expand": "Expand",
       "collapse": "Collapse",
-      "copy": "Copy"
+      "copy": "Copy",
+      "downloadMd": "Download Markdown",
+      "downloadDocx": "Download Word Document"
     },
     "dropdownNull": "No options available",
     "checkNewVersion": "Check for new version"

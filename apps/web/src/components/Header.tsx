@@ -1,7 +1,7 @@
 // src/components/Header.tsx
 import React, { useState, useEffect } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { RocketIcon, Columns2Icon, GalleryVerticalEndIcon, CogIcon } from 'lucide-react';
+import { RocketIcon, BookOpenCheckIcon, GalleryVerticalEndIcon, CogIcon } from 'lucide-react';
 import ThemeSwitcher from '@prompt-booster/ui/components/ThemeSwitcher';
 import MobileMenu, { TabItem } from './MobileMenu';
 import logo from '../assets/logo.svg';
@@ -66,7 +66,7 @@ const Header: React.FC<HeaderProps> = ({
     
     const tabs = [
         { id: 'booster', icon: RocketIcon, label: t('common.tabs.booster'), shortcut: '⌥+1' },
-        { id: 'test', icon: Columns2Icon, label: t('common.tabs.test'), shortcut: '⌥+2' },
+        { id: 'test', icon: BookOpenCheckIcon, label: t('common.tabs.test'), shortcut: '⌥+2' },
         { id: 'history', icon: GalleryVerticalEndIcon, label: t('common.tabs.history'), shortcut: '⌥+3' },
         { id: 'settings', icon: CogIcon, label: t('common.tabs.settings'), shortcut: '⌥+4' }
     ] as const;

@@ -26,7 +26,9 @@
       "restore": "还原",
       "expand": "扩展",
       "collapse": "收缩",
-      "copy": "复制"
+      "copy": "复制",
+      "downloadMd": "下载 Markdown",
+      "downloadDocx": "下载 Word 文档"
     },
     "dropdownNull": "没有可选项",
     "checkNewVersion": "检查新版本"

@@ -26,7 +26,9 @@
       "restore": "पुनर्स्थापित करें",
       "expand": "विस्तार करें",
       "collapse": "संकुचित करें",
-      "copy": "कॉपी करें"
+      "copy": "कॉपी करें",
+      "downloadMd": "Markdown डाउनलोड करें",
+      "downloadDocx": "Word दस्तावेज़ डाउनलोड करें"
     },
     "dropdownNull": "कोई विकल्प उपलब्ध नहीं",
     "checkNewVersion": "नया संस्करण जांचें"

@@ -26,7 +26,9 @@
       "restore": "Herstellen",
       "expand": "Uitvouwen",
       "collapse": "Invouwen",
-      "copy": "Kopiëren"
+      "copy": "Kopiëren",
+      "downloadMd": "Markdown downloaden",
+      "downloadDocx": "Word-document downloaden"
     },
     "dropdownNull": "Geen opties beschikbaar",
     "checkNewVersion": "Controleren op nieuwe versie"

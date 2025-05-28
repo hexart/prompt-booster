@@ -136,7 +136,7 @@ export const ModelModal: React.FC<ModelModalProps> = ({
                             name="apiKey"
                             value={formData.apiKey || ''}
                             onChange={handleInputChange}
-                            className="w-full overflow-hidden truncate p-2 pr-12 border rounded input"
+                            className="w-full overflow-hidden truncate p-2 ltr:pr-10 rtl:pl-10 border rounded input"
                             placeholder={t('settings.apiKeyPlaceholder')}
                         />
                         {originalApiKey && (
@@ -145,7 +145,7 @@ export const ModelModal: React.FC<ModelModalProps> = ({
                                 onMouseDown={() => showApiKey()}
                                 onMouseUp={() => hideApiKey()}
                                 onMouseLeave={() => hideApiKey()}
-                                className="absolute inset-y-0 right-0 px-3 flex items-center text-sm input-display-button"
+                                className="absolute inset-y-0 right-0 rtl:right-auto rtl:left-0 px-3 flex items-center text-sm input-display-button"
                             >
                                 {isMaskedApiKey ? <EyeClosedIcon size={18} /> : <EyeIcon size={18} />}
                             </button>

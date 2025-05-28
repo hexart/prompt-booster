@@ -26,7 +26,9 @@
       "restore": "복원",
       "expand": "확장",
       "collapse": "접기",
-      "copy": "복사"
+      "copy": "복사",
+      "downloadMd": "Markdown 다운로드",
+      "downloadDocx": "Word 문서 다운로드"
     },
     "dropdownNull": "사용 가능한 옵션 없음",
     "checkNewVersion": "새 버전 확인"
