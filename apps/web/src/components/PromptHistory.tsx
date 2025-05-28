@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Dialog } from '@prompt-booster/ui/components/Dialog';
 import { usePrompt } from '@prompt-booster/core/prompt/hooks/usePrompt';
 import { PromptGroup } from '@prompt-booster/core/prompt/models/prompt';
@@ -6,6 +6,8 @@ import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
 import { Trash2Icon, ChevronsDownIcon, ChevronsUpIcon, RotateCcwIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { PROVIDER_USER_EDIT } from '@prompt-booster/core/prompt/services/promptService';
+import { formatProviderModelName } from '../utils/displayUtils';
+import { isRTL } from '../rtl';
 
 interface PromptHistoryProps {
   onNavigateToEditor?: () => void;
@@ -19,7 +21,15 @@ export const getDisplayProviderName = (provider: string, t: (key: string) => str
   return provider;
 };
 export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const [currentIsRTL, setCurrentIsRTL] = useState(isRTL());
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setCurrentIsRTL(isRTL());
+    }, 10);
+    return () => clearTimeout(timer);
+  }, [i18n.language]);
 
   // 使用新的 usePrompt hook
   const {
@@ -224,10 +234,16 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                         {/* 版本列表 */}
                         <div className="flex gap-2 overflow-y-visible overflow-x-auto py-2 [&::-webkit-scrollbar]:h-1">
                           {versions.map(version => (
-                            <Tooltip key={version.id} text={version.provider === PROVIDER_USER_EDIT
-                              ? getDisplayProviderName(version.provider, t)
-                              : `${t('history.usingModel')}\n${getDisplayProviderName(version.provider, t)}${version.modelName ? ` - ${version.modelName}` : ''}`
-                            }>
+                            <Tooltip key={version.id}
+                              text={version.provider === PROVIDER_USER_EDIT
+                                ? getDisplayProviderName(version.provider, t)
+                                : `${t('history.usingModel')}\n${formatProviderModelName(
+                                  getDisplayProviderName(version.provider, t),
+                                  version.modelName,
+                                  currentIsRTL
+                                )}`
+                              }
+                            >
                               <button
                                 key={version.id}
                                 onClick={() => handleSelectVersion(group.id, version.number)}

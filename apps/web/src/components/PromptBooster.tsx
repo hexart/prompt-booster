@@ -36,7 +36,7 @@ import Confetti from "react-confetti";
 import { Tooltip } from "@prompt-booster/ui/components/Tooltip";
 import { IterationDialog } from "./IterationDialog";
 import { usePrompt } from "@prompt-booster/core/prompt/hooks/usePrompt";
-import { useModelStore } from "@prompt-booster/core/model/store/modelStore";
+import { useModelData } from '../hooks/model-hooks';
 import { PromptVersion } from "@prompt-booster/core/prompt/models/prompt";
 import { useTranslation } from "react-i18next";
 import { PROMPT_PENDING_MARKER } from '@prompt-booster/core/prompt/services/promptGroupManager';
@@ -154,7 +154,7 @@ export const PromptBooster: React.FC = () => {
   }, [t, i18n.language]);
 
   // 获取模型商店
-  const { activeModel, setActiveModel, getEnabledModels } = useModelStore();
+  const { activeModel, setActiveModel, getEnabledModels } = useModelData();
 
   // 检查当前选择的模型是否还在启用的模型列表中
   const isActiveModelEnabled = getEnabledModels().some(

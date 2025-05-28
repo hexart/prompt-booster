@@ -7,6 +7,7 @@ import { Dialog, ModelSelector, toast } from '@prompt-booster/ui';
 import { useModelForm } from '../hooks/model-hooks';
 import { EyeIcon, EyeClosedIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { formatInterfaceName } from '../utils/displayUtils';
 
 // 模型编辑弹窗组件
 interface ModelModalProps {
@@ -257,7 +258,7 @@ export const ModelModal: React.FC<ModelModalProps> = ({
                         <input
                             type="text"
                             name="name"
-                            value={formData.name || ''}
+                            value={formatInterfaceName(formData.name || '')}
                             disabled={true}
                             className="w-full p-2 border rounded input input-disabled"
                             placeholder={t('settings.interfaceNamePlaceholder')}

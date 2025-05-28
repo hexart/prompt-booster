@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { toast, AutoScrollContent, EnhancedDropdown, DraggableNotice, EnhancedTextarea } from '@prompt-booster/ui';
 import { StandardModelType } from '@prompt-booster/core/model/models/config';
-import { useModelStore } from '@prompt-booster/core/model/store/modelStore';
+import { useModelData } from '../hooks/model-hooks';
 import { cleanOptimizedPrompt } from '@prompt-booster/core/prompt/utils/promptUtils';
 import { usePrompt } from '@prompt-booster/core/prompt/hooks/usePrompt';
 import { useMemoryStore } from '@prompt-booster/core/storage/memoryStorage';
@@ -33,7 +33,7 @@ export const TestResult: React.FC = () => {
     getCustomInterface,
     getEnabledModels,
     configs
-  } = useModelStore();
+  } = useModelData();
 
   // 状态管理
   // 从 localStorage 初始化状态
