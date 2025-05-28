@@ -173,7 +173,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
 
           return (
             <div key={group.id} className="border rounded-lg p-3 shadow-2xs hover:shadow-md listcard-container">
-              <div className="flex justify-between items-center mb-2 hover:cursor-pointer listcard-title-container" onClick={() => toggleExpand(group.id)}>
+              <div className="flex justify-between items-center hover:cursor-pointer listcard-title-container" onClick={() => toggleExpand(group.id)}>
                 <div className="flex items-center gap-2 listcard-text-container">
                   <span className="text-sm listcard-description">
                     {formatTimestamp(group.updatedAt)}

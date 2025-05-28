@@ -547,7 +547,7 @@ export const PromptBooster: React.FC = () => {
             : "min-h-[calc(100vh-550px)]"
           }`}
       >
-        <div className="flex w-full mb-4 gap-2">
+        <div className="flex w-full mb-4 gap-2 items-center">
           {/* 父容器 */}
           <div className="flex-shrink  md:w-fit min-w-[95px]">
             <h2 className="text-xl font-semibold truncate title-secondary">

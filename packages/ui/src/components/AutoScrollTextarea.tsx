@@ -136,7 +136,8 @@ export const AutoScrollTextarea: React.FC<AutoScrollTextareaProps> = ({
           {/* 背景textarea */}
           <textarea
             ref={elementRef}
-            className={`w-full h-full absolute inset-0 ${className}
+            disabled
+            className={`w-full h-full absolute inset-0 input-textarea ${className}
                         ${isHovered
                 ? 'autoscroll-border-hover'
                 : 'autoscroll-border'
@@ -158,7 +159,7 @@ export const AutoScrollTextarea: React.FC<AutoScrollTextareaProps> = ({
         // 正常有内容的textarea
         <textarea
           ref={elementRef}
-          className={`w-full scrollable rounded-md p-3 border-0 outline-none transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${className}
+          className={`w-full scrollable rounded-md p-3 transition-colors duration-200 input-textarea ${className}
                     ${isHovered
               ? 'autoscroll-border-hover'
               : 'autoscroll-border'
