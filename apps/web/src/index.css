@@ -18,38 +18,43 @@
   font-family: var(--font-latin);
 }
 /* 淡入动画 */
-@keyframes fadeIn {
+@keyframes draggableNoticeIn {
   from {
     opacity: 0;
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
+    transform: translateY(0);
   }
 }
 
 /* 淡出动画 */
-@keyframes fadeOut {
+@keyframes draggableNoticeOut {
   from {
     opacity: 1;
+    transform: translateY(0);
   }
   to {
     opacity: 0;
+    transform: translateY(10px);
   }
 }
 
 /* 淡入类 */
 .fade-in {
-  animation: fadeIn 300ms ease-in-out forwards;
+  animation: draggableNoticeIn 0.5s ease-in forwards;
 }
 
 /* 淡出类 */
 .fade-out {
-  animation: fadeOut 300ms ease-in-out forwards;
+  animation: draggableNoticeOut 0.5s ease-out forwards;
 }
 
-/* 隐藏状态 */
+/* 初始隐藏状态 */
 .fade-hidden {
   opacity: 0;
+  transform: scale(0.8) translateY(10px);
 }
 
 @keyframes slideIn {
