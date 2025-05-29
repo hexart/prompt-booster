@@ -85,12 +85,15 @@ export const PromptBooster: React.FC = () => {
   // 监听优化提示词变化
   useEffect(() => {
     if (!optimizedPrompt) {
+      // 当 optimizedPrompt 为空时重置状态
       setEditablePrompt("");
       setIsEditMode(false);
     } else if (isProcessing) {
+      // 当正在处理时，实时更新 editablePrompt 但不启用编辑模式
       setEditablePrompt(optimizedPrompt);
       setIsEditMode(false);
     } else if (!isProcessing && optimizedPrompt) {
+      // 当响应结束且有内容时启用编辑模式
       setEditablePrompt(optimizedPrompt);
       setIsEditMode(true);
     }
@@ -209,24 +212,7 @@ export const PromptBooster: React.FC = () => {
     getGroupVersions(activeGroup?.id || "").length, // 当版本数量变化时（新增版本）
   ]);
 
-  // 3. 添加一个useEffect监听流式响应结束
-  useEffect(() => {
-    if (!optimizedPrompt) {
-      // 当 optimizedPrompt 为空时重置状态
-      setEditablePrompt("");
-      setIsEditMode(false);
-    } else if (isProcessing) {
-      // 当正在处理时，实时更新 editablePrompt 但不启用编辑模式
-      setEditablePrompt(optimizedPrompt);
-      setIsEditMode(false);
-    } else if (!isProcessing && optimizedPrompt) {
-      // 当响应结束且有内容时启用编辑模式
-      setEditablePrompt(optimizedPrompt);
-      setIsEditMode(true);
-    }
-  }, [optimizedPrompt, isProcessing]);
-
-  // 4. 修改处理函数，只更新本地状态
+  // 修改处理函数，只更新本地状态
   const handleOptimizedPromptChange = (
     e: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
@@ -282,7 +268,7 @@ export const PromptBooster: React.FC = () => {
   };
 
   // 分析提示词状态
-  const [loading, setLoading] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   // 跟踪是否已使用LLM分析
   const [hasUsedLLMAnalysis, setHasUsedLLMAnalysis] = useState(false);
 
@@ -292,7 +278,7 @@ export const PromptBooster: React.FC = () => {
 
     try {
       setIsDrawerOpen(true);
-      setLoading(true);
+      setIsAnalyzing(true);
       // 设置抽屉为可关闭状态
       setIsDrawerDismissible(true);
 
@@ -305,7 +291,7 @@ export const PromptBooster: React.FC = () => {
     } catch (err: any) {
       toast.error(err.message || t("toast.analyzePromptFailed"));
     } finally {
-      setLoading(false);
+      setIsAnalyzing(false);
     }
   };
 
@@ -314,7 +300,7 @@ export const PromptBooster: React.FC = () => {
     if (!optimizedPrompt || !optimizedPrompt.trim()) return;
 
     try {
-      setLoading(true);
+      setIsAnalyzing(true);
       // 设置抽屉为不可关闭状态
       setIsDrawerDismissible(false);
 
@@ -334,7 +320,7 @@ export const PromptBooster: React.FC = () => {
     } catch (err: any) {
       toast.error(err.message || t("toast.analyzePromptFailed"));
     } finally {
-      setLoading(false);
+      setIsAnalyzing(false);
     }
   };
 
@@ -521,10 +507,8 @@ export const PromptBooster: React.FC = () => {
             onClick={handleOptimize}
             disabled={
               isProcessing ||
-              !localOriginalPrompt ||
-              !localOriginalPrompt.trim() ||
+              !localOriginalPrompt?.trim() ||
               !isActiveModelEnabled ||
-              !selectedTemplateId ||
               !displayTemplates[selectedTemplateId] ||
               Boolean(activeGroup)
             }
@@ -613,10 +597,10 @@ export const PromptBooster: React.FC = () => {
               className="text-sm flex items-center gap-1 rounded-lg px-3 py-2 button-third"
               onClick={handleAnalyze}
               disabled={
-                !optimizedPrompt || isProcessing || !activeGroup || loading
+                !optimizedPrompt || isProcessing || !activeGroup || isAnalyzing
               }
             >
-              {loading ? (
+              {isAnalyzing ? (
                 <>
                   <LoadingIcon />
                   <span className="hidden md:block">
@@ -636,7 +620,7 @@ export const PromptBooster: React.FC = () => {
             <button
               className="text-sm flex items-center gap-1 rounded-lg px-3 py-2 button-third"
               onClick={() => setIsMaximized(!isMaximized)}
-              disabled={!optimizedPrompt || !activeGroup}
+              disabled={!localOriginalPrompt?.trim()}
             >
               {isMaximized ? (
                 <>
@@ -725,7 +709,7 @@ export const PromptBooster: React.FC = () => {
                 <div className="mx-auto w-12 h-1 shrink-0 rounded-full drawer-handle mb-4" />
                 <div className="max-w-[680px] mx-6 md:mx-auto">
                   {/* 主体：加载中骨架 vs 分析结果 */}
-                  {loading ? (
+                  {isAnalyzing ? (
                     <div className="animate-pulse space-y-4">
                       <div className="mb-4 flex justify-between items-center">
                         {/* 标题骨架 */}
@@ -922,9 +906,9 @@ export const PromptBooster: React.FC = () => {
                           <button
                             className="px-4 py-2 text-sm button-confirm rounded-md transition"
                             onClick={handleLLMAnalyze}
-                            disabled={loading || !isActiveModelEnabled}
+                            disabled={isAnalyzing || !isActiveModelEnabled}
                           >
-                            {loading ? (
+                            {isAnalyzing ? (
                               <span className="flex items-center gap-2">
                                 <LoadingIcon />
                                 {t("promptBooster.analyzing")}
