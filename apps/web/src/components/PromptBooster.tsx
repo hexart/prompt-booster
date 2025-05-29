@@ -1,14 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { promptService } from "@prompt-booster/core/prompt/services/promptService";
-// import templates from '@prompt-booster/core/prompt/templates/default-templates.json';
 import medalImage from "../assets/medal.png";
-import { getAllTemplatesAsRecord } from "@prompt-booster/core/prompt/services/templateService";
-import { Template } from "@prompt-booster/core/prompt/models/template";
+import { useTemplates } from "@prompt-booster/core/prompt/hooks/useTemplates";
 import {
   analyzePromptWithLLM,
   PromptAnalysisResult,
   CriterionItem,
-  handleTemplateLocalization,
 } from "@prompt-booster/core/prompt/utils/promptUtils";
 import { analyzePromptQuality } from "@prompt-booster/core/prompt/utils/promptAnalysisUtils";
 import {
@@ -46,6 +43,15 @@ import { getButtonPosition } from '../rtl';
 
 export const PromptBooster: React.FC = () => {
   const { t, i18n } = useTranslation();
+  // 使用模板钩子
+  const {
+    displayTemplates,
+    isTemplatesLoading,
+    getActualTemplateId,
+    getOptimizeTemplateOptions,
+    hasTemplates
+  } = useTemplates();
+
   // 使用提示词组钩子
   const {
     activeGroup,
@@ -103,58 +109,6 @@ export const PromptBooster: React.FC = () => {
   const [selectedTemplateId, setSelectedTemplateId] = useState(() => {
     return localStorage.getItem("selectedTemplateId") || "general-optimize";
   });
-
-  // 新增状态来存储模板列表
-  const [templates, setTemplates] = useState<Record<string, Template>>({});
-  const [isTemplatesLoading, setIsTemplatesLoading] = useState(true);
-
-  const [displayTemplates, setDisplayTemplates] = useState<
-    Record<string, Template>
-  >({});
-  const [getActualTemplateId, setGetActualTemplateId] = useState<
-    (id: string) => string
-  >(
-    () =>
-      (id: string): string =>
-        id
-  );
-
-  // 加载模板列表
-  useEffect(() => {
-    const loadTemplates = async () => {
-      try {
-        setIsTemplatesLoading(true);
-        const templatesRecord = await getAllTemplatesAsRecord();
-        setTemplates(templatesRecord);
-
-        // 应用模板本地化
-        const {
-          displayTemplates: localizedTemplates,
-          getActualTemplateId: idMapper,
-        } = handleTemplateLocalization(templatesRecord, i18n.language);
-        setDisplayTemplates(localizedTemplates);
-        setGetActualTemplateId(() => idMapper);
-
-        if (Object.keys(templatesRecord).length > 0) {
-          console.log(
-            t("toast.loadTemplatesSuccess", {
-              count: Object.keys(templatesRecord).length,
-            })
-          );
-          // toast.success(t('toast.loadTemplatesSuccess', { count: Object.keys(templatesRecord).length }));
-        } else {
-          toast.info(t("toast.noTemplatesAvailable"));
-        }
-      } catch (error) {
-        console.error("加载模板失败:", error);
-        toast.error(t("toast.loadTemplatesFailed"));
-      } finally {
-        setIsTemplatesLoading(false);
-      }
-    };
-
-    loadTemplates();
-  }, [t, i18n.language]);
 
   // 获取模型商店
   const { activeModel, setActiveModel, getEnabledModels } = useModelData();
@@ -222,7 +176,7 @@ export const PromptBooster: React.FC = () => {
 
   // 处理优化操作
   const handleOptimize = async () => {
-    if (!localOriginalPrompt || !localOriginalPrompt.trim() || !activeModel) {
+    if (!localOriginalPrompt?.trim() || !activeModel) {
       return;
     }
 
@@ -234,6 +188,7 @@ export const PromptBooster: React.FC = () => {
 
       toast.info(t("toast.enhancingWithModel", { modelName }));
 
+      // 直接调用函数获取实际模板ID
       const actualTemplateId = getActualTemplateId(selectedTemplateId);
 
       await enhancePrompt({
@@ -452,15 +407,7 @@ export const PromptBooster: React.FC = () => {
           </label>
           <div className="relative">
             <EnhancedDropdown
-              options={Object.entries(displayTemplates)
-                .filter(
-                  ([_, template]) =>
-                    template.metadata?.templateType === "optimize"
-                )
-                .map(([id, template]) => ({
-                  value: id,
-                  label: template.name,
-                }))}
+              options={getOptimizeTemplateOptions()}
               value={selectedTemplateId}
               onChange={setSelectedTemplateId}
               placeholder={t("promptBooster.templatePlaceholder")}
@@ -473,7 +420,7 @@ export const PromptBooster: React.FC = () => {
               </div>
             )}
           </div>
-          {!isTemplatesLoading && Object.keys(templates).length === 0 && (
+          {!isTemplatesLoading && !hasTemplates && (
             <div className="mt-2 p-2 text-center text-sm dropdown-null">
               {t("promptBooster.noTemplatesAvailable")}
             </div>
@@ -500,10 +447,7 @@ export const PromptBooster: React.FC = () => {
         <Tooltip text={t("promptBooster.enhancePrompt")}>
           <button
             className={`flex gap-2 items-center h-10 px-4 py-2 rounded-md truncate button-confirm 
-                            ${isProcessing
-                ? "cursor-not-allowed opacity-50"
-                : ""
-              }`}
+                        ${isProcessing ? "cursor-not-allowed opacity-50" : ""}`}
             onClick={handleOptimize}
             disabled={
               isProcessing ||
@@ -948,7 +892,6 @@ export const PromptBooster: React.FC = () => {
         isOpen={isIterationDialogOpen}
         onClose={() => setIsIterationDialogOpen(false)}
         onSubmit={handleIterationSubmit}
-        templates={displayTemplates}
       />
 
       {/* 重置确认对话框 */}

@@ -2,7 +2,7 @@
 /**
  * 模板类型枚举
  */
-export type TemplateType = 'optimize' | 'iterate' | 'custom';
+export type TemplateType = 'optimize' | 'iterate'| 'analyze' | 'custom';
 
 /**
  * 模板元数据接口

@@ -1,5 +1,45 @@
 // packages/core/src/utils/prompt-utils.ts
 import { llmService } from '../services/llmService';
+import { getAllTemplatesAsRecord } from '../services/templateService';
+import { Template } from '../models/template';
+
+let templatesCache: Record<string, Template> | null = null;
+
+async function getAnalyzeTemplate(currentLanguage?: string): Promise<Template> {
+  if (!templatesCache) {
+    templatesCache = await getAllTemplatesAsRecord();
+  }
+
+  // 第一步：筛选出所有 'analyze' 类型的模板
+  const analyzeTemplates: Record<string, Template> = {};
+  Object.entries(templatesCache).forEach(([id, template]) => {
+    if (template.metadata?.templateType === 'analyze') {
+      analyzeTemplates[id] = template;
+    }
+  });
+
+  if (Object.keys(analyzeTemplates).length === 0) {
+    throw new Error('No analyze templates found');
+  }
+
+  // 第二步：使用现有的本地化处理逻辑
+  const {
+    displayTemplates,
+    getActualTemplateId
+  } = handleTemplateLocalization(analyzeTemplates, currentLanguage || 'en');
+
+  // 第三步：获取第一个（也是唯一的）分析模板
+  const firstTemplateKey = Object.keys(displayTemplates)[0];
+  if (!firstTemplateKey) {
+    throw new Error('No localized analyze template found');
+  }
+
+  const actualTemplateId = getActualTemplateId(firstTemplateKey);
+  const template = templatesCache[actualTemplateId];
+
+  console.log('🎯 通过本地化选择分析模板:', actualTemplateId);
+  return template;
+}
 
 /**
  * 根据语言代码生成对应的语言指令
@@ -128,122 +168,82 @@ export async function analyzePromptWithLLM(
   currentLanguage?: string
 ): Promise<PromptAnalysisResult> {
   const cleanedPrompt = removeThinkTags(prompt);
-  let languageInstruction = getLanguageInstruction(currentLanguage);
-  const systemPrompt = `
-你是一个专业的提示词（Prompt）质量评估助手，你将对用户提供的提示词进行公正、创造性且全面的评估。
 
-# 评估原则：
-- 评估应基于提示词实际效果，而非固定标准
-- 捕捉提示词的独特亮点和可能的不足
-- 提供有建设性的、具体的改进建议
-- 评价应真实反映提示词的实际水平，不人为降低或抬高
-
-# 评估方法：
-1. 选择3-5个与该提示词最相关的评估维度
-2. 为每个维度给出0-3分的评分：
-   - 0分：完全未达到要求
-   - 1分：基本达到要求
-   - 2分：完全满足要求
-   - 3分：表现优秀，超出预期
-3. 自由分配分数，但请确保：
-   - 真正优秀的提示词应该获得高分
-   - 总分控制在10分以内
-   - 分数应反映各维度的重要性和表现
-   - 不必强制使总分达到10分，应反映实际质量
-4. 为每个维度提供具体评价和建议
-5. 提供一句个性化的鼓励语，具体反映该提示词的特点：
-   - 对优秀提示词，赞赏其突出优势和专业性
-   - 对良好提示词，肯定其优点并点明改进方向
-   - 对基础提示词，给予鼓励并指明关键改进点
-   - 鼓励语应精准反映提示词的实际水平和特色，避免泛泛而谈
-
-# 响应格式：
-返回纯JSON对象，格式如下：
-{
-  "criteria": [
-    {
-      "label": "维度名称",
-      "points": 分数(0-3),
-      "feedback": "针对该维度的具体评价",
-      "suggestion": "针对该维度的改进建议"
-    },
-    // 更多维度评估...
-  ],
-  "score": 总分(计算所有维度分数之和，最高10分),
-  "suggestions": ["整体优化建议1", "整体优化建议2"],
-  "encouragement": "基于提示词特点的个性化鼓励语，应明确反映其优势和特色"
-}
-
-${languageInstruction}
-`;
-  console.log(languageInstruction);
-  const userMessage = `请对以下提示词进行质量分析。如果它确实表现优秀，请给予高分评价；如果有不足，请如实指出并提供改进建议，${languageInstruction}：\n\n${cleanedPrompt}`;
-
-  const result = await llmService.callLLM({
-    userMessage,
-    systemMessage: systemPrompt,
-    stream: false
-  });
+  // 获取语言指令
+  const languageInstruction = getLanguageInstruction(currentLanguage);
 
   try {
-    const withoutThinkTags = removeThinkTags(result);
-    const cleaned = withoutThinkTags.trim().replace(/^```json[\s\r\n]*|```$/g, '');
-    const parsed = JSON.parse(cleaned) as {
-      criteria?: Array<{
-        label: string;
-        points: number;
-        feedback: string;
-        suggestion?: string;
-      }>;
-      score?: number;
-      suggestions?: string[];
-      encouragement?: string;
-    };
+    // 🎯 使用灵活的模板选择（不再硬编码ID）
+    const template = await getAnalyzeTemplate(currentLanguage);
 
-    // 验证并调整评分逻辑
-    const criteria = parsed.criteria || [];
+    // 构建系统提示词：模板内容 + 语言指令
+    const systemPrompt = `${template.content}\n\n${languageInstruction}`;
 
-    // 确保每个criterion都有正确的字段
-    const enhancedCriteria: CriterionItem[] = criteria.map((c: {
-      label: string;
-      points: number;
-      feedback: string;
-      suggestion?: string;
-    }) => ({
-      label: c.label,
-      points: typeof c.points === 'number' ? c.points : 0,
-      feedback: c.feedback,
-      suggestion: c.suggestion,
-      maxPoints: 3, // 每个维度的最高分为3分
-      passed: (typeof c.points === 'number' ? c.points : 0) > 0 // 只要得分大于0就算通过
-    }));
+    // 构建用户消息：保持语言指令重复以确保优先级
+    const userMessage = `请对以下提示词进行质量分析。如果它确实表现优秀，请给予高分评价；如果有不足，请如实指出并提供改进建议：\n\n${cleanedPrompt}，\n##Important: ${languageInstruction}`;
 
-    // 计算总分
-    let calculatedScore: number = enhancedCriteria.reduce((sum: number, c: CriterionItem) => sum + c.points, 0);
+    console.log('🌍 语言指令:', languageInstruction);
+    console.log('🔍 系统提示词最后20字符:', systemPrompt.slice(-20));
+    console.log('🔍 用户消息最后20字符:', userMessage.slice(-20));
 
-    // 如果总分超过10分，按比例缩减
-    if (calculatedScore > 10) {
-      const scaleFactor: number = 10 / calculatedScore;
-      enhancedCriteria.forEach((c: CriterionItem) => {
-        c.points = Math.round(c.points * scaleFactor * 10) / 10; // 保留一位小数
-        // 确保缩放后分数为0的项也更新passed状态
-        c.passed = c.points > 0;
-      });
-      calculatedScore = 10; // 确保总分为10
+    const result = await llmService.callLLM({
+      userMessage,
+      systemMessage: systemPrompt,
+      stream: false
+    });
+
+    // 后续处理逻辑保持不变...
+    try {
+      const withoutThinkTags = removeThinkTags(result);
+      const cleaned = withoutThinkTags.trim().replace(/^```json[\s\r\n]*|```$/g, '');
+      const parsed = JSON.parse(cleaned) as {
+        criteria?: Array<{
+          label: string;
+          points: number;
+          feedback: string;
+          suggestion?: string;
+        }>;
+        score?: number;
+        suggestions?: string[];
+        encouragement?: string;
+      };
+
+      const criteria = parsed.criteria || [];
+      const enhancedCriteria: CriterionItem[] = criteria.map((c) => ({
+        label: c.label,
+        points: typeof c.points === 'number' ? c.points : 0,
+        feedback: c.feedback,
+        suggestion: c.suggestion,
+        maxPoints: 3,
+        passed: (typeof c.points === 'number' ? c.points : 0) > 0
+      }));
+
+      let calculatedScore: number = enhancedCriteria.reduce((sum: number, c: CriterionItem) => sum + c.points, 0);
+
+      if (calculatedScore > 10) {
+        const scaleFactor: number = 10 / calculatedScore;
+        enhancedCriteria.forEach((c: CriterionItem) => {
+          c.points = Math.round(c.points * scaleFactor * 10) / 10;
+          c.passed = c.points > 0;
+        });
+        calculatedScore = 10;
+      }
+
+      const finalResult: PromptAnalysisResult = {
+        score: Math.round(calculatedScore * 10) / 10,
+        criteria: enhancedCriteria,
+        suggestions: parsed.suggestions || [],
+        encouragement: parsed.encouragement
+      };
+
+      return finalResult;
+    } catch (parseError) {
+      console.error('[LLM❌Parse Error]', parseError);
+      throw new Error('LLM 评分结果解析失败');
     }
-
-    // 直接使用大模型提供的鼓励语
-    const finalResult: PromptAnalysisResult = {
-      score: Math.round(calculatedScore * 10) / 10, // 保留一位小数
-      criteria: enhancedCriteria,
-      suggestions: parsed.suggestions || [],
-      encouragement: parsed.encouragement
-    };
-
-    return finalResult;
-  } catch (e) {
-    console.error('[LLM❌Parse Error]', e);
-    throw new Error('LLM 评分结果解析失败');
+  } catch (templateError) {
+    console.error('[Template❌Load Error]', templateError);
+    throw new Error('模板加载失败，将使用本地分析');
   }
 }
 

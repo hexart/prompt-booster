@@ -2,38 +2,38 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog } from '@prompt-booster/ui/components/Dialog';
 import { EnhancedDropdown } from '@prompt-booster/ui/components/EnhancedDropdown';
-import { Template } from '@prompt-booster/core/prompt/models/template';
+import { useTemplates } from '@prompt-booster/core/prompt/hooks/useTemplates';
 import { useTranslation } from 'react-i18next';
 
 interface IterationDialogProps {
     isOpen: boolean;
     onClose: () => void;
     onSubmit: (templateId: string, direction: string) => void;
-    templates: Record<string, Template>;
 }
 
 export const IterationDialog: React.FC<IterationDialogProps> = ({
     isOpen,
     onClose,
     onSubmit,
-    templates
 }) => {
     const { t } = useTranslation();
+    const { getTemplateOptionsByType } = useTemplates();
+    
     const [selectedTemplateId, setSelectedTemplateId] = useState('');
     const [iterationDirection, setIterationDirection] = useState('');
+
+    // 获取迭代类型的模板选项
+    const iterateTemplateOptions = getTemplateOptionsByType('iterate');
 
     // 组件挂载时设置默认模板
     useEffect(() => {
         if (isOpen) {
-            // 默认选择第一个迭代类型的模板
-            const iterateTemplates = Object.entries(templates)
-                .filter(([_, template]) => template.metadata?.templateType === 'iterate');
-            
-            if (iterateTemplates.length > 0) {
-                setSelectedTemplateId(iterateTemplates[0][0]);
+            // 使用第一个选项
+            if (iterateTemplateOptions.length > 0) {
+                setSelectedTemplateId(iterateTemplateOptions[0].value);
             }
         }
-    }, [isOpen, templates]);
+    }, [isOpen, iterateTemplateOptions]);
 
     const handleSubmit = () => {
         if (selectedTemplateId && iterationDirection.trim()) {
@@ -75,12 +75,7 @@ export const IterationDialog: React.FC<IterationDialogProps> = ({
                         {t('promptBooster.iterationDialog.selectTemplate')}
                     </label>
                     <EnhancedDropdown
-                        options={Object.entries(templates)
-                            .filter(([_, template]) => template.metadata?.templateType === 'iterate')
-                            .map(([id, template]) => ({
-                                value: id,
-                                label: template.name
-                            }))}
+                        options={iterateTemplateOptions}
                         value={selectedTemplateId}
                         onChange={setSelectedTemplateId}
                         placeholder="选择迭代提示词模板..."
