@@ -276,7 +276,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                     disabled={disabled}
                     placeholder={placeholder}
                     className={`
-                        w-full p-2 pr-10 border rounded input placeholder-gray-400
+                        w-full p-2 pe-10 border rounded input placeholder-gray-400
                         ${disabled
                             ? 'input-disabled'
                             : ''}
@@ -287,7 +287,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                     onClick={handleButtonClick}
                     disabled={disabled}
                     className={`
-                        absolute inset-y-0 right-0 flex items-center justify-center
+                        absolute inset-y-0 end-0 flex items-center justify-center
                         p-3 focus:outline-none
                         ${disabled
                             ? 'cursor-not-allowed input-select-button-disabled'

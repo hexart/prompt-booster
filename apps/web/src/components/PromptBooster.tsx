@@ -487,7 +487,7 @@ export const PromptBooster: React.FC = () => {
             {activeGroup && (
               <div
                 ref={versionsContainerRef}
-                className="flex items-center gap-2 pr-2 overflow-x-auto no-scrollbar w-full py-1 [&::-webkit-scrollbar]:h-1"
+                className="flex items-center gap-2 pe-2 overflow-x-auto no-scrollbar w-full py-1 [&::-webkit-scrollbar]:h-1"
               >
                 {getGroupVersions(activeGroup.id).map(
                   (version: PromptVersion) => (
@@ -519,7 +519,7 @@ export const PromptBooster: React.FC = () => {
 
           {/* 处理中指示器 */}
           {isProcessing && (
-            <div className="flex-shrink-0 mr-4 flex items-center">
+            <div className="flex-shrink-0 me-4 flex items-center">
               <LoadingIcon />
             </div>
           )}
@@ -815,7 +815,7 @@ export const PromptBooster: React.FC = () => {
                                 {t("promptBooster.drawer.copyAll")}
                               </button>
                             </div>
-                            <ul className="list-disc pl-5 drawer-suggestion-title space-y-1">
+                            <ul className="list-disc ps-5 drawer-suggestion-title space-y-1">
                               {[
                                 // 先放各维度未通过的建议
                                 ...analysisResult.criteria
@@ -833,7 +833,7 @@ export const PromptBooster: React.FC = () => {
                         )}
                     </>
                   )}
-                  <div className="mt-4 flex justify-center">
+                  <div className="mt-4 flex gap-2 justify-center">
                     {!hasUsedLLMAnalysis && (
                       <Tooltip
                         text={
@@ -865,7 +865,7 @@ export const PromptBooster: React.FC = () => {
                       </Tooltip>
                     )}
                     <button
-                      className="px-4 py-2 ml-2 text-sm button-cancel rounded-md transition"
+                      className="px-4 py-2 text-sm button-cancel rounded-md transition"
                       onClick={() => setIsDrawerOpen(false)}
                     >
                       {t("common.buttons.close")}

@@ -71,7 +71,7 @@ export const TestResult: React.FC = () => {
         toast.error(
           <>
             <p className="font-medium">可能的解决方案:</p>
-            <ul className="list-disc ml-5 mt-1">
+            <ul className="list-disc ms-5 mt-1">
               <li>检查您的网络连接</li>
               <li>验证您的API密钥和端点配置</li>
               <li>API服务可能暂时不可用，请稍后再试</li>
@@ -316,7 +316,7 @@ export const TestResult: React.FC = () => {
         <div className="flex justify-between items-center mb-2">
           <h2 className="text-xl font-semibold title-secondary">{title}</h2>
           {isStreaming ? (
-            <div className="ml-2">
+            <div className="ms-2">
               <LoadingIcon />
             </div>
           ) : (

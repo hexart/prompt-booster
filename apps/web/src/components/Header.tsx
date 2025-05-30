@@ -100,7 +100,7 @@ const Header: React.FC<HeaderProps> = ({
                                 <img
                                     src={logo}
                                     alt={t('common.wuKong')}
-                                    className="h-8 w-8 mr-2"
+                                    className="h-8 w-8 me-2"
                                     style={nonDraggableStyle}
                                 />
                             </Tooltip>

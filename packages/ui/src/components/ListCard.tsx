@@ -46,7 +46,7 @@ export const ListCard: React.FC<ListCardProps> = ({
             onClick={onClick}
         >
             <div className="flex">
-                <div className="grow w-1/2 min-w-[33%] pr-4 overflow-hidden">
+                <div className="grow w-1/2 min-w-[33%] pe-4 overflow-hidden">
                     {/* 标题 */}
                     {renderTitle ? renderTitle(title) : <h3 className="truncate">{title}</h3>}
 

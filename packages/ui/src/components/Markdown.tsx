@@ -268,12 +268,12 @@ export const Markdown: React.FC<MarkdownProps> = ({
 
             // 列表
             ul: ({ children }) => (
-                <ul className="pl-8 mt-2 mb-2 list-disc text-gray-800 dark:text-gray-200">
+                <ul className="ps-8 mt-2 mb-2 list-disc text-gray-800 dark:text-gray-200">
                     {children}
                 </ul>
             ),
             ol: ({ children }) => (
-                <ol className="pl-8 mt-2 mb-4 list-decimal text-gray-800 dark:text-gray-200">
+                <ol className="ps-8 mt-2 mb-4 list-decimal text-gray-800 dark:text-gray-200">
                     {children}
                 </ol>
             ),
@@ -309,7 +309,7 @@ export const Markdown: React.FC<MarkdownProps> = ({
 
             // 引用
             blockquote: ({ children }) => (
-                <blockquote className="pl-4 pr-4 italic border-l-4 markdown-table my-4 text-gray-700 dark:text-gray-300">
+                <blockquote className="ps-4 pe-4 italic border-l-4 markdown-table my-4 text-gray-700 dark:text-gray-300">
                     {children}
                 </blockquote>
             ),
