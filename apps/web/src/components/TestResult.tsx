@@ -367,6 +367,7 @@ export const TestResult: React.FC = () => {
             threshold={8}
             placeholder={isStreaming ? t('testResult.responding') : t('testResult.noResponseYet')}
             buttonPosition={getButtonPosition('top-right')}
+            isRTL={isRTL()}
           />
         </div>
 

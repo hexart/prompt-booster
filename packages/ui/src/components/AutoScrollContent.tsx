@@ -58,6 +58,9 @@ interface AutoScrollContentProps {
 
   /** 按钮位置 */
   buttonPosition?: 'top-right' | 'bottom-right' | 'top-left' | 'bottom-left';
+
+  /** 是否为RTL语言 */
+  isRTL?: boolean;
 }
 
 export const AutoScrollContent: React.FC<AutoScrollContentProps> = ({
@@ -75,6 +78,7 @@ export const AutoScrollContent: React.FC<AutoScrollContentProps> = ({
   showDownloadMd = true,
   showDownloadDocx = true,
   buttonPosition = 'top-right',
+  isRTL = false,
 }) => {
   const {
     elementRef,
@@ -173,6 +177,7 @@ export const AutoScrollContent: React.FC<AutoScrollContentProps> = ({
             content={content}
             allowHtml={allowHtml}
             streaming={streaming}
+            isRTL={isRTL}
           />
         ) : (
           // 纯文本模式 - 只处理换行
