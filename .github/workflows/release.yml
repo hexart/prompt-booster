@@ -123,6 +123,36 @@ jobs:
           name: Prompt Booster ${{ steps.get_version.outputs.VERSION }}
           body: |
             ## This app supports auto update.
+            
+            ## For Linux Users: Running AppImage
+            
+            Download the AppImage file and run these two commands:
+            
+            ```bash
+            chmod +x Prompt-Booster-*.AppImage
+            ./Prompt-Booster-*.AppImage --no-sandbox
+            ```
+            
+            **Note**: The `--no-sandbox` flag is required for AppImage compatibility on most Linux distributions.
+            
+            ### Optional: Easy Desktop Integration
+            
+            **Method 1: File Manager Integration (Most User-Friendly)**
+            1. Right-click on the AppImage file
+            2. Select "Properties" or "Permissions"
+            3. Check "Allow executing file as program" or "Executable"
+            4. Double-click to run (you may still need to add --no-sandbox manually)
+            
+            **Method 2: Create Launcher Script**
+            Create a simple script in the same folder as your AppImage:
+            ```bash
+            # Save this as "launch-prompt-booster.sh" next to your AppImage
+            #!/bin/bash
+            cd "$(dirname "$0")"
+            ./Prompt-Booster-*.AppImage --no-sandbox
+            ```
+            Then make it executable: `chmod +x launch-prompt-booster.sh`
+            
             ## For macOS Users: Running Unsigned App
 
             Since this app is not signed with an Apple Developer certificate, macOS may prevent it from running. Use either of these methods:
