@@ -154,7 +154,11 @@
     "enableMarkdown": "마크다운 렌더링 활성화",
     "disableMarkdown": "마크다운 렌더링 비활성화",
     "runComparisonTest": "비교 테스트 실행",
-    "retrying": "재시도 중 ({{count}}/{{max}})..."
+    "retrying": "재시도 중 ({{count}}/{{max}})...",
+    "markDown": {
+      "thinkProcessCompleted": "사고 과정 (완료)",
+      "thinkProcessInProgress": "사고 과정 (진행 중...)"
+    }
   },
   "history": {
     "title": "기록",

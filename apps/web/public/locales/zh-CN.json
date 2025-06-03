@@ -154,7 +154,11 @@
     "enableMarkdown": "开启Markdown渲染",
     "disableMarkdown": "关闭Markdown渲染",
     "runComparisonTest": "运行对比测试",
-    "retrying": "正在重试({{count}}/{{max}})..."
+    "retrying": "正在重试({{count}}/{{max}})...",
+    "markDown": {
+      "thinkProcessCompleted": "思考过程 (已完成)",
+      "thinkProcessInProgress": "思考过程 (进行中...)"
+    }
   },
   "history": {
     "title": "历史记录",

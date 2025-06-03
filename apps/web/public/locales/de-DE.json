@@ -156,7 +156,11 @@
     "enableMarkdown": "Markdown-Rendering aktivieren",
     "disableMarkdown": "Markdown-Rendering deaktivieren",
     "runComparisonTest": "Vergleichstest ausführen",
-    "retrying": "Wiederholungsversuch ({{count}}/{{max}})..."
+    "retrying": "Wiederholungsversuch ({{count}}/{{max}})...",
+    "markDown": {
+      "thinkProcessCompleted": "Denkprozess (Abgeschlossen)",
+      "thinkProcessInProgress": "Denkprozess (Läuft...)"
+    }
   },
   "history": {
     "title": "Verlaufsaufzeichnung",

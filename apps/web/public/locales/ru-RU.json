@@ -158,7 +158,11 @@
     "enableMarkdown": "Включить рендеринг Markdown",
     "disableMarkdown": "Отключить рендеринг Markdown",
     "runComparisonTest": "Запустить сравнительный тест",
-    "retrying": "Повторная попытка ({{count}}/{{max}})..."
+    "retrying": "Повторная попытка ({{count}}/{{max}})...",
+    "markDown": {
+      "thinkProcessCompleted": "Процесс Мышления (Завершён)",
+      "thinkProcessInProgress": "Процесс Мышления (В Процессе...)"
+    }
   },
   "history": {
     "title": "История",

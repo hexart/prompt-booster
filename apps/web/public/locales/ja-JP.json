@@ -154,7 +154,11 @@
     "enableMarkdown": "Markdownレンダリングを有効化",
     "disableMarkdown": "Markdownレンダリングを無効化",
     "runComparisonTest": "比較テストを実行",
-    "retrying": "再試行中 ({{count}}/{{max}})..."
+    "retrying": "再試行中 ({{count}}/{{max}})...",
+    "markDown": {
+      "thinkProcessCompleted": "思考プロセス (完了)",
+      "thinkProcessInProgress": "思考プロセス (進行中...)"
+    }
   },
   "history": {
     "title": "履歴レコード",

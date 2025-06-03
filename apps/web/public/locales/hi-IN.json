@@ -156,7 +156,11 @@
     "enableMarkdown": "मार्कडाउन रेंडरिंग सक्षम करें",
     "disableMarkdown": "मार्कडाउन रेंडरिंग अक्षम करें",
     "runComparisonTest": "तुलनात्मक परीक्षण चलाएं",
-    "retrying": "पुन: प्रयास कर रहा है ({{count}}/{{max}})..."
+    "retrying": "पुन: प्रयास कर रहा है ({{count}}/{{max}})...",
+    "markDown": {
+      "thinkProcessCompleted": "सोच प्रक्रिया (पूर्ण)",
+      "thinkProcessInProgress": "सोच प्रक्रिया (प्रगति में...)"
+    }
   },
   "history": {
     "title": "इतिहास",

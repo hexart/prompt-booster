@@ -1,4 +1,6 @@
 // packages/ui/src/components/MarkdownThink.tsx
+import { useTranslation } from 'react-i18next';
+
 /**
  * 预处理Markdown内容中的思考标签(<think>)
  * 将<think>标签转换为可折叠的HTML details元素
@@ -10,9 +12,14 @@
  * 
  * @param rawContent - 原始Markdown内容字符串
  * @param isRTL - 是否为RTL语言
+ * @param t - i18next翻译函数
  * @returns 处理后的包含HTML details元素的内容字符串
  */
-export const preprocessThinkTags = (rawContent: string, isRTL: boolean = false): string => {
+export const preprocessThinkTags = (
+  rawContent: string, 
+  isRTL: boolean = false,
+  t: (key: string) => string
+): string => {
   if (!rawContent) return '';
 
   let processedContent = rawContent;
@@ -31,9 +38,10 @@ export const preprocessThinkTags = (rawContent: string, isRTL: boolean = false):
                     </svg>`;
 
   // 处理已完成的思考块 (完整的<think></think>对)
+  const completedTitle = t('testResult.markDown.thinkProcessCompleted');
   processedContent = processedContent.replace(
     /<think>([\s\S]*?)<\/think>/g,
-    `<details class="think-block" data-complete="true"><summary class="think-header"><span>${arrowSvg}</span><span class="think-title">思考过程 (已完成)</span></summary><div class="think-content">$1</div></details>`
+    `<details class="think-block" data-complete="true"><summary class="think-header"><span>${arrowSvg}</span><span class="think-title">${completedTitle}</span></summary><div class="think-content">$1</div></details>`
   );
 
   // 处理未完成的思考块 (只有开始标签)
@@ -43,10 +51,11 @@ export const preprocessThinkTags = (rawContent: string, isRTL: boolean = false):
   if (lastThinkIndex > lastThinkEndIndex) {
     // 有未闭合的<think>标签，提取内容并替换
     const thinkContent = processedContent.substring(lastThinkIndex + 7); // +7 跳过 <think> 标签
+    const inProgressTitle = t('testResult.markDown.thinkProcessInProgress');
 
     // 替换最后一个未闭合的<think>标签及其内容
     processedContent = processedContent.substring(0, lastThinkIndex) +
-      `<details class="think-block" open data-streaming="true"><summary class="think-header"><span>${arrowSvg}</span><span class="think-title in-progress">思考过程 (进行中...)</span></summary><div class="think-content">` +
+      `<details class="think-block" open data-streaming="true"><summary class="think-header"><span>${arrowSvg}</span><span class="think-title in-progress">${inProgressTitle}</span></summary><div class="think-content">` +
       thinkContent +
       '</div></details>';
   }
@@ -60,8 +69,13 @@ export const preprocessThinkTags = (rawContent: string, isRTL: boolean = false):
  * 
  * @param containerElement - 包含思考块的DOM容器元素
  * @param content - 原始内容字符串
+ * @param t - i18next翻译函数
  */
-export const handleThinkBlocks = (containerElement: HTMLElement | null, content: string) => {
+export const handleThinkBlocks = (
+  containerElement: HTMLElement | null, 
+  content: string,
+  t: (key: string) => string
+) => {
   if (!containerElement) return;
 
   // 检查是否有正在流式传输的 think 块
@@ -74,6 +88,8 @@ export const handleThinkBlocks = (containerElement: HTMLElement | null, content:
 
   // 如果不再有未闭合的<think>标签，关闭所有流式块
   if (!hasUnclosedThink && streamingBlocks && streamingBlocks.length > 0) {
+    const completedTitle = t('testResult.markDown.thinkProcessCompleted');
+    
     setTimeout(() => {
       streamingBlocks.forEach(block => {
         // 标记为已完成
@@ -84,7 +100,7 @@ export const handleThinkBlocks = (containerElement: HTMLElement | null, content:
         // 更新标题
         const title = block.querySelector('.think-title');
         if (title) {
-          title.textContent = '思考过程 (已完成)';
+          title.textContent = completedTitle;
           title.classList.remove('in-progress');
         }
       });
@@ -115,4 +131,26 @@ export const addThinkBlocksEventHandlers = (containerElement: HTMLElement | null
       (detail as any)._hasClickListener = true;
     }
   });
+};
+
+/**
+ * React Hook组件，用于在React组件中使用带有i18next的思考块功能
+ * 这个hook封装了i18next的使用，提供便于使用的函数
+ */
+export const useMarkdownThink = () => {
+  const { t } = useTranslation();
+
+  const preprocessThinkTagsWithTranslation = (rawContent: string, isRTL: boolean = false) => {
+    return preprocessThinkTags(rawContent, isRTL, t);
+  };
+
+  const handleThinkBlocksWithTranslation = (containerElement: HTMLElement | null, content: string) => {
+    return handleThinkBlocks(containerElement, content, t);
+  };
+
+  return {
+    preprocessThinkTags: preprocessThinkTagsWithTranslation,
+    handleThinkBlocks: handleThinkBlocksWithTranslation,
+    addThinkBlocksEventHandlers
+  };
 };

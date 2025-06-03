@@ -156,7 +156,11 @@
     "enableMarkdown": "Activer le rendu Markdown",
     "disableMarkdown": "Désactiver le rendu Markdown",
     "runComparisonTest": "Exécuter un test comparatif",
-    "retrying": "Nouvelle tentative ({{count}}/{{max}})..."
+    "retrying": "Nouvelle tentative ({{count}}/{{max}})...",
+    "markDown": {
+      "thinkProcessCompleted": "Processus de Réflexion (Terminé)",
+      "thinkProcessInProgress": "Processus de Réflexion (En Cours...)"
+    }
   },
   "history": {
     "title": "Historique",

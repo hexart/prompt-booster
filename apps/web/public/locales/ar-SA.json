@@ -164,7 +164,11 @@
     "enableMarkdown": "تمكين عرض ماركداون",
     "disableMarkdown": "تعطيل عرض ماركداون",
     "runComparisonTest": "تشغيل اختبار المقارنة",
-    "retrying": "إعادة المحاولة ({{count}}/{{max}})..."
+    "retrying": "إعادة المحاولة ({{count}}/{{max}})...",
+    "markDown": {
+      "thinkProcessCompleted": "عملية التفكير (مكتملة)",
+      "thinkProcessInProgress": "عملية التفكير (قيد التنفيذ...)"
+    }
   },
   "history": {
     "title": "السجل التاريخي",

@@ -13,7 +13,7 @@ import typescript from 'react-syntax-highlighter/dist/esm/languages/prism/typesc
 import python from 'react-syntax-highlighter/dist/esm/languages/prism/python';
 import { visit } from 'unist-util-visit';
 // 导入think标签插件
-import { preprocessThinkTags, handleThinkBlocks } from './MarkdownThink';
+import { useMarkdownThink } from './MarkdownThink';
 import './markdown.css';
 import './markdownthink.css'; // 引入think标签的样式
 
@@ -129,17 +129,20 @@ export const Markdown: React.FC<MarkdownProps> = ({
   // 创建一个ref来引用container元素
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // 使用Hook获取翻译后的处理函数
+  const { preprocessThinkTags: preprocessThinkTagsWithI18n, handleThinkBlocks: handleThinkBlocksWithI18n } = useMarkdownThink();
+
   // 处理流式内容时的光标
   const processedContent = useMemo(() => {
-    // 先预处理 think 标签，传入RTL状态
-    const preprocessed = preprocessThinkTags(content, isRTL);
+    // 先预处理 think 标签，传入RTL状态（现在自动包含翻译）
+    const preprocessed = preprocessThinkTagsWithI18n(content, isRTL);
 
     // 再添加流式光标
     if (streaming && typeof preprocessed === 'string') {
       return preprocessed + '\u200B';
     }
     return preprocessed || '';
-  }, [content, streaming, isRTL]);
+  }, [content, streaming, isRTL, preprocessThinkTagsWithI18n]);
 
   // 使用 useMemo 缓存插件配置，避免不必要的重新计算
   const plugins = useMemo(() => {
@@ -160,9 +163,9 @@ export const Markdown: React.FC<MarkdownProps> = ({
 
   // 组件渲染后，处理思考块
   useEffect(() => {
-    // 处理思考块的折叠/展开状态
-    handleThinkBlocks(containerRef.current, content);
-  }, [content, streaming]);
+    // 处理思考块的折叠/展开状态（现在自动包含翻译）
+    handleThinkBlocksWithI18n(containerRef.current, content);
+  }, [content, streaming, handleThinkBlocksWithI18n]);
 
   // 自定义组件配置
   const components: Components = useMemo(() => {

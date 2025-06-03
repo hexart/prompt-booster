@@ -156,7 +156,11 @@
     "enableMarkdown": "Markdown-rendering inschakelen",
     "disableMarkdown": "Markdown-rendering uitschakelen",
     "runComparisonTest": "Vergelijkende test uitvoeren",
-    "retrying": "Opnieuw proberen ({{count}}/{{max}})..."
+    "retrying": "Opnieuw proberen ({{count}}/{{max}})...",
+    "markDown": {
+      "thinkProcessCompleted": "Denkproces (Voltooid)",
+      "thinkProcessInProgress": "Denkproces (Bezig...)"
+    }
   },
   "history": {
     "title": "Geschiedenis",
