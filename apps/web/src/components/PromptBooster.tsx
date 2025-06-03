@@ -262,7 +262,7 @@ export const PromptBooster: React.FC = () => {
       // 尝试使用LLM分析
       let result;
       try {
-        result = await analyzePromptWithLLM(optimizedPrompt, i18n.language);
+        result = await analyzePromptWithLLM(optimizedPrompt, displayOriginalPrompt, i18n.language);
         // 标记已使用LLM分析
         setHasUsedLLMAnalysis(true);
       } catch (e) {
@@ -564,7 +564,7 @@ export const PromptBooster: React.FC = () => {
             <button
               className="text-sm flex items-center gap-1 rounded-lg px-3 py-2 button-third"
               onClick={() => setIsMaximized(!isMaximized)}
-              disabled={!localOriginalPrompt?.trim()}
+              disabled={!displayOriginalPrompt?.trim()}
             >
               {isMaximized ? (
                 <>

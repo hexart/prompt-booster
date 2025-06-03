@@ -165,9 +165,11 @@ export interface LLMAnalysisResponse {
 
 export async function analyzePromptWithLLM(
   prompt: string,
+  originalPrompt: string,
   currentLanguage?: string
 ): Promise<PromptAnalysisResult> {
   const cleanedPrompt = removeThinkTags(prompt);
+  const cleanedOriginalPrompt = removeThinkTags(originalPrompt);
 
   // 获取语言指令
   const languageInstruction = getLanguageInstruction(currentLanguage);
@@ -180,7 +182,7 @@ export async function analyzePromptWithLLM(
     const systemPrompt = `${template.content}\n\n${languageInstruction}`;
 
     // 构建用户消息：保持语言指令重复以确保优先级
-    const userMessage = `请对以下提示词进行质量分析。如果它确实表现优秀，请给予高分评价；如果有不足，请如实指出并提供改进建议：\n\n${cleanedPrompt}，\n##Important: ${languageInstruction}`;
+    const userMessage = `请对以下提示词进行质量分析。如果它确实表现优秀，请给予高分评价；如果有不足，请如实指出并提供改进建议：\n\n${cleanedPrompt}\n\n参考信息 - 原始提示词：\n${cleanedOriginalPrompt}\n\n##Important: ${languageInstruction}`;
 
     console.log('🌍 语言指令:', languageInstruction);
     console.log('🔍 系统提示词最后20字符:', systemPrompt.slice(-20));
