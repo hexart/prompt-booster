@@ -29,8 +29,7 @@
     "build": "vite build",
     "dev": "vite build --watch",
     "lint": "eslint \"src/**/*.ts\"",
-    "clean": "rm -rf .turbo node_modules dist",
-    "test": "vitest run"
+    "clean": "rm -rf .turbo node_modules dist"
   },
   "dependencies": {
     "@prompt-booster/api": "workspace:*",
@@ -46,7 +45,6 @@
     "@types/uuid": "^10.0.0",
     "typescript": "^5.8.3",
     "vite": "^6.3.5",
-    "vite-plugin-dts": "^4.5.4",
-    "vitest": "^3.2.2"
+    "vite-plugin-dts": "^4.5.4"
   }
 }

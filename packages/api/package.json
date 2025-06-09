@@ -19,7 +19,6 @@
     "build": "vite build",
     "dev": "vite build --watch",
     "lint": "eslint \"src/**/*.ts\"",
-    "test": "vitest run",
     "clean": "rm -rf .turbo node_modules dist"
   },
   "dependencies": {
@@ -32,7 +31,6 @@
   "devDependencies": {
     "typescript": "^5.8.3",
     "vite": "^6.3.5",
-    "vite-plugin-dts": "^4.5.4",
-    "vitest": "^3.2.2"
+    "vite-plugin-dts": "^4.5.4"
   }
 }
