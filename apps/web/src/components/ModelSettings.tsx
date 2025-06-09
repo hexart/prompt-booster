@@ -5,7 +5,7 @@ import { useModelStore } from '@prompt-booster/core/model/store/modelStore';
 import { Dialog, ListCard, toast } from '@prompt-booster/ui';
 import LoadingIcon from '@prompt-booster/ui/components/LoadingIcon';
 import { useModal } from '@prompt-booster/ui/hooks/useModal';
-import { ListPlus, Power, Link2, FileCog, Trash2 } from 'lucide-react';
+import { Grid2X2PlusIcon, Power, Link2, FileCog, Trash2 } from 'lucide-react';
 import { useModelConnection, useModelData, useModelEdit } from '../hooks/model-hooks';
 import { ModelModal } from './ModelModal';
 import { disableApiClientLogs } from '@prompt-booster/api/utils/apiLogging';
@@ -204,7 +204,7 @@ export const ModelSettings: React.FC = () => {
                         onClick={handleOpenAddCustomModal}
                         className="px-3 py-2 rounded-md text-sm inline-flex items-center gap-1 button-confirm"
                     >
-                        <ListPlus size={17} />
+                        <Grid2X2PlusIcon size={14} />
                         <span className="hidden sm:block">{t('settings.add')}</span>
                     </button>
                 </Tooltip>
@@ -248,7 +248,7 @@ export const ModelSettings: React.FC = () => {
                                 >
                                     <div className="w-4 h-4 flex items-center justify-center">
                                         {!isTestingConnection(model.id) ? (
-                                            <Link2 size={16} />
+                                            <Link2 size={14} />
                                         ) : (
                                             <LoadingIcon />
                                         )}

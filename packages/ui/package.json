@@ -23,7 +23,7 @@
     "clean": "rm -rf .turbo node_modules dist"
   },
   "dependencies": {
-    "@mohtasham/md-to-docx": "^1.4.8",
+    "@mohtasham/md-to-docx": "^1.4.9",
     "react-markdown": "^10.1.0",
     "react-syntax-highlighter": "^15.6.1",
     "rehype-raw": "^7.0.0",
@@ -31,24 +31,23 @@
     "unist-util-visit": "^5.0.0"
   },
   "peerDependencies": {
+    "@prompt-booster/api": "workspace:*",
+    "@prompt-booster/core": "workspace:*",
     "@tailwindcss/vite": "^4.1.4",
     "i18next": "^25.1.2",
-    "lucide-react": "^0.511.0",
+    "lucide-react": "^0.513.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hotkeys-hook": "^5.0.1",
     "react-i18next": "^15.5.1",
-    "tailwindcss": "^4.1.4",
-    "tailwindcss-animate": "^1.0.7",
     "sonner": "^2.0.5",
-    "@prompt-booster/api": "workspace:*",
-    "@prompt-booster/core": "workspace:*"
+    "tailwindcss": "^4.1.4",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@types/react-dom": "^19.1.6",
     "@types/react-syntax-highlighter": "^15.5.13",
     "i18next": "^25.2.1",
-    "lucide-react": "^0.511.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hotkeys-hook": "^5.1.0",
@@ -56,6 +55,6 @@
     "typescript": "^5.8.3",
     "vite": "^6.3.5",
     "vite-plugin-dts": "^4.5.4",
-    "vitest": "^3.2.1"
+    "vitest": "^3.2.2"
   }
 }
