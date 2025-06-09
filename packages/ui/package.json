@@ -24,13 +24,10 @@
   },
   "dependencies": {
     "@mohtasham/md-to-docx": "^1.4.8",
-    "@prompt-booster/api": "workspace:*",
-    "@prompt-booster/core": "workspace:*",
     "react-markdown": "^10.1.0",
     "react-syntax-highlighter": "^15.6.1",
     "rehype-raw": "^7.0.0",
     "remark-gfm": "^4.0.1",
-    "sonner": "^2.0.5",
     "unist-util-visit": "^5.0.0"
   },
   "peerDependencies": {
@@ -42,7 +39,10 @@
     "react-hotkeys-hook": "^5.0.1",
     "react-i18next": "^15.5.1",
     "tailwindcss": "^4.1.4",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "sonner": "^2.0.5",
+    "@prompt-booster/api": "workspace:*",
+    "@prompt-booster/core": "workspace:*"
   },
   "devDependencies": {
     "@types/react-dom": "^19.1.6",

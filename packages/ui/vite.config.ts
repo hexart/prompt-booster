@@ -22,7 +22,11 @@ export default defineConfig({
             external: [
                 'react',
                 'react-dom',
-                '@prompt-booster/core'
+                '@prompt-booster/core',
+                'buffer',
+                'crypto',
+                'fs',
+                'path'
             ],
             output: {
                 globals: {
