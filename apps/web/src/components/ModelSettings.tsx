@@ -4,7 +4,7 @@ import { type StandardModelType } from '@prompt-booster/core/model/models/config
 import { useModelStore } from '@prompt-booster/core/model/store/modelStore';
 import { Dialog, ListCard, toast } from '@prompt-booster/ui';
 import LoadingIcon from '@prompt-booster/ui/components/LoadingIcon';
-import { useModal } from '@prompt-booster/ui';
+import { useModal } from '@prompt-booster/ui/hooks/useModal';
 import { ListPlus, Power, Link2, FileCog, Trash2 } from 'lucide-react';
 import { useModelConnection, useModelData, useModelEdit } from '../hooks/model-hooks';
 import { ModelModal } from './ModelModal';
