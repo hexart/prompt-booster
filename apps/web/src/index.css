@@ -91,14 +91,6 @@
 }
 
 @layer base {
-
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    @apply border-gray-200;
-  }
 }
 
 html {
@@ -115,11 +107,11 @@ textarea {
 }
 
 button {
-  cursor: pointer;
+  @apply cursor-pointer rounded-xl;
 }
 
 button:disabled {
-  cursor: not-allowed;
+  @apply cursor-not-allowed;
 }
 
 /* 全局背景设置 */
@@ -352,7 +344,7 @@ button:disabled {
     @apply transition-colors border-gray-300 dark:border-gray-500;
   }
   .drawer-mask {
-    @apply bg-white/10 dark:bg-black/10 z-50;
+    @apply bg-white/20 dark:bg-black/20 z-50;
   }
   .drawer-content-container {
     @apply bg-transparent border-t border-gray-300 dark:border-gray-700;

@@ -172,16 +172,23 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
           if (!latestVersion) return null; // 防止空版本
 
           return (
-            <div key={group.id} className="border rounded-lg p-3 shadow-2xs hover:shadow-md listcard-container">
+            <div key={group.id} className="border rounded-lg p-3 shadow-2xs transition-all hover:shadow-md listcard-container">
               <div className="flex justify-between items-center hover:cursor-pointer listcard-title-container" onClick={() => toggleExpand(group.id)}>
                 <div className="flex items-center gap-2 listcard-text-container">
                   <span className="text-sm listcard-description">
                     {formatTimestamp(group.updatedAt)}
                   </span>
                   {versions.length > 1 && (
-                    <span className="px-2 py-0.5 text-xs rounded-full listcard-tag">
-                      {t('history.versionsCount', { count: versions.length })}
-                    </span>
+                    <>
+                      {/* sm屏幕以下显示简化版本 */}
+                      <span className="px-2 py-0.5 text-xs rounded-full listcard-tag sm:hidden">
+                        {versions.length}
+                      </span>
+                      {/* sm屏幕以上显示完整版本 */}
+                      <span className="px-2 py-0.5 text-xs rounded-full listcard-tag hidden sm:inline">
+                        {t('history.versionsCount', { count: versions.length })}
+                      </span>
+                    </>
                   )}
                 </div>
                 <div className="flex gap-2 items-center listcard-button-container">
@@ -215,7 +222,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
               </div>
 
               {expandedGroupId === group.id && (
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {/* 获取当前显示版本 */}
                   {(() => {
                     const displayVersion = versions.find(

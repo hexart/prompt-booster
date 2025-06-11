@@ -47,7 +47,6 @@ i18n
 // 简单记录初始化完成
 i18n.on('initialized', () => {
     console.log('i18next初始化完成，当前语言:', i18n.language);
-    console.log('currentLanguage:', currentLanguage);
 });
 
 export default i18n;
