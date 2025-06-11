@@ -122,7 +122,7 @@ export const AutoScrollTextarea: React.FC<AutoScrollTextareaProps> = ({
   };
 
   // 自动滚动按钮类名
-  const buttonClassName = `absolute z-10 backdrop-blur-xs shadow-md text-white bg-blue-500/80 hover:bg-blue-600/80 transition-all duration-600 ease-in-out flex items-center gap-1 bottom-4 left-1/2 -translate-x-1/2 animate-bounce motion-reduce:animate-none ${buttonText ? 'px-4 py-2 rounded-full' : 'p-2 rounded-full aspect-square'}`;
+  const buttonClassName = `absolute z-10 backdrop-blur-xs shadow-md text-white bg-blue-500/80 hover:bg-blue-600/80 transition-all duration-1000 ease-in-out flex items-center gap-1 bottom-4 left-1/2 -translate-x-1/2 animate-bounce motion-reduce:animate-none ${buttonText ? 'px-4 py-2 rounded-full' : 'p-2 rounded-full aspect-square'}`;
 
   return (
     <div

@@ -149,7 +149,7 @@ export const AutoScrollContent: React.FC<AutoScrollContentProps> = ({
   const [isHovered, setIsHovered] = useState(false);
 
   // 确定按钮形状的类名，使用纯 Tailwind 类名，并自定义弹跳动画速度
-  const buttonClassName = `absolute z-10 bottom-4 left-1/2 -translate-x-1/2 bg-blue-500/80 backdrop-blur-xs text-white shadow-md hover:bg-blue-600/80 transition-all duration-600 ease-in-out flex items-center gap-1 animate-bounce motion-reduce:animate-none ${buttonText ? 'px-4 py-2 rounded-full' : 'p-2 rounded-full aspect-square'} [animation-duration:1500ms]`;
+  const buttonClassName = `absolute z-10 bottom-4 left-1/2 -translate-x-1/2 bg-blue-500/80 backdrop-blur-xs text-white shadow-md hover:bg-blue-600/80 transition-all duration-1000 ease-in-out flex items-center gap-1 animate-bounce motion-reduce:animate-none ${buttonText ? 'px-4 py-2 rounded-full' : 'p-2 rounded-full aspect-square'} [animation-duration:1500ms]`;
 
   return (
     <div
