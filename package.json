@@ -23,11 +23,11 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.17.17",
-    "@types/node": "^22.15.30",
-    "@types/react": "^19.1.6",
-    "@typescript-eslint/eslint-plugin": "^8.33.1",
-    "@typescript-eslint/parser": "^8.33.1",
-    "@vitejs/plugin-react": "^4.5.1",
+    "@types/node": "^22.15.31",
+    "@types/react": "^19.1.8",
+    "@typescript-eslint/eslint-plugin": "^8.34.0",
+    "@typescript-eslint/parser": "^8.34.0",
+    "@vitejs/plugin-react": "^4.5.2",
     "eslint": "^9.28.0",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-react-hooks": "^5.2.0",
@@ -53,7 +53,7 @@
       "boolean": "^3.2.0",
       "inflight": "^1.0.6",
       "lodash.isequal": "^4.5.0",
-      "zustand": "5.0.4"
+      "zustand": "^5.0.5"
     },
     "onlyBuiltDependencies": [
       "@tailwindcss/oxide",
