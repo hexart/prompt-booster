@@ -1,5 +1,6 @@
 // packages/ui/src/components/ActionButtons.tsx
 import React, { useState } from 'react';
+import { removeThinkTags } from '@prompt-booster/core';
 import { ClipboardIcon, ClipboardCheckIcon, FileTypeIcon, FileTextIcon, FileCheck2Icon } from 'lucide-react';
 import { Tooltip } from './Tooltip';
 import { toast } from 'sonner';
@@ -86,7 +87,8 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
     if (!hasContent) return;
 
     try {
-      await navigator.clipboard.writeText(content);
+      const cleanedContent = removeThinkTags(content);
+      await navigator.clipboard.writeText(cleanedContent);
       setCopied(true);
       toast.success(t('toast.copySuccess'));
       onCopy?.();
@@ -108,8 +110,9 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
     try {
       setDownloading('md');
 
+      const cleanedContent = removeThinkTags(content);
       // 创建Blob
-      const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' });
+      const blob = new Blob([cleanedContent], { type: 'text/markdown;charset=utf-8' });
 
       // 创建下载链接
       const url = URL.createObjectURL(blob);
@@ -149,8 +152,9 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
     try {
       setDownloading('docx');
 
+      const cleanedContent = removeThinkTags(content);
       // 使用 @mohtasham/md-to-docx 转换
-      const blob = await convertMarkdownToDocx(content, {
+      const blob = await convertMarkdownToDocx(cleanedContent, {
         documentType: 'document',
         style: {
           titleSize: 48,
