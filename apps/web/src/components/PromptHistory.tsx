@@ -6,20 +6,14 @@ import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
 import { Trash2Icon, ChevronsDownIcon, ChevronsUpIcon, RotateCcwIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { PROVIDER_USER_EDIT } from '@prompt-booster/core/prompt/services/promptService';
-import { formatProviderModelName } from '../utils/displayUtils';
 import { isRTL } from '../rtl';
+import { getVersionTooltipText } from '../utils/displayUtils';
 
 interface PromptHistoryProps {
   onNavigateToEditor?: () => void;
 }
 
-// 处理"用户编辑"文本
-export const getDisplayProviderName = (provider: string, t: (key: string) => string): string => {
-  if (provider === PROVIDER_USER_EDIT) {
-    return t('history.userEdit');
-  }
-  return provider;
-};
+
 export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor }) => {
   const { t, i18n } = useTranslation();
   const [currentIsRTL, setCurrentIsRTL] = useState(isRTL());
@@ -242,14 +236,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                         <div className="flex gap-2 overflow-y-visible overflow-x-auto py-2 [&::-webkit-scrollbar]:h-1">
                           {versions.map(version => (
                             <Tooltip key={version.id}
-                              text={version.provider === PROVIDER_USER_EDIT
-                                ? getDisplayProviderName(version.provider, t)
-                                : `${t('history.usingModel')}\n${formatProviderModelName(
-                                  getDisplayProviderName(version.provider, t),
-                                  version.modelName,
-                                  currentIsRTL
-                                )}`
-                              }
+                              text={getVersionTooltipText(version, t, currentIsRTL)}
                             >
                               <button
                                 key={version.id}
@@ -269,7 +256,9 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                           <h3 className="text-sm font-medium mb-1 listcard-description">{t('history.iterationDirection')}</h3>
                           <div className="p-2 rounded-md text-sm whitespace-pre-wrap iteration-prompt-container">
                             {displayVersion.iterationDirection
-                              ? getDisplayProviderName(displayVersion.iterationDirection, t)
+                              ? (displayVersion.iterationDirection === PROVIDER_USER_EDIT
+                                ? t('history.userEdit')
+                                : displayVersion.iterationDirection)
                               : t('history.initialVersion')
                             }
                           </div>
