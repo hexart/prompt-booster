@@ -5,7 +5,6 @@
  */
 import { RequestFormatter, ChatRequest } from '../types';
 import { RequestFormatType, DEFAULT_TEMPERATURE } from '../config';
-import { getMaxTokensForModel } from '../config';
 
 /**
  * OpenAI兼容请求格式化器
@@ -45,15 +44,15 @@ export class OpenAIRequestFormatter implements RequestFormatter {
             content: request.userMessage
         });
 
-        // 获取最大令牌数
-        const maxTokens = request.options?.maxTokens || getMaxTokensForModel(this.model);
-
         // 构建完整请求
         return {
             model: this.model,
             messages,
             temperature: request.options?.temperature || DEFAULT_TEMPERATURE,
-            max_tokens: maxTokens
+            // 只有明确设置maxTokens时才添加，否则让LLM自动决定
+            ...(request.options?.maxTokens && { 
+                max_tokens: request.options.maxTokens 
+            })
         };
     }
 }
@@ -67,6 +66,13 @@ export class GeminiRequestFormatter implements RequestFormatter {
      * @param model 模型名称
      */
     constructor(private model: string) { }
+
+    /**
+     * 获取模型名称（用于URL构建等）
+     */
+    getModel(): string {
+        return this.model;
+    }
 
     /**
      * 格式化请求为Gemini格式
@@ -101,15 +107,15 @@ export class GeminiRequestFormatter implements RequestFormatter {
             parts: [{ text: userText }]
         });
 
-        // 获取最大令牌数
-        const maxTokens = request.options?.maxTokens || getMaxTokensForModel(this.model);
-
         // 构建完整请求
         return {
             contents,
             generationConfig: {
                 temperature: request.options?.temperature || DEFAULT_TEMPERATURE,
-                maxOutputTokens: maxTokens
+                // 只有明确设置maxTokens时才添加
+                ...(request.options?.maxTokens && { 
+                    maxOutputTokens: request.options.maxTokens 
+                })
             }
         };
     }

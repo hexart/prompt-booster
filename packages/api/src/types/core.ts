@@ -1,3 +1,4 @@
+// packages/api/src/types/core.ts
 /**
  * 核心类型定义
  * 定义了统一客户端接口和基础类型

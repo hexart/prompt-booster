@@ -12,6 +12,8 @@ export interface LLMServiceParams {
   systemMessage: string;
   modelId?: string;
   stream?: boolean;
+  maxTokens?: number;
+  temperature?: number;
   onData?: (chunk: string) => void;
   onComplete?: () => void;
   onError?: (error: Error) => void;
@@ -42,6 +44,8 @@ export class LLMService {
       systemMessage,
       modelId,
       stream = true,
+      maxTokens,
+      temperature,
       onData,
       onComplete,
       onError,
@@ -64,7 +68,10 @@ export class LLMService {
     const request = {
       userMessage,
       systemMessage,
-      options: { temperature: 0.7 },
+      options: {
+        temperature,
+        ...(maxTokens && { maxTokens })
+      },
     };
 
     if (!stream) {

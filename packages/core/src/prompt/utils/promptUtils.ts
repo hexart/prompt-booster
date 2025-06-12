@@ -184,14 +184,14 @@ export async function analyzePromptWithLLM(
     // 构建用户消息：保持语言指令重复以确保优先级
     const userMessage = `请对以下提示词进行质量分析。如果它确实表现优秀，请给予高分评价；如果有不足，请如实指出并提供改进建议：\n\n${cleanedPrompt}\n\n参考信息 - 原始提示词：\n${cleanedOriginalPrompt}\n\n##Important: ${languageInstruction}`;
 
-    console.log('🌍 语言指令:', languageInstruction);
     console.log('🔍 系统提示词最后20字符:', systemPrompt.slice(-20));
     console.log('🔍 用户消息最后20字符:', userMessage.slice(-20));
 
     const result = await llmService.callLLM({
       userMessage,
       systemMessage: systemPrompt,
-      stream: false
+      stream: false,
+      temperature: 0.7
     });
 
     // 后续处理逻辑保持不变...
@@ -241,6 +241,7 @@ export async function analyzePromptWithLLM(
       return finalResult;
     } catch (parseError) {
       console.error('[LLM❌Parse Error]', parseError);
+      console.error('[LLM❌Full Response]', result);
       throw new Error('LLM 评分结果解析失败');
     }
   } catch (templateError) {

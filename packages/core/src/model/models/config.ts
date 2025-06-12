@@ -1,6 +1,3 @@
-/**
- * 4. models/config.ts - 配置模型扩展
- */
 // packages/core/src/model/models/config.ts
 /**
  * 标准模型类型

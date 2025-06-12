@@ -1,3 +1,4 @@
+// packages/core/src/config/defaults.ts
 /**
  * 默认配置
  */
@@ -36,7 +37,6 @@ export const defaultModelConfigs = createDefaultModelConfigs();
  */
 export const defaultOptimizeSettings = {
   temperature: 0.7,
-  maxTokens: 1000,
   stream: true,
   timeout: 60000
 };

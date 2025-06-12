@@ -1,3 +1,4 @@
+// packages/api/src/config/models.ts
 /**
  * 模型配置文件
  * 定义模型的令牌限制和其他特性
