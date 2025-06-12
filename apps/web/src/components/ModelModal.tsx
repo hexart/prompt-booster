@@ -100,14 +100,14 @@ export const ModelModal: React.FC<ModelModalProps> = ({
                 <div className="flex justify-end gap-3">
                     <button
                         onClick={onClose}
-                        className="px-4 py-2 rounded-md transition-colors button-cancel"
+                        className="px-4 py-2 transition-colors button-cancel"
                     >
                         {t('common.buttons.cancel')}
                     </button>
                     <button
                         onClick={handleSave}
                         disabled={isSaving || !formData.apiKey}
-                        className="px-4 py-2 rounded-md transition-colors button-confirm"
+                        className="px-4 py-2 transition-colors button-confirm"
                     >
                         {isSaving ? t('common.buttons.saving') : t('common.buttons.save')}
                     </button>

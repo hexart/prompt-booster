@@ -2,15 +2,15 @@
 @layer components {
     /* 主题切换器样式 */
     .theme-container {
-        @apply bg-gray-100/60 dark:bg-gray-700/60 backdrop-blur-md p-1 rounded-lg;
+        @apply bg-gray-100/60 dark:bg-gray-700/60 backdrop-blur-md p-1 rounded-2xl;
     }
 
     .theme-button {
-        @apply p-[10px] rounded-md transition-all;
+        @apply p-[10px] transition-all;
     }
 
     .theme-dropdown-container {
-        @apply absolute right-0 mt-1 rounded-lg shadow-lg z-40 p-1;
+        @apply absolute right-0 mt-1 rounded-2xl shadow-lg z-40 p-1;
     }
 
     /* 亮色主题样式 */
@@ -41,6 +41,6 @@
     }
 
     .lang-button {
-        @apply items-center w-10 h-10 rounded-md transition-all;
+        @apply items-center w-10 h-10 transition-all;
     }
 }

@@ -347,7 +347,7 @@ button:disabled {
     @apply bg-white/20 dark:bg-black/20 z-50;
   }
   .drawer-content-container {
-    @apply bg-transparent border-t border-gray-300 dark:border-gray-700;
+    @apply bg-white/70 dark:bg-gray-800/70 border-t border-gray-300 dark:border-gray-700;
   }
   .drawer-handle {
     @apply bg-gray-300 dark:bg-gray-600;

@@ -55,13 +55,13 @@ export const IterationDialog: React.FC<IterationDialogProps> = ({
                 <div className="flex justify-end gap-3">
                     <button
                         onClick={onClose}
-                        className="px-4 py-2 rounded-md button-cancel"
+                        className="px-4 py-2 button-cancel"
                     >
                         {t('common.buttons.cancel')}
                     </button>
                     <button
                         onClick={handleSubmit}
-                        className="px-4 py-2 rounded-md button-confirm"
+                        className="px-4 py-2 button-confirm"
                         disabled={!selectedTemplateId || !iterationDirection.trim()}
                     >
                         {t('common.buttons.confirm')}

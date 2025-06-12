@@ -322,7 +322,7 @@ export const TestResult: React.FC = () => {
           ) : (
             <div className='flex gap-2'>
               <button
-                className="flex text-sm items-center gap-1 rounded-lg p-3 lg:px-3 lg:py-2 button-third"
+                className="flex text-sm items-center gap-1 p-3 lg:px-3 lg:py-2 button-third"
                 onClick={onToggleMaximize}
                 disabled={!response}
               >
@@ -405,7 +405,7 @@ export const TestResult: React.FC = () => {
                 }
               ]}
               onClose={() => setShowRequirements(false)}
-              className='w-60 backdrop-blur-md shadow-lg rounded-lg dragable-notice-container'
+              className='w-60 backdrop-blur-md shadow-lg rounded-2xl dragable-notice-container'
               isRTL={isRTL()}
               initialPosition={{ x: '20px', y: '20px' }}
             />
@@ -451,7 +451,7 @@ export const TestResult: React.FC = () => {
             <button
               type="button"
               onClick={() => setShowMarkdown(!showMarkdown)}
-              className={`px-3 py-2 rounded-md h-10 flex items-center justify-center transition-colors duration-200 ${showMarkdown
+              className={`px-3 py-2 h-10 flex items-center justify-center transition-colors duration-200 ${showMarkdown
                 ? 'button-confirm'
                 : 'button-cancel'
                 }`}
@@ -465,7 +465,7 @@ export const TestResult: React.FC = () => {
           {/* 运行对比测试按钮 */}
           <Tooltip text={t('testResult.runComparisonTest')}>
             <button
-              className={`flex gap-2 items-center px-3 py-2 rounded-md h-10 min-w-[30%] truncate transition-colors duration-500 button-confirm ${isTestingOriginal || isTestingOptimized ? 'cursor-not-allowed opacity-50' : ''
+              className={`flex gap-2 items-center px-3 py-2 h-10 min-w-[30%] truncate transition-colors duration-500 button-confirm ${isTestingOriginal || isTestingOptimized ? 'cursor-not-allowed opacity-50' : ''
                 }`}
               onClick={runComparisonTest}
               disabled={isTestingOriginal || isTestingOptimized || (
@@ -484,7 +484,7 @@ export const TestResult: React.FC = () => {
           </Tooltip>
           {/* 最大化/还原按钮 */}
           <button
-            className='px-3 py-2 rounded-md h-10 text-sm flex items-center gap-1 button-third'
+            className='px-3 py-2 h-10 text-sm flex items-center gap-1 button-third'
             onClick={() => setIsMaximized(!isMaximized)}
             disabled={!originalResponse && !optimizedResponse}
           >

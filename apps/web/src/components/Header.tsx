@@ -111,14 +111,14 @@ const Header: React.FC<HeaderProps> = ({
 
                         <div className="flex items-center gap-2" style={nonDraggableStyle}>
                             {/* 桌面端卡片导航 */}
-                            <div className="hidden md:flex tab-container rounded-lg p-1">
+                            <div className="hidden md:flex tab-container rounded-2xl p-1">
                                 {tabs.map((tab) => {
                                     const Icon = tab.icon;
                                     return (
-                                        <Tooltip key={tab.id} text={tab.shortcut} position='bottom'>
+                                        <Tooltip key={tab.id} text={`(${tab.shortcut})`} position='bottom'>
                                             <button
                                                 onClick={() => setActiveTab(tab.id)}
-                                                className={`py-2 px-4 font-medium rounded-md relative transition-all duration-300 flex items-center gap-2 ${activeTab === tab.id
+                                                className={`py-2 px-4 font-medium relative transition-all duration-300 flex items-center gap-2 ${activeTab === tab.id
                                                     ? 'tab-active shadow-sm'
                                                     : 'tab-inactive'
                                                     } min-w-0`}
@@ -149,7 +149,7 @@ const Header: React.FC<HeaderProps> = ({
                             />
 
                             {/* 移动端菜单按钮 */}
-                            <div className={`md:hidden p-1 rounded-lg mobile-menu-button-container`}>
+                            <div className={`md:hidden p-1 rounded-2xl mobile-menu-button-container`}>
                                 <button
                                     ref={menuButtonRef}
                                     className="w-10 h-10 p-2 rounded-md mobile-menu-button"

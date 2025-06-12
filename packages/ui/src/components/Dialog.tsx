@@ -80,7 +80,7 @@ export const Dialog: React.FC<DialogProps> = ({
         }}
       >
         <div
-          className={`p-6 rounded-2xl shadow-2xl shadow-black/30 dialog ${maxWidth} w-full mx-4 my-auto ${className} transition-all duration-300`}
+          className={`p-6 rounded-3xl shadow-2xl shadow-black/30 dialog ${maxWidth} w-full mx-4 my-auto ${className} transition-all duration-300`}
           style={{
             marginTop: 'auto',
             marginBottom: 'auto',

@@ -155,7 +155,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
         <div>
           <button
             onClick={handleClearHistoryClick}
-            className="px-3 py-2 flex items-center gap-1 text-sm rounded-md button-danger"
+            className="px-3 py-2 flex items-center gap-1 text-sm button-danger"
           >
             <Trash2Icon size={15} />
             <span className="hidden sm:block">{t('history.clearHistory')}</span>
@@ -197,7 +197,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                       e.stopPropagation();
                       toggleExpand(group.id);
                     }}
-                    className="flex items-center gap-1 text-sm px-3 py-2 rounded-md button-secondary"
+                    className="flex items-center gap-1 text-sm px-3 py-2 button-secondary"
                   >
                     {expandedGroupId === group.id ? <ChevronsUpIcon size={15} /> : <ChevronsDownIcon size={15} />}
                     <span className="hidden md:block">{expandedGroupId === group.id ? t('history.collapse') : t('history.expand')}</span>
@@ -205,7 +205,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
 
                   <button
                     onClick={() => handleLoadGroup(group)}
-                    className="flex items-center gap-1 text-sm px-3 py-2 rounded-md button-secondary-load"
+                    className="flex items-center gap-1 text-sm px-3 py-2 button-secondary-load"
                   >
                     <RotateCcwIcon size={15} />
                     <span className="hidden md:block">{t('history.load')}</span>
@@ -213,7 +213,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
 
                   <button
                     onClick={() => handleDeleteGroup(group.id)}
-                    className="flex items-center gap-1 text-sm px-3 py-2 rounded-md button-secondary-danger"
+                    className="flex items-center gap-1 text-sm px-3 py-2 button-secondary-danger"
                   >
                     <Trash2Icon size={15} />
                     <span className="hidden md:block">{t('history.deleteGroup')}</span>
@@ -289,7 +289,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                               group.id,
                               getSelectedVersion(group.id, group.currentVersionNumber)
                             )}
-                            className="text-sm px-3 py-2 rounded-md button-secondary-load-version"
+                            className="text-sm px-3 py-2 button-secondary-load-version"
                           >
                             {t('history.loadVersion')}
                           </button>
@@ -321,13 +321,13 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
           <div className="flex justify-end gap-3">
             <button
               onClick={cancelClearHistory}
-              className="px-4 py-2 rounded-md button-cancel"
+              className="px-4 py-2 button-cancel"
             >
               {t('common.buttons.cancel')}
             </button>
             <button
               onClick={confirmClearHistory}
-              className="px-4 py-2 rounded-md button-danger"
+              className="px-4 py-2 button-danger"
             >
               {t('history.confirmClearButton')}
             </button>
@@ -347,13 +347,13 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
           <div className="flex justify-end gap-3">
             <button
               onClick={cancelDeleteHistoryItem}
-              className="px-4 py-2 rounded-md button-cancel"
+              className="px-4 py-2 button-cancel"
             >
               {t('common.buttons.cancel')}
             </button>
             <button
               onClick={confirmDeleteHistoryItem}
-              className="px-4 py-2 rounded-md button-danger"
+              className="px-4 py-2 button-danger"
             >
               {t('history.confirmDeleteButton')}
             </button>

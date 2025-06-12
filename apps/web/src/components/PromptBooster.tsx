@@ -374,7 +374,7 @@ export const PromptBooster: React.FC = () => {
             {activeGroup && (
               <Tooltip text={t("promptBooster.resetWorkspace")}>
                 <button
-                  className="px-3 py-2 text-sm flex items-center gap-1 rounded-md button-danger"
+                  className="px-3 py-2 text-sm flex items-center gap-1 button-danger"
                   onClick={() => setIsResetDialogOpen(true)}
                 >
                   <ListRestartIcon size={18} />
@@ -446,7 +446,7 @@ export const PromptBooster: React.FC = () => {
 
         <Tooltip text={t("promptBooster.enhancePrompt")}>
           <button
-            className={`flex gap-2 items-center h-10 px-4 py-2 rounded-md truncate button-confirm 
+            className={`flex gap-2 items-center h-10 px-4 py-2 truncate button-confirm 
                         ${isProcessing ? "cursor-not-allowed opacity-50" : ""}`}
             onClick={handleOptimize}
             disabled={
@@ -615,7 +615,7 @@ export const PromptBooster: React.FC = () => {
               >
                 <button
                   onClick={handleSaveUserModification}
-                  className="absolute animate-pulse mt-40 bottom-4 right-4 text-sm px-3 py-2 rounded-md shadow-sm flex items-center gap-1 transition-colors button-save-as"
+                  className="absolute animate-pulse mt-40 bottom-4 right-4 text-sm px-3 py-2 shadow-sm flex items-center gap-1 transition-colors button-save-as"
                 >
                   <CopyPlusIcon size={14} />
                   <span className="hidden md:block">
@@ -848,7 +848,7 @@ export const PromptBooster: React.FC = () => {
                           {" "}
                           {/* 使用div作为disabled按钮的容器，确保onMouseEnter触发 */}
                           <button
-                            className="px-4 py-2 text-sm button-confirm rounded-md transition"
+                            className="px-4 py-2 text-sm button-confirm transition"
                             onClick={handleLLMAnalyze}
                             disabled={isAnalyzing || !isActiveModelEnabled}
                           >
@@ -865,7 +865,7 @@ export const PromptBooster: React.FC = () => {
                       </Tooltip>
                     )}
                     <button
-                      className="px-4 py-2 text-sm button-cancel rounded-md transition"
+                      className="px-4 py-2 text-sm button-cancel transition"
                       onClick={() => setIsDrawerOpen(false)}
                     >
                       {t("common.buttons.close")}
@@ -903,13 +903,13 @@ export const PromptBooster: React.FC = () => {
         footer={
           <div className="flex justify-end gap-3">
             <button
-              className="px-4 py-2 rounded-md button-cancel"
+              className="px-4 py-2 button-cancel"
               onClick={() => setIsResetDialogOpen(false)}
             >
               {t("common.buttons.cancel")}
             </button>
             <button
-              className="px-4 py-2 rounded-md button-danger"
+              className="px-4 py-2 button-danger"
               onClick={handleConfirmReset}
             >
               {t("promptBooster.confirmResetTitle")}

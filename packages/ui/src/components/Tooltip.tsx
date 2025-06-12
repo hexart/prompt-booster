@@ -192,7 +192,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
           <div
             role="tooltip"
             style={tooltipStyle}
-            className={`px-2 py-1 text-xs text-center font-medium ${themeClasses} rounded-md ${shadowClass} ${shadowColor} whitespace-pre-line border ${transitionClass} ${durationClass} ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+            className={`px-2 py-1 text-xs text-center font-medium ${themeClasses} rounded-xl ${shadowClass} ${shadowColor} whitespace-pre-line border ${transitionClass} ${durationClass} ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
           >
             {tooltipContent}
             <div style={arrowInfo.style} className={`absolute w-2 h-2 tooltip-arrow ${themeClasses} ${arrowInfo.className}`}></div>

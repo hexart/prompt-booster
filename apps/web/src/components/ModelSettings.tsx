@@ -44,13 +44,13 @@ const ConfirmDialog: React.FC<{
                     <div className="flex justify-end gap-3">
                         <button
                             onClick={onClose}
-                            className="px-4 py-2 rounded-md button-cancel"
+                            className="px-4 py-2 button-cancel"
                         >
                             {cancelText}
                         </button>
                         <button
                             onClick={onConfirm}
-                            className={`px-4 py-2 text-white rounded-md ${danger
+                            className={`px-4 py-2 text-white ${danger
                                 ? "button-danger"
                                 : "button-confirm"
                                 }`}
@@ -202,7 +202,7 @@ export const ModelSettings: React.FC = () => {
                 <Tooltip text={t('settings.addCustomModel')}>
                     <button
                         onClick={handleOpenAddCustomModal}
-                        className="px-3 py-2 rounded-md text-sm inline-flex items-center gap-1 button-confirm"
+                        className="px-3 py-2 text-sm inline-flex items-center gap-1 button-confirm"
                     >
                         <Grid2X2PlusIcon size={14} />
                         <span className="hidden sm:block">{t('settings.add')}</span>
@@ -228,7 +228,7 @@ export const ModelSettings: React.FC = () => {
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={() => toggleModelStatus(model.id, model.isStandard, !model.isEnabled)}
-                                    className={`px-3 py-2 rounded-md text-sm whitespace-nowrap inline-flex items-center gap-1 ${model.isEnabled
+                                    className={`px-3 py-2 text-sm whitespace-nowrap inline-flex items-center gap-1 ${model.isEnabled
                                         ? "button-secondary-enabled"
                                         : "button-secondary-disabled"
                                         }`}
@@ -243,7 +243,7 @@ export const ModelSettings: React.FC = () => {
 
                                 <button
                                     onClick={() => testConnection(model)}
-                                    className="px-3 py-2 rounded-md text-sm inline-flex items-center gap-1 button-secondary-testlink"
+                                    className="px-3 py-2 text-sm inline-flex items-center gap-1 button-secondary-testlink"
                                     disabled={isTestingConnection(model.id)}
                                 >
                                     <div className="w-4 h-4 flex items-center justify-center">
@@ -258,7 +258,7 @@ export const ModelSettings: React.FC = () => {
 
                                 <button
                                     onClick={() => handleEditModel(model.id, model.isStandard)}
-                                    className="px-3 py-2 rounded-md text-sm inline-flex items-center gap-1 button-secondary-edit"
+                                    className="px-3 py-2 text-sm inline-flex items-center gap-1 button-secondary-edit"
                                 >
                                     <FileCog size={14} />
                                     <span className="hidden md:inline whitespace-nowrap">{t('common.buttons.edit')}</span>
@@ -267,7 +267,7 @@ export const ModelSettings: React.FC = () => {
                                 {!model.isStandard && (
                                     <button
                                         onClick={() => handleDeleteCustomInterface(model.id)}
-                                        className="px-3 py-2 rounded-md text-sm inline-flex items-center gap-1 button-secondary-danger"
+                                        className="px-3 py-2 text-sm inline-flex items-center gap-1 button-secondary-danger"
 
                                     >
                                         <Trash2 size={14} />
