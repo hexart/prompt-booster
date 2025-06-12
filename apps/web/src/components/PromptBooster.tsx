@@ -37,8 +37,7 @@ import { useModelData } from '../hooks/model-hooks';
 import { PromptVersion } from "@prompt-booster/core/prompt/models/prompt";
 import { useTranslation } from "react-i18next";
 import { PROMPT_PENDING_MARKER } from '@prompt-booster/core/prompt/services/promptGroupManager';
-import { getDisplayProviderName } from './PromptHistory';
-import { PROVIDER_USER_EDIT } from '@prompt-booster/core/prompt/services/promptService';
+import { getVersionTooltipText } from '../utils/displayUtils';
 import { getButtonPosition } from '../rtl';
 
 export const PromptBooster: React.FC = () => {
@@ -305,6 +304,42 @@ export const PromptBooster: React.FC = () => {
     // 注意：我们不再尝试设置为null，因为setActiveModel不接受null
   }, [activeModel, getEnabledModels]);
 
+  // 格式化迭代建议
+  const formatSuggestionForMarkdown = (suggestion: string) => {
+    // 如果建议已经包含序号或标记，保持原格式
+    if (suggestion.match(/^[\d\-\*\+]\s/)) {
+      return suggestion;
+    }
+    // 否则添加 Markdown 列表格式
+    return `- ${suggestion}`;
+  };
+
+  // 复制所有迭代建议
+  const copyAllSuggestions = () => {
+    if (!analysisResult) return;
+
+    // 获取维度建议，确保是数组
+    const criteriaTips = (analysisResult.criteria || [])
+      .filter((c) => !c.passed && c.suggestion)
+      .map((c) => formatSuggestionForMarkdown(c.suggestion!));
+
+    // 获取全局建议，确保是数组
+    const globalTips = (analysisResult.suggestions || [])
+      .map(formatSuggestionForMarkdown);
+
+    // 构建 Markdown 内容
+    const markdownContent = [
+      ...criteriaTips,
+      ...globalTips,
+    ].join('\n');
+
+    // 复制到剪贴板
+    navigator.clipboard
+      .writeText(markdownContent)
+      .then(() => toast.success(t("toast.copySuggestionSuccess")))
+      .catch(() => toast.error(t("toast.copyFailed")));
+  };
+
   // 处理迭代对话框提交
   const handleIterationSubmit = async (
     templateId: string,
@@ -493,10 +528,7 @@ export const PromptBooster: React.FC = () => {
                   (version: PromptVersion) => (
                     <Tooltip
                       key={version.id}
-                      text={version.provider === PROVIDER_USER_EDIT
-                        ? getDisplayProviderName(version.provider, t)
-                        : `${t('history.usingModel')}\n${getDisplayProviderName(version.provider, t)}${version.modelName ? ` - ${version.modelName}` : ''}`
-                      }
+                      text={getVersionTooltipText(version, t)}
                     >
                       <button
                         onClick={() => {
@@ -791,25 +823,7 @@ export const PromptBooster: React.FC = () => {
                               <button
                                 className="text-sm font-semibold drawer-suggestion-copy hover:underline"
                                 onClick={() => {
-                                  const criteriaTips = analysisResult.criteria
-                                    .filter((c) => !c.passed && c.suggestion)
-                                    .map((c) => c.suggestion!);
-                                  const globalTips =
-                                    analysisResult.suggestions || [];
-                                  const allTips = [
-                                    ...criteriaTips,
-                                    ...globalTips,
-                                  ];
-                                  navigator.clipboard
-                                    .writeText(allTips.join("\n"))
-                                    .then(() =>
-                                      toast.success(
-                                        t("toast.copySuggestionSuccess")
-                                      )
-                                    )
-                                    .catch(() =>
-                                      toast.error(t("toast.copyFailed"))
-                                    );
+                                  copyAllSuggestions();
                                 }}
                               >
                                 {t("promptBooster.drawer.copyAll")}
@@ -866,7 +880,13 @@ export const PromptBooster: React.FC = () => {
                     )}
                     <button
                       className="px-4 py-2 text-sm button-cancel transition"
-                      onClick={() => setIsDrawerOpen(false)}
+                      onClick={() => {
+                        if (analysisResult?.suggestions?.length || 
+                            analysisResult?.criteria.some((c) => !c.passed && c.suggestion)) {
+                          copyAllSuggestions();
+                        }
+                        setIsDrawerOpen(false);
+                      }}
                     >
                       {t("common.buttons.close")}
                     </button>
