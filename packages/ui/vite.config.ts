@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import { resolve } from 'path';
 import react from '@vitejs/plugin-react';
 import dts from 'vite-plugin-dts';
+import path from 'path';
 
 export default defineConfig({
     plugins: [
@@ -11,6 +12,13 @@ export default defineConfig({
             rollupTypes: true
         })
     ],
+    resolve: {
+        alias: {
+            '@': resolve(__dirname, './src'),
+            '@prompt-booster/core': path.resolve(__dirname, '../../packages/core/src'),
+            '@prompt-booster/api': path.resolve(__dirname, '../../packages/api/src'),
+        }
+    },
     build: {
         lib: {
             entry: resolve(__dirname, 'src/index.ts'),

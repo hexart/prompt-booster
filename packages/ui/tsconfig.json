@@ -7,7 +7,11 @@
         "declaration": true,
         "noEmit": false,
         "lib": ["DOM", "DOM.Iterable", "ESNext"],
-        "types": [] // Explicitly empty to avoid implicit Node types
+        "types": [],
+        "paths": {
+            "@prompt-booster/core": ["../core/src"],
+            "@prompt-booster/core/*": ["../core/src/*"]
+        }
     },
     "include": [
         "src/**/*.ts",

@@ -1,3 +1,4 @@
+// packages/core/src/prompt/index.ts
 // 导出提示词相关hooks
 export * from './hooks'
 
