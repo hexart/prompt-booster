@@ -152,12 +152,12 @@ export class PromptService {
 
       // 获取模型信息
       const modelStore = useModelStore.getState();
-      const modelInfo = this.getModelMetadata(modelId || modelStore.activeModel);
+      const modelConfig = this.getModelMetadata(modelId || modelStore.activeModel);
 
       // 创建预备版本
       const version = this.groupManager.createPendingVersion(
         group.id,
-        modelInfo
+        modelConfig
       );
 
       // 立即更新状态，让 UI 可以响应
@@ -270,12 +270,12 @@ export class PromptService {
 
       // 获取模型信息
       const modelStore = useModelStore.getState();
-      const modelInfo = this.getModelMetadata(modelId || modelStore.activeModel);
+      const modelConfig = this.getModelMetadata(modelId || modelStore.activeModel);
 
       // 创建预备版本
       const version = this.groupManager.createPendingVersion(
         groupId,
-        modelInfo,
+        modelConfig,
         direction
       );
 
@@ -361,7 +361,7 @@ export class PromptService {
 
     try {
       const modelStore = useModelStore.getState();
-      const modelInfo = {
+      const modelConfig = {
         modelId: modelStore.activeModel,
         provider: PROVIDER_USER_EDIT,
         modelName: "",
@@ -371,7 +371,7 @@ export class PromptService {
       const version = this.groupManager.createVersion(
         groupId,
         cleanedModifiedPrompt,
-        modelInfo,
+        modelConfig,
         PROVIDER_USER_EDIT
       );
 
@@ -397,14 +397,14 @@ export class PromptService {
   private getModelMetadata(modelId: string) {
     const modelStore = useModelStore.getState();
     const enabledModels = modelStore.getEnabledModels();
-    const modelInfo = enabledModels.find((m: any) => m.id === modelId);
+    const modelConfig = enabledModels.find((m: any) => m.id === modelId);
 
-    if (modelInfo) {
-      const parts = modelInfo.name.split(" - ");
+    if (modelConfig) {
+      const parts = modelConfig.name.split(" - ");
       return {
         modelId,
         provider: parts[0] || modelId,
-        modelName: parts[1] || modelInfo.name,
+        modelName: parts[1] || modelConfig.name,
       };
     }
 

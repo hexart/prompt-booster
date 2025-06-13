@@ -658,7 +658,7 @@ function checkIfHasStructure(prompt: string): boolean {
     if (/\n/.test(prompt)) {
         return true;
     }
-    
+
     // 创建包含多种语言关键词的正则表达式
     const structurePatterns = [
         // 英语
