@@ -9,7 +9,7 @@ type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
 import { useTheme } from './ThemeContext';
 
 // 语言类型
-type LanguageCode = 'zh-CN' | 'zh-Hant' | 'en-US' | 'ja-JP' | 'ko-KR' | 'de-DE' | 'nl-NL' | 'ru-RU' | 'es-ES' | 'fr-FR' | 'ar-SA' | 'pt-BR' | 'hi-IN';
+type LanguageCode = 'zh-CN' | 'zh-Hant' | 'en-US' | 'ja-JP' | 'ko-KR' | 'de-DE' | 'nl-NL' | 'ru-RU' | 'es-ES' | 'fr-FR' | 'ar-SA' | 'pt-BR' | 'hi-IN' | 'it-IT' | 'id-ID';
 
 // 语言配置
 const languageConfig: Record<LanguageCode, {
@@ -57,8 +57,8 @@ const languageConfig: Record<LanguageCode, {
   'de-DE': {
     icon: '🇩🇪',
     label: 'Deutsch',
-    shortcut: '⌥+G',
-    hotkey: 'alt+g',
+    shortcut: '⌥+D',
+    hotkey: 'alt+d',
     display: true
   },
   'nl-NL': {
@@ -109,6 +109,20 @@ const languageConfig: Record<LanguageCode, {
     shortcut: '⌥+I',
     hotkey: 'alt+i',
     display: true
+  },
+  'it-IT': {
+    icon: '🇮🇹',
+    label: 'Italiano',
+    shortcut: '⌥+T',  // 使用 T 因为 I 已被印地语占用
+    hotkey: 'alt+t',
+    display: true
+  },
+  'id-ID': {
+    icon: '🇮🇩',
+    label: 'Bahasa Indonesia',
+    shortcut: '⌥+B',  // 使用 B 因为 I 已被占用
+    hotkey: 'alt+b',
+    display: true
   }
 };
 
@@ -143,7 +157,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
   tooltipPosition = 'left',
   menuTooltipPosition = 'left'
 }) => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { theme } = useTheme();
@@ -182,6 +196,10 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
       return 'pt-BR';
     if (lang.includes('hi'))
       return 'hi-IN';
+    if (lang.includes('it'))
+      return 'it-IT';
+    if (lang.includes('id'))
+      return 'id-ID';
     return 'en-US';
   };
 
@@ -276,7 +294,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
             className={`lang-button ${dropdownButtonStyle}`}
             aria-expanded={isOpen}
             aria-haspopup="true"
-            aria-label="切换语言"
+            aria-label={t('aria.switchLanguage') || 'Switch Language'}
           >
             <span className="">{currentLangConfig.icon}</span>
           </button>

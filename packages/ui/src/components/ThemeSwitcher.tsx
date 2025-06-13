@@ -83,22 +83,22 @@ const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
       icon: Sun,
       label: t('common.theme.light'),
       getStyleType: () => 'light',
-      shortcut: '⌥+L',
-      hotkey: 'alt+l'
+      shortcut: '⇧+L',
+      hotkey: 'shift+l'
     },
     dark: {
       icon: Moon,
       label: t('common.theme.dark'),
       getStyleType: () => 'dark',
-      shortcut: '⌥+D',
-      hotkey: 'alt+d'
+      shortcut: '⇧+D',
+      hotkey: 'shift+d'
     },
     system: {
       icon: MonitorCog,
       label: t('common.theme.system'),
       getStyleType: (isDarkMode) => isDarkMode ? 'dark' : 'light',
-      shortcut: '⌥+S',
-      hotkey: 'alt+s'
+      shortcut: '⇧+S',
+      hotkey: 'shift+s'
     }
   };
 
