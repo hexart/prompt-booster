@@ -266,7 +266,7 @@ export const PromptBooster: React.FC = () => {
         setHasUsedLLMAnalysis(true);
       } catch (e) {
         console.warn("[Fallback] LLM 评分失败，尝试使用本地分析:", e);
-        result = analyzePromptQuality(optimizedPrompt);
+        result = analyzePromptQuality(optimizedPrompt, i18n.language);
         toast.warning(t("toast.analyzePromptLLMFailed"));
       }
 
