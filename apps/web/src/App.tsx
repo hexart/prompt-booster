@@ -73,7 +73,7 @@ function App() {
           </div>
         </main>
 
-        <footer className="mt-auto footer">
+        <footer className="mt-auto rounded-t-xl footer">
           <div className="w-full max-w-(--breakpoint-2xl) mx-auto px-4 sm:px-6 lg:px-8 py-2 md:py-3">
             <div className="flex text-center text-sm items-center justify-center gap-2">
               <span>

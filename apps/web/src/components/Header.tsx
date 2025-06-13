@@ -90,7 +90,7 @@ const Header: React.FC<HeaderProps> = ({
     return (
         <>
             <header
-                className="sticky top-0 w-full z-40 shadow-2xs header"
+                className="sticky top-0 rounded-b-xl w-full z-40 shadow-2xs header"
                 style={{ WebkitAppRegion: 'drag' as const }}
             >
                 <div className="w-full max-w-(--breakpoint-2xl) mx-auto px-2 md:px-6 py-4">
