@@ -77,6 +77,10 @@ export function getLanguageInstruction(language?: string): string {
     return 'Por favor, apresente o resultado em português.';
   } else if (language.includes('hi')) {
     return 'कृपया परिणाम हिंदी में प्रदर्शित करें।';
+  } else if (language.includes('it')) {
+    return 'Si prega di mostrare il risultato in italiano.';
+  } else if (language.includes('id')) {
+    return 'Silakan tampilkan hasilnya dalam bahasa Indonesia.';
   } else {
     // 默认使用英语
     return 'Please output the result in English.';
