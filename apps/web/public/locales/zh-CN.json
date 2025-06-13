@@ -89,7 +89,8 @@
   "aria": {
     "openMenu": "打开菜单",
     "closeMenu": "关闭菜单",
-    "mobileMenu": "移动端导航菜单"
+    "mobileMenu": "移动端导航菜单",
+    "switchLanguage": "切换语言"
   },
   "promptBooster": {
     "originalPrompt": "原始提示词",

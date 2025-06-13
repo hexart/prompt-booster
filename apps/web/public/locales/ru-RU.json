@@ -89,7 +89,8 @@
   "aria": {
     "openMenu": "Открыть меню",
     "closeMenu": "Закрыть меню",
-    "mobileMenu": "Мобильное меню"
+    "mobileMenu": "Мобильное меню",
+    "switchLanguage": "Переключить язык"
   },
   "promptBooster": {
     "originalPrompt": "Исходный запрос",

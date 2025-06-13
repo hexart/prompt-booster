@@ -89,7 +89,8 @@
   "aria": {
     "openMenu": "मेन्यू खोलें",
     "closeMenu": "मेन्यू बंद करें",
-    "mobileMenu": "मोबाइल मेन्यू"
+    "mobileMenu": "मोबाइल मेन्यू",
+    "switchLanguage": "भाषा बदलें"
   },
   "promptBooster": {
     "originalPrompt": "मूल प्रॉम्प्ट",

@@ -89,7 +89,8 @@
   "aria": {
     "openMenu": "فتح القائمة",
     "closeMenu": "إغلاق القائمة",
-    "mobileMenu": "قائمة الهاتف المحمول"
+    "mobileMenu": "قائمة الهاتف المحمول",
+    "switchLanguage": "تغيير اللغة"
   },
   "promptBooster": {
     "originalPrompt": "النص الأصلي",

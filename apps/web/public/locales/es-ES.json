@@ -89,7 +89,8 @@
   "aria": {
     "openMenu": "Abrir menú",
     "closeMenu": "Cerrar menú",
-    "mobileMenu": "Menú móvil"
+    "mobileMenu": "Menú móvil",
+    "switchLanguage": "Cambiar idioma"
   },
   "promptBooster": {
     "originalPrompt": "Prompt original",

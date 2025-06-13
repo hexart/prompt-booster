@@ -89,7 +89,8 @@
   "aria": {
     "openMenu": "打開菜單",
     "closeMenu": "關閉菜單",
-    "mobileMenu": "移動端導航菜單"
+    "mobileMenu": "移動端導航菜單",
+    "switchLanguage": "切換語言"
   },
   "promptBooster": {
     "originalPrompt": "原始提示詞",
