@@ -152,7 +152,7 @@ export class PromptService {
 
       // 获取模型信息
       const modelStore = useModelStore.getState();
-      const modelInfo = this.getModelInfo(modelId || modelStore.activeModel);
+      const modelInfo = this.getModelMetadata(modelId || modelStore.activeModel);
 
       // 创建预备版本
       const version = this.groupManager.createPendingVersion(
@@ -170,7 +170,7 @@ export class PromptService {
       });
 
       // 存储累积的响应
-      let optimizedPrompt = "";
+      let enhancedPrompt = "";
 
       // 调用LLM
       await llmService.callLLM({
@@ -180,13 +180,13 @@ export class PromptService {
         stream: true,
         onData: (chunk) => {
           // 累积响应
-          optimizedPrompt += chunk;
+          enhancedPrompt += chunk;
 
           // 直接更新版本内容
           this.groupManager.updateVersionContent(
             group.id,
             version.id,
-            optimizedPrompt
+            enhancedPrompt
           );
 
           // 触发状态更新通知UI
@@ -197,10 +197,11 @@ export class PromptService {
       });
 
       // 完成后最终更新
+      const cleanedEnhancedPrompt = removeThinkTags(enhancedPrompt);
       this.groupManager.updateVersionContent(
         group.id,
         version.id,
-        optimizedPrompt
+        cleanedEnhancedPrompt
       );
 
       // 最终更新状态
@@ -213,7 +214,7 @@ export class PromptService {
       return {
         groupId: group.id,
         versionId: version.id,
-        optimizedPrompt,
+        enhancedPrompt: cleanedEnhancedPrompt,
       };
     } catch (error) {
       this.updateState({
@@ -256,10 +257,10 @@ export class PromptService {
       }
 
       // 清理当前提示词
-      const cleanedPrompt = removeThinkTags(currentVersion.optimizedPrompt);
+      const currentCleanedPrompt = removeThinkTags(currentVersion.optimizedPrompt);
 
       // 构建迭代消息
-      const iterationMessage = `当前优化后的提示词:\n\n${cleanedPrompt}\n\n迭代方向:\n${direction}`;
+      const iterationMessage = `当前优化后的提示词:\n\n${currentCleanedPrompt}\n\n迭代方向:\n${direction}`;
 
       // 添加语言指令
       const languageInstruction = getLanguageInstruction(language);
@@ -269,7 +270,7 @@ export class PromptService {
 
       // 获取模型信息
       const modelStore = useModelStore.getState();
-      const modelInfo = this.getModelInfo(modelId || modelStore.activeModel);
+      const modelInfo = this.getModelMetadata(modelId || modelStore.activeModel);
 
       // 创建预备版本
       const version = this.groupManager.createPendingVersion(
@@ -287,7 +288,7 @@ export class PromptService {
       });
 
       // 存储累积的响应
-      let optimizedPrompt = "";
+      let iteratedPrompt = "";
 
       // 调用LLM
       await llmService.callLLM({
@@ -297,13 +298,13 @@ export class PromptService {
         stream: true,
         onData: (chunk) => {
           // 累积响应
-          optimizedPrompt += chunk;
+          iteratedPrompt += chunk;
 
           // 直接更新版本内容
           this.groupManager.updateVersionContent(
             groupId,
             version.id,
-            optimizedPrompt
+            iteratedPrompt
           );
 
           // 触发状态更新通知UI
@@ -314,10 +315,11 @@ export class PromptService {
       });
 
       // 完成后最终更新
+      const cleanedIteratedPrompt = removeThinkTags(iteratedPrompt);
       this.groupManager.updateVersionContent(
         groupId,
         version.id,
-        optimizedPrompt
+        cleanedIteratedPrompt
       );
 
       // 最终更新状态
@@ -331,7 +333,7 @@ export class PromptService {
         groupId,
         versionId: version.id,
         versionNumber: version.number,
-        optimizedPrompt,
+        iteratedPrompt,
       };
     } catch (error) {
       this.updateState({
@@ -347,13 +349,13 @@ export class PromptService {
    */
   async saveUserModification(
     groupId: string,
-    modifiedPrompt: string
+    userEditedPrompt: string
   ): Promise<IterateResult> {
     if (!this.groupManager.getGroup(groupId)) {
       throw new Error(`Group ${groupId} not found`);
     }
 
-    if (!modifiedPrompt?.trim()) {
+    if (!userEditedPrompt?.trim()) {
       throw new Error("Modified prompt is empty");
     }
 
@@ -365,9 +367,10 @@ export class PromptService {
         modelName: "",
       };
 
+      const cleanedModifiedPrompt = removeThinkTags(userEditedPrompt);
       const version = this.groupManager.createVersion(
         groupId,
-        modifiedPrompt,
+        cleanedModifiedPrompt,
         modelInfo,
         PROVIDER_USER_EDIT
       );
@@ -383,7 +386,7 @@ export class PromptService {
         groupId,
         versionId: version.id,
         versionNumber: version.number,
-        optimizedPrompt: modifiedPrompt,
+        iteratedPrompt: cleanedModifiedPrompt,
       };
     } catch (error) {
       throw error;
@@ -391,7 +394,7 @@ export class PromptService {
   }
 
   // 获取模型信息
-  private getModelInfo(modelId: string) {
+  private getModelMetadata(modelId: string) {
     const modelStore = useModelStore.getState();
     const enabledModels = modelStore.getEnabledModels();
     const modelInfo = enabledModels.find((m: any) => m.id === modelId);

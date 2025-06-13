@@ -57,7 +57,7 @@ export interface EnhancePromptParams {
 export interface EnhanceResult {
     groupId: string;
     versionId: string;
-    optimizedPrompt: string;
+    enhancedPrompt: string;
     reasoning?: string;
 }
 
@@ -75,7 +75,7 @@ export interface IterateResult {
     groupId: string;
     versionId: string;
     versionNumber: number;
-    optimizedPrompt: string;
+    iteratedPrompt: string;
     reasoning?: string;
 }
 
