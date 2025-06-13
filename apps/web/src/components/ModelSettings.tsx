@@ -196,7 +196,7 @@ export const ModelSettings: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col h-full p-4 border rounded-lg shadow-2xs secondary-container">
+        <div className="flex flex-col h-full p-4 border rounded-xl shadow-2xs secondary-container">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-semibold title-secondary">{t('settings.title')}</h2>
                 <Tooltip text={t('settings.addCustomModel')}>

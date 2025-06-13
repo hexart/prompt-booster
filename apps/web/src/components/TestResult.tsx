@@ -311,7 +311,7 @@ export const TestResult: React.FC = () => {
   ) => {
 
     return (
-      <div className="flex flex-col h-full border rounded p-4 overflow-hidden secondary-container">
+      <div className="flex flex-col h-full border rounded-xl p-4 overflow-hidden secondary-container">
         {/* 标题和扩展按钮 */}
         <div className="flex justify-between items-center mb-2">
           <h2 className="text-xl font-semibold title-secondary">{title}</h2>
@@ -362,7 +362,7 @@ export const TestResult: React.FC = () => {
             streaming={isStreaming}
             allowHtml={showMarkdown}
             enableMarkdown={showMarkdown}
-            className="p-3 border rounded-md max-h-[380px] min-h-0 md:max-h-[100vh] autoscroll-content"
+            className="p-3 border rounded-lg max-h-[380px] min-h-0 md:max-h-[100vh] autoscroll-content"
             buttonText=""
             threshold={8}
             placeholder={isStreaming ? t('testResult.responding') : t('testResult.noResponseYet')}
@@ -382,7 +382,7 @@ export const TestResult: React.FC = () => {
     <div className="flex flex-col h-full">
       {/* 用户输入区域 */}
       {!isMaximized && (
-        <div className="relative p-4 mb-4 border rounded-lg shadow-2xs flex-none secondary-container">
+        <div className="relative p-4 mb-4 border rounded-xl shadow-2xs flex-none secondary-container">
           <h2 className="text-xl font-semibold mb-4 title-secondary">
             {t('testResult.title')}
           </h2>

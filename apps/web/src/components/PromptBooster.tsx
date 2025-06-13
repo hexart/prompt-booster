@@ -401,7 +401,7 @@ export const PromptBooster: React.FC = () => {
     <div className="grid-cols-1 gap-6 md:min-h-[550px] flex flex-col flex-grow">
       {/* 原始提示词区域 */}
       {!isMaximized && (
-        <div className="p-4 border rounded-lg shadow-2xs flex-none secondary-container">
+        <div className="p-4 border rounded-xl shadow-2xs flex-none secondary-container">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold title-secondary">
               {t("promptBooster.originalPrompt")}
@@ -504,7 +504,7 @@ export const PromptBooster: React.FC = () => {
 
       {/* 增强提示词区域 */}
       <div
-        className={`flex flex-col flex-grow md:min-h-0 p-4 border rounded-lg shadow-2xs secondary-container
+        className={`flex flex-col flex-grow md:min-h-0 p-4 border rounded-xl shadow-2xs secondary-container
                     ${isMaximized
             ? "min-h-[calc(100vh-260px)]"
             : "min-h-[calc(100vh-550px)]"
@@ -559,7 +559,7 @@ export const PromptBooster: React.FC = () => {
           {/* 按钮区域 */}
           <div className="flex-shrink-0 flex gap-2">
             <button
-              className={`text-sm flex items-center gap-1 rounded-lg px-3 py-2 ${activeGroup ? "button-confirm" : "button-third"}`}
+              className={`text-sm flex items-center gap-1 px-3 py-2 ${activeGroup ? "button-confirm" : "button-third"}`}
               onClick={() => setIsIterationDialogOpen(true)}
               disabled={!optimizedPrompt || isProcessing || !activeGroup}
             >
@@ -570,7 +570,7 @@ export const PromptBooster: React.FC = () => {
             </button>
 
             <button
-              className="text-sm flex items-center gap-1 rounded-lg px-3 py-2 button-third"
+              className="text-sm flex items-center gap-1 px-3 py-2 button-third"
               onClick={handleAnalyze}
               disabled={
                 !optimizedPrompt || isProcessing || !activeGroup || isAnalyzing
@@ -594,7 +594,7 @@ export const PromptBooster: React.FC = () => {
             </button>
 
             <button
-              className="text-sm flex items-center gap-1 rounded-lg px-3 py-2 button-third"
+              className="text-sm flex items-center gap-1 px-3 py-2 button-third"
               onClick={() => setIsMaximized(!isMaximized)}
               disabled={!displayOriginalPrompt?.trim()}
             >
@@ -700,7 +700,7 @@ export const PromptBooster: React.FC = () => {
                       <Drawer.Description className="h-3 drawer-skeleton rounded w-full mt-1"></Drawer.Description>
 
                       {/* 三条维度骨架 */}
-                      <div className="p-4 drawer-analysis-container rounded-lg">
+                      <div className="p-4 drawer-analysis-container rounded-xl">
                         {[1, 2, 3].map((i) => (
                           <div key={i} className="flex gap-2 items-start justify-between mb-4 last:mb-0">
                             <div className="flex items-start gap-2 w-[85%]">
@@ -716,7 +716,7 @@ export const PromptBooster: React.FC = () => {
                       </div>
 
                       {/* 三条综合建议骨架 */}
-                      <div className="mt-4 p-4 drawer-suggestion-container rounded-lg">
+                      <div className="mt-4 p-4 drawer-suggestion-container rounded-xl">
                         <div className="h-4 drawer-skeleton rounded w-1/5 mb-2" />
                         {[1, 2, 3].map((i) => (
                           <div
@@ -765,7 +765,7 @@ export const PromptBooster: React.FC = () => {
 
                       {/* 分析维度 */}
                       {analysisResult?.criteria && (
-                        <div className="p-4 drawer-analysis-container rounded-lg mb-4">
+                        <div className="p-4 drawer-analysis-container rounded-xl mb-4">
                           <ul className="space-y-2 text-sm">
                             {analysisResult.criteria.map(
                               (item: CriterionItem, i: number) => (
@@ -815,7 +815,7 @@ export const PromptBooster: React.FC = () => {
                         (c) => !c.passed && c.suggestion
                       ) ||
                         analysisResult?.suggestions?.length) && (
-                          <div className="p-4 mt-2 drawer-suggestion-container rounded-lg">
+                          <div className="p-4 mt-2 drawer-suggestion-container rounded-xl">
                             <div className="flex justify-between items-center mb-2">
                               <h4 className="text-sm font-semibold drawer-suggestion-title">
                                 {t("promptBooster.drawer.suggestionsTitle")}

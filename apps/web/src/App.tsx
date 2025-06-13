@@ -65,7 +65,7 @@ function App() {
         <main className="w-full h-auto mac-top-margin md:h-[calc(100vh-126px)] overflow-y-auto md:overflow-hidden max-w-(--breakpoint-2xl) mx-auto p-2 md:px-6 md:py-4">
           <Toaster position={toastPosition} />
           {/* 内容区域 */}
-          <div className="flex flex-col flex-grow rounded-lg shadow p-4 md:p-6 w-full h-full main-container" aria-hidden="false">
+          <div className="flex flex-col flex-grow rounded-3xl shadow p-4 md:p-6 w-full h-full main-container" aria-hidden="false">
             {activeTab === 'booster' && <PromptBooster />}
             {activeTab === 'test' && <TestResult />}
             {activeTab === 'history' && <PromptHistory onNavigateToEditor={navigateToEditor} />}
