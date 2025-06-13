@@ -40,21 +40,22 @@
     transform: translateY(10px);
   }
 }
+@layer utilities {
+  /* 淡入类 */
+  .fade-in {
+    animation: draggableNoticeIn 0.5s ease-in forwards;
+  }
 
-/* 淡入类 */
-.fade-in {
-  animation: draggableNoticeIn 0.5s ease-in forwards;
-}
+  /* 淡出类 */
+  .fade-out {
+    animation: draggableNoticeOut 0.5s ease-out forwards;
+  }
 
-/* 淡出类 */
-.fade-out {
-  animation: draggableNoticeOut 0.5s ease-out forwards;
-}
-
-/* 初始隐藏状态 */
-.fade-hidden {
-  opacity: 0;
-  transform: scale(0.8) translateY(10px);
+  /* 初始隐藏状态 */
+  .fade-hidden {
+    opacity: 0;
+    transform: scale(0.8) translateY(10px);
+  }
 }
 
 @keyframes slideIn {
@@ -91,17 +92,25 @@
 }
 
 @layer base {
-}
+  /* 全局背景设置 */
+  :root body {
+    @apply bg-gray-100 text-black;
+  }
 
-html {
-  @apply min-h-screen transition-colors duration-300 antialiased;
-}
+  /* 暗色模式背景 */
+  :root.dark body {
+    @apply bg-gray-900 text-gray-100;
+  }
 
-body {
-  min-height: 100dvh;
-  margin: 0;
-}
+  html {
+    @apply min-h-screen transition-colors duration-300 antialiased;
+  }
 
+  body {
+    min-height: 100dvh;
+    margin: 0;
+  }
+}
 textarea {
   @apply resize-none rounded-md;
 }
@@ -112,16 +121,6 @@ button {
 
 button:disabled {
   @apply cursor-not-allowed;
-}
-
-/* 全局背景设置 */
-:root body {
-  @apply bg-gray-100 text-black;
-}
-
-/* 暗色模式背景 */
-:root.dark body {
-  @apply bg-gray-900 text-gray-100;
 }
 
 /* 亮色主题 */
