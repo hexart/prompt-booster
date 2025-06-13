@@ -56,7 +56,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
 
   if (sortedGroups.length === 0) {
     return (
-      <div className="p-4 border rounded-lg shadow-2xs h-full listcard-container">
+      <div className="p-4 border rounded-xl shadow-2xs h-full listcard-container">
         <div className="p-8 text-center h-full items-center listcard-description">
           <p>{t('history.noHistory')}</p>
           <p className="text-sm mt-2">{t('history.noHistoryHint')}</p>
@@ -143,7 +143,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
   };
 
   return (
-    <div className="flex flex-col h-full p-4 border rounded-lg secondary-container">
+    <div className="flex flex-col h-full p-4 border rounded-xl secondary-container">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold title-secondary">{t('history.title')} ({sortedGroups.length})</h2>
         <div>
@@ -168,22 +168,29 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
           return (
             <div key={group.id} className="border rounded-lg p-3 shadow-2xs transition-all hover:shadow-md listcard-container">
               <div className="flex justify-between items-center hover:cursor-pointer listcard-title-container" onClick={() => toggleExpand(group.id)}>
-                <div className="flex items-center gap-2 listcard-text-container">
-                  <span className="text-sm listcard-description">
-                    {formatTimestamp(group.updatedAt)}
-                  </span>
-                  {versions.length > 1 && (
-                    <>
-                      {/* sm屏幕以下显示简化版本 */}
-                      <span className="px-2 py-0.5 text-xs rounded-full listcard-tag sm:hidden">
-                        {versions.length}
-                      </span>
-                      {/* sm屏幕以上显示完整版本 */}
-                      <span className="px-2 py-0.5 text-xs rounded-full listcard-tag hidden sm:inline">
-                        {t('history.versionsCount', { count: versions.length })}
-                      </span>
-                    </>
-                  )}
+                <div className="flex-col grow w-1/2 min-w-[33%] pe-4 items-center space-y-2 listcard-text-container">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm listcard-description">
+                      {formatTimestamp(group.updatedAt)}
+                    </span>
+                    {versions.length > 1 && (
+                      <>
+                        {/* sm屏幕以下显示简化版本 */}
+                        <span className="px-2 py-0.5 text-xs rounded-full listcard-tag sm:hidden">
+                          {versions.length}
+                        </span>
+                        {/* sm屏幕以上显示完整版本 */}
+                        <span className="px-2 py-0.5 text-xs rounded-full listcard-tag hidden sm:inline">
+                          {t('history.versionsCount', { count: versions.length })}
+                        </span>
+                      </>
+                    )}
+                  </div>
+
+                  {/* 未展开时只显示原始提示词 */}
+                  <div className="truncate text-sm font-medium mb-1 listcard-description">
+                    {t('history.originalPrompt')} {expandedGroupId !== group.id && truncateText(group.originalPrompt)}
+                  </div>
                 </div>
                 <div className="flex gap-2 items-center listcard-button-container">
                   <button
@@ -226,8 +233,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                     return (
                       <>
                         <div>
-                          <h3 className="text-sm font-medium mb-1 listcard-description">{t('history.originalPrompt')}</h3>
-                          <div className="p-2 max-h-32 overflow-y-scroll rounded-md text-sm whitespace-pre-wrap listcard-prompt-container">
+                          <div className="mt-2 p-2 max-h-32 overflow-y-scroll rounded-md text-sm whitespace-pre-wrap listcard-prompt-container">
                             {group.originalPrompt}
                           </div>
                         </div>
@@ -254,7 +260,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
 
                         <div>
                           <h3 className="text-sm font-medium mb-1 listcard-description">{t('history.iterationDirection')}</h3>
-                          <div className="p-2 rounded-md text-sm whitespace-pre-wrap iteration-prompt-container">
+                          <div className="p-2 max-h-[260px] rounded-md text-sm whitespace-pre-wrap iteration-prompt-container">
                             {displayVersion.iterationDirection
                               ? (displayVersion.iterationDirection === PROVIDER_USER_EDIT
                                 ? t('history.userEdit')
@@ -286,13 +292,6 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                       </>
                     );
                   })()}
-                </div>
-              )}
-
-              {/* 未展开时只显示原始提示词 */}
-              {expandedGroupId !== group.id && (
-                <div className="truncate text-sm font-medium mb-1 listcard-description">
-                  {t('history.originalPrompt')} {truncateText(group.originalPrompt)}
                 </div>
               )}
             </div>
