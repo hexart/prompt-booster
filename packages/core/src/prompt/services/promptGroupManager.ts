@@ -4,7 +4,7 @@
  * 专门负责提示词组的CRUD操作
  */
 import { PromptGroup, PromptVersion } from '../models/prompt';
-import { generateId } from '../../utils';
+import { generateId } from '../../utils/idGenerator';
 
 export const PROMPT_PENDING_MARKER = '__PENDING__';
 export class PromptGroupManager {
