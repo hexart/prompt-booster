@@ -78,7 +78,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
       {/* 菜单内容 - 只有菜单本身接收点击事件 */}
       <nav
         ref={menuRef}
-        className={`absolute top-18 ${isRTL ? 'left-4' : 'right-4'} overflow-hidden rounded-2xl shadow-lg pointer-events-auto mobile-menu-container menu-container-animation ${isRTL ? 'rtl' : ''}`}
+        className={`absolute top-18 ${isRTL ? 'left-2' : 'right-2'} overflow-hidden rounded-2xl shadow-lg pointer-events-auto mobile-menu-container menu-container-animation ${isRTL ? 'rtl' : ''}`}
         aria-label={t('aria.mobileMenu')}
       >
         <div className="p-2">
