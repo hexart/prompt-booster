@@ -1,7 +1,6 @@
 // packages/ui/src/components/ActionButtons.tsx
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { removeThinkTags } from '@prompt-booster/core';
 import { ClipboardIcon, ClipboardCheckIcon, FileTypeIcon, FileTextIcon, FileCheck2Icon } from 'lucide-react';
 import { Tooltip } from './Tooltip';
 import { toast } from 'sonner';
@@ -53,18 +52,18 @@ interface ActionButtonsProps {
 
 // 单个按钮的动画配置 - 移除了 visible 状态的 transition
 const buttonVariants = {
-  hidden: { 
-    opacity: 0, 
+  hidden: {
+    opacity: 0,
     scale: 0.8,
     y: -10
   },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     scale: 1,
     y: 0
   },
-  exit: { 
-    opacity: 0, 
+  exit: {
+    opacity: 0,
     scale: 0.8,
     y: -10,
     transition: {
@@ -107,6 +106,11 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 
   // 决定是否显示按钮组
   const shouldShow = hasContent && (!showOnHover || isHovered) && !streaming;
+
+  function removeThinkTags(text: string): string {
+    if (!text) return text;
+    return text.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
+  }
 
   // 处理复制
   const handleCopy = async (e: React.MouseEvent) => {
@@ -250,7 +254,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 
   // 构建要显示的按钮数组
   const buttons = [];
-  
+
   if (showCopy) {
     buttons.push({
       key: 'copy',
@@ -326,7 +330,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
   return (
     <AnimatePresence mode="wait">
       {shouldShow && (
-        <motion.div 
+        <motion.div
           className={`${positionClass} flex items-center gap-1 ${className}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
