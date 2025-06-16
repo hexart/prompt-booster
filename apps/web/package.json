@@ -24,7 +24,7 @@
     "react-confetti": "^6.4.0",
     "react-dom": "^19.1.0",
     "react-hotkeys-hook": "^5.1.0",
-    "react-i18next": "^15.5.2",
+    "react-i18next": "^15.5.3",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^1.1.2"
   },
