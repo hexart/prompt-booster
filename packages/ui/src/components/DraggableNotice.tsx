@@ -28,7 +28,27 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
 }) => {
   const [hasValidParent, setHasValidParent] = useState(true);
   const [isVisible, setIsVisible] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const constraintsRef = useRef<HTMLElement>(null);
+
+  // 处理拖拽开始
+  const handleDragStart = () => {
+    setIsDragging(true);
+    document.body.classList.add('dragging-active');
+  };
+
+  // 处理拖拽结束
+  const handleDragEnd = () => {
+    setIsDragging(false);
+    document.body.classList.remove('dragging-active');
+  };
+
+  // 组件卸载时清理
+  useEffect(() => {
+    return () => {
+      document.body.classList.remove('dragging-active');
+    };
+  }, []);
 
   // 检查指定容器并启动组件
   useEffect(() => {
@@ -80,7 +100,6 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
     const baseX = parseFloat(initialPosition.x);
     const baseY = parseFloat(initialPosition.y);
 
-    // 反向定位逻辑：LTR 从右侧开始，RTL 从左侧开始
     if (isRTL) {
       // RTL 模式：从左侧开始定位
       return {
@@ -112,7 +131,7 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
     return (
       <>
         <div className="flex justify-between items-center dragable-notice-header">
-          <div className={`flex items-center p-3 gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+          <div className="flex items-center p-3 gap-2">
             {isWarning ? (
               <AlertTriangleIcon size={20} className='dragable-notice-header-icon' />
             ) : (
@@ -135,12 +154,12 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
             <XIcon size={16} />
           </motion.button>
         </div>
-        <div className={`p-3 text-sm space-y-2 ${isRTL ? 'text-right' : 'text-left'}`}>
+        <div className="p-3 text-sm space-y-2">
           {contentItems.map((item, index) => (
             <motion.div
               key={index}
-              className={`flex items-start gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}
-              initial={{ opacity: 0, x: isRTL ? 10 : -10 }} // RTL 时从右侧滑入
+              className="flex items-start gap-2"
+              initial={{ opacity: 0, x: isRTL ? 10 : -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 + 0.3 }}
             >
@@ -154,50 +173,73 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
   };
 
   return (
-    <AnimatePresence>
-      {isVisible && (
-        <motion.div
-          drag={hasValidParent} // 只有在有效容器时才允许拖拽
-          dragConstraints={hasValidParent ? constraintsRef : undefined}
-          dragElastic={0.1}
-          dragMomentum={false}
-          initial={{
-            opacity: 0,
-            scale: 0.8
-          }}
-          animate={{
-            opacity: 1,
-            scale: 1
-          }}
-          exit={{
-            opacity: 0,
-            scale: 0.8,
-            transition: { duration: 0.3 }
-          }}
-          whileDrag={{
-            scale: 1.05,
-            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
-            cursor: "grabbing"
-          }}
-          style={{
-            position: 'absolute', // 使用 absolute 定位相对于父容器
-            zIndex: 50,
-            cursor: hasValidParent ? 'grab' : 'default',
-            maxWidth: hasValidParent ? 'none' : '300px',
-            direction: isRTL ? 'rtl' : 'ltr', // 设置文本方向
-            // 应用计算出的初始样式
-            ...getInitialStyle()
-          }}
-          className={`${className}`}
-          transition={{
-            type: "spring",
-            damping: 20,
-            stiffness: 300
-          }}
-        >
-          {renderContent(!hasValidParent)}
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <>
+      {/* 全局样式注入 */}
+      <style>{`
+        body.dragging-active {
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+          cursor: grabbing !important;
+        }
+        body.dragging-active * {
+          cursor: grabbing !important;
+        }
+      `}</style>
+      
+      <AnimatePresence>
+        {isVisible && (
+          <motion.div
+            drag={hasValidParent}
+            dragConstraints={hasValidParent ? constraintsRef : undefined}
+            dragElastic={0.1}
+            dragMomentum={false}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            initial={{
+              opacity: 0,
+              scale: 0.8
+            }}
+            animate={{
+              opacity: 1,
+              scale: 1
+            }}
+            exit={{
+              opacity: 0,
+              scale: 0.8,
+              transition: { duration: 0.3 }
+            }}
+            whileDrag={{
+              scale: 1.05,
+              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+              cursor: "grabbing"
+            }}
+            style={{
+              position: 'absolute',
+              zIndex: 50,
+              cursor: hasValidParent ? 'grab' : 'default',
+              maxWidth: hasValidParent ? 'none' : '300px',
+              direction: isRTL ? 'rtl' : 'ltr',
+              ...getInitialStyle()
+            }}
+            className={`${className} ${isDragging ? 'is-dragging' : ''}`}
+            transition={{
+              type: "spring",
+              damping: 20,
+              stiffness: 300
+            }}
+            // 阻止拖拽元素内部的文本选择
+            onMouseDown={(e) => {
+              if (hasValidParent) {
+                e.preventDefault();
+              }
+            }}
+          >
+            {renderContent(!hasValidParent)}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
