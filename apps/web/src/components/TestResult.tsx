@@ -382,7 +382,7 @@ export const TestResult: React.FC = () => {
     <div className="flex flex-col h-full">
       {/* 用户输入区域 */}
       {!isMaximized && (
-        <div className="relative p-4 mb-4 border rounded-xl shadow-2xs flex-none secondary-container">
+        <div id="parent-container" className="relative p-4 mb-4 border rounded-xl shadow-2xs flex-none secondary-container">
           <h2 className="text-xl font-semibold mb-4 title-secondary">
             {t('testResult.title')}
           </h2>
@@ -405,6 +405,7 @@ export const TestResult: React.FC = () => {
                 }
               ]}
               onClose={() => setShowRequirements(false)}
+              constraintsId="parent-container"
               className='w-60 backdrop-blur-md shadow-lg rounded-2xl dragable-notice-container'
               isRTL={isRTL()}
               initialPosition={{ x: '20px', y: '20px' }}
