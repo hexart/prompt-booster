@@ -97,7 +97,7 @@
     "originalInput": "يرجى إدخال النص الخاص بك...",
     "enhancedPrompt": "النص المحسّن",
     "templateSelect": "قالب نص النظام",
-    "templatePlaceholder": "اختر قالب نص النظام...",
+    "templatePlaceholder": "يرجى اختيار قالب المطالبة...",
     "noTemplatesAvailable": "لا توجد قوالب متاحة",
     "modelSelect": "النموذج المحدد",
     "modelPlaceholder": "اختر النموذج...",

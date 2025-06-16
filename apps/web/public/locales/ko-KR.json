@@ -97,7 +97,7 @@
     "originalInput": "프롬프트를 입력하세요...",
     "enhancedPrompt": "향상된 프롬프트",
     "templateSelect": "시스템 프롬프트 템플릿",
-    "templatePlaceholder": "시스템 프롬프트 템플릿 선택...",
+    "templatePlaceholder": "프롬프트 템플릿을 선택해주세요...",
     "noTemplatesAvailable": "사용 가능한 템플릿이 없습니다",
     "modelSelect": "선택된 모델",
     "modelPlaceholder": "모델 선택...",

@@ -78,7 +78,7 @@ export const IterationDialog: React.FC<IterationDialogProps> = ({
             options={iterateTemplateOptions}
             value={selectedTemplateId}
             onChange={setSelectedTemplateId}
-            placeholder="选择迭代提示词模板..."
+            placeholder={t("promptBooster.templatePlaceholder")}
           />
         </div>
         <div>

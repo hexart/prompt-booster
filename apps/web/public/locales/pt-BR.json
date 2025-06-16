@@ -97,7 +97,7 @@
     "originalInput": "Digite seu prompt...",
     "enhancedPrompt": "Prompt aprimorado",
     "templateSelect": "Modelo de prompt do sistema",
-    "templatePlaceholder": "Selecione o modelo de prompt do sistema...",
+    "templatePlaceholder": "Por favor, selecione um modelo de prompt...",
     "noTemplatesAvailable": "Nenhum modelo disponível",
     "modelSelect": "Modelo selecionado",
     "modelPlaceholder": "Selecione o modelo...",

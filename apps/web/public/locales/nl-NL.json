@@ -97,7 +97,7 @@
     "originalInput": "Voer uw prompt in...",
     "enhancedPrompt": "Verbeterde prompt",
     "templateSelect": "Systeemprompt sjabloon",
-    "templatePlaceholder": "Selecteer systeemprompt sjabloon...",
+    "templatePlaceholder": "Selecteer een prompt-sjabloon...",
     "noTemplatesAvailable": "Geen sjablonen beschikbaar",
     "modelSelect": "Geselecteerd model",
     "modelPlaceholder": "Selecteer model...",

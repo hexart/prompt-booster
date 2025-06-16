@@ -97,7 +97,7 @@
     "originalInput": "プロンプトを入力してください...",
     "enhancedPrompt": "強化されたプロンプト",
     "templateSelect": "システムプロンプトテンプレート",
-    "templatePlaceholder": "システムプロンプトテンプレートを選択...",
+    "templatePlaceholder": "プロンプトテンプレートを選択してください...",
     "noTemplatesAvailable": "利用可能なテンプレートはありません",
     "modelSelect": "モデル選択",
     "modelPlaceholder": "モデルを選択...",

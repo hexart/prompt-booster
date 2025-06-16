@@ -97,7 +97,7 @@
     "originalInput": "請輸入您的提示詞...",
     "enhancedPrompt": "增強提示詞",
     "templateSelect": "系統提示詞模板",
-    "templatePlaceholder": "選擇系統提示詞模板...",
+    "templatePlaceholder": "請選擇提示詞模板...",
     "modelSelect": "模型選擇",
     "modelPlaceholder": "選擇模型...",
     "noTemplatesAvailable": "沒有可用的模板",

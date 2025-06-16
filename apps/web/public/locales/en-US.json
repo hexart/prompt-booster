@@ -97,7 +97,7 @@
     "originalInput": "Please enter your prompt...",
     "enhancedPrompt": "Enhanced Prompt",
     "templateSelect": "System prompt template",
-    "templatePlaceholder": "Select system prompt template...",
+    "templatePlaceholder": "Please select a prompt template...",
     "noTemplatesAvailable": "No templates available",
     "modelSelect": "Selected model",
     "modelPlaceholder": "Select model...",

@@ -97,7 +97,7 @@
     "originalInput": "Bitte geben Sie Ihren Prompt ein...",
     "enhancedPrompt": "Verbesserter Prompt",
     "templateSelect": "System-Prompt-Vorlage",
-    "templatePlaceholder": "System-Prompt-Vorlage auswählen...",
+    "templatePlaceholder": "Bitte wählen Sie eine Prompt-Vorlage...",
     "noTemplatesAvailable": "Keine Vorlagen verfügbar",
     "modelSelect": "Modell auswählen",
     "modelPlaceholder": "Modell auswählen...",

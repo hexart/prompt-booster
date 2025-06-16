@@ -97,7 +97,7 @@
     "originalInput": "Введите ваш запрос...",
     "enhancedPrompt": "Улучшенный запрос",
     "templateSelect": "Шаблон системного запроса",
-    "templatePlaceholder": "Выберите шаблон системного запроса...",
+    "templatePlaceholder": "Por favor, selecione um modelo de prompt...",
     "noTemplatesAvailable": "Нет доступных шаблонов",
     "modelSelect": "Выбранная модель",
     "modelPlaceholder": "Выберите модель...",

@@ -97,7 +97,7 @@
     "originalInput": "कृपया अपना प्रॉम्प्ट दर्ज करें...",
     "enhancedPrompt": "बेहतर प्रॉम्प्ट",
     "templateSelect": "सिस्टम प्रॉम्प्ट टेम्पलेट",
-    "templatePlaceholder": "सिस्टम प्रॉम्प्ट टेम्पलेट चुनें...",
+    "templatePlaceholder": "कृपया प्रॉम्प्ट टेम्प्लेट चुनें...",
     "noTemplatesAvailable": "कोई टेम्पलेट उपलब्ध नहीं है",
     "modelSelect": "चयनित मॉडल",
     "modelPlaceholder": "मॉडल चुनें...",

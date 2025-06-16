@@ -97,7 +97,7 @@
     "originalInput": "Veuillez saisir votre prompt...",
     "enhancedPrompt": "Prompt amélioré",
     "templateSelect": "Modèle de prompt système",
-    "templatePlaceholder": "Sélectionnez un modèle de prompt système...",
+    "templatePlaceholder": "Veuillez sélectionner un modèle de prompt...",
     "noTemplatesAvailable": "Aucun modèle disponible",
     "modelSelect": "Modèle sélectionné",
     "modelPlaceholder": "Sélectionnez un modèle...",
