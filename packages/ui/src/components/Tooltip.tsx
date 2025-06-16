@@ -138,7 +138,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   const triggerProps: TriggerProps = {
     ref: (node) => {
       triggerRef.current = node;
-      const childRef = (children as any).ref;
+      const childRef = (children as any).props?.ref;
       if (typeof childRef === 'function') childRef(node);
       else if (childRef) (childRef as React.MutableRefObject<HTMLElement | null>).current = node;
     },
