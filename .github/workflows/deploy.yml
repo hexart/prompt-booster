@@ -83,11 +83,3 @@ jobs:
           tags: ghcr.io/${{ github.repository }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-      - name: Make Docker package public
-        run: |
-          curl -X PATCH \
-            -H "Authorization: token ${{ secrets.PACKAGE_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            -d '{"visibility":"public"}' \
-            "https://api.github.com/user/packages/container/${{ github.event.repository.name }}"
