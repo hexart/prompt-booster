@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Dialog } from '@prompt-booster/ui/components/Dialog';
 import { usePrompt } from '@prompt-booster/core/prompt/hooks/usePrompt';
 import { PromptGroup } from '@prompt-booster/core/prompt/models/prompt';
@@ -157,7 +158,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
         </div>
       </div>
       <div className="space-y-2 max-h-[1200px] overflow-y-auto pb-2">
-        {sortedGroups.map((group) => {
+        {sortedGroups.map((group, index) => {
           // 获取该组的所有版本
           const versions = getGroupVersions(group.id);
           // 获取最新版本
@@ -166,7 +167,14 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
           if (!latestVersion) return null; // 防止空版本
 
           return (
-            <div key={group.id} className="border rounded-lg p-3 shadow-2xs transition-all hover:shadow-md listcard-container">
+            <motion.div key={group.id} className="border rounded-lg p-3 shadow-2xs hover:shadow-md listcard-container"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.3,
+                delay: index * 0.1,
+                ease: "easeOut"
+              }}>
               <div className="flex justify-between items-center hover:cursor-pointer listcard-title-container" onClick={() => toggleExpand(group.id)}>
                 <div className="flex-col grow w-1/2 min-w-[33%] pe-4 items-center space-y-2 listcard-text-container">
                   <div className="flex items-center gap-2">
@@ -222,79 +230,92 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                 </div>
               </div>
 
-              {expandedGroupId === group.id && (
-                <div className="space-y-2">
-                  {/* 获取当前显示版本 */}
-                  {(() => {
-                    const displayVersion = versions.find(
-                      version => version.number === getSelectedVersion(group.id, group.currentVersionNumber)
-                    ) || latestVersion;
+              <AnimatePresence>
+                {expandedGroupId === group.id && (
+                  <motion.div
+                    className="space-y-2"
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{
+                      duration: 0.3,
+                      ease: "easeInOut",
+                      height: { duration: 0.4 }
+                    }}
+                    style={{ overflow: "hidden" }}
+                  >
+                    {/* 现有的所有展开内容保持不变 */}
+                    {(() => {
+                      const displayVersion = versions.find(
+                        version => version.number === getSelectedVersion(group.id, group.currentVersionNumber)
+                      ) || latestVersion;
 
-                    return (
-                      <>
-                        <div>
-                          <div className="mt-2 p-2 max-h-32 overflow-y-scroll rounded-md text-sm whitespace-pre-wrap listcard-prompt-container">
-                            {group.originalPrompt}
+                      return (
+                        <>
+                          <div>
+                            <div className="mt-2 p-2 max-h-32 overflow-y-scroll rounded-md text-sm whitespace-pre-wrap listcard-prompt-container">
+                              {group.originalPrompt}
+                            </div>
                           </div>
-                        </div>
 
-                        {/* 版本列表 */}
-                        <div className="flex gap-2 overflow-y-visible overflow-x-auto py-2 [&::-webkit-scrollbar]:h-1">
-                          {versions.map(version => (
-                            <Tooltip key={version.id}
-                              text={getVersionTooltipText(version, t, currentIsRTL)}
-                            >
-                              <button
-                                key={version.id}
-                                onClick={() => handleSelectVersion(group.id, version.number)}
-                                className={`px-2 py-1 text-xs min-w-[32px] rounded-full ${version.number === getSelectedVersion(group.id, group.currentVersionNumber)
-                                  ? 'version-tag-active'
-                                  : 'version-tag-inactive'
-                                  }`}
+                          {/* 版本列表 */}
+                          <div className="flex gap-2 overflow-y-visible overflow-x-auto py-2 [&::-webkit-scrollbar]:h-1">
+                            {versions.map(version => (
+                              <Tooltip key={version.id}
+                                text={getVersionTooltipText(version, t, currentIsRTL)}
                               >
-                                v{version.number}
-                              </button>
-                            </Tooltip>
-                          ))}
-                        </div>
-
-                        <div>
-                          <h3 className="text-sm font-medium mb-1 listcard-description">{t('history.iterationDirection')}</h3>
-                          <div className="p-2 max-h-[260px] rounded-md text-sm whitespace-pre-wrap iteration-prompt-container">
-                            {displayVersion.iterationDirection
-                              ? (displayVersion.iterationDirection === PROVIDER_USER_EDIT
-                                ? t('history.userEdit')
-                                : displayVersion.iterationDirection)
-                              : t('history.initialVersion')
-                            }
+                                <button
+                                  key={version.id}
+                                  onClick={() => handleSelectVersion(group.id, version.number)}
+                                  className={`px-2 py-1 text-xs min-w-[32px] rounded-full ${version.number === getSelectedVersion(group.id, group.currentVersionNumber)
+                                    ? 'version-tag-active'
+                                    : 'version-tag-inactive'
+                                    }`}
+                                >
+                                  v{version.number}
+                                </button>
+                              </Tooltip>
+                            ))}
                           </div>
-                        </div>
 
-                        <div>
-                          <h3 className="text-sm font-medium mb-1 listcard-description">{t('history.enhancedPrompt')}</h3>
-                          <div className="p-2 max-h-[460px] overflow-auto rounded-md text-sm listcard-prompt-container">
-                            {displayVersion.optimizedPrompt || ''}
+                          <div>
+                            <h3 className="text-sm font-medium mb-1 listcard-description">{t('history.iterationDirection')}</h3>
+                            <div className="p-2 max-h-[260px] rounded-md text-sm whitespace-pre-wrap iteration-prompt-container">
+                              {displayVersion.iterationDirection
+                                ? (displayVersion.iterationDirection === PROVIDER_USER_EDIT
+                                  ? t('history.userEdit')
+                                  : displayVersion.iterationDirection)
+                                : t('history.initialVersion')
+                              }
+                            </div>
                           </div>
-                        </div>
 
-                        <div className="mt-3 flex justify-end gap-2">
-                          {/* 加载当前版本按钮 */}
-                          <button
-                            onClick={() => handleLoadVersion(
-                              group.id,
-                              getSelectedVersion(group.id, group.currentVersionNumber)
-                            )}
-                            className="text-sm px-3 py-2 button-secondary-load-version"
-                          >
-                            {t('history.loadVersion')}
-                          </button>
-                        </div>
-                      </>
-                    );
-                  })()}
-                </div>
-              )}
-            </div>
+                          <div>
+                            <h3 className="text-sm font-medium mb-1 listcard-description">{t('history.enhancedPrompt')}</h3>
+                            <div className="p-2 max-h-[460px] overflow-auto rounded-md text-sm listcard-prompt-container">
+                              {displayVersion.optimizedPrompt || ''}
+                            </div>
+                          </div>
+
+                          <div className="mt-3 flex justify-end gap-2">
+                            {/* 加载当前版本按钮 */}
+                            <button
+                              onClick={() => handleLoadVersion(
+                                group.id,
+                                getSelectedVersion(group.id, group.currentVersionNumber)
+                              )}
+                              className="text-sm px-3 py-2 button-secondary-load-version"
+                            >
+                              {t('history.loadVersion')}
+                            </button>
+                          </div>
+                        </>
+                      );
+                    })()}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
           );
         })}
       </div>

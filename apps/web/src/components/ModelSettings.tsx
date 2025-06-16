@@ -1,5 +1,6 @@
 // apps/web/src/components/ModelSettings.tsx
 import React from 'react';
+import { motion } from 'framer-motion';
 import { type StandardModelType } from '@prompt-booster/core/model/models/config';
 import { useModelStore } from '@prompt-booster/core/model/store/modelStore';
 import { Dialog, ListCard, toast } from '@prompt-booster/ui';
@@ -212,71 +213,82 @@ export const ModelSettings: React.FC = () => {
 
             {/* 模型列表 */}
             <div className='flex-col h-full overflow-y-scroll pb-3'>
-                {allModels.map((model) => (
-                    <ListCard
+                {allModels.map((model, index) => (
+                    <motion.div
                         key={model.id}
-                        title={model.name}
-                        description={model.isStandard ? t('settings.builtInModel') : t('settings.customModel')}
-                        className={`border rounded-lg p-4 mb-2 last:mb-0 shadow-2xs hover:shadow-md transition-all duration-300 listcard-container ${!model.isEnabled ? 'opacity-50' : 'opacity-100'}`}
-                        renderTitle={(title) => (
-                            <h3 className="font-semibold text-lg truncate w-full listcard-title">{title}</h3>
-                        )}
-                        renderDescription={(desc) => (
-                            <div className="text-sm mt-1 truncate listcard-description">{desc}</div>
-                        )}
-                        actions={(
-                            <div className="flex items-center gap-2">
-                                <button
-                                    onClick={() => toggleModelStatus(model.id, model.isStandard, !model.isEnabled)}
-                                    className={`px-3 py-2 text-sm whitespace-nowrap inline-flex items-center gap-1 ${model.isEnabled
-                                        ? "button-secondary-enabled"
-                                        : "button-secondary-disabled"
-                                        }`}
-                                >
-                                    {model.isEnabled ? (
-                                        <Power size={14} />
-                                    ) : (
-                                        <Power size={14} />
-                                    )}
-                                    <span className="hidden md:inline whitespace-nowrap">{model.isEnabled ? t('settings.enabled') : t('settings.disabled')}</span>
-                                </button>
-
-                                <button
-                                    onClick={() => testConnection(model)}
-                                    className="px-3 py-2 text-sm inline-flex items-center gap-1 button-secondary-testlink"
-                                    disabled={isTestingConnection(model.id)}
-                                >
-                                    <div className="w-4 h-4 flex items-center justify-center">
-                                        {!isTestingConnection(model.id) ? (
-                                            <Link2 size={14} />
-                                        ) : (
-                                            <LoadingIcon />
-                                        )}
-                                    </div>
-                                    <span className="hidden md:inline whitespace-nowrap">{t('settings.testConnection')}</span>
-                                </button>
-
-                                <button
-                                    onClick={() => handleEditModel(model.id, model.isStandard)}
-                                    className="px-3 py-2 text-sm inline-flex items-center gap-1 button-secondary-edit"
-                                >
-                                    <FileCog size={14} />
-                                    <span className="hidden md:inline whitespace-nowrap">{t('common.buttons.edit')}</span>
-                                </button>
-
-                                {!model.isStandard && (
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                            duration: 0.3,
+                            delay: index * 0.1,
+                            ease: "easeOut"
+                        }}
+                    >
+                        <ListCard
+                            key={model.id}
+                            title={model.name}
+                            description={model.isStandard ? t('settings.builtInModel') : t('settings.customModel')}
+                            className={`border rounded-lg p-4 mb-2 last:mb-0 shadow-2xs hover:shadow-md transition-all duration-300 listcard-container ${!model.isEnabled ? 'opacity-50' : 'opacity-100'}`}
+                            renderTitle={(title) => (
+                                <h3 className="font-semibold text-lg truncate w-full listcard-title">{title}</h3>
+                            )}
+                            renderDescription={(desc) => (
+                                <div className="text-sm mt-1 truncate listcard-description">{desc}</div>
+                            )}
+                            actions={(
+                                <div className="flex items-center gap-2">
                                     <button
-                                        onClick={() => handleDeleteCustomInterface(model.id)}
-                                        className="px-3 py-2 text-sm inline-flex items-center gap-1 button-secondary-danger"
-
+                                        onClick={() => toggleModelStatus(model.id, model.isStandard, !model.isEnabled)}
+                                        className={`px-3 py-2 text-sm whitespace-nowrap inline-flex items-center gap-1 ${model.isEnabled
+                                            ? "button-secondary-enabled"
+                                            : "button-secondary-disabled"
+                                            }`}
                                     >
-                                        <Trash2 size={14} />
-                                        <span className="hidden md:inline whitespace-nowrap">{t('common.buttons.delete')}</span>
+                                        {model.isEnabled ? (
+                                            <Power size={14} />
+                                        ) : (
+                                            <Power size={14} />
+                                        )}
+                                        <span className="hidden md:inline whitespace-nowrap">{model.isEnabled ? t('settings.enabled') : t('settings.disabled')}</span>
                                     </button>
-                                )}
-                            </div>
-                        )}
-                    />
+
+                                    <button
+                                        onClick={() => testConnection(model)}
+                                        className="px-3 py-2 text-sm inline-flex items-center gap-1 button-secondary-testlink"
+                                        disabled={isTestingConnection(model.id)}
+                                    >
+                                        <div className="w-4 h-4 flex items-center justify-center">
+                                            {!isTestingConnection(model.id) ? (
+                                                <Link2 size={14} />
+                                            ) : (
+                                                <LoadingIcon />
+                                            )}
+                                        </div>
+                                        <span className="hidden md:inline whitespace-nowrap">{t('settings.testConnection')}</span>
+                                    </button>
+
+                                    <button
+                                        onClick={() => handleEditModel(model.id, model.isStandard)}
+                                        className="px-3 py-2 text-sm inline-flex items-center gap-1 button-secondary-edit"
+                                    >
+                                        <FileCog size={14} />
+                                        <span className="hidden md:inline whitespace-nowrap">{t('common.buttons.edit')}</span>
+                                    </button>
+
+                                    {!model.isStandard && (
+                                        <button
+                                            onClick={() => handleDeleteCustomInterface(model.id)}
+                                            className="px-3 py-2 text-sm inline-flex items-center gap-1 button-secondary-danger"
+
+                                        >
+                                            <Trash2 size={14} />
+                                            <span className="hidden md:inline whitespace-nowrap">{t('common.buttons.delete')}</span>
+                                        </button>
+                                    )}
+                                </div>
+                            )}
+                        />
+                    </motion.div>
                 ))}
 
                 {/* 空状态显示 */}
