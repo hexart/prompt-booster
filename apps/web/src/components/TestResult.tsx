@@ -431,10 +431,11 @@ export const TestResult: React.FC = () => {
       <div className="flex flex-row justify-between items-end gap-4 mb-4">
         {/* 选择模型菜单区域 */}
         <div className="min-w-[33%]">
-          <label className="block text-sm font-medium mb-2 whitespace-nowrap truncate input-description">
+          <label className="block text-sm font-medium mb-2 whitespace-nowrap truncate input-description" htmlFor='model-select'>
             {t('testResult.modelSelect')}
           </label>
           <EnhancedDropdown
+            id="model-select"
             options={getEnabledModels().map(model => ({
               value: model.id,
               label: model.name

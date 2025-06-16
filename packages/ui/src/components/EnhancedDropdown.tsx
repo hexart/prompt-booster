@@ -9,6 +9,7 @@ export interface DropdownOption {
 }
 
 interface EnhancedDropdownProps {
+  id?: string;
   options: DropdownOption[];
   value: string;
   onChange: (value: string) => void;
@@ -18,6 +19,7 @@ interface EnhancedDropdownProps {
 }
 
 export const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
+  id,
   options,
   value,
   onChange,
@@ -70,7 +72,9 @@ export const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
     <div className={`relative ${className}`} ref={dropdownRef}>
       <button
         type="button"
+        id={id}
         onClick={() => !disabled && setIsOpen(!isOpen)}
+        onFocus={() => !disabled && !isOpen && setIsOpen(true)}
         className={`w-full flex items-center justify-between rounded-lg border input-dropdown-button ${className}
                     ${disabled
             ? 'input-disabled cursor-not-allowed'

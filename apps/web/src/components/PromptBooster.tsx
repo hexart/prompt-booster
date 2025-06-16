@@ -438,11 +438,12 @@ export const PromptBooster: React.FC = () => {
       {/* 控制栏 */}
       <div className="flex items-end gap-3">
         <div className="min-w-[26%] inline-block relative">
-          <label className="block text-sm font-medium mb-2 whitespace-nowrap truncate input-description">
+          <label className="block text-sm font-medium mb-2 whitespace-nowrap truncate input-description" htmlFor="template-select">
             {t("promptBooster.templateSelect")}
           </label>
           <div className="relative">
             <EnhancedDropdown
+              id="template-select"
               options={getOptimizeTemplateOptions()}
               value={selectedTemplateId}
               onChange={setSelectedTemplateId}
@@ -464,10 +465,11 @@ export const PromptBooster: React.FC = () => {
         </div>
 
         <div className="min-w-[33%] grow">
-          <label className="block text-sm font-medium mb-2 input-description">
+          <label className="block text-sm font-medium mb-2 input-description" htmlFor="model-select">
             {t("promptBooster.modelSelect")}
           </label>
           <EnhancedDropdown
+            id="model-select"
             options={getEnabledModels().map((model) => ({
               value: model.id,
               label: model.name,
@@ -511,8 +513,9 @@ export const PromptBooster: React.FC = () => {
             : "min-h-[calc(100vh-550px)]"
           }`}
       >
+        {/* 标题栏 */}
         <div className="flex w-full mb-4 gap-2 items-center">
-          {/* 父容器 */}
+          {/* 标题 */}
           <div className="flex-shrink  md:w-fit min-w-[95px]">
             <h2 className="text-xl font-semibold truncate title-secondary">
               {t("promptBooster.enhancedPrompt")}
