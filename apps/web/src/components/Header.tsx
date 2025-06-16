@@ -192,7 +192,7 @@ const Header: React.FC<HeaderProps> = ({
                           tabRefs.current[index] = el;
                         }}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`relative z-10 py-2 px-4 font-medium transition-colors duration-300 flex items-center gap-2 ${activeTab === tab.id ? 'text-primary' : 'text-gray-600 dark:text-gray-300'
+                        className={`relative z-10 py-2 px-4 font-medium transition-colors duration-300 flex items-center gap-2 ${activeTab === tab.id ? 'tab-active' : 'tab-inactive'
                           }`}
                         style={{ WebkitAppRegion: 'no-drag' }}
                       >
