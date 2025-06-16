@@ -14,7 +14,7 @@
 
 /* 使用 :lang 选择器为特定语言应用字体 */
 :lang(en), :lang(en-US), :lang(en-GB), 
-:lang(de), :lang(de-DE), :lang(nl-NL), :lang(es-ES), :lang(fr-FR), :lang(pt-BR) {
+:lang(de), :lang(de-DE), :lang(nl-NL), :lang(es-ES), :lang(fr-FR), :lang(pt-BR), :lang(it-IT), :lang(id-ID) {
   font-family: var(--font-latin);
 }
 /* 淡入动画 */
