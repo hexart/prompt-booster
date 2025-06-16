@@ -39,6 +39,16 @@ export const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+
+      // 如果点击的是关联的 label，不要关闭下拉菜单
+      if (id && target instanceof Element) {
+        const associatedLabel = document.querySelector(`label[for="${id}"]`);
+        if (associatedLabel && associatedLabel.contains(target)) {
+          return; // 不关闭菜单，让 label 的点击事件正常处理开启/关闭菜单
+        }
+      }
+
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
@@ -74,7 +84,6 @@ export const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
         type="button"
         id={id}
         onClick={() => !disabled && setIsOpen(!isOpen)}
-        onFocus={() => !disabled && !isOpen && setIsOpen(true)}
         className={`w-full flex items-center justify-between rounded-lg border input-dropdown-button ${className}
                     ${disabled
             ? 'input-disabled cursor-not-allowed'
