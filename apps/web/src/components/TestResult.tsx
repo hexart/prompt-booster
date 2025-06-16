@@ -413,6 +413,7 @@ export const TestResult: React.FC = () => {
           )}
           {/* textarea区域 */}
           <EnhancedTextarea
+            id="test-input"
             placeholder={t('testResult.inputPlaceholder')}
             value={userTestPrompt}
             onChange={(e) => setUserTestPrompt(e.target.value)}

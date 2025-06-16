@@ -3,6 +3,7 @@ import { ActionButtons } from './ActionButtons';
 import { useTranslation } from 'react-i18next';
 
 interface EnhancedTextareaProps {
+  id?: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   placeholder?: string;
@@ -23,6 +24,7 @@ interface EnhancedTextareaProps {
 }
 
 export const EnhancedTextarea: React.FC<EnhancedTextareaProps> = ({
+  id,
   value,
   onChange,
   placeholder = '请输入...',
@@ -54,7 +56,7 @@ export const EnhancedTextarea: React.FC<EnhancedTextareaProps> = ({
   return (
     <div className="w-full">
       {label && (
-        <label className={`block text-sm font-medium mb-2 ${labelClassName}`}>
+        <label className={`block text-sm font-medium mb-2 ${labelClassName}`} htmlFor={id}>
           {label}
         </label>
       )}
@@ -66,6 +68,7 @@ export const EnhancedTextarea: React.FC<EnhancedTextareaProps> = ({
       >
         <textarea
           ref={textareaRef}
+          id={id}
           value={value}
           onChange={onChange}
           disabled={disabled}

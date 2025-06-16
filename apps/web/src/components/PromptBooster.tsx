@@ -422,6 +422,7 @@ export const PromptBooster: React.FC = () => {
           </div>
 
           <EnhancedTextarea
+            id="original-prompt"
             value={displayOriginalPrompt || ""}
             onChange={handleOriginalPromptChange}
             placeholder={t("promptBooster.originalInput")}
@@ -620,6 +621,7 @@ export const PromptBooster: React.FC = () => {
         {/* 增强提示词文本域 */}
         <div className="relative flex-grow flex flex-col">
           <AutoScrollTextarea
+            id="enhancement-textarea"
             className={`flex-grow rounded-lg border autoscroll-content 
                             ${!optimizedPrompt && !isProcessing
                 ? "flex justify-center items-center text-center"

@@ -10,6 +10,7 @@ import { ActionButtons } from './ActionButtons';
  * 专为textarea设计，自动处理输入时的滚动行为
  */
 interface AutoScrollTextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+  id?: string;
   // 是否处于内容流式生成状态
   streaming?: boolean;
 
@@ -42,6 +43,7 @@ interface AutoScrollTextareaProps extends TextareaHTMLAttributes<HTMLTextAreaEle
 }
 
 export const AutoScrollTextarea: React.FC<AutoScrollTextareaProps> = ({
+  id,
   streaming = false,
   buttonText,
   threshold = 5,
@@ -136,6 +138,7 @@ export const AutoScrollTextarea: React.FC<AutoScrollTextareaProps> = ({
           {/* 背景textarea */}
           <textarea
             ref={elementRef}
+            id={id}
             disabled
             className={`w-full h-full absolute inset-0 input-textarea ${className}
                         ${isHovered
