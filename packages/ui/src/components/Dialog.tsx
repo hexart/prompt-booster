@@ -1,7 +1,8 @@
 // packages/ui/src/components/Dialog.tsx
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
 import { createPortal } from 'react-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export interface DialogProps {
   isOpen: boolean;
@@ -34,26 +35,19 @@ export const Dialog: React.FC<DialogProps> = ({
   clickOutside = true,
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [animationState, setAnimationState] = useState<'none' | 'opening' | 'closing'>('none');
 
   // 当对话框打开时禁用主页面滚动
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
-      setAnimationState('opening');
     } else {
       document.body.style.overflow = 'auto';
-      if (animationState !== 'none') {
-        setAnimationState('closing');
-      }
     }
 
     return () => {
       document.body.style.overflow = 'auto';
     };
-  }, [isOpen, animationState]);
-
-  if (!isOpen && animationState === 'none') return null;
+  }, [isOpen]);
 
   const handleClickOutside = (e: React.MouseEvent<HTMLDivElement>) => {
     if (clickOutside && e.target === e.currentTarget) {
@@ -64,60 +58,77 @@ export const Dialog: React.FC<DialogProps> = ({
   // Dialog内容
   const dialogContent = (
     <DialogContext.Provider value={{ containerRef }}>
-      <div
-        className={`fixed inset-0 flex overflow-y-auto z-50 transition-opacity duration-300 mask ${isOpen ? 'opacity-100' : 'opacity-0'}`}
-        ref={containerRef}
-        onClick={handleClickOutside}
-        style={{
-          alignItems: 'flex-start',
-          justifyContent: 'center',
-          padding: '40px 0'
-        }}
-        onTransitionEnd={() => {
-          if (!isOpen) {
-            setAnimationState('none');
-          }
-        }}
-      >
-        <div
-          className={`p-6 rounded-3xl shadow-2xl shadow-black/30 dialog ${maxWidth} w-full mx-4 my-auto ${className} transition-all duration-300`}
-          style={{
-            marginTop: 'auto',
-            marginBottom: 'auto',
-            transform: animationState === 'opening' ? 'translateY(-20px)' :
-              (animationState === 'closing' ? 'translateY(20px)' : 'translateY(0)'),
-            opacity: isOpen ? 1 : 0
-          }}
-        >
-          {/* 固定标题栏 */}
-          {(title || showCloseButton) && (
-            <div className="mb-4 flex justify-between items-center">
-              {title && (
-                <h2 className="text-xl font-semibold dialog-title">
-                  {title}
-                </h2>
+      <AnimatePresence mode="wait">
+        {isOpen && (
+          <motion.div
+            className="fixed inset-0 flex overflow-y-auto z-50 mask"
+            ref={containerRef}
+            onClick={handleClickOutside}
+            style={{
+              alignItems: 'flex-start',
+              justifyContent: 'center',
+              padding: '40px 0'
+            }}
+            initial={{ opacity: 0, backdropFilter: 'blur(0px)' }}
+            animate={{ opacity: 1, backdropFilter: 'blur(4px)' }}
+            exit={{ opacity: 0, backdropFilter: 'blur(0px)' }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+          >
+            <motion.div
+              className={`p-6 rounded-3xl shadow-2xl shadow-black/30 dialog ${maxWidth} w-full mx-4 my-auto ${className}`}
+              style={{
+                marginTop: 'auto',
+                marginBottom: 'auto'
+              }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{
+                type: "spring",
+                damping: 20,
+                stiffness: 300,
+                duration: 0.4
+              }}
+            >
+              {/* 固定标题栏 */}
+              {(title || showCloseButton) && (
+                <div className="mb-4 flex justify-between items-center">
+                  {title && (
+                    <h2 className="text-xl font-semibold dialog-title">
+                      {title}
+                    </h2>
+                  )}
+                  {showCloseButton && (
+                    <motion.button
+                      onClick={onClose}
+                      className="dialog-close-button"
+                      whileHover={{
+                        scale: 1.1,
+                        rotate: 180
+                      }}
+                      whileTap={{ scale: 0.9 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <X size={20} />
+                    </motion.button>
+                  )}
+                </div>
               )}
-              {showCloseButton && (
-                <button
-                  onClick={onClose}
-                  className="dialog-close-button"
-                >
-                  <X size={20} className="transition-transform duration-300 hover:rotate-180" />
-                </button>
+
+              <div className="py-6 dialog-content">
+                {children}
+              </div>
+
+              {/* 对话框 footer 区域 */}
+              {footer && (
+                <div className="mt-4">
+                  {footer}
+                </div>
               )}
-            </div>
-          )}
-          <div className="py-6 dialog-content">
-            {children}
-          </div>
-          {/* 对话框 footer 区域 */}
-          {footer && (
-            <div className="mt-4">
-              {footer}
-            </div>
-          )}
-        </div>
-      </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </DialogContext.Provider>
   );
 

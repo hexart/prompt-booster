@@ -35,11 +35,11 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
     const timer = setTimeout(() => {
       // 查找指定的约束容器
       const targetContainer = document.getElementById(constraintsId);
-      
+
       if (targetContainer) {
         const containerStyle = window.getComputedStyle(targetContainer);
         const position = containerStyle.position;
-        
+
         if (['relative', 'absolute', 'fixed'].includes(position)) {
           // 容器有定位，设置为约束容器
           constraintsRef.current = targetContainer;
@@ -105,7 +105,7 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
 
   // 统一的内容渲染
   const renderContent = (isWarning = false) => {
-    const contentItems = isWarning 
+    const contentItems = isWarning
       ? [{ text: `请为容器 "#${constraintsId}" 添加 position: relative 样式以启用拖拽功能。` }]
       : filteredItems;
 
@@ -125,7 +125,10 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
           <motion.button
             onClick={handleClose}
             className="close-button p-2 m-1 transition-transform duration-300 dragable-notice-header-close"
-            whileHover={{ rotate: 180 }}
+            whileHover={{
+              scale: 1.1,
+              rotate: 180
+            }}
             whileTap={{ scale: 0.9 }}
             transition={{ duration: 0.2 }}
           >
@@ -134,8 +137,8 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
         </div>
         <div className={`p-3 text-sm space-y-2 ${isRTL ? 'text-right' : 'text-left'}`}>
           {contentItems.map((item, index) => (
-            <motion.div 
-              key={index} 
+            <motion.div
+              key={index}
               className={`flex items-start gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}
               initial={{ opacity: 0, x: isRTL ? 10 : -10 }} // RTL 时从右侧滑入
               animate={{ opacity: 1, x: 0 }}
@@ -158,20 +161,20 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
           dragConstraints={hasValidParent ? constraintsRef : undefined}
           dragElastic={0.1}
           dragMomentum={false}
-          initial={{ 
-            opacity: 0, 
+          initial={{
+            opacity: 0,
             scale: 0.8
           }}
-          animate={{ 
-            opacity: 1, 
+          animate={{
+            opacity: 1,
             scale: 1
           }}
-          exit={{ 
-            opacity: 0, 
+          exit={{
+            opacity: 0,
             scale: 0.8,
             transition: { duration: 0.3 }
           }}
-          whileDrag={{ 
+          whileDrag={{
             scale: 1.05,
             boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
             cursor: "grabbing"

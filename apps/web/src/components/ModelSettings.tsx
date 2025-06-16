@@ -216,6 +216,7 @@ export const ModelSettings: React.FC = () => {
                 {allModels.map((model, index) => (
                     <motion.div
                         key={model.id}
+                        className='mb-2 last:mb-0'
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{
@@ -228,7 +229,7 @@ export const ModelSettings: React.FC = () => {
                             key={model.id}
                             title={model.name}
                             description={model.isStandard ? t('settings.builtInModel') : t('settings.customModel')}
-                            className={`border rounded-lg p-4 mb-2 last:mb-0 shadow-2xs hover:shadow-md transition-all duration-300 listcard-container ${!model.isEnabled ? 'opacity-50' : 'opacity-100'}`}
+                            className={`border rounded-lg p-4 shadow-2xs hover:shadow-md transition-all duration-300 listcard-container ${!model.isEnabled ? 'opacity-50' : 'opacity-100'}`}
                             renderTitle={(title) => (
                                 <h3 className="font-semibold text-lg truncate w-full listcard-title">{title}</h3>
                             )}

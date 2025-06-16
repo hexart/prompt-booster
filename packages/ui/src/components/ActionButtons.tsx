@@ -1,5 +1,6 @@
 // packages/ui/src/components/ActionButtons.tsx
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { removeThinkTags } from '@prompt-booster/core';
 import { ClipboardIcon, ClipboardCheckIcon, FileTypeIcon, FileTextIcon, FileCheck2Icon } from 'lucide-react';
 import { Tooltip } from './Tooltip';
@@ -50,6 +51,37 @@ interface ActionButtonsProps {
   onDownload?: (type: 'md' | 'docx', filename: string) => void;
 }
 
+// 单个按钮的动画配置 - 移除了 visible 状态的 transition
+const buttonVariants = {
+  hidden: { 
+    opacity: 0, 
+    scale: 0.8,
+    y: -10
+  },
+  visible: { 
+    opacity: 1, 
+    scale: 1,
+    y: 0
+  },
+  exit: { 
+    opacity: 0, 
+    scale: 0.8,
+    y: -10,
+    transition: {
+      duration: 0.2,
+      ease: "easeInOut" as const
+    }
+  },
+  hover: {
+    scale: 1.1,
+    transition: { duration: 0.2 }
+  },
+  tap: {
+    scale: 0.95,
+    transition: { duration: 0.1 }
+  }
+};
+
 export const ActionButtons: React.FC<ActionButtonsProps> = ({
   content,
   filename = 'document',
@@ -75,10 +107,6 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 
   // 决定是否显示按钮组
   const shouldShow = hasContent && (!showOnHover || isHovered) && !streaming;
-
-  if (!shouldShow) {
-    return null;
-  }
 
   // 处理复制
   const handleCopy = async (e: React.MouseEvent) => {
@@ -220,28 +248,41 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 
   const positionClass = getPositionClass(position);
 
-  return (
-    <div className={`${positionClass} flex items-center gap-1 ${className}`}>
-      {/* 复制按钮 */}
-      {showCopy && (
+  // 构建要显示的按钮数组
+  const buttons = [];
+  
+  if (showCopy) {
+    buttons.push({
+      key: 'copy',
+      component: (
         <Tooltip text={t('common.buttons.copy')} position="bottom">
-          <button
+          <motion.button
             className="p-2 rounded-md input-copy-button"
             onClick={handleCopy}
             disabled={!hasContent}
+            variants={buttonVariants}
+            whileHover="hover"
+            whileTap="tap"
           >
             {copied ? <ClipboardCheckIcon size={16} /> : <ClipboardIcon size={16} />}
-          </button>
+          </motion.button>
         </Tooltip>
-      )}
+      )
+    });
+  }
 
-      {/* 下载MD按钮 */}
-      {showDownloadMd && (
+  if (showDownloadMd) {
+    buttons.push({
+      key: 'downloadMd',
+      component: (
         <Tooltip text={t('common.buttons.downloadMd', { defaultValue: 'Download MD' })} position="bottom">
-          <button
+          <motion.button
             className="p-2 rounded-md input-copy-button"
             onClick={handleDownloadMd}
             disabled={!hasContent || downloading === 'md'}
+            variants={buttonVariants}
+            whileHover="hover"
+            whileTap="tap"
           >
             {downloading === 'md' ? (
               <div className="animate-spin w-4 h-4 border-2 border-current border-t-transparent rounded-full" />
@@ -250,17 +291,24 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
             ) : (
               <FileTypeIcon size={16} />
             )}
-          </button>
+          </motion.button>
         </Tooltip>
-      )}
+      )
+    });
+  }
 
-      {/* 下载DOCX按钮 */}
-      {showDownloadDocx && (
+  if (showDownloadDocx) {
+    buttons.push({
+      key: 'downloadDocx',
+      component: (
         <Tooltip text={t('common.buttons.downloadDocx', { defaultValue: 'Download DOCX' })} position="bottom">
-          <button
+          <motion.button
             className="p-2 rounded-md input-copy-button"
             onClick={handleDownloadDocx}
             disabled={!hasContent || downloading === 'docx'}
+            variants={buttonVariants}
+            whileHover="hover"
+            whileTap="tap"
           >
             {downloading === 'docx' ? (
               <div className="animate-spin w-4 h-4 border-2 border-current border-t-transparent rounded-full" />
@@ -269,9 +317,44 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
             ) : (
               <FileTextIcon size={16} />
             )}
-          </button>
+          </motion.button>
         </Tooltip>
+      )
+    });
+  }
+
+  return (
+    <AnimatePresence mode="wait">
+      {shouldShow && (
+        <motion.div 
+          className={`${positionClass} flex items-center gap-1 ${className}`}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          <AnimatePresence>
+            {buttons.map((button, index) => (
+              <motion.div
+                key={button.key}
+                variants={buttonVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                transition={{
+                  delay: index * 0.1,
+                  type: "spring",
+                  damping: 20,
+                  stiffness: 300,
+                  duration: 0.4
+                }}
+              >
+                {button.component}
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
       )}
-    </div>
+    </AnimatePresence>
   );
 };
