@@ -39,7 +39,7 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hotkeys-hook": "^5.1.0",
-    "react-i18next": "^15.5.3",
+    "react-i18next": "^15.5.2",
     "sonner": "^2.0.5",
     "tailwindcss": "^4.1.10",
     "tailwindcss-animate": "^1.0.7"
@@ -51,7 +51,7 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hotkeys-hook": "^5.1.0",
-    "react-i18next": "^15.5.3",
+    "react-i18next": "^15.5.2",
     "typescript": "^5.8.3",
     "vite": "^6.3.5",
     "vite-plugin-dts": "^4.5.4"
