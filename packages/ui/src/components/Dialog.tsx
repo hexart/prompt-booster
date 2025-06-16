@@ -1,6 +1,6 @@
 // packages/ui/src/components/Dialog.tsx
 import React, { useEffect, useRef } from 'react';
-import { X } from 'lucide-react';
+import { XIcon } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -109,7 +109,7 @@ export const Dialog: React.FC<DialogProps> = ({
                       whileTap={{ scale: 0.9 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <X size={20} />
+                      <XIcon size={20} />
                     </motion.button>
                   )}
                 </div>
