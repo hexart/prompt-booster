@@ -24,11 +24,15 @@ export const useTemplates = () => {
         const templatesRecord = await getAllTemplatesAsRecord();
         setTemplates(templatesRecord);
 
+        // 获取当前语言，添加防御性检查
+        const currentLanguage = i18n?.language || 'zh-CN';
+        console.log('🌐 当前语言:', currentLanguage);
+
         // 应用模板本地化
         const {
           displayTemplates: localizedTemplates,
           getActualTemplateId: idMapper,
-        } = handleTemplateLocalization(templatesRecord, i18n.language);
+        } = handleTemplateLocalization(templatesRecord, currentLanguage);
         
         setDisplayTemplates(localizedTemplates);
         
@@ -56,7 +60,7 @@ export const useTemplates = () => {
     };
 
     loadTemplates();
-  }, [i18n.language]); // 🔧 优化：移除 t 依赖，因为 t 函数本身不会变化
+  }, [i18n?.language]); // 使用可选链操作符
 
   // 获取实际模板ID的函数（现在是纯函数，不存储在状态中）
   const getActualTemplateId = useCallback((displayId: string): string => {
@@ -109,7 +113,7 @@ export const useTemplates = () => {
     hasTemplates: Object.keys(templates).length > 0,
     templateCount: Object.keys(templates).length,
     
-    // 前语言信息（调试用）
-    currentLanguage: i18n.language,
+    // 当前语言信息（调试用）
+    currentLanguage: i18n?.language || 'zh-CN',
   };
 };
