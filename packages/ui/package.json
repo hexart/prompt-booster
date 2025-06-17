@@ -32,23 +32,19 @@
   "peerDependencies": {
     "@prompt-booster/api": "workspace:*",
     "@prompt-booster/core": "workspace:*",
-    "@tailwindcss/vite": "^4.1.10",
-    "framer-motion": "^12.18.1",
-    "i18next": "^25.2.1",
-    "lucide-react": "^0.515.0",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "react-hotkeys-hook": "^5.1.0",
-    "react-i18next": "^15.5.2",
-    "sonner": "^2.0.5",
-    "tailwindcss": "^4.1.10",
-    "tailwindcss-animate": "^1.0.7"
+    "@tailwindcss/vite": "*",
+    "framer-motion": "*",
+    "i18next": "*",
+    "lucide-react": "*",
+    "react-hotkeys-hook": "*",
+    "react-i18next": "*",
+    "sonner": "*",
+    "tailwindcss": "*",
+    "tailwindcss-animate": "*"
   },
   "devDependencies": {
     "@types/react-syntax-highlighter": "^15.5.13",
     "i18next": "^25.2.1",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
     "react-hotkeys-hook": "^5.1.0"
   }
 }
