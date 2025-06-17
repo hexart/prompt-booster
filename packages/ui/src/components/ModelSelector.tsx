@@ -1,5 +1,6 @@
 // packages/ui/src/components/ModelSelectorNew.tsx
 import React, { useState, useEffect, useRef, useContext } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from '../index';
 import { DialogContext } from './Dialog';
 import LoadingIcon from './LoadingIcon';
@@ -62,11 +63,29 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
         filterChanged;
 
       if (needsToScrollToSelected && selectedOptionRef.current) {
-        // 滚动到选中项
-        selectedOptionRef.current.scrollIntoView({
+        const element = selectedOptionRef.current;
+        const container = optionsContainerRef.current;
+        const extraPadding = 6; // 额外的间距
+
+        // 先滚动到选中项
+        element.scrollIntoView({
           block: 'nearest',
-          behavior: 'smooth'
+          behavior: 'auto'
         });
+
+        // 然后调整滚动位置以增加下方 padding
+        const elementRect = element.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+
+        // 如果元素贴近容器底部，向上滚动一点以增加下方 padding
+        if (containerRect.bottom - elementRect.bottom < extraPadding) {
+          const adjustScrollBy = extraPadding - (containerRect.bottom - elementRect.bottom);
+          container.scrollBy({
+            top: adjustScrollBy,
+            behavior: 'smooth'
+          });
+        }
+
         // 更新状态
         lastScrolledValueRef.current = value;
         hasScrolledToSelectedRef.current = true;
@@ -287,62 +306,121 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
           onClick={handleButtonClick}
           disabled={disabled}
           className={`
-                        absolute inset-y-0 end-0 flex items-center justify-center
-                        p-3 focus:outline-none
-                        ${disabled
+            absolute inset-y-0 end-0 flex items-center justify-center
+            p-3 focus:outline-none
+            ${disabled
               ? 'cursor-not-allowed input-select-button-disabled'
               : 'input-select-button'}
-                    `}
+          `}
         >
-          <ChevronDown size={14} />
+          <motion.div
+            animate={{ rotate: isOpen ? 180 : 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <ChevronDown size={14} />
+          </motion.div>
         </button>
       </div>
 
-      {isOpen && (
-        <div
-          className="absolute z-100 left-0 right-0 mt-1 p-1 dropdown-menu space-y-1 backdrop-blur-md rounded-lg shadow-lg max-h-62 overflow-y-auto"
-          style={{
-            top: '100%', // 相对于父组件底部
-            width: '100%'
-          }}
-          ref={optionsContainerRef}
-        >
-          {isLoading ? (
-            // 空白下拉菜单
-            <div className="p-2 text-center flex items-center justify-center dropdown-null space-x-2">
-              <LoadingIcon />
-              <span>{t('settings.loading')}</span>
-            </div>
-          ) : filteredOptions.length === 0 ? (
-            <div className="p-2 text-center dropdown-null">
-              {options.length === 0 ? t('settings.noModelAvailable') : t('settings.noMatchingModel')}
-            </div>
-          ) : (
-            filteredOptions.map((option) => (
-              <div
-                key={option.id}
-                ref={value === option.id ? selectedOptionRef : null}
-                onMouseDown={(e) => {
-                  e.preventDefault(); // 阻止默认行为
-                  e.stopPropagation(); // 阻止事件冒泡
-                  selectModel(option);
-                }}
-                className={`
-                                    p-2 cursor-pointer rounded-md
-                                    ${value === option.id ? 'dropdown-item-active' : 'dropdown-item-inactive'}
-                                `}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{
+              opacity: 0,
+              y: -10,
+              scaleY: 0.9
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              scaleY: 1
+            }}
+            exit={{
+              opacity: 0,
+              y: -10,
+              scaleY: 0.9
+            }}
+            transition={{
+              duration: 0.2,
+              ease: "easeOut"
+            }}
+            style={{
+              transformOrigin: 'top',
+              top: '100%',
+              width: '100%'
+            }}
+            className="absolute z-100 left-0 right-0 mt-1 p-1 dropdown-menu space-y-1 backdrop-blur-md rounded-lg shadow-lg max-h-62 overflow-y-auto"
+            ref={optionsContainerRef}
+          >
+            {isLoading ? (
+              // 空白下拉菜单 - 加载状态
+              <motion.div
+                key="loading"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="p-2 text-center flex items-center justify-center dropdown-null space-x-2"
               >
-                <div className={`${value === option.id ? 'dropdown-item-active-title' : 'dropdown-item-inactive-title'}`}>
-                  {option.name}
-                </div>
-                <div className={`text-xs ${value === option.id ? 'dropdown-item-active-description' : 'dropdown-item-inactive-description'}`}>
-                  {option.id}
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      )}
+                <LoadingIcon />
+                <span>{t('settings.loading')}</span>
+              </motion.div>
+            ) : filteredOptions.length === 0 ? (
+              // 无结果状态
+              <motion.div
+                key="empty"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ delay: 0.1 }}
+                className="p-2 text-center dropdown-null"
+              >
+                {options.length === 0 ? t('settings.noModelAvailable') : t('settings.noMatchingModel')}
+              </motion.div>
+            ) : (
+              // 选项列表
+              <motion.div
+                key="options"
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                variants={{
+                  visible: {
+                    transition: {
+                      staggerChildren: 0.02
+                    }
+                  }
+                }}
+                className='space-y-1'
+              >
+                {filteredOptions.map((option) => (
+                  <motion.div
+                    key={option.id}
+                    ref={value === option.id ? selectedOptionRef : null}
+                    whileHover={{ x: 2 }}
+                    whileTap={{ scale: 0.98 }}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      selectModel(option);
+                    }}
+                    className={`
+                      p-2 cursor-pointer rounded-md
+                      ${value === option.id ? 'dropdown-item-active' : 'dropdown-item-inactive'}
+                    `}
+                  >
+                    <div className={`${value === option.id ? 'dropdown-item-active-title' : 'dropdown-item-inactive-title'}`}>
+                      {option.name}
+                    </div>
+                    <div className={`text-xs ${value === option.id ? 'dropdown-item-active-description' : 'dropdown-item-inactive-description'}`}>
+                      {option.id}
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

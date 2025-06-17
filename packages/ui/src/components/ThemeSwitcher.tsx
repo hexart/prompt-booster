@@ -1,5 +1,6 @@
 // packages/ui/src/components/ThemeSwitcher.tsx
 import React, { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from './ThemeContext';
 import { Moon, Sun, MonitorCog } from 'lucide-react';
 import { useHotkeys } from 'react-hotkeys-hook';
@@ -232,16 +233,53 @@ const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
           </Tooltip>
         </div>
 
-        {/* 下拉菜单 */}
-        {isOpen && (
-          <div className={`${THEME_CLASSES.dropdownContainer} ${THEME_CLASSES.container}`}>
-            <div className="flex flex-col gap-1">
-              {Object.keys(themeConfig).map(key =>
-                renderThemeButton(key as ThemeType, mobileMenuTooltipPosition)
-              )}
-            </div>
-          </div>
-        )}
+        {/* 下拉菜单 - 添加动画 */}
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{
+                opacity: 0,
+                scale: 0.85,
+                y: -8
+              }}
+              animate={{
+                opacity: 1,
+                scale: 1,
+                y: 0
+              }}
+              exit={{
+                opacity: 0,
+                scale: 0.85,
+                y: -8
+              }}
+              transition={{
+                duration: 0.2,
+                ease: "easeOut"
+              }}
+              style={{
+                transformOrigin: 'top center'
+              }}
+              className={`${THEME_CLASSES.dropdownContainer} ${THEME_CLASSES.container}`}
+            >
+              <motion.div className="flex flex-col gap-1">
+                {Object.keys(themeConfig).map((key, index) => (
+                  <motion.div
+                    key={key}
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      duration: 0.2,
+                      delay: index * 0.05,
+                      ease: "easeOut"
+                    }}
+                  >
+                    {renderThemeButton(key as ThemeType, mobileMenuTooltipPosition)}
+                  </motion.div>
+                ))}
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

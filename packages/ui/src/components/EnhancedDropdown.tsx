@@ -1,5 +1,6 @@
 //packages/ui/src/components/EnhancedDropdown.tsx
 import { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -94,43 +95,87 @@ export const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
         <span className="px-3 py-2 truncate">
           {selectedOption ? selectedOption.label : placeholder}
         </span>
-        <div className={`p-2 input-select-button transition-transform duration-200 ${isOpen ? 'transform rotate-180' : ''}`}>
+        <motion.div
+          className={`p-2 input-select-button`}
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.2 }}
+        >
           <ChevronDown size={16} />
-        </div>
+        </motion.div>
       </button>
 
-      {isOpen && (
-        <div
-          className="absolute z-40 w-full mt-1 rounded-xl shadow-lg max-h-[247px] overflow-y-auto dropdown-menu backdrop-blur-md"
-          ref={optionsContainerRef}
-        >
-          <ul className="py-1">
-            {options.map((option) => (
-              <li
-                key={option.value}
-                ref={option.value === value ? selectedOptionRef : null}
-                onClick={() => {
-                  onChange(option.value);
-                  setIsOpen(false);
-                }}
-                className={`px-3 py-3 cursor-pointer text-sm mx-1 rounded-lg mb-1 last:mb-0
-                                    ${option.value === value
-                    ? 'dropdown-item-active dropdown-item-active-title'
-                    : 'dropdown-item-inactive dropdown-item-inactive-title'
-                  }`}
-              >
-                {option.label}
-              </li>
-            ))}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{
+              opacity: 0,
+              y: -10,
+              scaleY: 0.9
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              scaleY: 1
+            }}
+            exit={{
+              opacity: 0,
+              y: -10,
+              scaleY: 0.9
+            }}
+            transition={{
+              duration: 0.4,
+              ease: "easeOut"
+            }}
+            style={{
+              transformOrigin: 'top'
+            }}
+            className="absolute z-40 w-full mt-1 rounded-xl shadow-lg max-h-[247px] overflow-y-auto dropdown-menu backdrop-blur-md"
+            ref={optionsContainerRef}
+          >
+            <ul className="py-1">
+              <AnimatePresence mode="wait">
+                {options.map((option, index) => (
+                  <motion.li
+                    key={option.value}
+                    ref={option.value === value ? selectedOptionRef : null}
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 0 }}
+                    transition={{
+                      duration: 0.15,
+                      delay: index * 0.05,
+                      ease: "easeOut"
+                    }}
+                    onClick={() => {
+                      onChange(option.value);
+                      setIsOpen(false);
+                    }}
+                    whileHover={{ x: 2 }}
+                    whileTap={{ scale: 0.98 }}
+                    className={`px-3 py-3 cursor-pointer text-sm mx-1 rounded-lg mb-1 last:mb-0
+                ${option.value === value
+                        ? 'dropdown-item-active dropdown-item-active-title'
+                        : 'dropdown-item-inactive dropdown-item-inactive-title'
+                      }`}
+                  >
+                    {option.label}
+                  </motion.li>
+                ))}
 
-            {options.length === 0 && (
-              <li className="px-3 py-2 text-sm italic dropdown-null">
-                {t('common.dropdownNull')}
-              </li>
-            )}
-          </ul>
-        </div>
-      )}
+                {options.length === 0 && (
+                  <motion.li
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="px-3 py-2 text-sm italic dropdown-null"
+                  >
+                    {t('common.dropdownNull')}
+                  </motion.li>
+                )}
+              </AnimatePresence>
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
