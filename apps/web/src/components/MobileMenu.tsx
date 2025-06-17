@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // 菜单类型定义
 export type TabItem = {
@@ -16,7 +17,7 @@ interface MobileMenuProps {
   tabs: TabItem[];
   activeTab: string;
   onTabChange: (tabId: string) => void;
-  toggleButtonRef?: React.RefObject<HTMLButtonElement | null>; // 添加对菜单按钮的引用
+  toggleButtonRef?: React.RefObject<HTMLButtonElement | null>;
   isRTL?: boolean;
 }
 
@@ -31,7 +32,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
 }) => {
   const { t } = useTranslation();
   const [mounted, setMounted] = useState(false);
-  const menuRef = useRef<HTMLElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   // 在组件挂载后才渲染Portal，避免SSR问题
   useEffect(() => {
@@ -69,37 +70,70 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
   // 渲染Portal的目标元素
   const portalRoot = typeof document !== 'undefined' ? document.body : null;
 
-  if (!mounted || !portalRoot || !isOpen) {
+  if (!mounted || !portalRoot) {
     return null;
   }
 
   return createPortal(
-    <div className="fixed inset-0 z-50 md:hidden pointer-events-none">
-      {/* 菜单内容 - 只有菜单本身接收点击事件 */}
-      <nav
-        ref={menuRef}
-        className={`absolute top-18 ${isRTL ? 'left-2' : 'right-2'} overflow-hidden rounded-2xl shadow-lg pointer-events-auto mobile-menu-container menu-container-animation ${isRTL ? 'rtl' : ''}`}
-        aria-label={t('aria.mobileMenu')}
-      >
-        <div className="p-2">
-          {tabs.map((tab, index) => (
-            <button
-              key={tab.id}
-              onClick={() => handleTabClick(tab.id)}
-              className={`w-full flex items-center space-x-3 px-4 py-3 mb-1 last:mb-0 transition-all duration-200 menu-item-animation ${activeTab === tab.id
-                ? 'mobile-menu-active'
-                : 'mobile-menu-inactive'
-                }`}
-              style={{ animationDelay: `${index * 200}ms`, opacity: 0 }}
-              aria-current={activeTab === tab.id ? 'page' : undefined}
-            >
-              {tab.icon && React.createElement(tab.icon, { size: 18 })}
-              <span>{tab.label}</span>
-            </button>
-          ))}
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-50 md:hidden pointer-events-none">
+          {/* 菜单内容 - 只有菜单本身接收点击事件 */}
+          <motion.nav
+            ref={menuRef}
+            initial={{ 
+              opacity: 0, 
+              scale: 0.75,
+              y: -10
+            }}
+            animate={{ 
+              opacity: 1, 
+              scale: 1,
+              y: 0
+            }}
+            exit={{ 
+              opacity: 0, 
+              scale: 0.75,
+              y: -10
+            }}
+            transition={{
+              duration: 0.25,
+              ease: "easeOut"
+            }}
+            style={{
+              transformOrigin: isRTL ? 'top left' : 'top right'
+            }}
+            className={`absolute top-18 ${isRTL ? 'left-2' : 'right-2'} overflow-hidden rounded-2xl shadow-lg pointer-events-auto mobile-menu-container`}
+            aria-label={t('aria.mobileMenu')}
+          >
+            <motion.div className="p-2">
+              {tabs.map((tab, index) => (
+                <motion.button
+                  key={tab.id}
+                  initial={{ opacity: 0, x: isRTL ? -20 : 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{
+                    duration: 0.3,
+                    delay: index * 0.05,
+                    ease: "easeOut"
+                  }}
+                  onClick={() => handleTabClick(tab.id)}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 mb-1 last:mb-0 ${
+                    activeTab === tab.id
+                      ? 'mobile-menu-active'
+                      : 'mobile-menu-inactive'
+                  }`}
+                  aria-current={activeTab === tab.id ? 'page' : undefined}
+                >
+                  {tab.icon && React.createElement(tab.icon, { size: 18 })}
+                  <span>{tab.label}</span>
+                </motion.button>
+              ))}
+            </motion.div>
+          </motion.nav>
         </div>
-      </nav>
-    </div>,
+      )}
+    </AnimatePresence>,
     portalRoot
   );
 };
