@@ -459,41 +459,6 @@ Returns:
 - `closeModal`: Function to close the modal
 - `setData`: Function to update the modal data
 
-### `useScrollFade`
-
-A hook for creating fade-in/fade-out scrollbars.
-
-```jsx
-import { useScrollFade } from '@prompt-booster/ui';
-
-function ScrollableContent() {
-  const containerRef = useRef(null);
-  const { applyToAll } = useScrollFade(containerRef, {
-    timeout: 2000,
-    showOnHover: true
-  });
-  
-  // Apply to all scrollable elements in the component
-  useEffect(() => {
-    const cleanup = applyToAll();
-    return cleanup;
-  }, [applyToAll]);
-  
-  return (
-    <div ref={containerRef} className="overflow-auto">
-      {/* Scrollable content */}
-    </div>
-  );
-}
-```
-
-Options:
-
-- `timeout`: Time in milliseconds before scrollbars fade out
-- `showOnHover`: Whether to show scrollbars on hover
-- `listenToScroll`: Whether to listen to scroll events
-- `selector`: CSS selector for scrollable elements
-
 ## Theme System
 
 The UI library includes a comprehensive theme system supporting light, dark, and system preference modes.
