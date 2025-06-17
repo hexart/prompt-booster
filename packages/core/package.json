@@ -42,9 +42,6 @@
     "react-i18next": "^15.5.3"
   },
   "devDependencies": {
-    "@types/uuid": "^10.0.0",
-    "typescript": "^5.8.3",
-    "vite": "^6.3.5",
-    "vite-plugin-dts": "^4.5.4"
+    "@types/uuid": "^10.0.0"
   }
 }
