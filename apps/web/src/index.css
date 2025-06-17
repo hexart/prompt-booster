@@ -92,18 +92,18 @@
 }
 
 @layer base {
-  /* 全局背景设置 */
-  :root body {
-    @apply bg-gray-100 text-black;
+  :root {
+    --bg-light: rgb(243, 244, 246); /* gray-100 的RGB值 */
+    --bg-dark: rgb(17, 24, 39);     /* gray-900 的RGB值 */
   }
-
-  /* 暗色模式背景 */
-  :root.dark body {
-    @apply bg-gray-900 text-gray-100;
-  }
-
   html {
     @apply min-h-screen transition-colors duration-300 antialiased;
+    background-color: var(--bg-light);
+    transition: background-color 0.3s ease;
+  }
+
+  html.dark {
+    background-color: var(--bg-dark);
   }
 
   body {
