@@ -22,7 +22,7 @@
     "clean": "rm -rf .turbo node_modules dist"
   },
   "dependencies": {
-    "@mohtasham/md-to-docx": "^1.4.9",
+    "@mohtasham/md-to-docx": "^2.0.0",
     "react-markdown": "^10.1.0",
     "react-syntax-highlighter": "^15.6.1",
     "rehype-raw": "^7.0.0",
