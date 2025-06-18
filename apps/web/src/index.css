@@ -90,16 +90,16 @@ button:disabled {
   .main-container {
     @apply bg-white dark:bg-gray-800;
     .secondary-container {
-      @apply  bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700 drop-shadow-xs;
+      @apply  bg-white border-gray-300/40 dark:bg-gray-800 dark:border-gray-700 drop-shadow-xs;
     }
     .title-secondary {
       @apply text-gray-600 dark:text-gray-300;
     }
   }
   .dragable-notice-container {
-    @apply bg-white/60 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700;
+    @apply bg-white/60 dark:bg-gray-800/60 border border-gray-300/40 dark:border-gray-700;
     .dragable-notice-header {
-      @apply border-b border-gray-200 dark:border-gray-700;
+      @apply border-b border-gray-300/40 dark:border-gray-700;
       .dragable-notice-header-icon {
         @apply text-yellow-500 dark:text-yellow-400;
       }
@@ -151,7 +151,7 @@ button:disabled {
   .mask {
     @apply bg-white/40 dark:bg-black/40 backdrop-blur-md z-50;
     .dialog {
-      @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700;
+      @apply bg-white dark:bg-gray-800 border border-gray-300/30 dark:border-gray-600/30;
     }
     .dialog-title {
       @apply text-gray-600 dark:text-white;

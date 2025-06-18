@@ -160,11 +160,11 @@ const Header: React.FC<HeaderProps> = ({
 
             <div className="flex items-center gap-2" style={nonDraggableStyle}>
               {/* 桌面端卡片导航 */}
-              <div className="hidden md:flex tab-container rounded-2xl p-1 relative">
+              <div className="hidden md:flex tab-container rounded-2xl shadow-[inset_0_0_4px_rgba(0,0,0,0.05)] p-1 relative">
                 {/* 滑动背景 */}
                 {tabDimensions.length > 0 && activeTabIndex >= 0 && (
                   <motion.div
-                    className="absolute top-1 tab-active rounded-xl"
+                    className="absolute top-1 tab-active rounded-xl shadow"
                     style={{
                       left: 0,
                       height: 'calc(100% - 8px)',  // 100% 减去 top-1 + bottom-1 的值

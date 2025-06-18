@@ -75,7 +75,7 @@ export const Dialog: React.FC<DialogProps> = ({
             transition={{ duration: 0.3, ease: "easeOut" }}
           >
             <motion.div
-              className={`p-6 rounded-3xl shadow-2xl shadow-black/30 dialog ${maxWidth} w-full mx-4 my-auto ${className}`}
+              className={`p-6 rounded-3xl shadow-2xl dialog ${maxWidth} w-full mx-4 my-auto ${className}`}
               style={{
                 marginTop: 'auto',
                 marginBottom: 'auto'
