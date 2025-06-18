@@ -71,10 +71,11 @@ export const IterationDialog: React.FC<IterationDialogProps> = ({
     >
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium mb-2 input-description">
+          <label className="block text-sm font-medium mb-2 input-description" htmlFor='template-select'>
             {t('promptBooster.iterationDialog.selectTemplate')}
           </label>
           <EnhancedDropdown
+            id="template-select"
             options={iterateTemplateOptions}
             value={selectedTemplateId}
             onChange={setSelectedTemplateId}
@@ -82,10 +83,11 @@ export const IterationDialog: React.FC<IterationDialogProps> = ({
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-2 input-description">
+          <label className="block text-sm font-medium mb-2 input-description" htmlFor='iterationDirection'>
             {t('promptBooster.iterationDialog.enterDirection')}
           </label>
           <textarea
+            id='iterationDirection'
             className="w-full p-3 border rounded-lg focus:outline-hidden input-textarea autoscroll-border"
             placeholder={t('promptBooster.iterationDialog.directionPlaceholder')}
             value={iterationDirection}
