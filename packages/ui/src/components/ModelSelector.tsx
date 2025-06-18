@@ -13,6 +13,7 @@ export interface ModelOption {
 }
 
 interface ModelSelectorProps {
+  id?: string;
   value: string;
   onChange: (value: string) => void;
   fetchModels: () => Promise<ModelOption[]>;
@@ -23,6 +24,7 @@ interface ModelSelectorProps {
 }
 
 export const ModelSelector: React.FC<ModelSelectorProps> = ({
+  id,
   value,
   onChange,
   fetchModels,
@@ -282,6 +284,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
     >
       <div className="relative">
         <input
+          id={id}
           type="text"
           value={inputValue}
           onChange={handleInputChange}

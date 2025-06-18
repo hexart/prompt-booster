@@ -117,9 +117,10 @@ export const ModelModal: React.FC<ModelModalProps> = ({
       <div className="space-y-4">
         {isCustom && (
           <div>
-            <label className="block text-sm font-medium mb-1 input-label">{t('settings.providerName')}</label>
+            <label className="block text-sm font-medium mb-1 input-label" htmlFor='providerName'>{t('settings.providerName')}</label>
             <input
               type="text"
+              id="providerName"
               name="providerName"
               value={(formData as CustomInterface).providerName || ''}
               onChange={handleInputChange}
@@ -130,10 +131,11 @@ export const ModelModal: React.FC<ModelModalProps> = ({
         )}
 
         <div>
-          <label className="block text-sm font-medium mb-1 input-laebel">API Key</label>
+          <label className="block text-sm font-medium mb-1 input-label" htmlFor='apiKey'>API Key</label>
           <div className="relative">
             <input
               type={isMaskedApiKey ? "text" : "text"}
+              id="apiKey"
               name="apiKey"
               value={formData.apiKey || ''}
               onChange={handleInputChange}
@@ -160,9 +162,10 @@ export const ModelModal: React.FC<ModelModalProps> = ({
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1 input-laebel">{t('settings.apiBaseURL')}</label>
+          <label className="block text-sm font-medium mb-1 input-label" htmlFor='baseUrl'>{t('settings.apiBaseURL')}</label>
           <input
             type="text"
+            id="baseUrl"
             name="baseUrl"
             value={formData.baseUrl || ''}
             onChange={handleInputChange}
@@ -179,9 +182,10 @@ export const ModelModal: React.FC<ModelModalProps> = ({
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1 input-laebel">{t('settings.apiEndpointPath')}</label>
+          <label className="block text-sm font-medium mb-1 input-label" htmlFor='endpoint'>{t('settings.apiEndpointPath')}</label>
           <input
             type="text"
+            id="endpoint"
             name="endpoint"
             value={formData.endpoint || ''}
             onChange={handleInputChange}
@@ -196,8 +200,9 @@ export const ModelModal: React.FC<ModelModalProps> = ({
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1 input-laebel">{t('settings.modelList')}</label>
+          <label className="block text-sm font-medium mb-1 input-label" htmlFor='model-selector'>{t('settings.modelList')}</label>
           <ModelSelector
+            id='model-selector'
             value={formData.model || ''}
             onChange={(value) => {
               // 找到选中的模型选项
@@ -254,14 +259,16 @@ export const ModelModal: React.FC<ModelModalProps> = ({
 
         {isCustom && (
           <div>
-            <label className="block text-sm font-medium mb-1 input-laebel">{t('settings.interfaceName')}</label>
+            <label className="block text-sm font-medium mb-1 input-label" htmlFor='fullname'>{t('settings.interfaceName')}</label>
             <input
               type="text"
+              id="fullname"
               name="name"
               value={formatInterfaceName(formData.name || '')}
               disabled={true}
               className="w-full p-2 border rounded input input-disabled"
               placeholder={t('settings.interfaceNamePlaceholder')}
+              autoComplete="off"
             />
             <p className="mt-1 text-xs input-description">
               {t('settings.interfaceNameHint')}
@@ -277,7 +284,7 @@ export const ModelModal: React.FC<ModelModalProps> = ({
             onChange={(e) => setEnableAfterSave(e.target.checked)}
             className="w-4 h-4 input"
           />
-          <label htmlFor="enableAfterSave" className="ms-2 text-sm font-medium input-laebel">
+          <label htmlFor="enableAfterSave" className="ms-2 text-sm font-medium input-label">
             {t('settings.saveAndEnable')}
           </label>
         </div>
