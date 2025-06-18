@@ -162,6 +162,7 @@ export const AutoScrollTextarea: React.FC<AutoScrollTextareaProps> = ({
         // 正常有内容的textarea
         <textarea
           ref={elementRef}
+          id={id}
           className={`w-full scrollable rounded-md p-3 transition-colors duration-200 input-textarea ${className}
                     ${isHovered
               ? 'autoscroll-border-hover'
