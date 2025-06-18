@@ -133,7 +133,7 @@ export const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
             ref={optionsContainerRef}
           >
             <ul className="py-1">
-              <AnimatePresence mode="wait">
+              <AnimatePresence mode="popLayout">
                 {options.map((option, index) => (
                   <motion.li
                     key={option.value}
