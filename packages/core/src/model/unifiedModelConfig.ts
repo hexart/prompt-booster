@@ -1,110 +1,82 @@
 // packages/core/src/model/unifiedModelConfig.ts
+import { PROVIDER_CONFIG, LLMProvider } from '@prompt-booster/api';
+import { StandardModelType } from './models/config';
+
 /**
- * 统一的模型配置管理
- * 重新导出API包的配置，避免重复定义
+ * StandardModelType 到 LLMProvider 的映射
+ * 确保类型系统的一致性
  */
-
-// 从API包导入配置，统一数据源
-export { getMaxTokensForModel } from '@prompt-booster/api';
-
-// 模型提供商类型
-export type ModelProvider = 'openai' | 'gemini' | 'deepseek' | 'hunyuan' | 'siliconflow' | 'ollama';
-
-// 模型配置基础接口
-export interface BaseModelConfig {
-  id: string;
-  name: string;
-  provider: ModelProvider;
-  baseUrl: string;
-  defaultModel: string;
-  models: string[];
-  timeout?: number;
-  endpoint?: string;
-  isOpenAICompatible: boolean;
-}
-
-// 业务层的模型注册表
-export const MODEL_REGISTRY: Record<ModelProvider, BaseModelConfig> = {
-  openai: {
-    id: 'openai',
-    name: 'OpenAI',
-    provider: 'openai',
-    baseUrl: 'https://api.openai.com',
-    defaultModel: 'gpt-4-turbo',
-    models: ['gpt-4-turbo', 'gpt-4', 'gpt-3.5-turbo'],
-    timeout: 60000,
-    endpoint: '/v1/chat/completions',
-    isOpenAICompatible: true
-  },
-  gemini: {
-    id: 'gemini',
-    name: 'Google Gemini',
-    provider: 'gemini',
-    baseUrl: 'https://generativelanguage.googleapis.com',
-    defaultModel: 'gemini-1.5-pro',
-    models: ['gemini-1.5-pro', 'gemini-1.5-flash'],
-    timeout: 60000,
-    endpoint: '/v1beta/models/{model}:generateContent',
-    isOpenAICompatible: false
-  },
-  deepseek: {
-    id: 'deepseek',
-    name: 'DeepSeek',
-    provider: 'deepseek',
-    baseUrl: 'https://api.deepseek.com',
-    defaultModel: 'deepseek-chat',
-    models: ['deepseek-chat', 'deepseek-coder'],
-    timeout: 60000,
-    endpoint: '/v1/chat/completions',
-    isOpenAICompatible: true
-  },
-  hunyuan: {
-    id: 'hunyuan',
-    name: 'Tencent Hunyuan',
-    provider: 'hunyuan',
-    baseUrl: 'https://api.hunyuan.cloud.tencent.com',
-    defaultModel: 'hunyuan-turbos-latest',
-    models: ['hunyuan-turbos-latest'],
-    timeout: 60000,
-    endpoint: '/v1/chat/completions',
-    isOpenAICompatible: true
-  },
-  siliconflow: {
-    id: 'siliconflow',
-    name: 'SiliconFlow',
-    provider: 'siliconflow',
-    baseUrl: 'https://api.siliconflow.cn',
-    defaultModel: 'Qwen/QwQ-32B',
-    models: ['Qwen/QwQ-32B'],
-    timeout: 60000,
-    endpoint: '/v1/chat/completions',
-    isOpenAICompatible: true
-  },
-  ollama: {
-    id: 'ollama',
-    name: 'Ollama',
-    provider: 'ollama',
-    baseUrl: 'http://localhost:11434',
-    defaultModel: 'qwen3:32b',
-    models: ['qwen3:32b', 'qwq:latest'],
-    timeout: 180000,
-    endpoint: '/api/chat',
-    isOpenAICompatible: false
-  }
+const MODEL_TYPE_TO_PROVIDER: Record<StandardModelType, LLMProvider> = {
+    'openai': LLMProvider.OPENAI,
+    'ollama': LLMProvider.OLLAMA,
+    'gemini': LLMProvider.GEMINI,
+    'deepseek': LLMProvider.DEEPSEEK,
+    'hunyuan': LLMProvider.HUNYUAN,
+    'siliconflow': LLMProvider.SILICONFLOW,
 };
 
-// 检查是否为OpenAI兼容的提供商
-export function isOpenAICompatible(provider: ModelProvider | string): boolean {
-  const config = MODEL_REGISTRY[provider as ModelProvider];
-  return config?.isOpenAICompatible ?? true;
+/**
+ * 默认模型配置接口
+ * 定义从 API 包获取的配置结构
+ */
+export interface DefaultModelConfig {
+    baseUrl: string;
+    endpoint: string;
+    defaultModel: string;
+    timeout: number;
+    modelsEndpoint?: string;
+    authType?: string;
+    requestType?: string;
+    responseType?: string;
 }
 
-// 获取默认配置
-export function getDefaultModelConfig(provider: ModelProvider): BaseModelConfig | null {
-  return MODEL_REGISTRY[provider] || null;
+/**
+ * 获取指定模型类型的默认配置
+ * 从 API 包的 PROVIDER_CONFIG 中获取配置
+ * 
+ * @param modelType 标准模型类型
+ * @returns 默认配置对象，如果不存在则返回 null
+ */
+export function getDefaultModelConfig(modelType: StandardModelType): DefaultModelConfig | null {
+    // 获取对应的 LLMProvider
+    const provider = MODEL_TYPE_TO_PROVIDER[modelType];
+    if (!provider) {
+        console.warn(`未找到模型类型 ${modelType} 对应的提供商`);
+        return null;
+    }
+
+    // 从 API 包获取提供商配置
+    const providerConfig = PROVIDER_CONFIG[provider];
+    if (!providerConfig) {
+        console.warn(`未找到提供商 ${provider} 的配置`);
+        return null;
+    }
+
+    // 转换为标准化的默认配置格式
+    return {
+        baseUrl: providerConfig.baseUrl,
+        endpoint: providerConfig.endpoints.chat,
+        defaultModel: providerConfig.defaultModel,
+        timeout: providerConfig.timeout,
+        modelsEndpoint: providerConfig.endpoints.models,
+        authType: providerConfig.auth?.type,
+        requestType: providerConfig.request?.type,
+        responseType: providerConfig.response?.type,
+    };
 }
 
-// 获取所有支持的提供商
-export function getSupportedProviders(): ModelProvider[] {
-  return Object.keys(MODEL_REGISTRY) as ModelProvider[];
+/**
+ * 获取所有支持的模型类型的默认配置
+ * 
+ * @returns 所有模型类型的默认配置映射
+ */
+export function getAllDefaultModelConfigs(): Record<StandardModelType, DefaultModelConfig | null> {
+    const configs: Record<StandardModelType, DefaultModelConfig | null> = {} as any;
+    
+    // 遍历所有标准模型类型
+    Object.keys(MODEL_TYPE_TO_PROVIDER).forEach((modelType) => {
+        configs[modelType as StandardModelType] = getDefaultModelConfig(modelType as StandardModelType);
+    });
+    
+    return configs;
 }

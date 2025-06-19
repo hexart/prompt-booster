@@ -110,7 +110,7 @@ export function maskApiKey(key: string): string {
 }
 
 /**
- * 检查模型配置是否有效
+ * 检查用户的模型配置是否有效
  */
 export function validateModelConfig(config: ModelConfig | CustomInterface, t?: TranslationFunction): {
   valid: boolean;

@@ -3,7 +3,7 @@
  * 默认配置
  */
 import { ModelConfig, StandardModelType } from '../model';
-import { MODEL_REGISTRY } from '../model/unifiedModelConfig';
+import { getAllDefaultModelConfigs } from '../model/unifiedModelConfig';
 
 /**
  * 创建默认模型配置
@@ -11,17 +11,22 @@ import { MODEL_REGISTRY } from '../model/unifiedModelConfig';
 export const createDefaultModelConfigs = (): Record<StandardModelType, ModelConfig> => {
   const configs: Record<string, ModelConfig> = {};
   
-  Object.entries(MODEL_REGISTRY).forEach(([key, registry]) => {
-    configs[key] = {
-      id: key,
-      providerName: registry.name,
-      apiKey: '',
-      model: registry.defaultModel,
-      baseUrl: registry.baseUrl,
-      endpoint: registry.endpoint,
-      timeout: registry.timeout,
-      enabled: false
-    };
+  // 使用新的 API 获取所有默认配置
+  const allDefaultConfigs = getAllDefaultModelConfigs();
+  
+  Object.entries(allDefaultConfigs).forEach(([modelType, defaultConfig]) => {
+    if (defaultConfig) {
+      configs[modelType] = {
+        id: modelType,
+        providerName: modelType, // 使用模型类型作为提供商名称
+        apiKey: '',
+        model: defaultConfig.defaultModel,
+        baseUrl: defaultConfig.baseUrl,
+        endpoint: defaultConfig.endpoint,
+        timeout: defaultConfig.timeout,
+        enabled: false
+      };
+    }
   });
   
   return configs as Record<StandardModelType, ModelConfig>;
