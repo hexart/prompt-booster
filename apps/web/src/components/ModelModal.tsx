@@ -43,7 +43,8 @@ export const ModelModal: React.FC<ModelModalProps> = ({
     handleInputChange,
     updateFormWithInitialData,
     showApiKey,
-    hideApiKey
+    hideApiKey,
+    getCompleteModelConfig
   } = useModelForm(initialData);
 
   const [isSaving, setIsSaving] = React.useState(false);
@@ -56,24 +57,26 @@ export const ModelModal: React.FC<ModelModalProps> = ({
 
   // 当初始数据变化时更新表单
   useEffect(() => {
-    updateFormWithInitialData(initialData);
-  }, [initialData]);
+    updateFormWithInitialData(initialData, !isCustom, modelType);
+  }, [initialData, isCustom, modelType]);
 
   const handleSave = async () => {
+    // 合并默认配置
+    const completeFormData = getCompleteModelConfig(formData, !isCustom, modelType);
     // 验证表单
-    const validation = validateModelConfig(formData);
+    const validation = validateModelConfig(completeFormData);
     if (!validation.valid) {
       toast.error(validation.message);
       return;
     }
 
     // 如果所有必要字段都有值，自动设为启用状态
-    const enabled = enableAfterSave && Boolean(formData.apiKey && formData.model && (!isCustom || (formData as CustomInterface).providerName));
+    const enabled = enableAfterSave && Boolean(completeFormData.apiKey && completeFormData.model && (!isCustom || (completeFormData as CustomInterface).providerName));
 
     // 准备保存数据
     const dataToSave = {
-      ...formData,
-      apiKey: isMaskedApiKey ? originalApiKey : formData.apiKey,
+      ...completeFormData,
+      apiKey: isMaskedApiKey ? originalApiKey : completeFormData.apiKey,
       enabled
     };
 
@@ -216,23 +219,26 @@ export const ModelModal: React.FC<ModelModalProps> = ({
             }}
             fetchModels={async () => {
               try {
+                // ✅ 使用合并后的完整配置
+                const completeConfig = getCompleteModelConfig(formData, !isCustom, modelType);
+
                 // 只有当有 apiKey 和 baseUrl 时才尝试获取模型列表
-                if (!formData.apiKey || !formData.baseUrl) {
+                if (!completeConfig.apiKey || !completeConfig.baseUrl) {
                   toast.error(t('toast.fillAPIKey_BaseURL'));
                   return [];
                 }
 
                 const provider = isCustom ?
-                  (formData as CustomInterface).providerName || 'custom' :
+                  (completeConfig as CustomInterface).providerName || 'custom' :
                   modelType;
 
                 const client = createClient({
                   provider,
                   apiKey: originalApiKey,
-                  baseUrl: formData.baseUrl,
+                  baseUrl: completeConfig.baseUrl,
                   model: 'default',
                   endpoints: {
-                    chat: formData.endpoint || '/v1/chat/completions',
+                    chat: completeConfig.endpoint || '/v1/chat/completions',
                     models: '/v1/models'
                   }
                 });

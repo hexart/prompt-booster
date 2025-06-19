@@ -4,9 +4,39 @@ import { toast } from '@prompt-booster/ui';
 import { useModelStore, type StandardModelType } from '@prompt-booster/core';
 import { testModelConnection, maskApiKey, prepareModelsForDisplay } from '@prompt-booster/core/model/services/modelService';
 import { ModelConfig, CustomInterface } from '@prompt-booster/core/model/models/config';
+import { getDefaultModelConfig } from '@prompt-booster/core/model/unifiedModelConfig';
 import { useTranslation } from 'react-i18next';
 import { formatInterfaceName } from '../utils/displayUtils';
 import { isRTL } from '../rtl';
+
+/**
+ * 获取完整的模型配置（合并默认配置和用户配置）
+ */
+function getCompleteModelConfig(
+    userConfig: ModelConfig | CustomInterface,
+    isStandard: boolean,
+    modelId: string
+): ModelConfig | CustomInterface {
+    if (!isStandard) {
+        // 自定义接口直接返回用户配置
+        return userConfig;
+    }
+
+    // 对于内置模型，获取默认配置
+    const defaultConfig = getDefaultModelConfig(modelId as any);
+    if (!defaultConfig) {
+        return userConfig;
+    }
+
+    // 合并配置：用户配置优先，缺失的字段使用默认配置
+    return {
+        ...userConfig,
+        baseUrl: userConfig.baseUrl || defaultConfig.baseUrl,
+        endpoint: userConfig.endpoint || defaultConfig.endpoint,
+        timeout: userConfig.timeout || defaultConfig.timeout,
+        model: userConfig.model || defaultConfig.defaultModel,
+    };
+}
 
 /**
  * 连接测试钩子
@@ -25,15 +55,21 @@ export function useModelConnection() {
         try {
             // 对于自定义接口，使用其 providerName 或 id
             const provider = model.isStandard ? model.id : (model.providerName || model.id);
-            const { apiKey, baseUrl, model: modelName, endpoint } = model.config;
+            const completeConfig = getCompleteModelConfig(
+                model.config,
+                model.isStandard,
+                model.id
+            );
+            const { apiKey, baseUrl, model: modelName, endpoint } = completeConfig;
 
             toast.info(t('toast.connection.testing', { modelName }));
 
+            const finalBaseUrl = baseUrl || '';
             // 返回格式为 { success: boolean; message: string }
             const result = await testModelConnection(
                 provider,
                 apiKey,
-                baseUrl,
+                finalBaseUrl,
                 modelName,
                 endpoint,
                 t
@@ -59,7 +95,8 @@ export function useModelConnection() {
 
     return {
         testConnection,
-        isTestingConnection: (id: string) => !!testingModels[id]
+        isTestingConnection: (id: string) => !!testingModels[id],
+        getCompleteModelConfig
     };
 }
 
@@ -261,19 +298,33 @@ export function useModelForm(initialData: ModelConfig | CustomInterface) {
         }));
     };
 
-    // 当初始数据变化时更新表单
-    const updateFormWithInitialData = (data: ModelConfig | CustomInterface) => {
-        setFormData(data);
-        setOriginalApiKey(data.apiKey || '');
+    // ✅ 新增：初始化时合并默认配置
+    const initializeFormData = (
+        data: ModelConfig | CustomInterface,
+        isStandard: boolean,
+        modelId: string
+    ) => {
+        const completeConfig = getCompleteModelConfig(data, isStandard, modelId);
+        setFormData(completeConfig);
+        setOriginalApiKey(completeConfig.apiKey || '');
 
         // 创建掩码API Key
-        const maskedApiKey = maskApiKey(data.apiKey || '');
+        const maskedApiKey = maskApiKey(completeConfig.apiKey || '');
         setFormData(prev => ({
             ...prev,
             apiKey: maskedApiKey
         }));
 
-        setEnableAfterSave(data.enabled || false);
+        setEnableAfterSave(completeConfig.enabled || false);
+    };
+
+    // 当初始数据变化时更新表单
+    const updateFormWithInitialData = (
+        data: ModelConfig | CustomInterface,
+        isStandard: boolean = false,
+        modelId: string = ''
+    ) => {
+        initializeFormData(data, isStandard, modelId);
     };
 
     // 处理输入变化
@@ -329,6 +380,7 @@ export function useModelForm(initialData: ModelConfig | CustomInterface) {
         handleInputChange,
         updateFormWithInitialData,
         showApiKey,
-        hideApiKey
+        hideApiKey,
+        getCompleteModelConfig
     };
 }
