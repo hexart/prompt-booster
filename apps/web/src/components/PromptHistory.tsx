@@ -221,7 +221,10 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                   </button>
 
                   <button
-                    onClick={() => handleDeleteGroup(group.id)}
+                    onClick={(e) => {
+                      handleDeleteGroup(group.id);
+                      e.stopPropagation();
+                    }}
                     className="flex items-center gap-1 text-sm px-3 py-2 button-secondary-danger"
                   >
                     <Trash2Icon size={15} />
