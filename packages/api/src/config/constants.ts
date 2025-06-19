@@ -34,6 +34,7 @@ export enum AuthType {
 export enum RequestFormatType {
     OPENAI_COMPATIBLE = 'openai_compatible',
     GEMINI = 'gemini',
+    OLLAMA = 'ollama',
     CUSTOM = 'custom'
 }
 
@@ -44,6 +45,7 @@ export enum RequestFormatType {
 export enum ResponseParseType {
     OPENAI_COMPATIBLE = 'openai_compatible',
     GEMINI = 'gemini',
+    OLLAMA = 'ollama',
     CUSTOM = 'custom'
 }
 
@@ -162,10 +164,10 @@ export const PROVIDER_CONFIG: Record<string, any> = {
             type: AuthType.CUSTOM
         },
         request: {
-            type: RequestFormatType.OPENAI_COMPATIBLE
+            type: RequestFormatType.OLLAMA
         },
         response: {
-            type: ResponseParseType.OPENAI_COMPATIBLE
+            type: ResponseParseType.OLLAMA
         }
     }
 };
