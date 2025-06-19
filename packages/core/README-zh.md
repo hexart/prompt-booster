@@ -47,6 +47,8 @@
 - **单一数据源设计**：通过服务层统一管理所有提示词数据
 - **存储工具**：灵活的存储选项，支持持久化和内存存储
 - **核心服务**：模块化的服务架构，实现关注点分离
+- **分层架构**：api 包 → core 包 → web 包，每层职责明确
+- **配置集中化**：所有提供商配置统一在 api 包中管理
 
 ## 架构
 
@@ -59,7 +61,7 @@ core/
 │   ├── models/     # 类型定义
 │   ├── services/   # 模型服务
 │   ├── store/      # 模型状态管理
-│   └── unifiedModelConfig.ts  # 统一模型配置
+│   └── unifiedModelConfig.ts  # 从 API 包获取配置
 ├── prompt/         # 提示词管理和优化
 │   ├── hooks/      # React 钩子
 │   ├── models/     # 类型定义
@@ -80,7 +82,8 @@ core/
 
 模型管理系统通过 `unifiedModelConfig.ts` 提供统一的配置管理：
 
-- **统一配置注册表**：通过 `MODEL_REGISTRY` 集中管理所有模型配置
+- **配置来源统一**：从 `@prompt-booster/api` 包获取所有模型的默认配置
+- **架构清晰**：api 包负责通信配置，core 包负责业务逻辑，web 包负责UI展示
 - **支持的提供商**：OpenAI、Gemini、DeepSeek、Hunyuan、Siliconflow 和 Ollama
 - **自定义接口**：支持添加兼容 OpenAI 接口规范的自定义 API
 - **智能识别**：自动识别 OpenAI 兼容接口并使用相应的处理逻辑
@@ -158,11 +161,12 @@ function PromptOptimizer() {
 
 ### 配置
 
-统一的模型配置管理：
+从 API 包获取的统一模型配置管理：
 
-- **MODEL_REGISTRY**：所有模型的中央配置注册表
-- **默认配置**：每个模型的预设配置
-- **动态创建**：基于注册表自动生成默认配置
+- **配置来源**：所有默认配置来自 `@prompt-booster/api/config/constants` 的 `PROVIDER_CONFIG`
+- **类型映射**：通过 `MODEL_TYPE_TO_PROVIDER` 确保业务层和通信层的类型一致性
+- **配置转换**：将 API 包的配置转换为业务层需要的格式
+- **单一数据源**：避免在多个包中重复维护相同的配置信息
 
 ### 模型服务
 

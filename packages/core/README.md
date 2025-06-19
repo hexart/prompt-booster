@@ -47,6 +47,8 @@ The `@prompt-booster/core` package is the foundation of the Prompt Booster appli
 - **Single Source of Truth Design**: Unified management of all prompt data through service layers
 - **Storage Utilities**: Flexible storage options supporting both persistence and in-memory storage
 - **Core Services**: Modular service architecture implementing separation of concerns
+- **Layered Architecture**: api package → core package → web package, with clear responsibilities for each layer  
+- **Centralized Configuration**: All provider configurations are centrally managed within the api package  
 
 ## Architecture
 
@@ -59,7 +61,7 @@ core/
 │   ├── models/     # Type definitions
 │   ├── services/   # Model services
 │   ├── store/      # Model state management
-│   └── unifiedModelConfig.ts  # Unified model configuration
+│   └── unifiedModelConfig.ts  # Obtaining Configurations from the API Package
 ├── prompt/         # Prompt management and optimization
 │   ├── hooks/      # React hooks
 │   ├── models/     # Type definitions
@@ -80,7 +82,8 @@ core/
 
 The model management system provides unified configuration management through `unifiedModelConfig.ts`:
 
-- **Unified Configuration Registry**: Centralized management of all model configurations through `MODEL_REGISTRY`
+- **Unified Configuration Source**: All default configurations for all models are obtained from the `@prompt-booster/api` package  
+- **Clear Architecture**: The api package handles communication configurations, the core package manages business logic, and the web package is responsible for UI display  
 - **Supported Providers**: OpenAI, Gemini, DeepSeek, Hunyuan, Siliconflow, and Ollama
 - **Custom Interfaces**: Support for adding custom APIs compatible with OpenAI interface specifications
 - **Smart Recognition**: Automatic identification of OpenAI-compatible interfaces with appropriate processing logic
@@ -158,11 +161,12 @@ Simplified storage architecture:
 
 ### Configuration
 
-Unified model configuration management:
-
-- **MODEL_REGISTRY**: Central configuration registry for all models
-- **Default Configurations**: Preset configurations for each model
-- **Dynamic Creation**: Automatic generation of default configurations based on registry
+Unified model configuration management obtained from the API Package: 
+ 
+- **Configuration Source**: All default configurations are sourced from `PROVIDER_CONFIG` in `@prompt-booster/api/config/constants`  
+- **Type Mapping**: Type consistency between the business layer and the communication layer is ensured through `MODEL_TYPE_TO_PROVIDER`  
+- **Configuration Conversion**: Configurations from the api package are converted into the format required by the business layer  
+- **Single Data Source**: Avoids duplicate maintenance of the same configuration information across multiple packages
 
 ### Model Service
 
