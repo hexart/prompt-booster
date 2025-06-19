@@ -5,8 +5,7 @@
  */
 import { LLMClient, ClientConfig } from './types';
 import { LLMClientImpl } from './client';
-import { LLMProvider, PROVIDER_CONFIG } from './config';
-import { isLoggingEnabled } from './utils';
+import { DEFAULT_TIMEOUT,PROVIDER_CONFIG } from './config';
 
 /**
  * 创建LLM客户端
@@ -15,62 +14,36 @@ import { isLoggingEnabled } from './utils';
  * @param config 客户端配置
  * @returns LLM客户端实例
  */
-export function createClient(config: ClientConfig): LLMClient {
-    if (isLoggingEnabled()) {
-        console.log(`[DEBUG] Creating client for provider: ${config.provider}`);
-    }
-
-    // 检查是否为已知提供商
-    const isKnownProvider = Object.values(LLMProvider).includes(config.provider as LLMProvider);
+export function createClient(config: ClientConfig | {
+    provider: string;
+    apiKey: string;
+    model?: string;
+    baseUrl?: string;
+    timeout?: number;
+    endpoints?: Partial<ClientConfig['endpoints']>;
+}): LLMClient {
+    // 标准化 provider
+    const provider = config.provider.toLowerCase();
     
-    // 如果不是已知提供商，记录一个日志但继续创建客户端
-    if (!isKnownProvider && isLoggingEnabled()) {
-        console.log(`[DEBUG] Using custom provider configuration: ${config.provider}`);
-    }
-
-    return new LLMClientImpl(config);
-}
-
-/**
- * 创建简化的LLM客户端
- * 使用内置的提供商配置创建客户端实例
- * 
- * @param provider 提供商类型
- * @param apiKey API密钥
- * @param options 额外选项
- * @returns LLM客户端实例
- */
-export function createLLMClient(
-    provider: string,
-    apiKey: string,
-    options?: {
-        model?: string;
-        baseUrl?: string;
-        endpoints?: {
-            chat?: string;
-            models?: string;
-        };
-        [key: string]: any;
-    }
-): LLMClient {
-    provider = provider.toLowerCase();
-    // 获取提供商配置
-    const providerConfig = PROVIDER_CONFIG[provider] || PROVIDER_CONFIG[LLMProvider.OPENAI];
-
-    // 构建客户端配置
-    const clientConfig: ClientConfig = {
+    // 获取提供商默认配置
+    const providerConfig = PROVIDER_CONFIG[provider] || {};
+    
+    // 智能合并配置
+    const finalConfig: ClientConfig = {
         provider,
-        apiKey,
-        baseUrl: options?.baseUrl || providerConfig.baseUrl,
-        model: options?.model || providerConfig.defaultModel,
+        apiKey: config.apiKey,
+        baseUrl: config.baseUrl || providerConfig.baseUrl,
+        model: config.model || providerConfig.defaultModel,
+        timeout: config.timeout || providerConfig.timeout || DEFAULT_TIMEOUT,
         endpoints: {
-            chat: options?.endpoints?.chat || providerConfig.endpoints.chat,
-            models: options?.endpoints?.models || providerConfig.endpoints.models
+            chat: config.endpoints?.chat || providerConfig.endpoints?.chat,
+            models: config.endpoints?.models || providerConfig.endpoints?.models
         },
-        auth: { ...providerConfig.auth },
-        request: { ...providerConfig.request },
-        response: { ...providerConfig.response }
+        // 如果config中没有这些字段，使用providerConfig中的
+        auth: (config as ClientConfig).auth || providerConfig.auth,
+        request: (config as ClientConfig).request || providerConfig.request,
+        response: (config as ClientConfig).response || providerConfig.response
     };
 
-    return createClient(clientConfig);
+    return new LLMClientImpl(finalConfig);
 }
