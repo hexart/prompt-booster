@@ -218,8 +218,8 @@ const client = createClient({
   model: 'gpt-4-turbo',    // 模型名称
   timeout: 60000,          // 可选：超时时间(毫秒)
   endpoints: {             // 可选：自定义端点
-    chat: '/v1/chat/completions',
-    models: '/v1/models'
+    chat: '/chat/completions',
+    models: '/models'
   },
   auth: {                  // 可选：认证配置
     type: 'bearer'         // 'bearer', 'query_param', 或 'custom'

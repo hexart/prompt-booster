@@ -193,7 +193,7 @@ export const ModelModal: React.FC<ModelModalProps> = ({
             value={formData.endpoint || ''}
             onChange={handleInputChange}
             className="w-full p-2 border rounded input"
-            placeholder="/v1/chat/completions"
+            placeholder="/chat/completions"
           />
           <p className="mt-1 text-xs input-description">
             {isCustom
@@ -236,11 +236,7 @@ export const ModelModal: React.FC<ModelModalProps> = ({
                   provider,
                   apiKey: originalApiKey,
                   baseUrl: completeConfig.baseUrl,
-                  model: 'default',
-                  endpoints: {
-                    chat: completeConfig.endpoint || '/v1/chat/completions',
-                    models: '/v1/models'
-                  }
+                  model: 'default'
                 });
 
                 // 获取模型列表

@@ -60,7 +60,7 @@ export function useModelConnection() {
                 model.isStandard,
                 model.id
             );
-            const { apiKey, baseUrl, model: modelName, endpoint } = completeConfig;
+            const { apiKey, baseUrl, model: modelName } = completeConfig;
 
             toast.info(t('toast.connection.testing', { modelName }));
 
@@ -71,7 +71,6 @@ export function useModelConnection() {
                 apiKey,
                 finalBaseUrl,
                 modelName,
-                endpoint,
                 t
             );
 
@@ -140,7 +139,7 @@ export function useModelEdit() {
                     apiKey: customData.apiKey,
                     baseUrl: customData.baseUrl,
                     model: customData.model,
-                    endpoint: customData.endpoint || '/v1/chat/completions',
+                    endpoint: customData.endpoint || '/chat/completions',
                     enabled: customData.enabled || false
                 });
 

@@ -68,8 +68,8 @@ export class LLMClientImpl implements LLMClient {
     this.model = config.model || '';
     this.timeout = config.timeout || DEFAULT_TIMEOUT;
     this.endpoints = {
-      chat: config.endpoints?.chat || '/v1/chat/completions',
-      models: config.endpoints?.models || '/v1/models'
+      chat: config.endpoints?.chat || '/chat/completions',
+      models: config.endpoints?.models || '/models'
     };
 
     // 创建HTTP客户端
@@ -448,7 +448,8 @@ export class LLMClientImpl implements LLMClient {
     try {
       // 构建请求URL
       const endpoint = this.endpoints.models;
-      const url = new URL(endpoint, this.baseUrl);  //自动规范化路径里的重复/v1字段
+      const urlString = this.baseUrl + endpoint;
+      const url = new URL(urlString);
 
       // 使用适当的认证策略
       const headers = {

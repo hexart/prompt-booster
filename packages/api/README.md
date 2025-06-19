@@ -218,8 +218,8 @@ const client = createClient({
   model: 'gpt-4-turbo',    // Model name
   timeout: 60000,          // Optional: timeout in milliseconds
   endpoints: {             // Optional: custom endpoints
-    chat: '/v1/chat/completions',
-    models: '/v1/models'
+    chat: '/chat/completions',
+    models: '/models'
   },
   auth: {                  // Optional: authentication configuration
     type: 'bearer'         // 'bearer', 'query_param', or 'custom'

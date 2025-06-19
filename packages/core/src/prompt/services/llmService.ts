@@ -164,7 +164,7 @@ export class LLMService {
       // 对于自定义接口，如果它兼容 OpenAI，就使用 'openai' 作为 provider
       // 这样可以复用 OpenAI 的请求/响应处理逻辑
       const isOpenAICompatible =
-        customInterface.endpoint === "/v1/chat/completions" ||
+        customInterface.endpoint === "/chat/completions" ||
         customInterface.endpoint?.includes("chat/completions");
 
       return {
@@ -174,8 +174,8 @@ export class LLMService {
         model: customInterface.model,
         timeout: customInterface.timeout || 60000,
         endpoints: {
-          chat: customInterface.endpoint || "/v1/chat/completions",
-          models: "/v1/models",
+          chat: customInterface.endpoint || "/chat/completions",
+          models: "/models",
         },
       };
     }
@@ -193,8 +193,8 @@ export class LLMService {
       model: config.model,
       timeout: config.timeout || 60000,
       endpoints: {
-        chat: config.endpoint || "/v1/chat/completions",
-        models: "/v1/models",
+        chat: config.endpoint || "/chat/completions",
+        models: "/models",
       },
     };
   }

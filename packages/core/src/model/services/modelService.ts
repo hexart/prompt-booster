@@ -18,7 +18,6 @@ export async function testModelConnection(
   apiKey: string,
   baseUrl: string,
   model: string,
-  endpoint?: string,
   t?: TranslationFunction
 
 ): Promise<{ success: boolean; message: string }> {
@@ -47,11 +46,7 @@ export async function testModelConnection(
       provider,
       apiKey,
       baseUrl,
-      model,
-      endpoints: {
-        chat: endpoint || '/v1/chat/completions',
-        models: '/v1/models'
-      }
+      model
     });
 
     // 发送测试消息

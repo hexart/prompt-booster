@@ -148,7 +148,7 @@ export const ModelSettings: React.FC = () => {
       apiKey: '',
       baseUrl: '',
       model: '',
-      endpoint: '/v1/chat/completions',
+      endpoint: '/chat/completions',
       enabled: false
     };
 

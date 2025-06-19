@@ -55,10 +55,10 @@ export enum ResponseParseType {
  */
 export const PROVIDER_CONFIG: Record<string, any> = {
   [LLMProvider.OPENAI]: {
-    baseUrl: 'https://api.openai.com',
+    baseUrl: 'https://api.openai.com/v1',
     endpoints: {
-      chat: '/v1/chat/completions',
-      models: '/v1/models'
+      chat: '/chat/completions',
+      models: '/models'
     },
     defaultModel: 'gpt-3.5-turbo',
     timeout: 60000,
@@ -73,11 +73,11 @@ export const PROVIDER_CONFIG: Record<string, any> = {
     }
   },
   [LLMProvider.GEMINI]: {
-    baseUrl: 'https://generativelanguage.googleapis.com',
+    baseUrl: 'https://generativelanguage.googleapis.com/v1beta',
     endpoints: {
-      chat: '/v1beta/models/{model}:generateContent',
-      streamChat: '/v1beta/models/{model}:streamGenerateContent',
-      models: '/v1beta/models'
+      chat: '/models/{model}:generateContent',
+      streamChat: '/models/{model}:streamGenerateContent',
+      models: '/models'
     },
     defaultModel: 'gemini-2.0-flash',
     timeout: 60000,
@@ -93,10 +93,10 @@ export const PROVIDER_CONFIG: Record<string, any> = {
     }
   },
   [LLMProvider.DEEPSEEK]: {
-    baseUrl: 'https://api.deepseek.com',
+    baseUrl: 'https://api.deepseek.com/v1',
     endpoints: {
-      chat: '/v1/chat/completions',
-      models: '/v1/models'
+      chat: '/chat/completions',
+      models: '/models'
     },
     defaultModel: 'deepseek-chat',
     timeout: 60000,
@@ -111,7 +111,7 @@ export const PROVIDER_CONFIG: Record<string, any> = {
     }
   },
   [LLMProvider.HUNYUAN]: {
-    baseUrl: 'https://api.hunyuan.cloud.tencent.com',
+    baseUrl: 'https://api.hunyuan.cloud.tencent.com/v1',
     endpoints: {
       chat: '/chat/completions',
       models: '/models'
@@ -132,7 +132,7 @@ export const PROVIDER_CONFIG: Record<string, any> = {
     }
   },
   [LLMProvider.SILICONFLOW]: {
-    baseUrl: 'https://api.siliconflow.cn',
+    baseUrl: 'https://api.siliconflow.cn/v1',
     endpoints: {
       chat: '/chat/completions',
       models: '/models'

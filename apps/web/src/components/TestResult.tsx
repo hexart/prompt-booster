@@ -161,8 +161,7 @@ export const TestResult: React.FC = () => {
         baseUrl: customInterface.baseUrl,
         model: customInterface.model,
         endpoints: {
-          chat: customInterface.endpoint || '/v1/chat/completions',
-          models: '/v1/models'
+          chat: customInterface.endpoint
         }
       };
     } else {
@@ -173,8 +172,7 @@ export const TestResult: React.FC = () => {
         baseUrl: modelConfig.baseUrl,
         model: modelConfig.model,
         endpoints: {
-          chat: modelConfig.endpoint || '/v1/chat/completions',
-          models: '/v1/models'
+          chat: modelConfig.endpoint
         }
       };
     }

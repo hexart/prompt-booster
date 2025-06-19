@@ -486,9 +486,9 @@ function AddCustomModel() {
     name: "FastGPT API",
     providerName: "fastgpt",
     apiKey: "fastgpt-api-key",
-    baseUrl: "https://api.fastgpt.in",
+    baseUrl: "https://api.fastgpt.in/v1",
     model: "gpt-4-vision-preview",
-    endpoint: "/v1/chat/completions", // OpenAI 兼容
+    endpoint: "/chat/completions", // OpenAI 兼容
     timeout: 120000,
     enabled: true
   };
