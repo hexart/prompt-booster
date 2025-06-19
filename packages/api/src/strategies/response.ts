@@ -5,6 +5,7 @@
  */
 import { ResponseParser, ChatResponse } from '../types';
 import { ResponseParseType } from '../config';
+import { isLoggingEnabled } from '../utils';
 
 /**
  * OpenAI兼容响应解析器
@@ -128,6 +129,172 @@ export class GeminiResponseParser implements ResponseParser {
 }
 
 /**
+ * Ollama响应解析器
+ * 适用于Ollama API
+ */
+export class OllamaResponseParser implements ResponseParser {
+    /**
+     * 解析Ollama流式响应块
+     * @param chunk 响应数据块
+     * @returns 解析出的文本内容
+     */
+    parseStreamChunk(chunk: any): string | null {
+        // Ollama 流式响应格式: {"model":"...","response":"...","done":false}
+        if (chunk && chunk.response !== undefined) {
+            return chunk.response;
+        }
+
+        // 处理message格式（用于chat端点）
+        if (chunk && chunk.message && chunk.message.content) {
+            return chunk.message.content;
+        }
+
+        // 处理纯文本响应
+        if (typeof chunk === 'string') {
+            return chunk;
+        }
+
+        return null;
+    }
+
+    /**
+     * 解析Ollama完整响应
+     * @param response 完整响应数据
+     * @returns 标准化的聊天响应
+     */
+    parseFullResponse(response: any): ChatResponse {
+        if (isLoggingEnabled()) {
+            console.log('[OllamaResponseParser] Parsing response:', response);
+            console.log('[OllamaResponseParser] Response type:', typeof response);
+        }
+
+        if (response === null || response === undefined) {
+            if (isLoggingEnabled()) {
+                console.log('[OllamaResponseParser] Response is null/undefined');
+            }
+            return { content: '' };
+        }
+
+        // 检查是否是模型加载响应
+        if (response.done_reason === 'load' && response.done === true) {
+            if (isLoggingEnabled()) {
+                console.log('[OllamaResponseParser] Model loaded successfully');
+            }
+            // 返回空内容而不是抛出错误
+            return {
+                content: '',
+                model: response.model,
+                meta: {
+                    done: response.done,
+                    doneReason: response.done_reason,
+                    createdAt: response.created_at
+                }
+            };
+        }
+
+        // 处理标准 Ollama 响应格式（chat端点）
+        if (response && response.message && response.message.content) {
+            return {
+                content: response.message.content,
+                model: response.model,
+                meta: {
+                    done: response.done,
+                    totalDuration: response.total_duration,
+                    loadDuration: response.load_duration,
+                    promptEvalCount: response.prompt_eval_count,
+                    evalCount: response.eval_count
+                }
+            };
+        }
+
+        // 处理 Ollama generate 端点的 NDJSON 流式响应
+        if (typeof response === 'string' && response.includes('\n')) {
+            const lines = response.split('\n').filter(line => line.trim());
+            let fullContent = '';
+            let modelName = '';
+            let metadata: any = {};
+
+            for (const line of lines) {
+                try {
+                    const parsed = JSON.parse(line);
+
+                    // 收集响应内容
+                    if (parsed.response !== undefined) {
+                        fullContent += parsed.response;
+                    }
+
+                    // 收集模型信息
+                    if (parsed.model) {
+                        modelName = parsed.model;
+                    }
+
+                    // 如果是最后一个响应，收集元数据
+                    if (parsed.done === true) {
+                        metadata = {
+                            done: parsed.done,
+                            context: parsed.context,
+                            totalDuration: parsed.total_duration,
+                            loadDuration: parsed.load_duration,
+                            promptEvalCount: parsed.prompt_eval_count,
+                            evalCount: parsed.eval_count,
+                            doneReason: parsed.done_reason
+                        };
+                    }
+                } catch (e) {
+                    // 忽略解析错误的行
+                    if (isLoggingEnabled()) {
+                        console.log('[OllamaResponseParser] Failed to parse line:', line);
+                    }
+                }
+            }
+
+            if (isLoggingEnabled()) {
+                console.log('[OllamaResponseParser] Full content length:', fullContent.length);
+                console.log('[OllamaResponseParser] First 200 chars:', fullContent.substring(0, 200));
+            }
+
+            return {
+                content: fullContent,
+                model: modelName,
+                meta: metadata
+            };
+        }
+
+        // 处理generate端点的单个响应
+        if (response && response.response !== undefined && response.done === true) {
+            return {
+                content: response.response,
+                model: response.model,
+                meta: {
+                    done: response.done,
+                    context: response.context,
+                    totalDuration: response.total_duration,
+                    loadDuration: response.load_duration,
+                    promptEvalCount: response.prompt_eval_count,
+                    evalCount: response.eval_count
+                }
+            };
+        }
+
+        // 处理可能的 content 字段（某些情况下的响应格式）
+        if (response && response.content) {
+            // 如果 content 包含流式数据，递归处理
+            if (typeof response.content === 'string' && response.content.includes('"done":')) {
+                return this.parseFullResponse(response.content);
+            }
+
+            return {
+                content: response.content,
+                model: response.model
+            };
+        }
+
+        // 最后回退到空响应
+        return { content: '' };
+    }
+}
+
+/**
  * 自定义响应解析器
  * 支持自定义解析逻辑
  */
@@ -183,6 +350,9 @@ export function createResponseParser(
 
         case ResponseParseType.GEMINI:
             return new GeminiResponseParser();
+
+        case ResponseParseType.OLLAMA:
+            return new OllamaResponseParser();
 
         case ResponseParseType.CUSTOM:
             if (options?.parseStreamFn && typeof options.parseStreamFn === 'function') {

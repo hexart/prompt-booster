@@ -50,8 +50,8 @@ export class OpenAIRequestFormatter implements RequestFormatter {
             messages,
             temperature: request.options?.temperature || DEFAULT_TEMPERATURE,
             // 只有明确设置maxTokens时才添加，否则让LLM自动决定
-            ...(request.options?.maxTokens && { 
-                max_tokens: request.options.maxTokens 
+            ...(request.options?.maxTokens && {
+                max_tokens: request.options.maxTokens
             })
         };
     }
@@ -113,8 +113,150 @@ export class GeminiRequestFormatter implements RequestFormatter {
             generationConfig: {
                 temperature: request.options?.temperature || DEFAULT_TEMPERATURE,
                 // 只有明确设置maxTokens时才添加
-                ...(request.options?.maxTokens && { 
-                    maxOutputTokens: request.options.maxTokens 
+                ...(request.options?.maxTokens && {
+                    maxOutputTokens: request.options.maxTokens
+                })
+            }
+        };
+    }
+}
+
+/**
+ * Ollama请求格式化器
+ * 适用于Ollama本地API
+ */
+export class OllamaRequestFormatter implements RequestFormatter {
+    /**
+     * @param model 模型名称
+     * @param options 可选配置
+     */
+    constructor(
+        private model: string,
+        private options?: {
+            endpoint?: string;
+            useGenerateFormat?: boolean;
+        }
+    ) { }
+
+    /**
+     * 格式化请求为Ollama格式
+     * @param request 标准聊天请求
+     * @returns Ollama格式的请求体
+     */
+    formatRequest(request: ChatRequest): any {
+        // 判断是否使用 chat 端点格式
+        const useChatFormat = this.options?.endpoint === '/api/chat' || 
+                            this.options?.endpoint?.includes('chat') ||
+                            !this.options?.useGenerateFormat;
+
+        if (useChatFormat) {
+            // 使用 /api/chat 端点格式
+            return this.formatChatRequest(request);
+        } else {
+            // 使用 /api/generate 端点格式
+            return this.formatGenerateRequest(request);
+        }
+    }
+
+    /**
+     * 格式化为 /api/chat 请求格式
+     * @param request 标准聊天请求
+     * @returns Ollama chat 格式的请求体
+     */
+    private formatChatRequest(request: ChatRequest): any {
+        // 构建消息数组
+        const messages = [];
+
+        // 添加系统消息
+        if (request.systemMessage) {
+            messages.push({
+                role: 'system',
+                content: request.systemMessage
+            });
+        }
+
+        // 添加历史消息
+        if (request.history && request.history.length > 0) {
+            messages.push(...request.history.map(msg => ({
+                role: msg.role,
+                content: msg.content
+            })));
+        }
+
+        // 添加用户消息
+        if (request.userMessage) {
+            messages.push({
+                role: 'user',
+                content: request.userMessage
+            });
+        }
+
+        // 如果消息数组为空，至少添加一个用户消息
+        if (messages.length === 0) {
+            messages.push({
+                role: 'user',
+                content: 'Hello'
+            });
+        }
+
+        // Ollama chat API 格式
+        return {
+            model: this.model,
+            messages: messages,
+            stream: false,  // 非流式请求先设为 false
+            options: {
+                temperature: request.options?.temperature || DEFAULT_TEMPERATURE,
+                ...(request.options?.maxTokens && {
+                    num_predict: request.options.maxTokens
+                })
+            }
+        };
+    }
+
+    /**
+     * 格式化为 /api/generate 请求格式
+     * @param request 标准聊天请求
+     * @returns Ollama generate 格式的请求体
+     */
+    private formatGenerateRequest(request: ChatRequest): any {
+        // 构建提示文本
+        let prompt = '';
+
+        // 如果有系统消息，先添加系统消息
+        if (request.systemMessage) {
+            prompt = request.systemMessage;
+        }
+
+        // 如果有历史对话，添加到提示中
+        if (request.history && request.history.length > 0) {
+            const historyText = request.history
+                .map(msg => {
+                    if (msg.role === 'user') {
+                        return `User: ${msg.content}`;
+                    } else if (msg.role === 'assistant') {
+                        return `Assistant: ${msg.content}`;
+                    }
+                    return msg.content;
+                })
+                .join('\n');
+            
+            prompt = prompt ? `${prompt}\n\n${historyText}` : historyText;
+        }
+
+        // 添加当前用户消息
+        if (request.userMessage) {
+            prompt = prompt ? `${prompt}\n\nUser: ${request.userMessage}\nAssistant:` : request.userMessage;
+        }
+
+        // Ollama generate API 格式
+        return {
+            model: this.model,
+            prompt: prompt,
+            stream: false,  // 根据需要可以设置为 true
+            options: {
+                temperature: request.options?.temperature || DEFAULT_TEMPERATURE,
+                ...(request.options?.maxTokens && {
+                    num_predict: request.options.maxTokens
                 })
             }
         };
@@ -161,6 +303,10 @@ export function createRequestFormatter(
 
         case RequestFormatType.GEMINI:
             return new GeminiRequestFormatter(model);
+
+        case RequestFormatType.OLLAMA:
+            // 传递额外的选项给 Ollama 格式化器
+            return new OllamaRequestFormatter(model, options);
 
         case RequestFormatType.CUSTOM:
             if (options?.formatFn && typeof options.formatFn === 'function') {
