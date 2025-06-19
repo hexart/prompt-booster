@@ -117,7 +117,7 @@ export class LLMClientImpl implements LLMClient {
       const url = new URL(this.endpoints.chat, this.baseUrl);
       const normalizedEndpoint = url.pathname + url.search;
 
-      this.logDebug(`[DEBUG] Sending chat request to ${this.endpoints.chat}`);
+      this.logDebug(`[DEBUG] Sending chat request to ${normalizedEndpoint}`);
 
       // 发送请求
       const response = await this.client.post(normalizedEndpoint, payload);
@@ -131,7 +131,7 @@ export class LLMClientImpl implements LLMClient {
 
       return { data: parsedResponse };
     } catch (error: any) {
-      this.logDebug(`Error in chat request: ${error.message}`);
+      this.logDebug('Error in chat request:', error);
       return {
         data: { content: '' },
         error: this.formatError(error)
@@ -384,8 +384,8 @@ export class LLMClientImpl implements LLMClient {
         }
       }
     } catch (error) {
-        if (streamHandler.onError) {
-          streamHandler.onError(error instanceof Error ? error : new Error(String(error)));
+      if (streamHandler.onError) {
+        streamHandler.onError(error instanceof Error ? error : new Error(String(error)));
       }
     }
   }
@@ -558,7 +558,7 @@ export class LLMClientImpl implements LLMClient {
    * 输出调试日志
    * @param message 日志消息
    */
-  private logDebug(message: string): void {
+  private logDebug(message: string, _data?: any): void {
     if (isLoggingEnabled()) {
       console.log(`[DEBUG] LLMClient: ${message}`);
     }
