@@ -9,12 +9,12 @@
  * 支持的LLM服务提供商列表
  */
 export enum LLMProvider {
-    OPENAI = 'openai',
-    GEMINI = 'gemini',
-    DEEPSEEK = 'deepseek',
-    HUNYUAN = 'hunyuan',
-    SILICONFLOW = 'siliconflow',
-    OLLAMA = 'ollama'
+  OPENAI = 'openai',
+  GEMINI = 'gemini',
+  DEEPSEEK = 'deepseek',
+  HUNYUAN = 'hunyuan',
+  SILICONFLOW = 'siliconflow',
+  OLLAMA = 'ollama'
 }
 
 /**
@@ -22,9 +22,9 @@ export enum LLMProvider {
  * 支持的认证方式
  */
 export enum AuthType {
-    BEARER = 'bearer',
-    QUERY_PARAM = 'query_param',
-    CUSTOM = 'custom'
+  BEARER = 'bearer',
+  QUERY_PARAM = 'query_param',
+  CUSTOM = 'custom'
 }
 
 /**
@@ -32,10 +32,10 @@ export enum AuthType {
  * 支持的请求格式
  */
 export enum RequestFormatType {
-    OPENAI_COMPATIBLE = 'openai_compatible',
-    GEMINI = 'gemini',
-    OLLAMA = 'ollama',
-    CUSTOM = 'custom'
+  OPENAI_COMPATIBLE = 'openai_compatible',
+  GEMINI = 'gemini',
+  OLLAMA = 'ollama',
+  CUSTOM = 'custom'
 }
 
 /**
@@ -43,10 +43,10 @@ export enum RequestFormatType {
  * 支持的响应解析方式
  */
 export enum ResponseParseType {
-    OPENAI_COMPATIBLE = 'openai_compatible',
-    GEMINI = 'gemini',
-    OLLAMA = 'ollama',
-    CUSTOM = 'custom'
+  OPENAI_COMPATIBLE = 'openai_compatible',
+  GEMINI = 'gemini',
+  OLLAMA = 'ollama',
+  CUSTOM = 'custom'
 }
 
 /**
@@ -54,122 +54,122 @@ export enum ResponseParseType {
  * 为每个支持的提供商提供默认配置
  */
 export const PROVIDER_CONFIG: Record<string, any> = {
-    [LLMProvider.OPENAI]: {
-        baseUrl: 'https://api.openai.com',
-        endpoints: {
-            chat: '/v1/chat/completions',
-            models: '/v1/models'
-        },
-        defaultModel: 'gpt-3.5-turbo',
-        timeout: 60000,
-        auth: {
-            type: AuthType.BEARER
-        },
-        request: {
-            type: RequestFormatType.OPENAI_COMPATIBLE
-        },
-        response: {
-            type: ResponseParseType.OPENAI_COMPATIBLE
-        }
+  [LLMProvider.OPENAI]: {
+    baseUrl: 'https://api.openai.com',
+    endpoints: {
+      chat: '/v1/chat/completions',
+      models: '/v1/models'
     },
-    [LLMProvider.GEMINI]: {
-        baseUrl: 'https://generativelanguage.googleapis.com',
-        endpoints: {
-            chat: '/v1beta/models/{model}:generateContent',
-            streamChat: '/v1beta/models/{model}:streamGenerateContent',
-            models: '/v1beta/models'
-        },
-        defaultModel: 'gemini-pro',
-        timeout: 60000,
-        auth: {
-            type: AuthType.QUERY_PARAM,
-            paramName: 'key'
-        },
-        request: {
-            type: RequestFormatType.GEMINI
-        },
-        response: {
-            type: ResponseParseType.GEMINI
-        }
+    defaultModel: 'gpt-3.5-turbo',
+    timeout: 60000,
+    auth: {
+      type: AuthType.BEARER
     },
-    [LLMProvider.DEEPSEEK]: {
-        baseUrl: 'https://api.deepseek.com',
-        endpoints: {
-            chat: '/v1/chat/completions',
-            models: '/v1/models'
-        },
-        defaultModel: 'deepseek-chat',
-        timeout: 60000,
-        auth: {
-            type: AuthType.BEARER
-        },
-        request: {
-            type: RequestFormatType.OPENAI_COMPATIBLE
-        },
-        response: {
-            type: ResponseParseType.OPENAI_COMPATIBLE
-        }
+    request: {
+      type: RequestFormatType.OPENAI_COMPATIBLE
     },
-    [LLMProvider.HUNYUAN]: {
-        baseUrl: 'https://api.hunyuan.cloud.tencent.com',
-        endpoints: {
-            chat: '/chat/completions',
-            models: '/models'
-        },
-        defaultModel: 'hunyuan-turbos-latest',
-        timeout: 60000,
-        auth: {
-            type: AuthType.BEARER
-        },
-        request: {
-            type: RequestFormatType.OPENAI_COMPATIBLE,
-            additionalParams: {
-                enable_enhancement: true
-            }
-        },
-        response: {
-            type: ResponseParseType.OPENAI_COMPATIBLE
-        }
-    },
-    [LLMProvider.SILICONFLOW]: {
-        baseUrl: 'https://api.siliconflow.cn',
-        endpoints: {
-            chat: '/chat/completions',
-            models: '/models'
-        },
-        defaultModel: 'Qwen/QwQ-32B',
-        timeout: 60000,
-        auth: {
-            type: AuthType.BEARER
-        },
-        request: {
-            type: RequestFormatType.OPENAI_COMPATIBLE,
-            additionalParams: {
-                enable_enhancement: true
-            }
-        },
-        response: {
-            type: ResponseParseType.OPENAI_COMPATIBLE
-        }
-    },
-    [LLMProvider.OLLAMA]: {
-        baseUrl: 'http://localhost:11434',
-        endpoints: {
-            chat: '/api/chat',
-            models: '/api/tags'
-        },
-        defaultModel: 'qwen3:32b',
-        timeout: 180000,
-        auth: {
-            type: AuthType.CUSTOM
-        },
-        request: {
-            type: RequestFormatType.OLLAMA
-        },
-        response: {
-            type: ResponseParseType.OLLAMA
-        }
+    response: {
+      type: ResponseParseType.OPENAI_COMPATIBLE
     }
+  },
+  [LLMProvider.GEMINI]: {
+    baseUrl: 'https://generativelanguage.googleapis.com',
+    endpoints: {
+      chat: '/v1beta/models/{model}:generateContent',
+      streamChat: '/v1beta/models/{model}:streamGenerateContent',
+      models: '/v1beta/models'
+    },
+    defaultModel: 'gemini-2.0-flash',
+    timeout: 60000,
+    auth: {
+      type: AuthType.QUERY_PARAM,
+      paramName: 'key'
+    },
+    request: {
+      type: RequestFormatType.GEMINI
+    },
+    response: {
+      type: ResponseParseType.GEMINI
+    }
+  },
+  [LLMProvider.DEEPSEEK]: {
+    baseUrl: 'https://api.deepseek.com',
+    endpoints: {
+      chat: '/v1/chat/completions',
+      models: '/v1/models'
+    },
+    defaultModel: 'deepseek-chat',
+    timeout: 60000,
+    auth: {
+      type: AuthType.BEARER
+    },
+    request: {
+      type: RequestFormatType.OPENAI_COMPATIBLE
+    },
+    response: {
+      type: ResponseParseType.OPENAI_COMPATIBLE
+    }
+  },
+  [LLMProvider.HUNYUAN]: {
+    baseUrl: 'https://api.hunyuan.cloud.tencent.com',
+    endpoints: {
+      chat: '/chat/completions',
+      models: '/models'
+    },
+    defaultModel: 'hunyuan-turbos-latest',
+    timeout: 60000,
+    auth: {
+      type: AuthType.BEARER
+    },
+    request: {
+      type: RequestFormatType.OPENAI_COMPATIBLE,
+      additionalParams: {
+        enable_enhancement: true
+      }
+    },
+    response: {
+      type: ResponseParseType.OPENAI_COMPATIBLE
+    }
+  },
+  [LLMProvider.SILICONFLOW]: {
+    baseUrl: 'https://api.siliconflow.cn',
+    endpoints: {
+      chat: '/chat/completions',
+      models: '/models'
+    },
+    defaultModel: 'Qwen/QwQ-32B',
+    timeout: 60000,
+    auth: {
+      type: AuthType.BEARER
+    },
+    request: {
+      type: RequestFormatType.OPENAI_COMPATIBLE,
+      additionalParams: {
+        enable_enhancement: true
+      }
+    },
+    response: {
+      type: ResponseParseType.OPENAI_COMPATIBLE
+    }
+  },
+  [LLMProvider.OLLAMA]: {
+    baseUrl: 'http://localhost:11434',
+    endpoints: {
+      chat: '/api/chat',
+      models: '/api/tags'
+    },
+    defaultModel: 'qwen3:32b',
+    timeout: 180000,
+    auth: {
+      type: AuthType.CUSTOM
+    },
+    request: {
+      type: RequestFormatType.OLLAMA
+    },
+    response: {
+      type: ResponseParseType.OLLAMA
+    }
+  }
 };
 
 /**
@@ -186,16 +186,16 @@ export const DEFAULT_TEMPERATURE = 0.7;
  * 重试配置
  */
 export const RETRY_CONFIG = {
-    MAX_RETRIES: 3,
-    RETRY_DELAY: 1000,
-    RETRY_MULTIPLIER: 1.5
+  MAX_RETRIES: 3,
+  RETRY_DELAY: 1000,
+  RETRY_MULTIPLIER: 1.5
 };
 
 /**
  * 内容类型常量
  */
 export const CONTENT_TYPES = {
-    JSON: 'application/json',
-    SSE: 'text/event-stream',
-    TEXT: 'text/plain'
+  JSON: 'application/json',
+  SSE: 'text/event-stream',
+  TEXT: 'text/plain'
 };
