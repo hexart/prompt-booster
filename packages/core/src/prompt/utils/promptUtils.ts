@@ -202,7 +202,11 @@ export async function analyzePromptWithLLM(
     try {
       const withoutThinkTags = removeThinkTags(result);
       const cleaned = withoutThinkTags.trim().replace(/^```json[\s\r\n]*|```$/g, '');
-      const parsed = JSON.parse(cleaned) as {
+      const fixedJson = cleaned
+        .split('\n')
+        .map(line => line.trim())
+        .join('');
+      const parsed = JSON.parse(fixedJson) as {
         criteria?: Array<{
           label: string;
           points: number;
