@@ -4,7 +4,7 @@ import { Dialog } from '@prompt-booster/ui/components/Dialog';
 import { usePrompt } from '@prompt-booster/core/prompt/hooks/usePrompt';
 import { PromptGroup } from '@prompt-booster/core/prompt/models/prompt';
 import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
-import { Trash2Icon, ChevronsDownIcon, ChevronsUpIcon, RotateCcwIcon } from 'lucide-react';
+import { Trash2Icon, ChevronsDownIcon, ChevronsUpIcon, ZapIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { PROVIDER_USER_EDIT } from '@prompt-booster/core/prompt/services/promptService';
 import { isRTL } from '../rtl';
@@ -219,7 +219,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                     }}
                     className="flex items-center gap-1 text-sm px-3 py-2 button-secondary-load"
                   >
-                    <RotateCcwIcon size={15} />
+                    <ZapIcon size={15} />
                     <span className="hidden md:block">{t('history.load')}</span>
                   </button>
 
@@ -259,7 +259,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                       return (
                         <>
                           <div>
-                            <div className="mt-2 p-2 max-h-32 overflow-y-scroll rounded-md text-sm whitespace-pre-wrap listcard-prompt-container">
+                            <div className="mt-2 p-3 max-h-32 overflow-y-scroll rounded-md text-sm whitespace-pre-wrap listcard-prompt-container">
                               {group.originalPrompt}
                             </div>
                           </div>
@@ -286,7 +286,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
 
                           <div>
                             <h3 className="text-sm font-medium mb-1 listcard-description">{t('history.iterationDirection')}</h3>
-                            <div className="p-2 max-h-[260px] rounded-md text-sm whitespace-pre-wrap iteration-prompt-container">
+                            <div className="p-3 max-h-[260px] rounded-md text-sm whitespace-pre-wrap iteration-prompt-container">
                               {displayVersion.iterationDirection
                                 ? (displayVersion.iterationDirection === PROVIDER_USER_EDIT
                                   ? t('history.userEdit')
@@ -298,7 +298,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
 
                           <div>
                             <h3 className="text-sm font-medium mb-1 listcard-description">{t('history.enhancedPrompt')}</h3>
-                            <div className="p-2 max-h-[460px] overflow-auto rounded-md text-sm listcard-prompt-container">
+                            <div className="p-3 max-h-[460px] md:max-h-[360px] overflow-auto rounded-md text-sm listcard-prompt-container">
                               {displayVersion.optimizedPrompt || ''}
                             </div>
                           </div>
