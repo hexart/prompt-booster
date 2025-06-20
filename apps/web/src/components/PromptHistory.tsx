@@ -206,14 +206,17 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                       e.stopPropagation();
                       toggleExpand(group.id);
                     }}
-                    className="flex items-center gap-1 text-sm px-3 py-2 button-secondary"
+                    className="hidden items-center gap-1 text-sm px-3 py-2 button-secondary"
                   >
                     {expandedGroupId === group.id ? <ChevronsUpIcon size={15} /> : <ChevronsDownIcon size={15} />}
                     <span className="hidden md:block">{expandedGroupId === group.id ? t('history.collapse') : t('history.expand')}</span>
                   </button>
 
                   <button
-                    onClick={() => handleLoadGroup(group)}
+                    onClick={(e) => {
+                      handleLoadGroup(group);
+                      e.stopPropagation()
+                    }}
                     className="flex items-center gap-1 text-sm px-3 py-2 button-secondary-load"
                   >
                     <RotateCcwIcon size={15} />
