@@ -13,8 +13,8 @@
 }
 
 /* 使用 :lang 选择器为特定语言应用字体 */
-:lang(en), :lang(en-US), :lang(en-GB), 
-:lang(de), :lang(de-DE), :lang(nl-NL), :lang(es-ES), :lang(fr-FR), :lang(pt-BR), :lang(it-IT), :lang(id-ID) {
+:lang(en), :lang(es), :lang(pt), :lang(fr), :lang(de), :lang(it), :lang(nl),
+:lang(tr), :lang(id), :lang(vi), :lang(pl), :lang(sv), :lang(da), :lang(no) {
   font-family: var(--font-latin);
 }
 @layer utilities {
@@ -185,10 +185,10 @@ button:disabled {
     @apply transition-colors text-green-500 hover:text-green-700 bg-gray-50 hover:bg-green-50 dark:bg-green-900 dark:text-green-400 dark:hover:text-green-300 dark:hover:bg-green-800;
   }
   .button-secondary-enabled {
-    @apply transition-colors bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 dark:hover:bg-gray-600 dark:hover:text-gray-300;
+    @apply transition-colors bg-green-100 hover:bg-green-200 text-green-800 dark:bg-green-900 dark:text-green-300 dark:hover:bg-green-800 dark:hover:text-gray-300;
   }
   .button-secondary-disabled {
-    @apply transition-colors bg-gray-300 text-gray-600 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-green-900 dark:hover:text-green-300;
+    @apply transition-colors bg-gray-300 hover:bg-green-200 text-gray-600 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-green-900 dark:hover:text-green-300;
   }
   .button-secondary-testlink {
     @apply transition-colors bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-teal-800 dark:text-gray-300 dark:hover:bg-teal-700;
