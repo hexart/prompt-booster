@@ -97,18 +97,18 @@ const languageConfig: Record<LanguageCode, {
     hotkey: 'alt+d',
     display: true
   },
-  'ko-KR': {
-    icon: '🇰🇷',
-    label: '한국어',
-    shortcut: '⌥+K',
-    hotkey: 'alt+k',
-    display: true
-  },
   'tr-TR': {
     icon: '🇹🇷',
     label: 'Türkçe',
     shortcut: '⌥+Y',
     hotkey: 'alt+y',
+    display: true
+  },
+  'ko-KR': {
+    icon: '🇰🇷',
+    label: '한국어',
+    shortcut: '⌥+K',
+    hotkey: 'alt+k',
     display: true
   },
   'ur-PK': {
