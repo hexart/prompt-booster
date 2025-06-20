@@ -101,7 +101,7 @@ export const Dialog: React.FC<DialogProps> = ({
                   {showCloseButton && (
                     <motion.button
                       onClick={onClose}
-                      className="dialog-close-button"
+                      className="dialog-close-button p-1"
                       whileHover={{
                         scale: 1.1,
                         rotate: 180

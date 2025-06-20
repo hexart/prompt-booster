@@ -337,26 +337,24 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
         >
-          <AnimatePresence>
-            {buttons.map((button, index) => (
-              <motion.div
-                key={button.key}
-                variants={buttonVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                transition={{
-                  delay: index * 0.1,
-                  type: "spring",
-                  damping: 20,
-                  stiffness: 300,
-                  duration: 0.4
-                }}
-              >
-                {button.component}
-              </motion.div>
-            ))}
-          </AnimatePresence>
+          {buttons.map((button, index) => (
+            <motion.div
+              key={button.key}
+              variants={buttonVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              transition={{
+                delay: index * 0.1,
+                type: "spring",
+                damping: 20,
+                stiffness: 300,
+                duration: 0.4
+              }}
+            >
+              {button.component}
+            </motion.div>
+          ))}
         </motion.div>
       )}
     </AnimatePresence>
