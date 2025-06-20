@@ -7,6 +7,7 @@ import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
 import { Trash2Icon, ChevronsDownIcon, ChevronsUpIcon, ZapIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { PROVIDER_USER_EDIT } from '@prompt-booster/core/prompt/services/promptService';
+import { ActionButtons } from '@prompt-booster/ui/components/ActionButtons';
 import { isRTL } from '../rtl';
 import { getVersionTooltipText } from '../utils/displayUtils';
 
@@ -37,6 +38,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
   // 状态管理
   const [expandedGroupId, setExpandedGroupId] = useState<string | null>(null);
   const [selectedVersions, setSelectedVersions] = useState<Record<string, number>>({});
+  const [hoveredContainer, setHoveredContainer] = useState<string | null>(null);
 
   // 获取所有组（已排序）
   const sortedGroups = useMemo(() => {
@@ -196,9 +198,9 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                   </div>
 
                   {/* 未展开时只显示原始提示词 */}
-                  <div className="truncate text-sm font-medium mb-1 listcard-description">
+                  <h3 className="truncate text-sm font-medium mb-1 listcard-description">
                     {t('history.originalPrompt')} {expandedGroupId !== group.id && truncateText(group.originalPrompt)}
-                  </div>
+                  </h3>
                 </div>
                 <div className="flex gap-2 items-center listcard-button-container">
                   <button
@@ -258,10 +260,20 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
 
                       return (
                         <>
-                          <div>
-                            <div className="mt-2 p-3 max-h-32 overflow-y-scroll rounded-md text-sm whitespace-pre-wrap listcard-prompt-container">
+                          <div className="relative mt-1 p-1 py-2 rounded-md listcard-prompt-container"
+                            onMouseEnter={() => setHoveredContainer(`${group.id}-original`)}
+                            onMouseLeave={() => setHoveredContainer(null)}>
+                            <div className="p-2 max-h-32 overflow-y-scroll text-sm whitespace-pre-wrap">
                               {group.originalPrompt}
                             </div>
+                            <ActionButtons
+                              content={group.originalPrompt}
+                              filename={`original-prompt-${group.id}`}
+                              position="top-right"
+                              isHovered={hoveredContainer === `${group.id}-original`}
+                              showOnHover={true}
+                              showDownloadDocx={false}
+                            />
                           </div>
 
                           {/* 版本列表 */}
@@ -284,9 +296,11 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                             ))}
                           </div>
 
-                          <div>
-                            <h3 className="text-sm font-medium mb-1 listcard-description">{t('history.iterationDirection')}</h3>
-                            <div className="p-3 max-h-[260px] rounded-md text-sm whitespace-pre-wrap iteration-prompt-container">
+                          <h3 className="text-sm font-medium mb-1 listcard-description">{t('history.iterationDirection')}</h3>
+                          <div className="relative p-1 py-2 rounded-md iteration-prompt-container"
+                            onMouseEnter={() => setHoveredContainer(`${group.id}-iteration`)}
+                            onMouseLeave={() => setHoveredContainer(null)}>
+                            <div className="p-2 max-h-[260px] text-sm whitespace-pre-wrap">
                               {displayVersion.iterationDirection
                                 ? (displayVersion.iterationDirection === PROVIDER_USER_EDIT
                                   ? t('history.userEdit')
@@ -294,13 +308,31 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                                 : t('history.initialVersion')
                               }
                             </div>
+                            <ActionButtons
+                              content={displayVersion.iterationDirection || t('history.initialVersion')}
+                              filename={`iteration-direction-${group.id}-v${displayVersion.number}`}
+                              position="top-right"
+                              isHovered={hoveredContainer === `${group.id}-iteration`}
+                              showOnHover={true}
+                              showDownloadDocx={false}
+                            />
                           </div>
 
-                          <div>
-                            <h3 className="text-sm font-medium mb-1 listcard-description">{t('history.enhancedPrompt')}</h3>
-                            <div className="p-3 max-h-[460px] md:max-h-[360px] overflow-auto rounded-md text-sm listcard-prompt-container">
+                          <h3 className="text-sm font-medium mb-1 listcard-description">{t('history.enhancedPrompt')}</h3>
+                          <div className="relative p-1 rounded-md listcard-prompt-container"
+                            onMouseEnter={() => setHoveredContainer(`${group.id}-optimized`)}
+                            onMouseLeave={() => setHoveredContainer(null)}>
+                            <div className="p-2 max-h-[460px] md:max-h-[360px] overflow-auto text-sm">
                               {displayVersion.optimizedPrompt || ''}
                             </div>
+                            <ActionButtons
+                              content={displayVersion.optimizedPrompt || ''}
+                              filename={`optimized-prompt-${group.id}-v${displayVersion.number}`}
+                              position="top-right"
+                              isHovered={hoveredContainer === `${group.id}-optimized`}
+                              showOnHover={true}
+                              showDownloadDocx={false}
+                            />
                           </div>
 
                           <div className="mt-3 flex justify-end gap-2">
