@@ -223,6 +223,8 @@
     "apiBaseURL": "عنوان URL الأساسي للـ API",
     "apiBaseURLPlaceholder": "أدخل عنوان URL الأساسي للـ API",
     "apiBaseURLDefault": "عنوان URL الافتراضي:",
+    "unknownModelInterface": "واجهة نموذج غير معروفة",
+    "apiCustomBaseURLDescription": "أدخل الرابط الجذري لواجهة برمجة التطبيقات، مع ملاحظة تضمين رقم الإصدار وعدم إضافة شرطة مائلة في النهاية. مثال: https://api.openai.com/v1",
     "apiBaseURLNotSet": "غير محدد",
     "apiEndpointPath": "مسار نقطة نهاية API",
     "apiEndpointCustomHint": "مسارات نقاط النهاية، مثل: /chat/completions أو /api/chat (باستثناء عنوان URL الأساسي)",

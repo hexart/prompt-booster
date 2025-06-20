@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { type StandardModelType, type ModelConfig, type CustomInterface } from '@prompt-booster/core/model/models/config';
 import { createClient } from '@prompt-booster/api/factory';
-import { validateModelConfig, getDefaultBaseUrl } from '@prompt-booster/core/model/services/modelService';
+import { validateModelConfig, formatBaseUrl, formatEndpoint, getDefaultBaseUrl } from '@prompt-booster/core/model/services/modelService';
 import { Dialog, ModelSelector, toast } from '@prompt-booster/ui';
 import { useModelForm } from '../hooks/model-hooks';
 import { EyeIcon, EyeClosedIcon } from 'lucide-react';
@@ -61,25 +61,33 @@ export const ModelModal: React.FC<ModelModalProps> = ({
   }, [initialData, isCustom, modelType]);
 
   const handleSave = async () => {
-    // 合并默认配置
+    // 1. 合并默认配置
     const completeFormData = getCompleteModelConfig(formData, !isCustom, modelType);
-    // 验证表单
+    // 2. 验证表单
     const validation = validateModelConfig(completeFormData);
     if (!validation.valid) {
       toast.error(validation.message);
       return;
     }
 
-    // 如果所有必要字段都有值，自动设为启用状态
+    // 3. 判断是否自动启用
     const enabled = enableAfterSave && Boolean(completeFormData.apiKey && completeFormData.model && (!isCustom || (completeFormData as CustomInterface).providerName));
 
-    // 准备保存数据
-    const dataToSave = {
+    // 格式化 baseUrl 和 endpoint
+    const formattedData = {
       ...completeFormData,
+      baseUrl: formatBaseUrl(completeFormData.baseUrl),
+      endpoint: formatEndpoint(completeFormData.endpoint)
+    };
+
+    // 4. 准备保存数据
+    const dataToSave = {
+      ...formattedData,
       apiKey: isMaskedApiKey ? originalApiKey : completeFormData.apiKey,
       enabled
     };
 
+    // 5. 调用 onSave 回调
     setIsSaving(true);
     try {
       await onSave(dataToSave, modelId);
@@ -165,7 +173,15 @@ export const ModelModal: React.FC<ModelModalProps> = ({
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1 input-label" htmlFor='baseUrl'>{t('settings.apiBaseURL')}</label>
+          <label className="block text-sm font-medium mb-1 input-label" htmlFor='baseUrl'>
+            {t('settings.apiBaseURL')}
+            {isCustom && formData.baseUrl && (
+              <span className="text-xs input-description">
+                {' → '}{formatBaseUrl(formData.baseUrl)}
+              </span>
+            )}
+          </label>
+
           <input
             type="text"
             id="baseUrl"
@@ -177,15 +193,23 @@ export const ModelModal: React.FC<ModelModalProps> = ({
               ? t('settings.apiBaseURLPlaceholder')
               : getDefaultBaseUrl(modelType as StandardModelType)}
           />
-          {!isCustom && (
-            <p className="mt-1 text-xs input-description">
-              {t('settings.apiBaseURLDefault')} {getDefaultBaseUrl(modelType as StandardModelType) || "未设置"}
-            </p>
-          )}
+          <p className="mt-1 text-xs input-description">
+            {isCustom
+              ? t('settings.apiCustomBaseURLDescription')
+              : `${t('settings.apiBaseURLDefault')} ${getDefaultBaseUrl(modelType as StandardModelType) || t('settings.unknownModelInterface')}`
+            }
+          </p>
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1 input-label" htmlFor='endpoint'>{t('settings.apiEndpointPath')}</label>
+          <label className="block text-sm font-medium mb-1 input-label" htmlFor='endpoint'>
+            {t('settings.apiEndpointPath')}
+            {isCustom && formData.endpoint && (
+              <span className="text-xs input-description">
+                {' → '}{formatEndpoint(formData.endpoint)}
+              </span>
+            )}
+          </label>
           <input
             type="text"
             id="endpoint"

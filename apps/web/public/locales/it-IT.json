@@ -208,6 +208,8 @@
     "apiBaseURL": "URL base API",
     "apiBaseURLPlaceholder": "Inserisci l'URL base API",
     "apiBaseURLDefault": "URL predefinito:",
+    "unknownModelInterface": "Interfaccia modello sconosciuta",
+    "apiCustomBaseURLDescription": "Inserisci l'URL radice dell'API, assicurati di includere il numero di versione e non aggiungere una barra alla fine. Esempio: https://api.openai.com/v1",
     "apiBaseURLNotSet": "Non impostato",
     "apiEndpointPath": "Percorso endpoint API",
     "apiEndpointCustomHint": "Percorsi endpoint, come: /chat/completions o /api/chat (escludendo URL base)",

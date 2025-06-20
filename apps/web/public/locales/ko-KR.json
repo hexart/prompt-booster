@@ -208,6 +208,8 @@
     "apiBaseURL": "API 기본 URL",
     "apiBaseURLPlaceholder": "기본 API URL 입력",
     "apiBaseURLDefault": "기본 URL:",
+    "unknownModelInterface": "알 수 없는 모델 인터페이스",
+    "apiCustomBaseURLDescription": "API의 루트 URL을 입력하고, 버전 번호를 포함하고 끝에 슬래시를 추가하지 마세요. 예: https://api.openai.com/v1",
     "apiBaseURLNotSet": "설정되지 않음",
     "apiEndpointPath": "API 엔드포인트 경로",
     "apiEndpointCustomHint": "/chat/completions 또는 /api/chat와 같은 엔드포인트 경로 (기본 URL 제외)",

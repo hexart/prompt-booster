@@ -211,6 +211,8 @@
     "apiBaseURL": "API आधार URL",
     "apiBaseURLPlaceholder": "API आधार URL दर्ज करें",
     "apiBaseURLDefault": "डिफ़ॉल्ट URL:",
+    "unknownModelInterface": "अज्ञात मॉडल इंटरफेस",
+    "apiCustomBaseURLDescription": "API का मूल URL दर्ज करें, संस्करण संख्या शामिल करना सुनिश्चित करें और अंत में स्लैश न जोड़ें। उदाहरण: https://api.openai.com/v1",
     "apiBaseURLNotSet": "सेट नहीं है",
     "apiEndpointPath": "API एंडपॉइंट पथ",
     "apiEndpointCustomHint": "एंडपॉइंट पथ, जैसे: /chat/completions या /api/chat (आधार URL को छोड़कर)",

@@ -208,6 +208,8 @@
     "apiBaseURL": "APIベースURL",
     "apiBaseURLPlaceholder": "APIベースURLを入力",
     "apiBaseURLDefault": "デフォルトURL：",
+    "unknownModelInterface": "未知のモデルインターフェース",
+    "apiCustomBaseURLDescription": "APIのルートURLを入力してください。バージョン番号を含めて、末尾にスラッシュを追加しないでください。例：https://api.openai.com/v1",
     "apiBaseURLNotSet": "未設定",
     "apiEndpointPath": "APIエンドポイントパス",
     "apiEndpointCustomHint": "エンドポイントパス（例：/chat/completionsまたは/api/chat）（ベースURLを含まない）",

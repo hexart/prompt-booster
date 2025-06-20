@@ -211,6 +211,8 @@
     "apiBaseURL": "URL de base de l'API",
     "apiBaseURLPlaceholder": "Saisissez l'URL de base de l'API",
     "apiBaseURLDefault": "URL par défaut :",
+    "unknownModelInterface": "Interface de modèle inconnue",
+    "apiCustomBaseURLDescription": "Saisissez l'URL racine de l'API, veillez à inclure le numéro de version et ne pas ajouter de barre oblique à la fin. Exemple : https://api.openai.com/v1",
     "apiBaseURLNotSet": "Non défini",
     "apiEndpointPath": "Chemin du point de terminaison API",
     "apiEndpointCustomHint": "Chemins des points de terminaison, tels que : /chat/completions ou /api/chat (excluant l'URL de base)",

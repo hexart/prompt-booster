@@ -214,6 +214,8 @@
     "apiBaseURL": "Базовый URL API",
     "apiBaseURLPlaceholder": "Введите базовый URL API",
     "apiBaseURLDefault": "URL по умолчанию:",
+    "unknownModelInterface": "Неизвестный интерфейс модели",
+    "apiCustomBaseURLDescription": "Введите корневой URL API, обязательно включите номер версии и не добавляйте косую черту в конце. Пример: https://api.openai.com/v1",
     "apiBaseURLNotSet": "Не задан",
     "apiEndpointPath": "Путь конечной точки API",
     "apiEndpointCustomHint": "Пути конечных точек, например: /chat/completions или /api/chat (без базового URL)",

@@ -211,6 +211,8 @@
     "apiBaseURL": "API basis-URL",
     "apiBaseURLPlaceholder": "Voer de basis-API-URL in",
     "apiBaseURLDefault": "Standaard URL:",
+    "unknownModelInterface": "Onbekende modelinterface",
+    "apiCustomBaseURLDescription": "Voer de basis-URL van de API in, zorg ervoor dat u het versienummer opneemt en voeg geen schuine streep toe aan het einde. Voorbeeld: https://api.openai.com/v1",
     "apiBaseURLNotSet": "Niet ingesteld",
     "apiEndpointPath": "API-eindpuntpad",
     "apiEndpointCustomHint": "Eindpuntpaden, zoals: /chat/completions of /api/chat (exclusief basis-URL)",

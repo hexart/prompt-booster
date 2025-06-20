@@ -151,6 +151,56 @@ export function getDefaultBaseUrl(modelType: StandardModelType): string {
 }
 
 /**
+ * 格式化 Base URL
+ * - 去除首尾空格
+ * - 确保以 http:// 或 https:// 开头
+ * - 移除末尾的斜杠
+ */
+export function formatBaseUrl(url: string | undefined): string {
+  if (!url) return '';
+  
+  // 去除首尾空格
+  let formatted = url.trim();
+  
+  if (!formatted) return '';
+  
+  // 如果没有协议，默认添加 https://
+  // if (!formatted.match(/^https?:\/\//i)) {
+  //   formatted = 'https://' + formatted;
+  // }
+  
+  // 移除末尾的斜杠
+  formatted = formatted.replace(/\/+$/, '');
+  
+  return formatted;
+}
+
+/**
+ * 格式化 Endpoint
+ * - 去除首尾空格
+ * - 确保以斜杠开头
+ * - 规范化多余的斜杠
+ */
+export function formatEndpoint(endpoint: string | undefined): string {
+  if (!endpoint) return '/chat/completions';
+  
+  // 去除首尾空格
+  let formatted = endpoint.trim();
+  
+  if (!formatted) return '/chat/completions';
+  
+  // 确保以斜杠开头
+  if (!formatted.startsWith('/')) {
+    formatted = '/' + formatted;
+  }
+  
+  // 规范化多个连续斜杠为单个斜杠
+  formatted = formatted.replace(/\/+/g, '/');
+  
+  return formatted;
+}
+
+/**
  * 准备模型用于UI展示的数据
  */
 export function prepareModelsForDisplay(

@@ -208,6 +208,8 @@
     "apiBaseURL": "API基础URL",
     "apiBaseURLPlaceholder": "输入API基础URL",
     "apiBaseURLDefault": "默认URL:",
+    "unknownModelInterface": "未知模型接口",
+    "apiCustomBaseURLDescription": "填写API的根URL，注意携带版本号，且末尾不要加斜杠。例如：https://api.openai.com/v1",
     "apiBaseURLNotSet": "未设置",
     "apiEndpointPath": "API端点路径",
     "apiEndpointCustomHint": "端点路径，例如: /chat/completions 或 /api/chat (不包含基础URL)",

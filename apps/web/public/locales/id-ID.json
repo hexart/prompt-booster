@@ -208,6 +208,8 @@
     "apiBaseURL": "URL dasar API",
     "apiBaseURLPlaceholder": "Masukkan URL dasar API",
     "apiBaseURLDefault": "URL default:",
+    "unknownModelInterface": "Antarmuka model tidak dikenal",
+    "apiCustomBaseURLDescription": "Masukkan URL dasar API, pastikan untuk menyertakan nomor versi dan jangan menambahkan garis miring di akhir. Contoh: https://api.openai.com/v1",
     "apiBaseURLNotSet": "Tidak diatur",
     "apiEndpointPath": "Path endpoint API",
     "apiEndpointCustomHint": "Path endpoint, seperti: /chat/completions atau /api/chat (tidak termasuk URL dasar)",
