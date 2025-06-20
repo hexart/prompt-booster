@@ -10,7 +10,7 @@ type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
 import { useTheme } from './ThemeContext';
 
 // 语言类型
-type LanguageCode = 'zh-CN' | 'zh-Hant' | 'en-US' | 'ja-JP' | 'ko-KR' | 'de-DE' | 'nl-NL' | 'ru-RU' | 'es-ES' | 'fr-FR' | 'ar-SA' | 'pt-BR' | 'hi-IN' | 'it-IT' | 'id-ID';
+type LanguageCode = 'zh-CN' | 'zh-Hant' | 'en-US' | 'ja-JP' | 'ko-KR' | 'de-DE' | 'tr-TR' | 'ru-RU' | 'es-ES' | 'fr-FR' | 'ar-SA' | 'pt-BR' | 'hi-IN' | 'it-IT' | 'id-ID' | 'ur-PK' | 'fa-IR';
 
 // 语言配置
 const languageConfig: Record<LanguageCode, {
@@ -41,53 +41,11 @@ const languageConfig: Record<LanguageCode, {
     hotkey: 'alt+e',
     display: true
   },
-  'ja-JP': {
-    icon: '🇯🇵',
-    label: '日本語',
-    shortcut: '⌥+J',
-    hotkey: 'alt+j',
-    display: true
-  },
-  'ko-KR': {
-    icon: '🇰🇷',
-    label: '한국어',
-    shortcut: '⌥+K',
-    hotkey: 'alt+k',
-    display: true
-  },
-  'de-DE': {
-    icon: '🇩🇪',
-    label: 'Deutsch',
-    shortcut: '⌥+D',
-    hotkey: 'alt+d',
-    display: true
-  },
-  'nl-NL': {
-    icon: '🇳🇱',
-    label: 'Nederlands',
-    shortcut: '⌥+N',
-    hotkey: 'alt+n',
-    display: true
-  },
-  'ru-RU': {
-    icon: '🇷🇺',
-    label: 'Русский',
-    shortcut: '⌥+R',
-    hotkey: 'alt+r',
-    display: true
-  },
   'es-ES': {
     icon: '🇪🇸',
     label: 'Español',
     shortcut: '⌥+S',
     hotkey: 'alt+s',
-    display: true
-  },
-  'fr-FR': {
-    icon: '🇫🇷',
-    label: 'Français',
-    shortcut: '⌥+F',
-    hotkey: 'alt+f',
     display: true
   },
   'ar-SA': {
@@ -97,6 +55,13 @@ const languageConfig: Record<LanguageCode, {
     hotkey: 'alt+a',
     display: true
   },
+  'hi-IN': {
+    icon: '🇮🇳',
+    label: 'हिन्दी',
+    shortcut: '⌥+I',
+    hotkey: 'alt+i',
+    display: true
+  },
   'pt-BR': {
     icon: '🇧🇷',
     label: 'Português',
@@ -104,11 +69,60 @@ const languageConfig: Record<LanguageCode, {
     hotkey: 'alt+p',
     display: true
   },
-  'hi-IN': {
-    icon: '🇮🇳',
-    label: 'हिन्दी',
-    shortcut: '⌥+I',
-    hotkey: 'alt+i',
+  'ru-RU': {
+    icon: '🇷🇺',
+    label: 'Русский',
+    shortcut: '⌥+R',
+    hotkey: 'alt+r',
+    display: true
+  },
+  'ja-JP': {
+    icon: '🇯🇵',
+    label: '日本語',
+    shortcut: '⌥+J',
+    hotkey: 'alt+j',
+    display: true
+  },
+  'fr-FR': {
+    icon: '🇫🇷',
+    label: 'Français',
+    shortcut: '⌥+F',
+    hotkey: 'alt+f',
+    display: true
+  },
+  'de-DE': {
+    icon: '🇩🇪',
+    label: 'Deutsch',
+    shortcut: '⌥+D',
+    hotkey: 'alt+d',
+    display: true
+  },
+  'ko-KR': {
+    icon: '🇰🇷',
+    label: '한국어',
+    shortcut: '⌥+K',
+    hotkey: 'alt+k',
+    display: true
+  },
+  'tr-TR': {
+    icon: '🇹🇷',
+    label: 'Türkçe',
+    shortcut: '⌥+Y',
+    hotkey: 'alt+y',
+    display: true
+  },
+  'ur-PK': {
+    icon: '🇵🇰',
+    label: 'اردو',
+    shortcut: '⌥+U',
+    hotkey: 'alt+u',
+    display: true
+  },
+  'fa-IR': {
+    icon: '🇮🇷',
+    label: 'فارسی',
+    shortcut: '⌥+G',  // 使用 G 因为 F 已被法语占用
+    hotkey: 'alt+g',
     display: true
   },
   'it-IT': {
@@ -171,20 +185,22 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 
   // 获取当前语言代码
   const getCurrentLangCode = (): LanguageCode => {
-    const lang = i18n.language || 'zh-CN';
+    const lang = (i18n.language || 'zh-CN').toLowerCase();
 
-    if (lang.includes('zh-CN') || lang === 'zh-Hans' || (lang === 'zh' && !lang.includes('TW') && !lang.includes('HK') && !lang.includes('Hant')))
-      return 'zh-CN';
-    if (lang.includes('zh-TW') || lang.includes('zh-HK') || lang.includes('zh-Hant') || lang === 'zh-Hant')
+    if (lang.includes('zh-tw') || lang.includes('zh-hk') || lang.includes('zh-mo') || lang.includes('hant') || lang === 'zh-hant') {
       return 'zh-Hant';
+    };
+    if (lang.includes('zh-cn') || lang.includes('zh-sg') || lang.includes('hans') || lang === 'zh-hans' || lang === 'zh') {
+      return 'zh-CN';
+    };
     if (lang.includes('ja'))
       return 'ja-JP';
     if (lang.includes('ko'))
       return 'ko-KR';
     if (lang.includes('de'))
       return 'de-DE';
-    if (lang.includes('nl'))
-      return 'nl-NL';
+    if (lang.includes('tr'))
+      return 'tr-TR';
     if (lang.includes('ru'))
       return 'ru-RU';
     if (lang.includes('es'))
@@ -201,6 +217,10 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
       return 'it-IT';
     if (lang.includes('id'))
       return 'id-ID';
+    if (lang.includes('ur'))
+      return 'ur-PK';
+    if (lang.includes('fa'))
+      return 'fa-IR';
     return 'en-US';
   };
 

@@ -27,8 +27,8 @@ i18n
         fallbackLng: 'zh-CN',
         supportedLngs: [
             'zh-CN', 'zh-Hant', 'en-US', 'ja-JP', 'ko-KR', 'de-DE',
-            'nl-NL', 'ru-RU', 'es-ES', 'fr-FR', 'ar-SA', 'pt-BR', 'hi-IN',
-            'it-IT', 'id-ID'
+            'tr-TR', 'ru-RU', 'es-ES', 'fr-FR', 'ar-SA', 'pt-BR', 'hi-IN',
+            'it-IT', 'id-ID', 'ur-PK', 'fa-IR'
         ],
         
         // 基本的i18next配置
