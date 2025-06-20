@@ -199,7 +199,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
 
                   {/* 未展开时只显示原始提示词 */}
                   <h3 className="truncate text-sm font-medium mb-1 listcard-description">
-                    {t('history.originalPrompt')} {expandedGroupId !== group.id && truncateText(group.originalPrompt)}
+                    {t('history.originalPrompt')}: {expandedGroupId !== group.id && truncateText(group.originalPrompt)}
                   </h3>
                 </div>
                 <div className="flex gap-2 items-center listcard-button-container">
@@ -268,7 +268,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                             </div>
                             <ActionButtons
                               content={group.originalPrompt}
-                              filename={`original-prompt-${group.id}`}
+                              filename={t('history.originalPrompt')}
                               position="top-right"
                               isHovered={hoveredContainer === `${group.id}-original`}
                               showOnHover={true}
@@ -296,7 +296,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                             ))}
                           </div>
 
-                          <h3 className="text-sm font-medium mb-1 listcard-description">{t('history.iterationDirection')}</h3>
+                          <h3 className="text-sm font-medium mb-1 listcard-description">{t('history.iterationDirection')}: </h3>
                           <div className="relative p-1 py-2 rounded-md iteration-prompt-container"
                             onMouseEnter={() => setHoveredContainer(`${group.id}-iteration`)}
                             onMouseLeave={() => setHoveredContainer(null)}>
@@ -310,7 +310,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                             </div>
                             <ActionButtons
                               content={displayVersion.iterationDirection || t('history.initialVersion')}
-                              filename={`iteration-direction-${group.id}-v${displayVersion.number}`}
+                              filename={`${t('history.iterationDirection')}-v${displayVersion.number}`}
                               position="top-right"
                               isHovered={hoveredContainer === `${group.id}-iteration`}
                               showOnHover={true}
@@ -318,7 +318,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                             />
                           </div>
 
-                          <h3 className="text-sm font-medium mb-1 listcard-description">{t('history.enhancedPrompt')}</h3>
+                          <h3 className="text-sm font-medium mb-1 listcard-description">{t('history.enhancedPrompt')}: </h3>
                           <div className="relative p-1 rounded-md listcard-prompt-container"
                             onMouseEnter={() => setHoveredContainer(`${group.id}-optimized`)}
                             onMouseLeave={() => setHoveredContainer(null)}>
@@ -327,7 +327,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                             </div>
                             <ActionButtons
                               content={displayVersion.optimizedPrompt || ''}
-                              filename={`optimized-prompt-${group.id}-v${displayVersion.number}`}
+                              filename={`${t('history.enhancedPrompt')}-v${displayVersion.number}`}
                               position="top-right"
                               isHovered={hoveredContainer === `${group.id}-optimized`}
                               showOnHover={true}

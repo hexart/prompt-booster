@@ -422,6 +422,7 @@ export const TestResult: React.FC = () => {
             showCharCount={true}
             disabled={isTestingOriginal || isTestingOptimized}
             buttonPosition={getButtonPosition('top-right')}
+            filename={t('testResult.title')}
           />
         </div>
       )}

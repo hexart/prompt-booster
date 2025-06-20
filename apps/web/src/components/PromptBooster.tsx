@@ -389,6 +389,7 @@ export const PromptBooster: React.FC = () => {
             showCharCount={true}
             disabled={isProcessing || Boolean(activeGroup)}
             buttonPosition={getButtonPosition('top-right')}
+            filename={t("promptBooster.originalPrompt")}
           />
         </div>
       )}
