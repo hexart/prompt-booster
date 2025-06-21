@@ -77,13 +77,15 @@
       "providerNameRequired": "請輸入供應商名稱"
     },
     "connection": {
-      "testing": "正在測試連接 {{modelName}} ...",
+      "testing": "正在測試連接 {{modelName}}...",
       "success": "{{modelName}} 連接成功！",
-      "successGeneric": "連接測試成功，模型響應正常",
       "failed": "連接測試失敗: {{error}}",
-      "failedGeneric": "連接失敗，請檢查您的API配置",
-      "error": "連接測試出錯: {{errorMessage}}",
-      "noResponseData": "未收到響應數據"
+      "authFailed": "認證失敗: {{error}}",
+      "requestError": "請求錯誤: {{error}}",
+      "parseError": "響應解析錯誤: {{error}}",
+      "error": "連接測試出錯: {{error}}",
+      "unexpectedError": "發生意外錯誤: {{error}}",
+      "testFailed": "連接測試失敗"
     }
   },
   "aria": {

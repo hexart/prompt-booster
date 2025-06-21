@@ -26,7 +26,10 @@ import {
 } from '../strategies';
 import {
   ConnectionError,
-  ResponseParseError
+  AuthenticationError,
+  RequestFormatError,
+  ResponseParseError,
+  LLMClientError,
 } from './errors';
 import { isLoggingEnabled } from '../utils';
 import { StreamFormat, splitStreamBuffer } from '../utils';
@@ -110,32 +113,45 @@ export class LLMClientImpl implements LLMClient {
    */
   async chat(request: ChatRequest): Promise<ClientResponse<ChatResponse>> {
     try {
-      // 格式化请求
-      const payload = this.requestFormatter.formatRequest(request);
+      // 1. 格式化请求
+      let payload;
+      try {
+        payload = this.requestFormatter.formatRequest(request);
+      } catch (formatError) {
+        throw new RequestFormatError(
+          formatError instanceof Error ? formatError.message : String(formatError),
+          formatError
+        );
+      }
 
-      // 使用 URL 对象规范化 endpoint 路径
+      // 2. 构建请求 URL
       const url = new URL(this.endpoints.chat, this.baseUrl);
       const normalizedEndpoint = url.pathname + url.search;
 
       this.logDebug(`[DEBUG] Sending chat request to ${normalizedEndpoint}`);
 
-      // 发送请求
+      // 3. 发送请求
       const response = await this.client.post(normalizedEndpoint, payload);
       this.logDebug('[DEBUG] Chat request completed successfully');
 
-      // 解析响应
-      const parsedResponse = this.responseParser.parseFullResponse?.(response.data);
-      if (!parsedResponse) {
-        throw new ResponseParseError('Failed to parse response');
+      // 4. 解析响应
+      let parsedResponse;
+      try {
+        parsedResponse = this.responseParser.parseFullResponse?.(response.data);
+        if (!parsedResponse) {
+          throw new Error('Parser returned null or undefined');
+        }
+      } catch (parseError) {
+        throw new ResponseParseError(
+          parseError instanceof Error ? parseError.message : 'Parse failed',
+          parseError
+        );
       }
 
       return { data: parsedResponse };
     } catch (error: any) {
       this.logDebug('Error in chat request:', error);
-      return {
-        data: { content: '' },
-        error: this.formatError(error)
-      };
+      throw this.formatError(error);
     }
   }
 
@@ -147,33 +163,47 @@ export class LLMClientImpl implements LLMClient {
    */
   async streamChat(request: ChatRequest, streamHandler: StreamHandler): Promise<void> {
     let fetchAttempted = false;
+
     try {
-      // 格式化请求
-      const payload = {
-        ...this.requestFormatter.formatRequest(request),
-        stream: true
-      };
+      // 1. 格式化请求
+      let payload;
+      try {
+        payload = {
+          ...this.requestFormatter.formatRequest(request),
+          stream: true
+        };
+      } catch (formatError) {
+        const error = new RequestFormatError(
+          formatError instanceof Error ? formatError.message : String(formatError),
+          formatError
+        );
+        if (streamHandler.onError) {
+          streamHandler.onError(error);
+        }
+        return;
+      }
 
       this.logDebug(`Starting streaming request to ${this.endpoints.chat}`);
 
-      // 获取中断控制器
+      // 2. 获取中断控制器
       const controller = streamHandler.abortController || new AbortController();
 
       try {
         fetchAttempted = true;
-        // 使用fetch API进行流式请求
+
+        // 3. 构建请求头
         const headers: Record<string, string> = {
           'Content-Type': CONTENT_TYPES.JSON,
           'Accept': `${CONTENT_TYPES.JSON}, ${CONTENT_TYPES.SSE}, ${CONTENT_TYPES.TEXT}, */*`
         };
 
-        // 手动添加认证
+        // 添加认证
         if (this.apiKey) {
-          // 简单地添加Bearer令牌认证，不检查具体策略类型
           headers['Authorization'] = `Bearer ${this.apiKey}`;
         }
 
-        const url = new URL(this.endpoints.chat, this.baseUrl); // 规范化URL去除重复的/v1路径
+        // 4. 发送请求
+        const url = new URL(this.endpoints.chat, this.baseUrl);
         const response = await fetch(url.toString(), {
           method: 'POST',
           headers,
@@ -181,19 +211,36 @@ export class LLMClientImpl implements LLMClient {
           signal: controller.signal
         });
 
+        // 5. 检查响应状态
         if (!response.ok) {
-          throw new ConnectionError(`HTTP error! Status: ${response.status}`);
+          // 尝试解析错误响应
+          let errorData;
+          try {
+            errorData = await response.json();
+          } catch {
+            errorData = await response.text();
+          }
+
+          // 构造类似 axios 的错误对象以便 formatError 处理
+          const axiosLikeError = {
+            response: {
+              status: response.status,
+              statusText: response.statusText,
+              data: errorData
+            }
+          };
+
+          throw this.formatError(axiosLikeError);
         }
 
         if (!response.body) {
           throw new ConnectionError("Response body is null");
         }
 
-        // 检测响应格式
+        // 6. 检测响应格式
         const contentType = response.headers.get('Content-Type') || '';
         this.logDebug(`Response content type: ${contentType}`);
 
-        // 确定流格式
         let streamFormat: StreamFormat = StreamFormat.AUTO;
         if (contentType.includes(CONTENT_TYPES.SSE)) {
           streamFormat = StreamFormat.SSE;
@@ -203,74 +250,89 @@ export class LLMClientImpl implements LLMClient {
           streamFormat = StreamFormat.TEXT;
         }
 
-        // 处理流式响应
+        // 7. 处理流式响应
         await this.handleStreamResponse(response.body, streamFormat, streamHandler);
-      } catch (fetchError) {
-        // 记录详细的fetch错误信息
-        this.logDebug(`Fetch streaming failed: ${fetchError}`);
-        console.error("Fetch详细错误:", fetchError);
 
-        // 错误传递给调用者
-        throw fetchError;
+      } catch (fetchError: any) {
+        this.logDebug(`Fetch streaming failed:`, fetchError);
+
+        // 处理 fetch 特有的错误
+        if (fetchError.name === 'AbortError') {
+          const error = new ConnectionError('Request aborted', fetchError);
+          if (streamHandler.onError) {
+            streamHandler.onError(error);
+          }
+          return;
+        }
+
+        // 使用 formatError 处理其他错误
+        const formattedError = this.formatError(fetchError);
+        if (streamHandler.onError) {
+          streamHandler.onError(formattedError);
+        }
       }
+
     } catch (error: any) {
-      // 安全地记录错误消息
       const errorMsg = error && typeof error === 'object' && 'message' in error ?
         error.message : 'Unknown stream error';
 
       this.logDebug(`Stream error: ${errorMsg}`);
 
       if (fetchAttempted) {
-        // 如果已经尝试过fetch，则直接报告错误
+        return;
+      }
+
+      // 尝试非流式后备方案
+      try {
+        await this.handleRegularResponse(
+          this.requestFormatter.formatRequest(request),
+          streamHandler
+        );
+      } catch (fallbackError) {
+        const formattedError = this.formatError(fallbackError);
         if (streamHandler.onError) {
-          const errorObj = error instanceof Error ?
-            error :
-            new Error(typeof error === 'string' ? error : errorMsg);
-          streamHandler.onError(errorObj);
-        }
-      } else {
-        // 如果fetch尚未尝试，则尝试非流式后备方案
-        try {
-          await this.handleRegularResponse(
-            this.requestFormatter.formatRequest(request),
-            streamHandler
-          );
-        } catch (fallbackError) {
-          if (streamHandler.onError) {
-            streamHandler.onError(fallbackError instanceof Error ?
-              fallbackError :
-              new Error('Fallback request failed'));
-          }
+          streamHandler.onError(formattedError);
         }
       }
     }
   }
 
   /**
-   * 测试连接
-   * @returns 连接测试结果
-   */
+ * 测试连接
+ * @returns 连接测试结果
+ * @description 通过发送最小化的 chat 请求来测试 API 的完整可用性（包括额度）
+ */
   async testConnection(): Promise<ClientResponse<{ success: boolean; message?: string }>> {
     try {
-      this.logDebug(`测试连接 ${this.endpoints.models}`);
-      await this.client.get(this.endpoints.models);
+      this.logDebug(`测试连接：发送最小化 chat 请求`);
 
-      return {
-        data: {
-          success: true,
-          message: '测试连接成功'
+      // 发送最小化的 chat 请求来测试完整的 API 可用性
+      const response = await this.chat({
+        userMessage: 'Hi',
+        options: {
+          maxTokens: 1,  // 最小化 token 消耗
+          temperature: 0  // 确定性输出
         }
-      };
-    } catch (error: any) {
-      this.logDebug(`测试连接失败：${error.message}`);
+      });
+      this.logDebug(response.data.content)
 
-      return {
-        data: {
-          success: false,
-          message: '测试连接失败'
-        },
-        error: this.formatError(error)
-      };
+      // 检查响应是否有效
+      if (response.data) {
+        return {
+          data: {
+            success: true,
+            message: 'Connection test successful'
+          }
+        };
+      }
+
+      // 如果没有数据，抛出解析错误
+      throw new ResponseParseError('Empty response from chat endpoint');
+
+    } catch (error: any) {
+      this.logDebug(`测试连接失败：`, error);
+      // 直接抛出错误，让上层处理
+      throw error;  // 注意：这里的错误已经被 chat 方法通过 formatError 处理过了
     }
   }
 
@@ -527,32 +589,58 @@ export class LLMClientImpl implements LLMClient {
    * @param error 错误对象
    * @returns 格式化后的错误信息
    */
-  private formatError(error: any): string {
-    if (error.response && error.response.data) {
-      // API返回的错误响应
-      const data = error.response.data;
-
-      if (data.error && data.error.message) {
-        return data.error.message;
-      }
-
-      if (data.message) {
-        return data.message;
-      }
+  private formatError(error: any): LLMClientError {
+    // 1. 如果已经是 LLMClientError，直接返回
+    if (error instanceof LLMClientError) {
+      return error;
     }
 
-    // 网络错误
-    if (error.code === 'ECONNREFUSED' || error.code === 'ENOTFOUND') {
-      return `连接错误: 无法连接到 ${this.baseUrl}`;
+    // 2. 处理网络/连接错误（没有响应）
+    if (!error.response) {
+      return new ConnectionError(
+        error.message || 'Network connection failed',
+        error
+      );
     }
 
-    // 超时错误
-    if (error.message && error.message.includes('timeout')) {
-      return '请求超时: 服务器响应时间过长';
+    // 3. 处理 HTTP 响应错误
+    const { status, data } = error.response;
+
+    // 提取原始错误消息
+    let originalMessage = '';
+    if (data?.error?.message) {
+      originalMessage = data.error.message;
+    } else if (data?.message) {
+      originalMessage = data.message;
+    } else if (typeof data === 'string') {
+      originalMessage = data;
+    } else {
+      originalMessage = `HTTP ${status}`;
     }
 
-    // 其他错误
-    return error.message || '发生未知错误';
+    // 根据状态码分类错误
+    switch (status) {
+      case 400:
+      case 422:
+        return new RequestFormatError(originalMessage, error);
+
+      case 401:
+      case 403:
+        return new AuthenticationError(originalMessage, error);
+
+      case 404:
+        return new ConnectionError(originalMessage, error);
+
+      case 500:
+      case 502:
+      case 503:
+      case 504:
+        return new ConnectionError(originalMessage, error);
+
+      default:
+        // 其他错误直接返回原始消息
+        return new LLMClientError(originalMessage, error);
+    }
   }
 
   /**

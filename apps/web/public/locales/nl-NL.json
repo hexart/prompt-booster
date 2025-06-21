@@ -77,13 +77,15 @@
       "providerNameRequired": "Voer de providernaam in"
     },
     "connection": {
-      "testing": "Verbinding testen {{modelName}}...",
-      "success": "{{modelName}} verbinding succesvol!",
-      "successGeneric": "Verbindingstest succesvol, model reageert normaal",
+      "testing": "Verbinding met {{modelName}} testen...",
+      "success": "{{modelName}} succesvol verbonden!",
       "failed": "Verbindingstest mislukt: {{error}}",
-      "failedGeneric": "Verbinding mislukt, controleer uw API-configuratie",
-      "error": "Verbindingstest fout: {{errorMessage}}",
-      "noResponseData": "Geen responsgegevens ontvangen"
+      "authFailed": "Authenticatie mislukt: {{error}}",
+      "requestError": "Aanvraagfout: {{error}}",
+      "parseError": "Fout bij het parseren van antwoord: {{error}}",
+      "error": "Verbindingstest fout: {{error}}",
+      "unexpectedError": "Onverwachte fout opgetreden: {{error}}",
+      "testFailed": "Verbindingstest mislukt"
     }
   },
   "aria": {

@@ -77,13 +77,15 @@
       "providerNameRequired": "プロバイダー名を入力してください"
     },
     "connection": {
-      "testing": "{{modelName}}への接続をテスト中...",
-      "success": "{{modelName}}の接続に成功しました！",
-      "successGeneric": "接続テストが成功しました、モデルは正常に応答しています",
-      "failed": "接続テストが失敗しました: {{error}}",
-      "failedGeneric": "接続に失敗しました、API設定を確認してください",
-      "error": "接続テストエラー: {{errorMessage}}",
-      "noResponseData": "応答データを受信していません"
+      "testing": "{{modelName}} への接続をテスト中...",
+      "success": "{{modelName}} の接続に成功しました！",
+      "failed": "接続テストに失敗しました: {{error}}",
+      "authFailed": "認証に失敗しました: {{error}}",
+      "requestError": "リクエストエラー: {{error}}",
+      "parseError": "レスポンスの解析エラー: {{error}}",
+      "error": "接続テストエラー: {{error}}",
+      "unexpectedError": "予期しないエラーが発生しました: {{error}}",
+      "testFailed": "接続テストに失敗しました"
     }
   },
   "aria": {

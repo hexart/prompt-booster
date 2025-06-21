@@ -77,13 +77,15 @@
       "providerNameRequired": "कृपया प्रदाता का नाम दर्ज करें"
     },
     "connection": {
-      "testing": "{{modelName}} कनेक्शन परीक्षण कर रहे हैं...",
-      "success": "{{modelName}} कनेक्शन सफल!",
-      "successGeneric": "कनेक्शन परीक्षण सफल, मॉडल सामान्य रूप से जवाब दे रहा है",
-      "failed": "कनेक्शन परीक्षण असफल: {{error}}",
-      "failedGeneric": "कनेक्शन असफल, कृपया अपनी API कॉन्फ़िगरेशन जांचें",
-      "error": "कनेक्शन परीक्षण त्रुटि: {{errorMessage}}",
-      "noResponseData": "कोई प्रतिक्रिया डेटा प्राप्त नहीं हुआ"
+      "testing": "{{modelName}} से कनेक्शन का परीक्षण हो रहा है...",
+      "success": "{{modelName}} सफलतापूर्वक कनेक्ट हुआ!",
+      "failed": "कनेक्शन परीक्षण विफल: {{error}}",
+      "authFailed": "प्रमाणीकरण विफल: {{error}}",
+      "requestError": "अनुरोध त्रुटि: {{error}}",
+      "parseError": "प्रतिक्रिया पार्स त्रुटि: {{error}}",
+      "error": "कनेक्शन परीक्षण त्रुटि: {{error}}",
+      "unexpectedError": "अप्रत्याशित त्रुटि हुई: {{error}}",
+      "testFailed": "कनेक्शन परीक्षण विफल"
     }
   },
   "aria": {

@@ -77,13 +77,15 @@
       "providerNameRequired": "يرجى إدخال اسم المزود"
     },
     "connection": {
-      "testing": "جاري اختبار الاتصال {{modelName}}...",
-      "success": "نجح الاتصال {{modelName}}!",
-      "successGeneric": "نجح اختبار الاتصال، النموذج يستجيب بشكل طبيعي",
+      "testing": "جاري اختبار الاتصال {{modelName}} ...",
+      "success": "تم الاتصال بـ {{modelName}} بنجاح!",
       "failed": "فشل اختبار الاتصال: {{error}}",
-      "failedGeneric": "فشل الاتصال، يرجى التحقق من تكوين API الخاص بك",
-      "error": "خطأ في اختبار الاتصال: {{errorMessage}}",
-      "noResponseData": "لم يتم استلام بيانات استجابة"
+      "authFailed": "فشل التحقق من الهوية: {{error}}",
+      "requestError": "خطأ في الطلب: {{error}}",
+      "parseError": "خطأ في تحليل الاستجابة: {{error}}",
+      "error": "خطأ في اختبار الاتصال: {{error}}",
+      "unexpectedError": "حدث خطأ غير متوقع: {{error}}",
+      "testFailed": "فشل اختبار الاتصال"
     }
   },
   "aria": {

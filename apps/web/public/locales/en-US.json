@@ -77,13 +77,15 @@
       "providerNameRequired": "Please enter provider name"
     },
     "connection": {
-      "testing": "Testing connection {{modelName}} ...",
-      "success": "{{modelName}} connection successful!",
-      "successGeneric": "Connection test successful, model responding normally",
+      "testing": "Testing connection to {{modelName}}...",
+      "success": "{{modelName}} connected successfully!",
       "failed": "Connection test failed: {{error}}",
-      "failedGeneric": "Connection failed, please check your API configuration",
-      "error": "Connection test error: {{errorMessage}}",
-      "noResponseData": "No response data received"
+      "authFailed": "Authentication failed: {{error}}",
+      "requestError": "Request error: {{error}}",
+      "parseError": "Response parse error: {{error}}",
+      "error": "Connection test error: {{error}}",
+      "unexpectedError": "Unexpected error occurred: {{error}}",
+      "testFailed": "Connection test failed"
     }
   },
   "aria": {

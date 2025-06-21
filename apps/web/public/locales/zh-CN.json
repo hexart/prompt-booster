@@ -79,11 +79,13 @@
     "connection": {
       "testing": "正在测试连接 {{modelName}} ...",
       "success": "{{modelName}} 连接成功！",
-      "successGeneric": "连接测试成功，模型响应正常",
       "failed": "连接测试失败: {{error}}",
-      "failedGeneric": "连接失败，请检查您的API配置",
-      "error": "连接测试出错: {{errorMessage}}",
-      "noResponseData": "未收到响应数据"
+      "authFailed": "认证失败: {{error}}",
+      "requestError": "请求错误: {{error}}",
+      "parseError": "响应解析错误: {{error}}",
+      "error": "连接测试出错: {{error}}",
+      "unexpectedError": "发生意外错误: {{error}}",
+      "testFailed": "连接测试失败"
     }
   },
   "aria": {

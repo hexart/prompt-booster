@@ -77,13 +77,15 @@
       "providerNameRequired": "Bitte geben Sie den Anbieternamen ein"
     },
     "connection": {
-      "testing": "Teste Verbindung zu {{modelName}}...",
-      "success": "{{modelName}} Verbindung erfolgreich!",
-      "successGeneric": "Verbindungstest erfolgreich, Modell antwortet normal",
+      "testing": "Verbindung zu {{modelName}} wird getestet ...",
+      "success": "{{modelName}} erfolgreich verbunden!",
       "failed": "Verbindungstest fehlgeschlagen: {{error}}",
-      "failedGeneric": "Verbindung fehlgeschlagen, bitte überprüfen Sie Ihre API-Konfiguration",
-      "error": "Verbindungstest-Fehler: {{errorMessage}}",
-      "noResponseData": "Keine Antwortdaten erhalten"
+      "authFailed": "Authentifizierung fehlgeschlagen: {{error}}",
+      "requestError": "Anfragefehler: {{error}}",
+      "parseError": "Fehler beim Parsen der Antwort: {{error}}",
+      "error": "Verbindungstest-Fehler: {{error}}",
+      "unexpectedError": "Unerwarteter Fehler aufgetreten: {{error}}",
+      "testFailed": "Verbindungstest fehlgeschlagen"
     }
   },
   "aria": {

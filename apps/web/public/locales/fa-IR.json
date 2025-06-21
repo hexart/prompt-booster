@@ -77,13 +77,15 @@
       "providerNameRequired": "لطفاً نام ارائه‌دهنده را وارد کنید"
     },
     "connection": {
-      "testing": "در حال تست اتصال {{modelName}}...",
-      "success": "اتصال {{modelName}} موفق بود!",
-      "successGeneric": "تست اتصال موفق بود، مدل به طور عادی پاسخ می‌دهد",
-      "failed": "تست اتصال ناموفق: {{error}}",
-      "failedGeneric": "اتصال ناموفق بود، لطفاً پیکربندی API خود را بررسی کنید",
-      "error": "خطا در تست اتصال: {{errorMessage}}",
-      "noResponseData": "داده پاسخی دریافت نشد"
+      "testing": "در حال آزمایش اتصال {{modelName}} ...",
+      "success": "{{modelName}} با موفقیت متصل شد!",
+      "failed": "آزمایش اتصال ناموفق بود: {{error}}",
+      "authFailed": "احراز هویت ناموفق بود: {{error}}",
+      "requestError": "خطای درخواست: {{error}}",
+      "parseError": "خطا در تجزیه پاسخ: {{error}}",
+      "error": "خطا در آزمایش اتصال: {{error}}",
+      "unexpectedError": "خطای غیرمنتظره رخ داد: {{error}}",
+      "testFailed": "آزمایش اتصال ناموفق بود"
     }
   },
   "aria": {

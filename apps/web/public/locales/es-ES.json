@@ -77,13 +77,15 @@
       "providerNameRequired": "Por favor ingrese el nombre del proveedor"
     },
     "connection": {
-      "testing": "Probando conexión {{modelName}}...",
-      "success": "¡Conexión {{modelName}} exitosa!",
-      "successGeneric": "Prueba de conexión exitosa, el modelo responde normalmente",
+      "testing": "Probando conexión con {{modelName}}...",
+      "success": "¡{{modelName}} conectado con éxito!",
       "failed": "Prueba de conexión fallida: {{error}}",
-      "failedGeneric": "Conexión fallida, por favor verifique su configuración API",
-      "error": "Error de prueba de conexión: {{errorMessage}}",
-      "noResponseData": "No se recibieron datos de respuesta"
+      "authFailed": "Error de autenticación: {{error}}",
+      "requestError": "Error de solicitud: {{error}}",
+      "parseError": "Error al analizar la respuesta: {{error}}",
+      "error": "Error en la prueba de conexión: {{error}}",
+      "unexpectedError": "Se produjo un error inesperado: {{error}}",
+      "testFailed": "Prueba de conexión fallida"
     }
   },
   "aria": {

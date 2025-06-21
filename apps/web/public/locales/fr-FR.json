@@ -77,13 +77,15 @@
       "providerNameRequired": "Veuillez saisir le nom du fournisseur"
     },
     "connection": {
-      "testing": "Test de connexion {{modelName}} en cours...",
-      "success": "Connexion {{modelName}} réussie !",
-      "successGeneric": "Test de connexion réussi, le modèle répond normalement",
-      "failed": "Échec du test de connexion : {{error}}",
-      "failedGeneric": "Échec de la connexion, veuillez vérifier votre configuration API",
-      "error": "Erreur de test de connexion : {{errorMessage}}",
-      "noResponseData": "Aucune donnée de réponse reçue"
+      "testing": "Test de connexion à {{modelName}} en cours...",
+      "success": "{{modelName}} connecté avec succès !",
+      "failed": "Test de connexion échoué : {{error}}",
+      "authFailed": "Échec de l'authentification : {{error}}",
+      "requestError": "Erreur de requête : {{error}}",
+      "parseError": "Erreur d'analyse de la réponse : {{error}}",
+      "error": "Erreur du test de connexion : {{error}}",
+      "unexpectedError": "Une erreur inattendue s'est produite : {{error}}",
+      "testFailed": "Test de connexion échoué"
     }
   },
   "aria": {

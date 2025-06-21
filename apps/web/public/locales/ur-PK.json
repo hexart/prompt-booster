@@ -77,13 +77,15 @@
       "providerNameRequired": "فراہم کنندہ کا نام درج کریں"
     },
     "connection": {
-      "testing": "{{modelName}} کنکشن ٹیسٹ ہو رہا ہے...",
-      "success": "{{modelName}} کنکشن کامیاب!",
-      "successGeneric": "کنکشن ٹیسٹ کامیاب، ماڈل عام طور پر جواب دے رہا ہے",
-      "failed": "کنکشن ٹیسٹ ناکام: {{error}}",
-      "failedGeneric": "کنکشن ناکام، اپنی API ترتیبات چیک کریں",
-      "error": "کنکشن ٹیسٹ میں خرابی: {{errorMessage}}",
-      "noResponseData": "کوئی جوابی ڈیٹا نہیں ملا"
+      "testing": "{{modelName}} سے رابطہ آزمایا جا رہا ہے...",
+      "success": "{{modelName}} کامیابی سے منسلک ہوا!",
+      "failed": "رابطہ ٹیسٹ ناکام: {{error}}",
+      "authFailed": "تصدیق ناکام: {{error}}",
+      "requestError": "درخواست کی خرابی: {{error}}",
+      "parseError": "جواب پارس کرنے میں خرابی: {{error}}",
+      "error": "رابطہ ٹیسٹ کی خرابی: {{error}}",
+      "unexpectedError": "غیر متوقع خرابی پیش آئی: {{error}}",
+      "testFailed": "رابطہ ٹیسٹ ناکام"
     }
   },
   "aria": {

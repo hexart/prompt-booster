@@ -65,23 +65,72 @@ export function useModelConnection() {
             toast.info(t('toast.connection.testing', { modelName }));
 
             const finalBaseUrl = baseUrl || '';
-            // 返回格式为 { success: boolean; message: string }
+            
+            // 调用测试函数，传递自定义端点（如果存在）
             const result = await testModelConnection(
                 provider,
                 apiKey,
                 finalBaseUrl,
                 modelName,
-                t
+                completeConfig.endpoint  // 直接传递 endpoint 字符串
             );
 
             if (result.success) {
-                toast.success(result.message);
+                toast.success(t('toast.connection.success', { modelName }));
             } else {
-                toast.error(result.message);
+                // 根据错误类型显示不同的本地化消息
+                switch (result.errorType) {
+                    case 'validation':
+                        // 参数验证错误
+                        if (result.originalError?.includes('Provider')) {
+                            toast.error(t('toast.validation.providerRequired'));
+                        } else if (result.originalError?.includes('API Key')) {
+                            toast.error(t('toast.validation.apiKeyRequired'));
+                        } else if (result.originalError?.includes('Base URL')) {
+                            toast.error(t('toast.validation.baseUrlRequired'));
+                        } else if (result.originalError?.includes('Model name')) {
+                            toast.error(t('toast.validation.modelNameRequired'));
+                        } else {
+                            toast.error(result.originalError || t('toast.connection.testFailed'));
+                        }
+                        break;
+                    
+                    case 'auth':
+                        toast.error(t('toast.connection.authFailed', { 
+                            error: result.originalError || 'Authentication error' 
+                        }));
+                        break;
+                    
+                    case 'connection':
+                        toast.error(t('toast.connection.failed', { 
+                            error: result.originalError || 'Connection error' 
+                        }));
+                        break;
+                    
+                    case 'request':
+                        toast.error(t('toast.connection.requestError', { 
+                            error: result.originalError || 'Request error' 
+                        }));
+                        break;
+                    
+                    case 'parse':
+                        toast.error(t('toast.connection.parseError', { 
+                            error: result.originalError || 'Parse error' 
+                        }));
+                        break;
+                    
+                    case 'unknown':
+                    default:
+                        toast.error(t('toast.connection.error', { 
+                            error: result.originalError || 'Unknown error' 
+                        }));
+                        break;
+                }
             }
         } catch (error) {
-            const errorMessage = error instanceof Error ? (error.message || '未知错误') : '未知错误';
-            toast.error(t('toast.connection.error', { errorMessage }));
+            // 处理意外错误（理论上不应该到这里）
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+            toast.error(t('toast.connection.unexpectedError', { error: errorMessage }));
         } finally {
             // 清除加载状态
             setTestingModels(prev => {

@@ -79,11 +79,13 @@
     "connection": {
       "testing": "{{modelName}} 연결 테스트 중...",
       "success": "{{modelName}} 연결 성공!",
-      "successGeneric": "연결 테스트 성공, 모델이 정상적으로 응답하고 있습니다",
       "failed": "연결 테스트 실패: {{error}}",
-      "failedGeneric": "연결 실패, API 설정을 확인해주세요",
-      "error": "연결 테스트 오류: {{errorMessage}}",
-      "noResponseData": "응답 데이터를 받지 못했습니다"
+      "authFailed": "인증 실패: {{error}}",
+      "requestError": "요청 오류: {{error}}",
+      "parseError": "응답 파싱 오류: {{error}}",
+      "error": "연결 테스트 오류: {{error}}",
+      "unexpectedError": "예기치 않은 오류가 발생했습니다: {{error}}",
+      "testFailed": "연결 테스트 실패"
     }
   },
   "aria": {

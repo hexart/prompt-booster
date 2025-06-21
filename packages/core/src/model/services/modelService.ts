@@ -1,90 +1,144 @@
 // packages/core/src/model/services/modelService.ts
 import { createClient } from '@prompt-booster/api';
+import { 
+  ConnectionError, 
+  AuthenticationError, 
+  RequestFormatError, 
+  ResponseParseError 
+} from '@prompt-booster/api';
 import { ModelConfig, CustomInterface, StandardModelType } from '../models/config';
 import { getDefaultModelConfig } from '../unifiedModelConfig';
 
 type TranslationFunction = (key: string, options?: any) => string;
 /**
- * 测试模型连接 - 简化版本，单次测试
+ * 测试模型连接
  * @param provider 提供商
  * @param apiKey API密钥  
  * @param baseUrl 基础URL
  * @param model 模型名称
- * @param endpoint 端点
- * @returns 测试结果
+ * @param endpoint 自定义聊天端点（可选）
+ * @returns 测试结果，包含成功状态、错误类型和原始错误信息
  */
 export async function testModelConnection(
   provider: string,
   apiKey: string,
   baseUrl: string,
   model: string,
-  t?: TranslationFunction
-
-): Promise<{ success: boolean; message: string }> {
+  endpoint?: string
+): Promise<{ 
+  success: boolean; 
+  errorType?: 'connection' | 'auth' | 'request' | 'parse' | 'validation' | 'unknown';
+  originalError?: string;
+}> {
 
   // 参数验证
-  if (!provider) return {
-    success: false,
-    message: t ? t('toast.validation.providerRequired') : 'Provider required'
-  };
-  if (!apiKey || apiKey.trim() === '') return {
-    success: false,
-    message: t ? t('toast.validation.apiKeyRequired') : 'API Key required'
-  };
-  if (!baseUrl || baseUrl.trim() === '') return {
-    success: false,
-    message: t ? t('toast.validation.baseUrlRequired') : 'Base URL required'
-  };
-  if (!model || model.trim() === '') return {
-    success: false,
-    message: t ? t('toast.validation.modelNameRequired') : 'Model name required'
-  };
+  if (!provider) {
+    return {
+      success: false,
+      errorType: 'validation',
+      originalError: 'Provider required'
+    };
+  }
+  
+  if (!apiKey || apiKey.trim() === '') {
+    return {
+      success: false,
+      errorType: 'validation',
+      originalError: 'API Key required'
+    };
+  }
+  
+  if (!baseUrl || baseUrl.trim() === '') {
+    return {
+      success: false,
+      errorType: 'validation',
+      originalError: 'Base URL required'
+    };
+  }
+  
+  if (!model || model.trim() === '') {
+    return {
+      success: false,
+      errorType: 'validation',
+      originalError: 'Model name required'
+    };
+  }
 
   try {
-    // 创建API客户端
-    const client = createClient({
+    // 创建API客户端，包含自定义端点
+    const clientConfig: any = {
       provider,
       apiKey,
       baseUrl,
       model
-    });
+    };
+    
+    // 如果提供了自定义端点，添加到配置中
+    if (endpoint) {
+      clientConfig.endpoints = {
+        chat: endpoint
+      };
+    }
+    
+    const client = createClient(clientConfig);
 
-    // 发送测试消息
-    const response = await client.chat({
-      userMessage: 'Say hi',
-      options: {
-        maxTokens: 10,
-        temperature: 0
-      }
-    });
+    // 使用 testConnection 方法进行连接测试
+    const response = await client.testConnection();
 
-    // 极简判断逻辑
-    if (response.error) {
+    // 检查响应
+    if (response.data?.success) {
       return {
-        success: false,
-        message: t?.('toast.connection.failed', { error: response.error }) ||
-          `Connection failed: ${response.error}`
+        success: true
       };
     }
 
-    if (response.data !== null && response.data !== undefined) {
-      return {
-        success: true,
-        message: t?.('toast.connection.successGeneric') || 'Connection test successful'
-      };
-    }
-
+    // 不应该到达这里，但以防万一
     return {
       success: false,
-      message: t?.('toast.connection.noResponseData') || 'No response data received'
+      errorType: 'unknown',
+      originalError: 'Connection test failed without error'
     };
 
   } catch (error: any) {
+    // 根据错误类型返回不同的结果
+    if (error instanceof ConnectionError) {
+      return {
+        success: false,
+        errorType: 'connection',
+        originalError: error.message
+      };
+    }
+    
+    if (error instanceof AuthenticationError) {
+      return {
+        success: false,
+        errorType: 'auth',
+        originalError: error.message
+      };
+    }
+    
+    if (error instanceof RequestFormatError) {
+      return {
+        success: false,
+        errorType: 'request',
+        originalError: error.message
+      };
+    }
+    
+    if (error instanceof ResponseParseError) {
+      return {
+        success: false,
+        errorType: 'parse',
+        originalError: error.message
+      };
+    }
+    
+    // 其他错误
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return {
       success: false,
-      message: t?.('toast.connection.error', { errorMessage }) ||
-        `Connection error: ${errorMessage}`
+      errorType: 'unknown',
+      originalError: errorMessage
     };
   }
 }
@@ -158,20 +212,20 @@ export function getDefaultBaseUrl(modelType: StandardModelType): string {
  */
 export function formatBaseUrl(url: string | undefined): string {
   if (!url) return '';
-  
+
   // 去除首尾空格
   let formatted = url.trim();
-  
+
   if (!formatted) return '';
-  
+
   // 如果没有协议，默认添加 https://
   // if (!formatted.match(/^https?:\/\//i)) {
   //   formatted = 'https://' + formatted;
   // }
-  
+
   // 移除末尾的斜杠
   formatted = formatted.replace(/\/+$/, '');
-  
+
   return formatted;
 }
 
@@ -183,20 +237,20 @@ export function formatBaseUrl(url: string | undefined): string {
  */
 export function formatEndpoint(endpoint: string | undefined): string {
   if (!endpoint) return '/chat/completions';
-  
+
   // 去除首尾空格
   let formatted = endpoint.trim();
-  
+
   if (!formatted) return '/chat/completions';
-  
+
   // 确保以斜杠开头
   if (!formatted.startsWith('/')) {
     formatted = '/' + formatted;
   }
-  
+
   // 规范化多个连续斜杠为单个斜杠
   formatted = formatted.replace(/\/+/g, '/');
-  
+
   return formatted;
 }
 

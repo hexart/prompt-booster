@@ -77,13 +77,15 @@
       "providerNameRequired": "Harap masukkan nama penyedia"
     },
     "connection": {
-      "testing": "Menguji koneksi {{modelName}}...",
-      "success": "Koneksi {{modelName}} berhasil!",
-      "successGeneric": "Tes koneksi berhasil, model merespons normal",
+      "testing": "Menguji koneksi ke {{modelName}}...",
+      "success": "{{modelName}} berhasil terhubung!",
       "failed": "Tes koneksi gagal: {{error}}",
-      "failedGeneric": "Koneksi gagal, periksa konfigurasi API Anda",
-      "error": "Kesalahan tes koneksi: {{errorMessage}}",
-      "noResponseData": "Tidak menerima data respons"
+      "authFailed": "Autentikasi gagal: {{error}}",
+      "requestError": "Kesalahan permintaan: {{error}}",
+      "parseError": "Kesalahan parsing respons: {{error}}",
+      "error": "Kesalahan tes koneksi: {{error}}",
+      "unexpectedError": "Terjadi kesalahan tak terduga: {{error}}",
+      "testFailed": "Tes koneksi gagal"
     }
   },
   "aria": {

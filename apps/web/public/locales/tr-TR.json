@@ -78,12 +78,14 @@
     },
     "connection": {
       "testing": "{{modelName}} bağlantısı test ediliyor...",
-      "success": "{{modelName}} bağlantısı başarılı!",
-      "successGeneric": "Bağlantı testi başarılı, model normal yanıt veriyor",
+      "success": "{{modelName}} başarıyla bağlandı!",
       "failed": "Bağlantı testi başarısız: {{error}}",
-      "failedGeneric": "Bağlantı başarısız, lütfen API yapılandırmanızı kontrol edin",
-      "error": "Bağlantı testi hatası: {{errorMessage}}",
-      "noResponseData": "Yanıt verisi alınamadı"
+      "authFailed": "Kimlik doğrulama başarısız: {{error}}",
+      "requestError": "İstek hatası: {{error}}",
+      "parseError": "Yanıt ayrıştırma hatası: {{error}}",
+      "error": "Bağlantı testi hatası: {{error}}",
+      "unexpectedError": "Beklenmeyen bir hata oluştu: {{error}}",
+      "testFailed": "Bağlantı testi başarısız"
     }
   },
   "aria": {

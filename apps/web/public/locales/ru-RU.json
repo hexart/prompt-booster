@@ -77,13 +77,15 @@
       "providerNameRequired": "Пожалуйста, введите имя поставщика"
     },
     "connection": {
-      "testing": "Тестирование соединения {{modelName}}...",
-      "success": "Соединение {{modelName}} успешно!",
-      "successGeneric": "Тест соединения успешен, модель отвечает нормально",
-      "failed": "Тест соединения не удался: {{error}}",
-      "failedGeneric": "Соединение не удалось, проверьте конфигурацию API",
-      "error": "Ошибка теста соединения: {{errorMessage}}",
-      "noResponseData": "Данные ответа не получены"
+      "testing": "Проверка подключения к {{modelName}}...",
+      "success": "{{modelName}} успешно подключен!",
+      "failed": "Тест подключения не удался: {{error}}",
+      "authFailed": "Ошибка аутентификации: {{error}}",
+      "requestError": "Ошибка запроса: {{error}}",
+      "parseError": "Ошибка разбора ответа: {{error}}",
+      "error": "Ошибка теста подключения: {{error}}",
+      "unexpectedError": "Произошла неожиданная ошибка: {{error}}",
+      "testFailed": "Тест подключения не удался"
     }
   },
   "aria": {
