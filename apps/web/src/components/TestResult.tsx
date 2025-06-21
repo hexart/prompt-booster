@@ -7,7 +7,7 @@ import { usePrompt } from '@prompt-booster/core/prompt/hooks/usePrompt';
 import { useMemoryStore } from '@prompt-booster/core/storage/memoryStorage';
 import { llmService } from '@prompt-booster/core/prompt/services/llmService';
 import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
-import { RocketIcon, MinimizeIcon, MaximizeIcon, ArrowLeftFromLineIcon, ArrowRightFromLineIcon, ArrowDownFromLineIcon, ArrowUpFromLineIcon } from 'lucide-react';
+import { BookOpenCheckIcon, RocketIcon, MinimizeIcon, MaximizeIcon, ArrowLeftFromLineIcon, ArrowRightFromLineIcon, ArrowDownFromLineIcon, ArrowUpFromLineIcon } from 'lucide-react';
 import LoadingIcon from '@prompt-booster/ui/components/LoadingIcon';
 import { useTranslation } from 'react-i18next';
 import { isRTL, getButtonPosition } from '../rtl';
@@ -381,7 +381,8 @@ export const TestResult: React.FC = () => {
       {/* 用户输入区域 */}
       {!isMaximized && (
         <div id="parent-container" className="relative p-4 mb-4 border rounded-xl shadow-2xs flex-none secondary-container">
-          <h2 className="text-xl font-semibold mb-4 title-secondary">
+          <h2 className="inline-flex items-center gap-2 text-xl font-semibold mb-4 title-secondary">
+            <BookOpenCheckIcon size={20} />
             {t('testResult.title')}
           </h2>
           {/* 使用DraggableNotice组件 */}
@@ -423,6 +424,7 @@ export const TestResult: React.FC = () => {
             disabled={isTestingOriginal || isTestingOptimized}
             buttonPosition={getButtonPosition('top-right')}
             filename={t('testResult.title')}
+            showDownloadDocx={false}
           />
         </div>
       )}

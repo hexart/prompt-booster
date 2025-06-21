@@ -18,10 +18,12 @@ import {
   RocketIcon,
   ListRestartIcon,
   StepForwardIcon,
-  ChartBarIcon,
+  ActivityIcon,
   CopyPlusIcon,
   MinimizeIcon,
   MaximizeIcon,
+  BookOpenIcon,
+  BookOpenTextIcon
 } from "lucide-react";
 import { AnalysisDrawer } from "./AnalysisDrawer";
 import { Tooltip } from "@prompt-booster/ui/components/Tooltip";
@@ -361,7 +363,8 @@ export const PromptBooster: React.FC = () => {
       {!isMaximized && (
         <div className="p-4 border rounded-xl shadow-2xs flex-none secondary-container">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold title-secondary">
+            <h2 className="inline-flex items-center gap-2 text-xl font-semibold title-secondary">
+              <BookOpenIcon size={20} />
               {t("promptBooster.originalPrompt")}
             </h2>
             {activeGroup && (
@@ -390,6 +393,7 @@ export const PromptBooster: React.FC = () => {
             disabled={isProcessing || Boolean(activeGroup)}
             buttonPosition={getButtonPosition('top-right')}
             filename={t("promptBooster.originalPrompt")}
+            showDownloadDocx={false}
           />
         </div>
       )}
@@ -476,7 +480,8 @@ export const PromptBooster: React.FC = () => {
         <div className="flex w-full mb-4 gap-2 items-center">
           {/* 标题 */}
           <div className="flex-shrink  md:w-fit min-w-[95px]">
-            <h2 className="text-xl font-semibold truncate title-secondary">
+            <h2 className="inline-flex items-center gap-2 text-xl font-semibold truncate title-secondary">
+              <BookOpenTextIcon size={20} />
               {t("promptBooster.enhancedPrompt")}
             </h2>
           </div>
@@ -548,7 +553,7 @@ export const PromptBooster: React.FC = () => {
                 </>
               ) : (
                 <>
-                  <ChartBarIcon size={14} />
+                  <ActivityIcon size={14} />
                   <span className="hidden md:block">
                     {t("promptBooster.analyzePrompt")}
                   </span>
@@ -601,6 +606,7 @@ export const PromptBooster: React.FC = () => {
             buttonText=""
             centerPlaceholder={!isProcessing && !optimizedPrompt}
             buttonPosition={getButtonPosition('top-right')}
+            showDownloadDocx={false}
           />
           {isEditMode &&
             editablePrompt !== optimizedPrompt &&

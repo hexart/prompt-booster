@@ -4,7 +4,7 @@ import { Dialog } from '@prompt-booster/ui/components/Dialog';
 import { usePrompt } from '@prompt-booster/core/prompt/hooks/usePrompt';
 import { PromptGroup } from '@prompt-booster/core/prompt/models/prompt';
 import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
-import { Trash2Icon, ChevronsDownIcon, ChevronsUpIcon, ZapIcon } from 'lucide-react';
+import { GalleryVerticalEndIcon, Trash2Icon, ChevronsDownIcon, ChevronsUpIcon, ZapIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { PROVIDER_USER_EDIT } from '@prompt-booster/core/prompt/services/promptService';
 import { ActionButtons } from '@prompt-booster/ui/components/ActionButtons';
@@ -148,7 +148,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
   return (
     <div className="flex flex-col h-full p-4 border rounded-xl secondary-container">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold title-secondary">{t('history.title')} ({sortedGroups.length})</h2>
+        <h2 className="inline-flex items-center gap-2 text-xl font-semibold title-secondary"><GalleryVerticalEndIcon size={20} />{t('history.title')} ({sortedGroups.length})</h2>
         <div>
           <button
             onClick={handleClearHistoryClick}

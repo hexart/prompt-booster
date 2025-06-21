@@ -6,7 +6,7 @@ import { useModelStore } from '@prompt-booster/core/model/store/modelStore';
 import { Dialog, ListCard, toast } from '@prompt-booster/ui';
 import LoadingIcon from '@prompt-booster/ui/components/LoadingIcon';
 import { useModal } from '@prompt-booster/ui/hooks/useModal';
-import { Grid2X2PlusIcon, Power, Link2, FileCog, Trash2 } from 'lucide-react';
+import { CogIcon, Grid2X2PlusIcon, Power, CableIcon, FileCog, Trash2 } from 'lucide-react';
 import { useModelConnection, useModelData, useModelEdit } from '../hooks/model-hooks';
 import { ModelModal } from './ModelModal';
 import { disableApiClientLogs } from '@prompt-booster/api/utils/apiLogging';
@@ -199,7 +199,7 @@ export const ModelSettings: React.FC = () => {
   return (
     <div className="flex flex-col h-full p-4 border rounded-xl shadow-2xs secondary-container">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold title-secondary">{t('settings.title')}</h2>
+        <h2 className="inline-flex items-center gap-2 text-xl font-semibold title-secondary"><CogIcon size={20} />{t('settings.title')}</h2>
         <Tooltip text={t('settings.addCustomModel')}>
           <button
             onClick={handleOpenAddCustomModal}
@@ -260,7 +260,7 @@ export const ModelSettings: React.FC = () => {
                   >
                     <div className="w-4 h-4 flex items-center justify-center">
                       {!isTestingConnection(model.id) ? (
-                        <Link2 size={14} />
+                        <CableIcon size={14} />
                       ) : (
                         <LoadingIcon />
                       )}
