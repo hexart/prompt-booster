@@ -1,10 +1,8 @@
 // packages/core/src/model/services/modelService.ts
 import { createClient } from '@prompt-booster/api';
-import { 
-  ConnectionError, 
-  AuthenticationError, 
-  RequestFormatError, 
-  ResponseParseError 
+import {
+  ConnectionError,
+  AuthenticationError
 } from '@prompt-booster/api';
 import { ModelConfig, CustomInterface, StandardModelType } from '../models/config';
 import { getDefaultModelConfig } from '../unifiedModelConfig';
@@ -25,9 +23,9 @@ export async function testModelConnection(
   baseUrl: string,
   model: string,
   endpoint?: string
-): Promise<{ 
-  success: boolean; 
-  errorType?: 'connection' | 'auth' | 'request' | 'parse' | 'validation' | 'unknown';
+): Promise<{
+  success: boolean;
+  errorType?: 'connection' | 'auth' | 'validation' | 'unknown';
   originalError?: string;
 }> {
 
@@ -39,7 +37,7 @@ export async function testModelConnection(
       originalError: 'Provider required'
     };
   }
-  
+
   if (!apiKey || apiKey.trim() === '') {
     return {
       success: false,
@@ -47,7 +45,7 @@ export async function testModelConnection(
       originalError: 'API Key required'
     };
   }
-  
+
   if (!baseUrl || baseUrl.trim() === '') {
     return {
       success: false,
@@ -55,7 +53,7 @@ export async function testModelConnection(
       originalError: 'Base URL required'
     };
   }
-  
+
   if (!model || model.trim() === '') {
     return {
       success: false,
@@ -72,14 +70,14 @@ export async function testModelConnection(
       baseUrl,
       model
     };
-    
+
     // 如果提供了自定义端点，添加到配置中
     if (endpoint) {
       clientConfig.endpoints = {
         chat: endpoint
       };
     }
-    
+
     const client = createClient(clientConfig);
 
     // 使用 testConnection 方法进行连接测试
@@ -108,7 +106,7 @@ export async function testModelConnection(
         originalError: error.message
       };
     }
-    
+
     if (error instanceof AuthenticationError) {
       return {
         success: false,
@@ -116,23 +114,7 @@ export async function testModelConnection(
         originalError: error.message
       };
     }
-    
-    if (error instanceof RequestFormatError) {
-      return {
-        success: false,
-        errorType: 'request',
-        originalError: error.message
-      };
-    }
-    
-    if (error instanceof ResponseParseError) {
-      return {
-        success: false,
-        errorType: 'parse',
-        originalError: error.message
-      };
-    }
-    
+
     // 其他错误
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return {
