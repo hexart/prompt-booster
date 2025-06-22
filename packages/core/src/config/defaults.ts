@@ -10,10 +10,10 @@ import { getAllDefaultModelConfigs } from '../model/unifiedModelConfig';
  */
 export const createDefaultModelConfigs = (): Record<StandardModelType, ModelConfig> => {
   const configs: Record<string, ModelConfig> = {};
-  
+
   // 使用新的 API 获取所有默认配置
   const allDefaultConfigs = getAllDefaultModelConfigs();
-  
+
   Object.entries(allDefaultConfigs).forEach(([modelType, defaultConfig]) => {
     if (defaultConfig) {
       configs[modelType] = {
@@ -28,7 +28,7 @@ export const createDefaultModelConfigs = (): Record<StandardModelType, ModelConf
       };
     }
   });
-  
+
   return configs as Record<StandardModelType, ModelConfig>;
 };
 
