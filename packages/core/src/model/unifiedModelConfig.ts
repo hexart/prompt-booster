@@ -20,6 +20,7 @@ const MODEL_TYPE_TO_PROVIDER: Record<StandardModelType, LLMProvider> = {
  * 定义从 API 包获取的配置结构
  */
 export interface DefaultModelConfig {
+  providerName: string;
   baseUrl: string;
   endpoint: string;
   defaultModel: string;
@@ -54,6 +55,7 @@ export function getDefaultModelConfig(modelType: StandardModelType): DefaultMode
 
   // 转换为标准化的默认配置格式
   return {
+    providerName: providerConfig.providerName,
     baseUrl: providerConfig.baseUrl,
     endpoint: providerConfig.endpoints.chat,
     defaultModel: providerConfig.defaultModel,

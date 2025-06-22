@@ -55,6 +55,7 @@ export enum ResponseParseType {
  */
 export const PROVIDER_CONFIG: Record<string, any> = {
   [LLMProvider.OPENAI]: {
+    providerName: 'OpenAI',
     baseUrl: 'https://api.openai.com/v1',
     endpoints: {
       chat: '/chat/completions',
@@ -73,6 +74,7 @@ export const PROVIDER_CONFIG: Record<string, any> = {
     }
   },
   [LLMProvider.GEMINI]: {
+    providerName: 'Gemini',
     baseUrl: 'https://generativelanguage.googleapis.com/v1beta',
     endpoints: {
       chat: '/models/{model}:generateContent',
@@ -93,6 +95,7 @@ export const PROVIDER_CONFIG: Record<string, any> = {
     }
   },
   [LLMProvider.DEEPSEEK]: {
+    providerName: 'DeepSeek',
     baseUrl: 'https://api.deepseek.com/v1',
     endpoints: {
       chat: '/chat/completions',
@@ -111,6 +114,7 @@ export const PROVIDER_CONFIG: Record<string, any> = {
     }
   },
   [LLMProvider.HUNYUAN]: {
+    providerName: 'Hunyuan',
     baseUrl: 'https://api.hunyuan.cloud.tencent.com/v1',
     endpoints: {
       chat: '/chat/completions',
@@ -132,6 +136,7 @@ export const PROVIDER_CONFIG: Record<string, any> = {
     }
   },
   [LLMProvider.SILICONFLOW]: {
+    providerName: 'SiliconFlow',
     baseUrl: 'https://api.siliconflow.cn/v1',
     endpoints: {
       chat: '/chat/completions',
@@ -153,6 +158,7 @@ export const PROVIDER_CONFIG: Record<string, any> = {
     }
   },
   [LLMProvider.OLLAMA]: {
+    providerName: 'Ollama',
     baseUrl: 'http://localhost:11434',
     endpoints: {
       chat: '/api/chat',

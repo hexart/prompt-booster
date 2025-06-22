@@ -8,6 +8,7 @@ import { useModelForm } from '../hooks/model-hooks';
 import { EyeIcon, EyeClosedIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { formatInterfaceName } from '../utils/displayUtils';
+import { getDefaultModelConfig } from '@prompt-booster/core/model/unifiedModelConfig';
 
 // 模型编辑弹窗组件
 interface ModelModalProps {
@@ -48,6 +49,8 @@ export const ModelModal: React.FC<ModelModalProps> = ({
   } = useModelForm(initialData);
 
   const [isSaving, setIsSaving] = React.useState(false);
+  const defaultConfig = getDefaultModelConfig(modelType as StandardModelType);
+  const providerName = defaultConfig?.providerName || modelType;
 
   useEffect(() => {
     if (modelOptions.length > 0) {
@@ -106,7 +109,7 @@ export const ModelModal: React.FC<ModelModalProps> = ({
       onClose={onClose}
       clickOutside={false}
       maxWidth="max-w-md"
-      title={isCustom ? (isNewInterface ? t('settings.newInterface') : t('settings.editInterface')) : t('settings.editModel', { type: modelType })}
+      title={isCustom ? (isNewInterface ? t('settings.newInterface') : t('settings.editInterface')) : t('settings.editModel', { type: providerName })}
       footer={
         <div className="flex justify-end gap-3">
           <button

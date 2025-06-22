@@ -18,7 +18,7 @@ export const createDefaultModelConfigs = (): Record<StandardModelType, ModelConf
     if (defaultConfig) {
       configs[modelType] = {
         id: modelType,
-        providerName: modelType, // 使用模型类型作为提供商名称
+        providerName: defaultConfig.providerName,
         apiKey: '',
         model: defaultConfig.defaultModel,
         baseUrl: defaultConfig.baseUrl,

@@ -31,6 +31,7 @@ function getCompleteModelConfig(
   // 合并配置：用户配置优先，缺失的字段使用默认配置
   return {
     ...userConfig,
+    providerName: userConfig.providerName || defaultConfig.providerName,
     baseUrl: userConfig.baseUrl || defaultConfig.baseUrl,
     endpoint: userConfig.endpoint || defaultConfig.endpoint,
     timeout: userConfig.timeout || defaultConfig.timeout,
