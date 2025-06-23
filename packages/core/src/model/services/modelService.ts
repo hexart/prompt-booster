@@ -4,6 +4,7 @@ import {
   ConnectionError,
   AuthenticationError
 } from '@prompt-booster/api';
+import { ErrorType } from '../models/config';
 import { ModelConfig, CustomInterface, StandardModelType } from '../models/config';
 import { getDefaultModelConfig } from '../unifiedModelConfig';
 
@@ -25,7 +26,7 @@ export async function testModelConnection(
   endpoint?: string
 ): Promise<{
   success: boolean;
-  errorType?: 'connection' | 'auth' | 'validation' | 'unknown';
+  errorType?: ErrorType;
   originalError?: string;
 }> {
 

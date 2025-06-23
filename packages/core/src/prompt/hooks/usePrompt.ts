@@ -13,6 +13,7 @@ import {
   EnhancePromptParams,
   IteratePromptParams 
 } from '../models/prompt';
+import { ErrorType } from '../../model/models/config';
 
 export interface UsePromptResult {
   // 状态
@@ -20,6 +21,7 @@ export interface UsePromptResult {
   activeVersion: PromptVersion | null;
   isProcessing: boolean;
   error: string | null;
+  errorType?: ErrorType;
   
   // 组操作
   groups: PromptGroup[];
@@ -99,7 +101,7 @@ export function usePrompt(): UsePromptResult {
       await promptService.enhancePrompt(params);
     } catch (error) {
       console.error('Enhance prompt failed:', error);
-      throw error;
+      // throw error;
     }
   }, []);
 
@@ -109,7 +111,7 @@ export function usePrompt(): UsePromptResult {
       await promptService.iteratePrompt(params);
     } catch (error) {
       console.error('Iterate prompt failed:', error);
-      throw error;
+      // throw error;
     }
   }, []);
 
@@ -175,6 +177,7 @@ export function usePrompt(): UsePromptResult {
     activeVersion,
     isProcessing: state.isProcessing,
     error: state.error,
+    errorType: state.errorType,
     
     // 组操作
     groups,

@@ -3,6 +3,7 @@
  * 标准模型类型
  */
 export type StandardModelType = 'openai' | 'gemini' | 'deepseek' | 'hunyuan' | 'siliconflow' | 'ollama';
+export type ErrorType = 'connection' | 'auth' | 'validation' | 'response' | 'parse' | 'unknown';
 
 /**
  * 模型配置接口

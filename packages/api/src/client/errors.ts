@@ -11,11 +11,24 @@
 export class LLMClientError extends Error {
     /**
      * @param message 错误消息
-     * @param cause 错误原因
+     * @param code 错误代码
+     * @param context 错误上下文信息
+     * @param provider 大模型提供商名称
+     * @param model 模型名称
+     * @param baseUrl 基础URL
+     * @param endpoint 聊天端点
      */
-    constructor(message: string, public cause?: any) {
+    constructor(
+        message: string,
+        public readonly code?: string,
+        public readonly context?: {
+            provider?: string;
+            model?: string;
+            baseUrl?: string;
+            endpoint?: string;
+        }
+    ) {
         super(message);
-        this.name = 'LLMClientError';
     }
 }
 

@@ -5,6 +5,13 @@
  */
 import { PromptGroupManager } from "./promptGroupManager";
 import { llmService } from "./llmService";
+import {
+  ConnectionError,
+  AuthenticationError,
+  RequestFormatError,
+  ResponseParseError
+} from '@prompt-booster/api';
+import { ErrorType } from "../../model/models/config";
 import { getTemplateContent } from "./templateService";
 import { getLanguageInstruction, removeThinkTags } from "../utils/promptUtils";
 import { useMemoryStore } from "../../storage/memoryStorage";
@@ -194,6 +201,32 @@ export class PromptService {
             versions: { ...this.groupManager.exportData().versions },
           });
         },
+        onError: (error) => {
+          // 添加错误处理
+          console.error('Enhance prompt error:', error);
+
+          // 判断错误类型并映射到 ErrorType
+          let errorType: ErrorType = 'unknown';
+          if (error instanceof ConnectionError) {
+            errorType = 'connection';
+          } else if (error instanceof AuthenticationError) {
+            errorType = 'auth';
+          } else if (error instanceof RequestFormatError) {
+            errorType = 'validation';
+          } else if (error instanceof ResponseParseError) {
+            errorType = 'parse';
+          }
+
+          this.updateState({
+            isProcessing: false,
+            error: error.message,  // 直接存储错误消息
+            errorType: errorType   // 存储错误类型供前端使用
+          });
+        },
+        onComplete: () => {
+          // 可选：添加完成回调
+          console.log('Enhancement completed');
+        }
       });
 
       // 完成后最终更新
@@ -312,6 +345,32 @@ export class PromptService {
             versions: { ...this.groupManager.exportData().versions },
           });
         },
+        onError: (error) => {
+          // 添加错误处理
+          console.error('Iterate prompt error:', error);
+
+          // 判断错误类型并映射到 ErrorType
+          let errorType: ErrorType = 'unknown';
+          if (error instanceof ConnectionError) {
+            errorType = 'connection';
+          } else if (error instanceof AuthenticationError) {
+            errorType = 'auth';
+          } else if (error instanceof RequestFormatError) {
+            errorType = 'validation';
+          } else if (error instanceof ResponseParseError) {
+            errorType = 'parse';
+          }
+
+          this.updateState({
+            isProcessing: false,
+            error: error.message,  // 直接存储错误消息
+            errorType: errorType   // 存储错误类型供前端使用
+          });
+        },
+        onComplete: () => {
+          // 可选：添加完成回调
+          console.log('Iteration completed');
+        }
       });
 
       // 完成后最终更新

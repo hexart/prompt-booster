@@ -1,4 +1,5 @@
 // packages/core/src/models/promptGroup.ts
+import { ErrorType } from './../../model/models/config';
 /**
  * 提示词组和版本的数据模型定义
  */
@@ -43,6 +44,7 @@ export interface PromptGroupServiceState {
     activeVersionNumber: number | null;
     isProcessing: boolean;
     error: string | null;
+    errorType?: ErrorType;
 }
 
 // 提示词增强参数
