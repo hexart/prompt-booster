@@ -77,8 +77,9 @@ export const PROVIDER_CONFIG: Record<string, any> = {
     providerName: 'Gemini',
     baseUrl: 'https://generativelanguage.googleapis.com',
     endpoints: {
+      // Gemini 端点会在client.ts中的streamChat中进行转化，把:generateContent替换为:streamGenerateContent
       chat: '/v1beta/models/{model}:generateContent',
-      streamChat: '/v1beta/models/{model}:streamGenerateContent',
+      // streamChat: '/v1beta/models/{model}:streamGenerateContent',
       models: '/v1beta/models'
     },
     defaultModel: 'gemini-2.0-flash',
