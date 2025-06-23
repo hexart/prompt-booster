@@ -14,7 +14,7 @@ import { isRTL, getButtonPosition } from '../rtl';
 
 export const TestResult: React.FC = () => {
   const { t, i18n } = useTranslation();
-  const { originalPrompt, optimizedPrompt } = usePrompt();
+  const { originalPrompt, optimizedPrompt, isProcessing } = usePrompt();
   // 使用memoryStore获取所有需要的状态
   const {
     userTestPrompt,
@@ -24,9 +24,6 @@ export const TestResult: React.FC = () => {
     optimizedResponse,
     setOptimizedResponse
   } = useMemoryStore();
-
-  // 从usePromptGroup钩子中获取isProcessing状态
-  const { isProcessing } = usePrompt();
 
   const {
     isCustomInterface,
