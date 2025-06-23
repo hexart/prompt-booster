@@ -42,7 +42,7 @@ export function getDefaultModelConfig(modelType: StandardModelType): DefaultMode
   // 获取对应的 LLMProvider
   const provider = MODEL_TYPE_TO_PROVIDER[modelType];
   if (!provider) {
-    console.warn(`未找到模型类型 ${modelType} 对应的提供商`);
+    // console.info(`未找到模型类型 ${modelType} 对应的提供商`);
     return null;
   }
 
