@@ -168,10 +168,10 @@ export class LLMClientImpl implements LLMClient {
       // 1. 格式化请求
       let payload;
       try {
-        payload = {
-          ...this.requestFormatter.formatRequest(request),
-          stream: true
-        };
+        payload = this.requestFormatter.formatRequest(request);
+        
+        // 处理流式请求的特殊情况
+        payload = this.prepareStreamPayload(payload);
       } catch (formatError) {
         const error = new RequestFormatError(
           formatError instanceof Error ? formatError.message : String(formatError),
@@ -197,21 +197,23 @@ export class LLMClientImpl implements LLMClient {
           'Accept': `${CONTENT_TYPES.JSON}, ${CONTENT_TYPES.SSE}, ${CONTENT_TYPES.TEXT}, */*`
         };
 
-        // 添加认证
-        if (this.apiKey) {
+        // 4. 构建URL - 使用统一的 buildStreamUrl 方法
+        const url = this.buildStreamUrl();
+        
+        // 5. 添加认证头（仅对非 Gemini API）
+        if (!this.isGeminiApi() && this.apiKey) {
           headers['Authorization'] = `Bearer ${this.apiKey}`;
         }
 
-        // 4. 发送请求
-        const url = new URL(this.endpoints.chat, this.baseUrl);
-        const response = await fetch(url.toString(), {
+        // 5. 发送请求
+        const response = await fetch(url, {
           method: 'POST',
           headers,
           body: JSON.stringify(payload),
           signal: controller.signal
         });
 
-        // 5. 检查响应状态
+        // 6. 检查响应状态
         if (!response.ok) {
           // 尝试解析错误响应
           let errorData;
@@ -237,7 +239,7 @@ export class LLMClientImpl implements LLMClient {
           throw new ConnectionError("Response body is null");
         }
 
-        // 6. 检测响应格式
+        // 7. 检测响应格式
         const contentType = response.headers.get('Content-Type') || '';
         this.logDebug(`Response content type: ${contentType}`);
 
@@ -250,7 +252,7 @@ export class LLMClientImpl implements LLMClient {
           streamFormat = StreamFormat.TEXT;
         }
 
-        // 7. 处理流式响应
+        // 8. 处理流式响应
         await this.handleStreamResponse(response.body, streamFormat, streamHandler);
 
       } catch (fetchError: any) {
@@ -298,10 +300,10 @@ export class LLMClientImpl implements LLMClient {
   }
 
   /**
- * 测试连接
- * @returns 连接测试结果
- * @description 通过发送最小化的 chat 请求来测试 API 的完整可用性（包括额度）
- */
+   * 测试连接
+   * @returns 连接测试结果
+   * @description 通过发送最小化的 chat 请求来测试 API 的完整可用性（包括额度）
+   */
   async testConnection(): Promise<ClientResponse<{ success: boolean; message?: string }>> {
     try {
       this.logDebug(`测试连接：发送最小化 chat 请求`);
@@ -337,6 +339,82 @@ export class LLMClientImpl implements LLMClient {
   }
 
   /**
+   * 获取模型列表
+   * 兼容OpenAI格式的模型列表接口
+   * 
+   * @returns 模型列表
+   */
+  async getModels(): Promise<Array<{ id: string, name?: string }>> {
+    try {
+      // 使用统一的 URL 构建方法
+      const url = this.buildUrl(this.endpoints.models);
+
+      // 构建请求头
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json'
+      };
+
+      // 添加认证头（仅对非 Gemini API）
+      if (!this.isGeminiApi() && this.apiKey) {
+        headers['Authorization'] = `Bearer ${this.apiKey}`;
+      }
+
+      // 发送请求
+      const response = await fetch(url, {
+        method: 'GET',
+        headers
+      });
+
+      if (!response.ok) {
+        throw new Error(`获取模型列表失败: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
+
+      // 处理不同格式的响应
+      if (Array.isArray(data)) {
+        // 一些API直接返回模型数组
+        return data.map((model: any) => ({
+          id: model.id || model.name,
+          name: model.name || model.id
+        }));
+      } else if (data.data && Array.isArray(data.data)) {
+        // OpenAI格式: { data: [model1, model2, ...] }
+        return data.data.map((model: any) => ({
+          id: model.id,
+          name: model.name || model.id
+        }));
+      } else if (data.models && Array.isArray(data.models)) {
+        // 一些API使用 models 字段
+        return data.models.map((model: any) => ({
+          id: model.id || model.name,
+          name: model.name || model.id
+        }));
+      }
+
+      // 如果没有找到已知格式，尝试推断
+      const possibleArrayFields = Object.keys(data).filter(key =>
+        Array.isArray(data[key]) && data[key].length > 0 &&
+        (data[key][0].id || data[key][0].name)
+      );
+
+      if (possibleArrayFields.length > 0) {
+        return data[possibleArrayFields[0]].map((model: any) => ({
+          id: model.id || model.name,
+          name: model.name || model.id
+        }));
+      }
+
+      // 如果无法解析，则返回空数组
+      this.logDebug('无法解析模型列表格式:' + JSON.stringify(data));
+      return [];
+    } catch (error) {
+      this.logDebug('获取模型列表失败:' + (error instanceof Error ? error.message : String(error)));
+      return [];
+    }
+  }
+
+  /**
    * 创建Axios实例
    * @returns Axios实例
    */
@@ -348,6 +426,79 @@ export class LLMClientImpl implements LLMClient {
         'Content-Type': CONTENT_TYPES.JSON
       }
     });
+  }
+
+  /**
+   * 准备流式请求的payload
+   * @param payload 原始payload
+   * @returns 处理后的payload
+   */
+  private prepareStreamPayload(payload: any): any {
+    // Gemini 特殊处理：移除 stream 字段
+    if (this.isGeminiApi()) {
+      const { stream, ...geminiPayload } = payload;
+      return geminiPayload;
+    }
+    
+    // 其他 API 保持 stream: true
+    return {
+      ...payload,
+      stream: true
+    };
+  }
+
+  /**
+   * 构建请求URL
+   * @param endpoint 端点路径
+   * @returns 完整URL
+   */
+  private buildUrl(endpoint: string): string {
+    // 替换模型占位符
+    endpoint = endpoint.replace('{model}', this.model);
+    
+    // 处理路径拼接
+    let urlString: string;
+    if (endpoint.startsWith('/')) {
+      // 确保 baseUrl 不以 / 结尾
+      const base = this.baseUrl.replace(/\/$/, '');
+      urlString = base + endpoint;
+    } else {
+      // 对于相对路径，使用标准 URL 构造
+      const url = new URL(endpoint, this.baseUrl.endsWith('/') ? this.baseUrl : this.baseUrl + '/');
+      urlString = url.toString();
+    }
+    
+    // Gemini API 特殊处理：添加 API key 到查询参数
+    if (this.isGeminiApi() && this.apiKey) {
+      const url = new URL(urlString);
+      url.searchParams.set('key', this.apiKey);
+      return url.toString();
+    }
+    
+    return urlString;
+  }
+
+  /**
+   * 构建流式请求URL
+   * @returns 完整URL
+   */
+  private buildStreamUrl(): string {
+    let endpoint = this.endpoints.chat;
+    
+    // Gemini API 特殊处理：使用流式端点
+    if (this.isGeminiApi() && endpoint.includes(':generateContent')) {
+      endpoint = endpoint.replace(':generateContent', ':streamGenerateContent');
+    }
+    
+    return this.buildUrl(endpoint);
+  }
+
+  /**
+   * 判断是否为Gemini API
+   * @returns 是否为Gemini
+   */
+  private isGeminiApi(): boolean {
+    return this.baseUrl.includes('generativelanguage.googleapis.com');
   }
 
   /**
@@ -497,90 +648,6 @@ export class LLMClientImpl implements LLMClient {
       if (streamHandler.onError) {
         streamHandler.onError(error instanceof Error ? error : new Error(String(error)));
       }
-    }
-  }
-
-  /**
-   * 获取模型列表
-   * 兼容OpenAI格式的模型列表接口
-   * 
-   * @returns 模型列表
-   */
-  async getModels(): Promise<Array<{ id: string, name?: string }>> {
-    try {
-      // 构建请求URL
-      const endpoint = this.endpoints.models;
-      const urlString = this.baseUrl + endpoint;
-      const url = new URL(urlString);
-
-      // 使用适当的认证策略
-      const headers = {
-        'Content-Type': 'application/json'
-      };
-
-      // 添加认证头 - 使用现有认证策略而不是直接访问config
-      if (this.client.defaults.baseURL?.includes('generativelanguage.googleapis.com')) {
-        // Gemini使用查询参数
-        url.searchParams.append('key', this.apiKey);
-      } else {
-        // 大多数API使用Bearer认证
-        Object.assign(headers, {
-          'Authorization': `Bearer ${this.apiKey}`
-        });
-      }
-
-      // 发送请求
-      const response = await fetch(url.toString(), {
-        method: 'GET',
-        headers
-      });
-
-      if (!response.ok) {
-        throw new Error(`获取模型列表失败: ${response.status} ${response.statusText}`);
-      }
-
-      const data = await response.json();
-
-      // 处理不同格式的响应
-      if (Array.isArray(data)) {
-        // 一些API直接返回模型数组
-        return data.map((model: any) => ({
-          id: model.id || model.name,
-          name: model.name || model.id
-        }));
-      } else if (data.data && Array.isArray(data.data)) {
-        // OpenAI格式: { data: [model1, model2, ...] }
-        return data.data.map((model: any) => ({
-          id: model.id,
-          name: model.name || model.id
-        }));
-      } else if (data.models && Array.isArray(data.models)) {
-        // 一些API使用 models 字段
-        return data.models.map((model: any) => ({
-          id: model.id || model.name,
-          name: model.name || model.id
-        }));
-      }
-
-      // 如果没有找到已知格式，尝试推断
-      const possibleArrayFields = Object.keys(data).filter(key =>
-        Array.isArray(data[key]) && data[key].length > 0 &&
-        (data[key][0].id || data[key][0].name)
-      );
-
-      if (possibleArrayFields.length > 0) {
-        return data[possibleArrayFields[0]].map((model: any) => ({
-          id: model.id || model.name,
-          name: model.name || model.id
-        }));
-      }
-
-      // 如果无法解析，则返回空数组
-      this.logDebug('无法解析模型列表格式:' + JSON.stringify(data));
-      return [];
-    } catch (error) {
-      this.logDebug('获取模型列表失败:' + (error instanceof Error ? error.message : String(error)));
-      return [];
     }
   }
 
