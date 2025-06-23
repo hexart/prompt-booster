@@ -5,6 +5,3 @@
 
 // 导出常量
 export * from './constants';
-
-// 导出模型配置
-export * from './models';
