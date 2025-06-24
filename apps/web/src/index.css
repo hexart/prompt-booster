@@ -118,10 +118,10 @@ button:disabled {
     }
   }
   .version-tag-active {
-    @apply transition-all duration-300 bg-blue-500 text-white hover:shadow-md dark:bg-blue-600;
+    @apply bg-blue-500 text-white hover:shadow-md dark:bg-blue-600;
   }
   .version-tag-inactive {
-    @apply transition-all duration-300 bg-gray-200 text-gray-700 hover:bg-gray-300 hover:shadow-md dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500;
+    @apply bg-gray-200 text-gray-700 hover:bg-gray-300 hover:shadow-md dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500;
   }
   .listcard-container {
     @apply mx-1 bg-white border-gray-200 dark:bg-gray-700 dark:border-gray-600;

@@ -1,5 +1,6 @@
 // packages/ui/src/components/index.ts
 export * from './ActionButtons';
+export * from './AnimatedButton';
 export * from './AutoScrollContent';
 export * from './AutoScrollTextarea';
 export * from './Dialog';

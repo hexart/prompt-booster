@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { toast, AutoScrollContent, EnhancedDropdown, DraggableNotice, EnhancedTextarea } from '@prompt-booster/ui';
+import { toast, AutoScrollContent, EnhancedDropdown, DraggableNotice, EnhancedTextarea, AnimatedButton } from '@prompt-booster/ui';
 import { StandardModelType } from '@prompt-booster/core/model/models/config';
 import { useModelData } from '../hooks/model-hooks';
 import { cleanOptimizedPrompt, getLanguageInstruction } from '@prompt-booster/core/prompt/utils/promptUtils';
@@ -316,7 +316,7 @@ export const TestResult: React.FC = () => {
             </div>
           ) : (
             <div className='flex gap-2'>
-              <button
+              <AnimatedButton
                 className="flex text-sm items-center gap-1 p-3 lg:px-3 lg:py-2 button-third"
                 onClick={onToggleMaximize}
                 disabled={!response}
@@ -346,7 +346,7 @@ export const TestResult: React.FC = () => {
                     </span>
                   </>
                 )}
-              </button>
+              </AnimatedButton>
             </div>
           )}
         </div>
@@ -449,7 +449,7 @@ export const TestResult: React.FC = () => {
         <div className="flex items-center justify-end gap-2 flex-shrink min-w-0">
           {/* Markdown按钮 */}
           <Tooltip text={`${showMarkdown ? t('testResult.disableMarkdown') : t('testResult.enableMarkdown')}`} position="top">
-            <button
+            <AnimatedButton
               type="button"
               onClick={() => setShowMarkdown(!showMarkdown)}
               className={`px-3 py-2 h-10 flex items-center justify-center transition-colors duration-200 ${showMarkdown
@@ -461,11 +461,11 @@ export const TestResult: React.FC = () => {
               <svg aria-hidden="true" focusable="false" viewBox="0 0 16 16" width="22" height="22" fill="currentColor" display="inline-block">
                 <path d="M14.85 3c.63 0 1.15.52 1.14 1.15v7.7c0 .63-.51 1.15-1.15 1.15H1.15C.52 13 0 12.48 0 11.84V4.15C0 3.52.52 3 1.15 3ZM9 11V5H7L5.5 7 4 5H2v6h2V8l1.5 1.92L7 8v3Zm2.99.5L14.5 8H13V5h-2v3H9.5Z"></path>
               </svg>
-            </button>
+            </AnimatedButton>
           </Tooltip>
           {/* 运行对比测试按钮 */}
           <Tooltip text={t('testResult.runComparisonTest')}>
-            <button
+            <AnimatedButton
               className={`flex gap-2 items-center px-3 py-2 h-10 min-w-[30%] truncate transition-colors duration-500 button-confirm ${isTestingOriginal || isTestingOptimized ? 'cursor-not-allowed opacity-50' : ''
                 }`}
               onClick={runComparisonTest}
@@ -481,10 +481,10 @@ export const TestResult: React.FC = () => {
                 ? t('testResult.generating')
                 : (retryCount > 0 ? t('testResult.retryingCount', { count: retryCount, max: maxRetries }) : t('testResult.runTest'))
               }
-            </button>
+            </AnimatedButton>
           </Tooltip>
           {/* 最大化/还原按钮 */}
-          <button
+          <AnimatedButton
             className='px-3 py-2 h-10 text-sm flex items-center gap-1 button-third'
             onClick={() => setIsMaximized(!isMaximized)}
             disabled={!originalResponse && !optimizedResponse}
@@ -500,7 +500,7 @@ export const TestResult: React.FC = () => {
                 <span className="hidden md:block">{t('common.buttons.maximize')}</span>
               </>
             )}
-          </button>
+          </AnimatedButton>
         </div>
       </div>
 

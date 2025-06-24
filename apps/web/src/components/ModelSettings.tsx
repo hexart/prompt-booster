@@ -3,7 +3,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { type StandardModelType } from '@prompt-booster/core/model/models/config';
 import { useModelStore } from '@prompt-booster/core/model/store/modelStore';
-import { Dialog, ListCard, toast } from '@prompt-booster/ui';
+import { Dialog, ListCard, toast, AnimatedButton } from '@prompt-booster/ui';
 import LoadingIcon from '@prompt-booster/ui/components/LoadingIcon';
 import { useModal } from '@prompt-booster/ui/hooks/useModal';
 import { CogIcon, Grid2X2PlusIcon, Power, CableIcon, FileCog, Trash2 } from 'lucide-react';
@@ -43,13 +43,13 @@ const ConfirmDialog: React.FC<{
         title={title}
         footer={
           <div className="flex justify-end gap-3">
-            <button
+            <AnimatedButton
               onClick={onClose}
               className="px-4 py-2 button-cancel"
             >
               {cancelText}
-            </button>
-            <button
+            </AnimatedButton>
+            <AnimatedButton
               onClick={onConfirm}
               className={`px-4 py-2 text-white ${danger
                 ? "button-danger"
@@ -57,7 +57,7 @@ const ConfirmDialog: React.FC<{
                 }`}
             >
               {confirmText}
-            </button>
+            </AnimatedButton>
           </div>
         }
       >
@@ -201,13 +201,13 @@ export const ModelSettings: React.FC = () => {
       <div className="flex justify-between items-center mb-4">
         <h2 className="inline-flex items-center gap-2 text-xl font-semibold title-secondary"><CogIcon size={20} />{t('settings.title')}</h2>
         <Tooltip text={t('settings.addCustomModel')}>
-          <button
+          <AnimatedButton
             onClick={handleOpenAddCustomModal}
             className="px-3 py-2 text-sm inline-flex items-center gap-1 button-confirm"
           >
             <Grid2X2PlusIcon size={14} />
             <span className="hidden sm:block">{t('settings.add')}</span>
-          </button>
+          </AnimatedButton>
         </Tooltip>
       </div>
 
@@ -238,7 +238,7 @@ export const ModelSettings: React.FC = () => {
               )}
               actions={(
                 <div className="flex items-center gap-2">
-                  <button
+                  <AnimatedButton
                     onClick={() => toggleModelStatus(model.id, model.isStandard, !model.isEnabled)}
                     className={`px-3 py-2 text-sm whitespace-nowrap inline-flex items-center gap-1 ${model.isEnabled
                       ? "button-secondary-enabled"
@@ -251,9 +251,9 @@ export const ModelSettings: React.FC = () => {
                       <Power size={14} />
                     )}
                     <span className="hidden md:inline whitespace-nowrap">{model.isEnabled ? t('settings.enabled') : t('settings.disabled')}</span>
-                  </button>
+                  </AnimatedButton>
 
-                  <button
+                  <AnimatedButton
                     onClick={() => testConnection(model)}
                     className="px-3 py-2 text-sm inline-flex items-center gap-1 button-secondary-testlink"
                     disabled={isTestingConnection(model.id)}
@@ -266,25 +266,25 @@ export const ModelSettings: React.FC = () => {
                       )}
                     </div>
                     <span className="hidden md:inline whitespace-nowrap">{t('settings.testConnection')}</span>
-                  </button>
+                  </AnimatedButton>
 
-                  <button
+                  <AnimatedButton
                     onClick={() => handleEditModel(model.id, model.isStandard)}
                     className="px-3 py-2 text-sm inline-flex items-center gap-1 button-secondary-edit"
                   >
                     <FileCog size={14} />
                     <span className="hidden md:inline whitespace-nowrap">{t('common.buttons.edit')}</span>
-                  </button>
+                  </AnimatedButton>
 
                   {!model.isStandard && (
-                    <button
+                    <AnimatedButton
                       onClick={() => handleDeleteCustomInterface(model.id)}
                       className="px-3 py-2 text-sm inline-flex items-center gap-1 button-secondary-danger"
 
                     >
                       <Trash2 size={14} />
                       <span className="hidden md:inline whitespace-nowrap">{t('common.buttons.delete')}</span>
-                    </button>
+                    </AnimatedButton>
                   )}
                 </div>
               )}

@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { type StandardModelType, type ModelConfig, type CustomInterface } from '@prompt-booster/core/model/models/config';
 import { createClient } from '@prompt-booster/api/factory';
 import { validateModelConfig, formatBaseUrl, formatEndpoint, getDefaultBaseUrl } from '@prompt-booster/core/model/services/modelService';
-import { Dialog, ModelSelector, toast } from '@prompt-booster/ui';
+import { Dialog, ModelSelector, toast, AnimatedButton } from '@prompt-booster/ui';
 import { useModelForm } from '../hooks/model-hooks';
 import { EyeIcon, EyeClosedIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -112,19 +112,19 @@ export const ModelModal: React.FC<ModelModalProps> = ({
       title={isCustom ? (isNewInterface ? t('settings.newInterface') : t('settings.editInterface')) : t('settings.editModel', { type: providerName })}
       footer={
         <div className="flex justify-end gap-3">
-          <button
+          <AnimatedButton
             onClick={onClose}
             className="px-4 py-2 transition-colors button-cancel"
           >
             {t('common.buttons.cancel')}
-          </button>
-          <button
+          </AnimatedButton>
+          <AnimatedButton
             onClick={handleSave}
             disabled={isSaving || !formData.apiKey}
             className="px-4 py-2 transition-colors button-confirm"
           >
             {isSaving ? t('common.buttons.saving') : t('common.buttons.save')}
-          </button>
+          </AnimatedButton>
         </div>
       }
     >

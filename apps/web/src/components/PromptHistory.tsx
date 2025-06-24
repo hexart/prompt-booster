@@ -3,11 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Dialog } from '@prompt-booster/ui/components/Dialog';
 import { usePrompt } from '@prompt-booster/core/prompt/hooks/usePrompt';
 import { PromptGroup } from '@prompt-booster/core/prompt/models/prompt';
-import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
+import { Tooltip, ActionButtons, AnimatedButton } from '@prompt-booster/ui/components';
 import { GalleryVerticalEndIcon, Trash2Icon, ChevronsDownIcon, ChevronsUpIcon, ZapIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { PROVIDER_USER_EDIT } from '@prompt-booster/core/prompt/services/promptService';
-import { ActionButtons } from '@prompt-booster/ui/components/ActionButtons';
 import { isRTL } from '../rtl';
 import { getVersionTooltipText } from '../utils/displayUtils';
 
@@ -150,13 +149,13 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
       <div className="flex justify-between items-center mb-4">
         <h2 className="inline-flex items-center gap-2 text-xl font-semibold title-secondary"><GalleryVerticalEndIcon size={20} />{t('history.title')} ({sortedGroups.length})</h2>
         <div>
-          <button
+          <AnimatedButton
             onClick={handleClearHistoryClick}
             className="px-3 py-2 flex items-center gap-1 text-sm button-danger"
           >
             <Trash2Icon size={15} />
             <span className="hidden sm:block">{t('history.clearHistory')}</span>
-          </button>
+          </AnimatedButton>
         </div>
       </div>
       <div className="space-y-2 h-full overflow-y-scroll pb-2">
@@ -203,7 +202,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                   </h3>
                 </div>
                 <div className="flex gap-2 items-center listcard-button-container">
-                  <button
+                  <AnimatedButton
                     onClick={(e) => {
                       e.stopPropagation();
                       toggleExpand(group.id);
@@ -212,9 +211,9 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                   >
                     {expandedGroupId === group.id ? <ChevronsUpIcon size={15} /> : <ChevronsDownIcon size={15} />}
                     <span className="hidden md:block">{expandedGroupId === group.id ? t('history.collapse') : t('history.expand')}</span>
-                  </button>
+                  </AnimatedButton>
 
-                  <button
+                  <AnimatedButton
                     onClick={(e) => {
                       handleLoadGroup(group);
                       e.stopPropagation()
@@ -223,9 +222,9 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                   >
                     <ZapIcon size={15} />
                     <span className="hidden md:block">{t('history.load')}</span>
-                  </button>
+                  </AnimatedButton>
 
-                  <button
+                  <AnimatedButton
                     onClick={(e) => {
                       handleDeleteGroup(group.id);
                       e.stopPropagation();
@@ -234,7 +233,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                   >
                     <Trash2Icon size={15} />
                     <span className="hidden md:block">{t('history.deleteGroup')}</span>
-                  </button>
+                  </AnimatedButton>
                 </div>
               </div>
 
@@ -277,12 +276,12 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                           </div>
 
                           {/* 版本列表 */}
-                          <div className="flex gap-2 overflow-y-visible overflow-x-auto py-2 [&::-webkit-scrollbar]:h-1">
+                          <div className="flex gap-2 overflow-y-visible overflow-x-auto px-1 py-2 [&::-webkit-scrollbar]:h-1">
                             {versions.map(version => (
                               <Tooltip key={version.id}
                                 text={getVersionTooltipText(version, t, currentIsRTL)}
                               >
-                                <button
+                                <AnimatedButton
                                   key={version.id}
                                   onClick={() => handleSelectVersion(group.id, version.number)}
                                   className={`px-2 py-1 text-xs min-w-[32px] rounded-full ${version.number === getSelectedVersion(group.id, group.currentVersionNumber)
@@ -291,7 +290,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                                     }`}
                                 >
                                   v{version.number}
-                                </button>
+                                </AnimatedButton>
                               </Tooltip>
                             ))}
                           </div>
@@ -337,7 +336,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
 
                           <div className="mt-3 flex justify-end gap-2">
                             {/* 加载当前版本按钮 */}
-                            <button
+                            <AnimatedButton
                               onClick={() => handleLoadVersion(
                                 group.id,
                                 getSelectedVersion(group.id, group.currentVersionNumber)
@@ -345,7 +344,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                               className="text-sm px-3 py-2 button-secondary-load-version"
                             >
                               {t('history.loadVersion')}
-                            </button>
+                            </AnimatedButton>
                           </div>
                         </>
                       );
@@ -366,18 +365,18 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
         maxWidth="max-w-md"
         footer={
           <div className="flex justify-end gap-3">
-            <button
+            <AnimatedButton
               onClick={cancelClearHistory}
               className="px-4 py-2 button-cancel"
             >
               {t('common.buttons.cancel')}
-            </button>
-            <button
+            </AnimatedButton>
+            <AnimatedButton
               onClick={confirmClearHistory}
               className="px-4 py-2 button-danger"
             >
               {t('history.confirmClearButton')}
-            </button>
+            </AnimatedButton>
           </div>
         }
       >
@@ -392,18 +391,18 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
         maxWidth="max-w-md"
         footer={
           <div className="flex justify-end gap-3">
-            <button
+            <AnimatedButton
               onClick={cancelDeleteHistoryItem}
               className="px-4 py-2 button-cancel"
             >
               {t('common.buttons.cancel')}
-            </button>
-            <button
+            </AnimatedButton>
+            <AnimatedButton
               onClick={confirmDeleteHistoryItem}
               className="px-4 py-2 button-danger"
             >
               {t('history.confirmDeleteButton')}
-            </button>
+            </AnimatedButton>
           </div>
         }
       >

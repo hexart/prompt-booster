@@ -7,7 +7,7 @@ import {
   SquareCheckBigIcon,
   TriangleAlertIcon,
 } from "lucide-react";
-import { toast, Tooltip } from "@prompt-booster/ui";
+import { toast, Tooltip, AnimatedButton } from "@prompt-booster/ui";
 import LoadingIcon from "@prompt-booster/ui/components/LoadingIcon";
 import medalImage from "../assets/medal.png";
 import {
@@ -278,8 +278,8 @@ export const AnalysisDrawer: React.FC<AnalysisDrawerProps> = ({
                     <div>
                       {" "}
                       {/* 使用div作为disabled按钮的容器，确保onMouseEnter触发 */}
-                      <button
-                        className="px-4 py-2 text-sm button-confirm transition"
+                      <AnimatedButton
+                        className="px-4 py-2 text-sm button-confirm"
                         onClick={onLLMAnalyze}
                         disabled={isAnalyzing || !isActiveModelEnabled}
                       >
@@ -291,12 +291,12 @@ export const AnalysisDrawer: React.FC<AnalysisDrawerProps> = ({
                         ) : (
                           t("promptBooster.drawer.deepAnalysis")
                         )}
-                      </button>
+                      </AnimatedButton>
                     </div>
                   </Tooltip>
                 )}
-                <button
-                  className="px-4 py-2 text-sm button-cancel transition"
+                <AnimatedButton
+                  className="px-4 py-2 text-sm button-cancel"
                   onClick={() => {
                     if (analysisResult?.suggestions?.length || 
                         analysisResult?.criteria.some((c) => !c.passed && c.suggestion)) {
@@ -306,7 +306,7 @@ export const AnalysisDrawer: React.FC<AnalysisDrawerProps> = ({
                   }}
                 >
                   {t("common.buttons.close")}
-                </button>
+                </AnimatedButton>
               </div>
             </div>
           </div>

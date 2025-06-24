@@ -12,6 +12,7 @@ import {
   AutoScrollTextarea,
   EnhancedDropdown,
   Dialog,
+  AnimatedButton,
 } from "@prompt-booster/ui";
 import LoadingIcon from "@prompt-booster/ui/components/LoadingIcon";
 import {
@@ -369,7 +370,7 @@ export const PromptBooster: React.FC = () => {
             </h2>
             {activeGroup && (
               <Tooltip text={t("promptBooster.resetWorkspace")}>
-                <button
+                <AnimatedButton
                   className="px-3 py-2 text-sm flex items-center gap-1 button-danger"
                   onClick={() => setIsResetDialogOpen(true)}
                 >
@@ -377,7 +378,7 @@ export const PromptBooster: React.FC = () => {
                   <span className="hidden sm:block">
                     {t("common.buttons.reset")}
                   </span>
-                </button>
+                </AnimatedButton>
               </Tooltip>
             )}
           </div>
@@ -446,7 +447,7 @@ export const PromptBooster: React.FC = () => {
         </div>
 
         <Tooltip text={t("promptBooster.enhancePrompt")}>
-          <button
+          <AnimatedButton
             className={`flex gap-2 items-center h-10 px-4 py-2 truncate button-confirm 
                         ${isProcessing ? "cursor-not-allowed opacity-50" : ""}`}
             onClick={handleOptimize}
@@ -464,7 +465,7 @@ export const PromptBooster: React.FC = () => {
                 ? t("promptBooster.enhancing")
                 : t("promptBooster.startEnhance")}
             </span>
-          </button>
+          </AnimatedButton>
         </Tooltip>
       </div>
 
@@ -490,7 +491,7 @@ export const PromptBooster: React.FC = () => {
             {activeGroup && (
               <div
                 ref={versionsContainerRef}
-                className="flex items-center gap-2 pe-2 overflow-x-auto no-scrollbar w-full py-1 [&::-webkit-scrollbar]:h-1"
+                className="flex items-center gap-2 px-2 overflow-x-auto no-scrollbar w-full py-1 [&::-webkit-scrollbar]:h-1"
               >
                 {getGroupVersions(activeGroup.id).map(
                   (version: PromptVersion) => (
@@ -498,7 +499,7 @@ export const PromptBooster: React.FC = () => {
                       key={version.id}
                       text={getVersionTooltipText(version, t)}
                     >
-                      <button
+                      <AnimatedButton
                         onClick={() => {
                           switchVersion(activeGroup.id, version.number);
                           setIsEditMode(false);
@@ -509,7 +510,7 @@ export const PromptBooster: React.FC = () => {
                           }`}
                       >
                         v{version.number}
-                      </button>
+                      </AnimatedButton>
                     </Tooltip>
                   )
                 )}
@@ -526,7 +527,7 @@ export const PromptBooster: React.FC = () => {
 
           {/* 副按钮区域 */}
           <div className="flex-shrink-0 flex gap-2">
-            <button
+            <AnimatedButton
               className={`text-sm flex items-center gap-1 px-3 py-2 ${activeGroup ? "button-confirm" : "button-third"}`}
               onClick={() => setIsIterationDialogOpen(true)}
               disabled={!optimizedPrompt || isProcessing || !activeGroup}
@@ -535,9 +536,9 @@ export const PromptBooster: React.FC = () => {
               <span className="hidden md:block">
                 {t("promptBooster.continueIteration")}
               </span>
-            </button>
+            </AnimatedButton>
 
-            <button
+            <AnimatedButton
               className="text-sm flex items-center gap-1 px-3 py-2 button-third"
               onClick={handleAnalyze}
               disabled={
@@ -559,9 +560,9 @@ export const PromptBooster: React.FC = () => {
                   </span>
                 </>
               )}
-            </button>
+            </AnimatedButton>
 
-            <button
+            <AnimatedButton
               className="text-sm flex items-center gap-1 px-3 py-2 button-third"
               onClick={() => setIsMaximized(!isMaximized)}
               disabled={!displayOriginalPrompt?.trim()}
@@ -581,7 +582,7 @@ export const PromptBooster: React.FC = () => {
                   </span>
                 </>
               )}
-            </button>
+            </AnimatedButton>
           </div>
         </div>
 
@@ -615,7 +616,7 @@ export const PromptBooster: React.FC = () => {
                 text={t("promptBooster.saveAsNewVersion")}
                 position="top"
               >
-                <button
+                <AnimatedButton
                   onClick={handleSaveUserModification}
                   className="absolute animate-pulse mt-40 bottom-4 right-4 text-sm px-3 py-2 shadow-sm flex items-center gap-1 transition-colors button-save-as"
                 >
@@ -623,7 +624,7 @@ export const PromptBooster: React.FC = () => {
                   <span className="hidden md:block">
                     {t("promptBooster.saveAs")}
                   </span>
-                </button>
+                </AnimatedButton>
               </Tooltip>
             )}
         </div>
@@ -665,18 +666,18 @@ export const PromptBooster: React.FC = () => {
         maxWidth="max-w-md"
         footer={
           <div className="flex justify-end gap-3">
-            <button
+            <AnimatedButton
               className="px-4 py-2 button-cancel"
               onClick={() => setIsResetDialogOpen(false)}
             >
               {t("common.buttons.cancel")}
-            </button>
-            <button
+            </AnimatedButton>
+            <AnimatedButton
               className="px-4 py-2 button-danger"
               onClick={handleConfirmReset}
             >
               {t("promptBooster.confirmResetTitle")}
-            </button>
+            </AnimatedButton>
           </div>
         }
       >
