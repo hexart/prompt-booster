@@ -159,7 +159,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
           </button>
         </div>
       </div>
-      <div className="space-y-2 max-h-[1200px] overflow-y-auto pb-2">
+      <div className="space-y-2 h-full overflow-y-scroll pb-2">
         {sortedGroups.map((group, index) => {
           // 获取该组的所有版本
           const versions = getGroupVersions(group.id);
