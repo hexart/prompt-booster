@@ -402,7 +402,7 @@ export const TestResult: React.FC = () => {
               ]}
               onClose={() => setShowRequirements(false)}
               constraintsId="parent-container"
-              className='w-60 backdrop-blur-md shadow-lg rounded-2xl dragable-notice-container'
+              className='backdrop-blur-md shadow-lg rounded-2xl dragable-notice-container'
               isRTL={isRTL()}
               initialPosition={{ x: '20px', y: '20px' }}
             />

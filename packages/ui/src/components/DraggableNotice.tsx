@@ -154,7 +154,7 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
             <XIcon size={16} />
           </motion.button>
         </div>
-        <div className="p-3 text-sm space-y-2">
+        <div className="p-3 me-2 text-sm space-y-2">
           {contentItems.map((item, index) => (
             <motion.div
               key={index}
