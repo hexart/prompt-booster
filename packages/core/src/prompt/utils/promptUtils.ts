@@ -97,7 +97,9 @@ export function removeThinkTags(text: string): string {
 
   // 使用正则表达式移除<think>标签及其内容
   // [\s\S]*? 匹配任意字符(包括换行符)，非贪婪模式
-  return text.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
+  let cleaned = text.replace(/<think>[\s\S]*?<\/think>/g, '');
+  cleaned = cleaned.replace(/^[\s\n\r]+/, '');
+  return cleaned.trim();
 }
 
 /**

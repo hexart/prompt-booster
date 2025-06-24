@@ -28,7 +28,7 @@ interface UseAutoScrollOptions {
 export function useAutoScroll<T extends HTMLElement = HTMLDivElement>({
     enabled = true,
     streaming = false,
-    threshold = 10, // 默认使用较小的容差值
+    threshold = 5, // 默认使用较小的容差值
     debug = false,
 }: UseAutoScrollOptions = {}) {
     const elementRef = useRef<T | null>(null);
