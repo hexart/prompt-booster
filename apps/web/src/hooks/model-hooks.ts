@@ -6,7 +6,7 @@ import { testModelConnection, maskApiKey, prepareModelsForDisplay } from '@promp
 import { ModelConfig, CustomInterface } from '@prompt-booster/core/model/models/config';
 import { getDefaultModelConfig } from '@prompt-booster/core/model/unifiedModelConfig';
 import { useTranslation } from 'react-i18next';
-import { formatInterfaceName } from '../utils/displayUtils';
+import { formatModelDisplayName } from '../utils/displayUtils';
 import { isRTL } from '../rtl';
 
 /**
@@ -239,7 +239,7 @@ export function useModelData() {
     const baseModels = prepareModelsForDisplay(configs, customInterfaces);
     return baseModels.map((model: any) => ({
       ...model,
-      name: formatInterfaceName(model.name, currentIsRTL)
+      name: formatModelDisplayName(model.providerName, model.model, currentIsRTL)
     }));
   }, [configs, customInterfaces, i18n.language, currentIsRTL]);
 

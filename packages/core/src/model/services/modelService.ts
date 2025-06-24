@@ -249,6 +249,7 @@ export function prepareModelsForDisplay(
     return {
       id,
       name: `${config.providerName} - ${config.model}`,
+      providerName: config.providerName,
       isStandard: true,
       isEnabled: config.enabled !== false,
       apiKey: config.apiKey,
@@ -262,11 +263,11 @@ export function prepareModelsForDisplay(
     return {
       id: item.id,
       name: item.name,
+      providerName: item.providerName,
       isStandard: false,
       isEnabled: item.enabled !== false,
       apiKey: item.apiKey,
       model: item.model || '',
-      providerName: item.providerName,
       config: item
     };
   });
@@ -278,6 +279,10 @@ export function prepareModelsForDisplay(
       if (!a.isEnabled && b.isEnabled) return 1;
       if (!a.isStandard && b.isStandard) return -1;
       if (a.isStandard && !b.isStandard) return 1;
-      return a.name.localeCompare(b.name);
+
+      // 统一使用 providerName 和 model 进行排序，而不依赖 name 字段
+      const aName = `${a.providerName} - ${a.model}`;
+      const bName = `${b.providerName} - ${b.model}`;
+      return aName.localeCompare(bName);
     });
 }
