@@ -53,6 +53,8 @@ export const Tooltip: React.FC<TooltipProps> = ({
       ? themeContext.resolvedTheme
       : theme || themeContext.resolvedTheme;
 
+  const timerRef = useRef<number | null>(null);
+
   // 设置 portal 目标
   useEffect(() => {
     setPortalTarget(document.body);
@@ -143,11 +145,23 @@ export const Tooltip: React.FC<TooltipProps> = ({
       else if (childRef) (childRef as React.MutableRefObject<HTMLElement | null>).current = node;
     },
     onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
-      if (!disabled) setIsVisible(true);
+      if (!disabled) {
+        setIsVisible(true);
+        if (timerRef.current) {
+          window.clearTimeout(timerRef.current);
+        }
+        timerRef.current = window.setTimeout(() => {
+          setIsVisible(false);
+        }, 3500); // 自动隐藏时间
+      }
       children.props.onMouseEnter?.(e);
     },
     onMouseLeave: (e: React.MouseEvent<HTMLElement>) => {
       setIsVisible(false);
+      if (timerRef.current) {
+        window.clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
       children.props.onMouseLeave?.(e);
     },
     onFocus: (e: React.FocusEvent<HTMLElement>) => {
