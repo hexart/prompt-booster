@@ -56,30 +56,30 @@ jobs:
         uses: actions/deploy-pages@v4
 
   # 部署到宝塔服务器
-  deploy-baota:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download Pages artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: github-pages
-          path: ./dist
+  # deploy-baota:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Download Pages artifact
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: github-pages
+  #         path: ./dist
 
-      - name: Extract artifact
-        run: |
-          cd ./dist
-          tar -xf artifact.tar
+  #     - name: Extract artifact
+  #       run: |
+  #         cd ./dist
+  #         tar -xf artifact.tar
 
-      - name: Deploy to FTP Server
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: 8.153.168.177
-          username: hexart
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./dist/
-          server-dir: ./
-          dangerous-clean-slate: true
+  #     - name: Deploy to FTP Server
+  #       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+  #       with:
+  #         server: 8.153.168.177
+  #         username: hexart
+  #         password: ${{ secrets.FTP_PASSWORD }}
+  #         local-dir: ./dist/
+  #         server-dir: ./
+  #         dangerous-clean-slate: true
 
   # Docker构建作业
   build-docker:
