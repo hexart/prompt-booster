@@ -75,12 +75,12 @@ export const PROVIDER_CONFIG: Record<string, any> = {
   },
   [LLMProvider.GEMINI]: {
     providerName: 'Gemini',
-    baseUrl: 'https://generativelanguage.googleapis.com',
+    baseUrl: 'https://generativelanguage.googleapis.com/v1beta',
     endpoints: {
       // Gemini 端点会在client.ts中的streamChat中进行转化，把:generateContent替换为:streamGenerateContent
-      chat: '/v1beta/models/{model}:generateContent',
-      // streamChat: '/v1beta/models/{model}:streamGenerateContent',
-      models: '/v1beta/models'
+      chat: '/models/{model}:generateContent',
+      // streamChat: '/models/{model}:streamGenerateContent',
+      models: '/models'
     },
     defaultModel: 'gemini-2.0-flash',
     timeout: 60000,

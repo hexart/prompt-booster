@@ -169,7 +169,7 @@ export class LLMClientImpl implements LLMClient {
       let payload;
       try {
         payload = this.requestFormatter.formatRequest(request);
-        
+
         // 处理流式请求的特殊情况
         payload = this.prepareStreamPayload(payload);
       } catch (formatError) {
@@ -199,7 +199,7 @@ export class LLMClientImpl implements LLMClient {
 
         // 4. 构建URL - 使用统一的 buildStreamUrl 方法
         const url = this.buildStreamUrl();
-        
+
         // 5. 添加认证头（仅对非 Gemini API）
         if (!this.isGeminiApi() && this.apiKey) {
           headers['Authorization'] = `Bearer ${this.apiKey}`;
@@ -439,7 +439,7 @@ export class LLMClientImpl implements LLMClient {
       const { stream, ...geminiPayload } = payload;
       return geminiPayload;
     }
-    
+
     // 其他 API 保持 stream: true
     return {
       ...payload,
@@ -455,7 +455,7 @@ export class LLMClientImpl implements LLMClient {
   private buildUrl(endpoint: string): string {
     // 替换模型占位符
     endpoint = endpoint.replace('{model}', this.model);
-    
+
     // 处理路径拼接
     let urlString: string;
     if (endpoint.startsWith('/')) {
@@ -467,14 +467,14 @@ export class LLMClientImpl implements LLMClient {
       const url = new URL(endpoint, this.baseUrl.endsWith('/') ? this.baseUrl : this.baseUrl + '/');
       urlString = url.toString();
     }
-    
+
     // Gemini API 特殊处理：添加 API key 到查询参数
     if (this.isGeminiApi() && this.apiKey) {
       const url = new URL(urlString);
       url.searchParams.set('key', this.apiKey);
       return url.toString();
     }
-    
+
     return urlString;
   }
 
@@ -484,12 +484,12 @@ export class LLMClientImpl implements LLMClient {
    */
   private buildStreamUrl(): string {
     let endpoint = this.endpoints.chat;
-    
+
     // Gemini API 特殊处理：使用流式端点
     if (this.isGeminiApi() && endpoint.includes(':generateContent')) {
       endpoint = endpoint.replace(':generateContent', ':streamGenerateContent');
     }
-    
+
     return this.buildUrl(endpoint);
   }
 

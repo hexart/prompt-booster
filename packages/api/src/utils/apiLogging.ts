@@ -11,7 +11,7 @@ let loggingEnabled = true;
  * 开启日志输出
  */
 export function enableApiClientLogs(): void {
-    loggingEnabled = true;
+  loggingEnabled = true;
 }
 
 /**
@@ -19,7 +19,7 @@ export function enableApiClientLogs(): void {
  * 关闭日志输出
  */
 export function disableApiClientLogs(): void {
-    loggingEnabled = false;
+  loggingEnabled = false;
 }
 
 /**
@@ -29,5 +29,5 @@ export function disableApiClientLogs(): void {
  * @returns 日志启用状态
  */
 export function isLoggingEnabled(): boolean {
-    return loggingEnabled;
+  return loggingEnabled;
 }
