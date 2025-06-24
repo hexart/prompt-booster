@@ -30,9 +30,9 @@ export const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
 }) => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
-  const optionsContainerRef = useRef<HTMLDivElement | null>(null);
-  const selectedOptionRef = useRef<HTMLLIElement | null>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const optionsContainerRef = useRef<HTMLDivElement>(null);
+  const selectedOptionRef = useRef<HTMLLIElement>(null);
 
   // Find the selected option for display
   const selectedOption = options.find(option => option.value === value);
@@ -59,25 +59,55 @@ export const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [id]);
 
-  // Scroll to the selected option when dropdown opens
+  // 滚动到选中项功能
   useEffect(() => {
-    if (isOpen && selectedOptionRef.current && optionsContainerRef.current) {
-      // 计算需要滚动的位置
-      const containerRect = optionsContainerRef.current.getBoundingClientRect();
-      const selectedRect = selectedOptionRef.current.getBoundingClientRect();
+    if (!isOpen || options.length === 0 || !value) return;
 
-      // 检查选中项是否在可视区域内
-      if (selectedRect.top < containerRect.top || selectedRect.bottom > containerRect.bottom) {
-        // 滚动到选中项，使其在可视区域内
-        selectedOptionRef.current.scrollIntoView({
-          block: 'nearest', // 'nearest' 将尝试最小的滚动量
-          behavior: 'smooth' // 平滑滚动
-        });
-      }
-    }
-  }, [isOpen, value]);
+    // 检查是否有匹配的选项
+    const hasMatchingOption = options.some(option => option.value === value);
+    if (!hasMatchingOption) return;
+
+    const scrollToSelected = () => {
+      if (!optionsContainerRef.current) return;
+
+      // 直接通过DOM查找选中的元素
+      const container = optionsContainerRef.current;
+      const selectedElement = container.querySelector(`[data-value="${value}"]`) as HTMLElement;
+
+      if (!selectedElement) return;
+
+      const extraPadding = 16; // 底部额外的间距
+
+      // 先用instant滚动快速定位，然后微调
+      selectedElement.scrollIntoView({
+        block: 'nearest',
+        behavior: 'auto'
+      });
+
+      // 立即进行微调计算
+      requestAnimationFrame(() => {
+        const elementRect = selectedElement.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        const actualBottomSpace = containerRect.bottom - elementRect.bottom;
+
+        // 如果需要微调，使用smooth滚动
+        if (actualBottomSpace < extraPadding) {
+          const scrollAmount = extraPadding - actualBottomSpace;
+          container.scrollBy({
+            top: scrollAmount,
+            behavior: 'smooth' // 只有微调使用smooth
+          });
+        }
+      });
+    };
+
+    // 给DOM一点渲染时间，然后滚动
+    const timer = setTimeout(scrollToSelected, 100);
+
+    return () => clearTimeout(timer);
+  }, [isOpen, value, options.length]);
 
   return (
     <div className={`relative ${className}`} ref={dropdownRef}>
@@ -132,11 +162,12 @@ export const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
             className="absolute z-40 w-full mt-1 rounded-xl shadow-lg max-h-[247px] overflow-y-auto dropdown-menu backdrop-blur-md"
             ref={optionsContainerRef}
           >
-            <ul className="py-1">
+            <ul className="py-1 space-y-1">
               <AnimatePresence mode="popLayout">
                 {options.map((option, index) => (
                   <motion.li
                     key={option.value}
+                    data-value={option.value}
                     ref={option.value === value ? selectedOptionRef : null}
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -152,8 +183,8 @@ export const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
                     }}
                     whileHover={{ x: 2 }}
                     whileTap={{ scale: 0.98 }}
-                    className={`px-3 py-3 cursor-pointer text-sm mx-1 rounded-lg mb-1 last:mb-0
-                ${option.value === value
+                    className={`px-3 py-3 cursor-pointer text-sm mx-1 rounded-lg
+                  ${option.value === value
                         ? 'dropdown-item-active dropdown-item-active-title'
                         : 'dropdown-item-inactive dropdown-item-inactive-title'
                       }`}
