@@ -16,8 +16,6 @@
   },
   "include": [
     "src/**/*.ts",
-    "src/**/*.tsx",
-    "../../packages/core/src/hooks/usePromptHistory.ts",
-    "../../packages/core/src/prompt/hooks/useTemplates.ts"
+    "src/**/*.tsx"
   ]
 }
