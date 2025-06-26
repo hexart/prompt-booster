@@ -11,6 +11,10 @@ import { Toaster } from '@prompt-booster/ui';
 import { useTranslation } from 'react-i18next';
 import { setDirectionByLanguage, getButtonPosition } from './rtl';
 import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
+import { setApiLogging } from '@prompt-booster/api/utils/apiLogging';
+
+// 在应用初始化时禁用 API 客户端日志
+setApiLogging(false);
 
 // 声明全局变量类型
 declare global {

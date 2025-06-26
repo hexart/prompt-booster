@@ -5,7 +5,7 @@
  */
 import { ResponseParser, ChatResponse } from '../types';
 import { ResponseParseType } from '../config';
-import { isLoggingEnabled } from '../utils';
+import { logDebug } from '../utils/apiLogging';
 
 /**
  * OpenAI兼容响应解析器
@@ -239,15 +239,11 @@ export class OllamaResponseParser implements ResponseParser {
    * @returns 标准化的聊天响应
    */
   parseFullResponse(response: any): ChatResponse {
-    if (isLoggingEnabled()) {
-      console.log('[OllamaResponseParser] Parsing response:', response);
-      console.log('[OllamaResponseParser] Response type:', typeof response);
-    }
+    logDebug('[OllamaResponseParser] Parsing response:', response);
+    logDebug('[OllamaResponseParser] Response type:', typeof response);
 
     if (response === null || response === undefined) {
-      if (isLoggingEnabled()) {
-        console.log('[OllamaResponseParser] Response is null/undefined');
-      }
+      logDebug('[OllamaResponseParser] Response is null/undefined');
       return { content: '' };
     }
 
@@ -281,9 +277,7 @@ export class OllamaResponseParser implements ResponseParser {
 
     // 检查是否是模型加载响应
     if (response.done_reason === 'load' && response.done === true) {
-      if (isLoggingEnabled()) {
-        console.log('[OllamaResponseParser] Model loaded successfully');
-      }
+      logDebug('[OllamaResponseParser] Model loaded successfully');
       // 返回空内容而不是抛出错误
       return {
         content: '',
@@ -378,16 +372,12 @@ export class OllamaResponseParser implements ResponseParser {
         }
       } catch (e) {
         // 忽略解析错误的行
-        if (isLoggingEnabled()) {
-          console.log('[OllamaResponseParser] Failed to parse line:', line);
-        }
+        logDebug('[OllamaResponseParser] Failed to parse line:', line);
       }
     }
 
-    if (isLoggingEnabled()) {
-      console.log('[OllamaResponseParser] Full content length:', fullContent.length);
-      console.log('[OllamaResponseParser] First 200 chars:', fullContent.substring(0, 200));
-    }
+    logDebug('[OllamaResponseParser] Full content length:', fullContent.length);
+    logDebug('[OllamaResponseParser] First 200 chars:', fullContent.substring(0, 200));
 
     return {
       content: fullContent,

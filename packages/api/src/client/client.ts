@@ -30,7 +30,7 @@ import {
   ResponseParseError,
   formatError
 } from './errors';
-import { isLoggingEnabled } from '../utils';
+import { logDebug } from '../utils/apiLogging';
 import { StreamFormat, splitStreamBuffer } from '../utils';
 
 /**
@@ -101,7 +101,7 @@ export class LLMClientImpl implements LLMClient {
       (error) => Promise.reject(error)
     );
 
-    this.logDebug(`LLMClient initialized with model: ${this.model}`);
+    logDebug(`[LLMClient] initialized with model: ${this.model}`);
   }
 
   /**
@@ -127,11 +127,11 @@ export class LLMClientImpl implements LLMClient {
       const url = new URL(this.endpoints.chat, this.baseUrl);
       const normalizedEndpoint = url.pathname + url.search;
 
-      this.logDebug(`[DEBUG] Sending chat request to ${normalizedEndpoint}`);
+      logDebug(`[LLMClient] Sending chat request to ${normalizedEndpoint}`);
 
       // 3. 发送请求
       const response = await this.client.post(normalizedEndpoint, payload);
-      this.logDebug('[DEBUG] Chat request completed successfully');
+      logDebug('[LLMClient] Chat request completed successfully');
 
       // 4. 解析响应
       let parsedResponse;
@@ -149,7 +149,7 @@ export class LLMClientImpl implements LLMClient {
 
       return { data: parsedResponse };
     } catch (error: any) {
-      this.logDebug('Error in chat request:', error);
+      logDebug('[LLMClient] Error in chat request:', error);
       throw formatError(error);
     }
   }
@@ -182,7 +182,7 @@ export class LLMClientImpl implements LLMClient {
         return;
       }
 
-      this.logDebug(`Starting streaming request to ${this.endpoints.chat}`);
+      logDebug(`[LLMClient] Starting streaming request to ${this.endpoints.chat}`);
 
       // 2. 获取中断控制器
       const controller = streamHandler.abortController || new AbortController();
@@ -240,7 +240,7 @@ export class LLMClientImpl implements LLMClient {
 
         // 7. 检测响应格式
         const contentType = response.headers.get('Content-Type') || '';
-        this.logDebug(`Response content type: ${contentType}`);
+        logDebug(`[LLMClient] Response content type: ${contentType}`);
 
         let streamFormat: StreamFormat = StreamFormat.AUTO;
         if (contentType.includes(CONTENT_TYPES.SSE)) {
@@ -255,7 +255,7 @@ export class LLMClientImpl implements LLMClient {
         await this.handleStreamResponse(response.body, streamFormat, streamHandler);
 
       } catch (fetchError: any) {
-        this.logDebug(`Fetch streaming failed:`, fetchError);
+        logDebug(`[LLMClient] Fetch streaming failed:`, fetchError);
 
         // 处理 fetch 特有的错误
         if (fetchError.name === 'AbortError') {
@@ -277,7 +277,7 @@ export class LLMClientImpl implements LLMClient {
       const errorMsg = error && typeof error === 'object' && 'message' in error ?
         error.message : 'Unknown stream error';
 
-      this.logDebug(`Stream error: ${errorMsg}`);
+      logDebug(`[LLMClient] Stream error: ${errorMsg}`);
 
       if (fetchAttempted) {
         return;
@@ -305,7 +305,7 @@ export class LLMClientImpl implements LLMClient {
    */
   async testConnection(): Promise<ClientResponse<{ success: boolean; message?: string }>> {
     try {
-      this.logDebug(`测试连接：发送最小化 chat 请求`);
+      logDebug(`[LLMClient] 测试连接：发送最小化 chat 请求`);
 
       // 发送最小化的 chat 请求来测试完整的 API 可用性
       const response = await this.chat({
@@ -315,7 +315,7 @@ export class LLMClientImpl implements LLMClient {
           temperature: 0  // 确定性输出
         }
       });
-      this.logDebug(response.data.content)
+      logDebug(`[LLMClient] Full response: ${response.data.content}`);
 
       // 检查响应是否有效
       if (response.data) {
@@ -331,7 +331,7 @@ export class LLMClientImpl implements LLMClient {
       throw new ResponseParseError('Empty response from chat endpoint');
 
     } catch (error: any) {
-      this.logDebug(`测试连接失败：`, error);
+      logDebug(`[LLMClient] 测试连接失败：`, error);
       // 直接抛出错误，让上层处理
       throw error;  // 注意：这里的错误已经被 chat 方法通过 formatError 处理过了
     }
@@ -415,12 +415,12 @@ export class LLMClientImpl implements LLMClient {
       }
 
       // 如果无法解析，则返回空数组
-      this.logDebug('无法解析模型列表格式:' + JSON.stringify(data));
+      logDebug('[LLMClient] 无法解析模型列表格式:' + JSON.stringify(data));
       return [];
     } catch (error: any) {
       // 使用 formatError 统一处理错误
       const formattedError = formatError(error);
-      this.logDebug('获取模型列表失败:' + formattedError.message);
+      logDebug('[LLMClient] 获取模型列表失败:' + formattedError.message);
       
       // 重新抛出格式化后的错误，让上层处理
       throw formattedError;
@@ -534,7 +534,7 @@ export class LLMClientImpl implements LLMClient {
         const { done, value } = await reader.read();
 
         if (done) {
-          this.logDebug("Stream complete");
+          logDebug("[LLMClient] Stream complete");
 
           // 处理可能的剩余数据
           if (buffer.trim()) {
@@ -626,14 +626,14 @@ export class LLMClientImpl implements LLMClient {
     streamHandler: StreamHandler
   ): Promise<void> {
     try {
-      this.logDebug("Using fallback non-streaming request");
+      logDebug("[LLMClient] Using fallback non-streaming request");
       const nonStreamingPayload = { ...payload, stream: false };
 
       // 使用 URL 对象规范化 endpoint 路径
       const url = new URL(this.endpoints.chat, this.baseUrl);
       const normalizedEndpoint = url.pathname + url.search;
 
-      this.logDebug(`Sending fallback request to ${normalizedEndpoint}`);
+      logDebug(`[LLMClient] Sending fallback request to ${normalizedEndpoint}`);
 
       const response = await this.client.post(normalizedEndpoint, nonStreamingPayload);
 
@@ -661,16 +661,6 @@ export class LLMClientImpl implements LLMClient {
       if (streamHandler.onError) {
         streamHandler.onError(error instanceof Error ? error : new Error(String(error)));
       }
-    }
-  }
-
-  /**
-   * 输出调试日志
-   * @param message 日志消息
-   */
-  private logDebug(message: string, _data?: any): void {
-    if (isLoggingEnabled()) {
-      console.log(`[DEBUG] LLMClient: ${message}`);
     }
   }
 }

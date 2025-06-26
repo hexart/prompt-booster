@@ -9,12 +9,9 @@ import { useModal } from '@prompt-booster/ui/hooks/useModal';
 import { CogIcon, Grid2X2PlusIcon, Power, CableIcon, FileCog, Trash2 } from 'lucide-react';
 import { useModelConnection, useModelData, useModelEdit } from '../hooks/model-hooks';
 import { ModelModal } from './ModelModal';
-import { disableApiClientLogs } from '@prompt-booster/api/utils/apiLogging';
 import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
 import { useTranslation } from 'react-i18next';
 
-// 在应用初始化时禁用 API 客户端日志
-disableApiClientLogs();
 // 确认删除对话框组件
 const ConfirmDialog: React.FC<{
   isOpen: boolean;
