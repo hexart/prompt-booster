@@ -15,7 +15,6 @@ export function setApiLogging(enabled: boolean): void {
   loggingEnabled = enabled;
 }
 
-
 /**
  * 检查日志是否启用
  * 获取当前日志状态
