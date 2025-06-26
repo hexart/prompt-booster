@@ -149,8 +149,9 @@ export class LLMClientImpl implements LLMClient {
 
       return { data: parsedResponse };
     } catch (error: any) {
-      logDebug('[LLMClient] Error in chat request:', error);
-      throw formatError(error);
+      const formattedError = formatError(error);
+      logDebug(`[LLMClient] Chat request failed: ${formattedError.message}`);
+      throw formattedError;
     }
   }
 
@@ -161,24 +162,18 @@ export class LLMClientImpl implements LLMClient {
    * @returns Promise
    */
   async streamChat(request: ChatRequest, streamHandler: StreamHandler): Promise<void> {
-    let fetchAttempted = false;
-
     try {
       // 1. 格式化请求
       let payload;
       try {
         payload = this.requestFormatter.formatRequest(request);
-
-        // 处理流式请求的特殊情况
         payload = this.prepareStreamPayload(payload);
       } catch (formatError) {
         const error = new RequestFormatError(
           formatError instanceof Error ? formatError.message : String(formatError),
           formatError
         );
-        if (streamHandler.onError) {
-          streamHandler.onError(error);
-        }
+        streamHandler.onError?.(error);
         return;
       }
 
@@ -187,103 +182,13 @@ export class LLMClientImpl implements LLMClient {
       // 2. 获取中断控制器
       const controller = streamHandler.abortController || new AbortController();
 
-      try {
-        fetchAttempted = true;
-
-        // 3. 构建请求头
-        const headers: Record<string, string> = {
-          'Content-Type': CONTENT_TYPES.JSON,
-          'Accept': `${CONTENT_TYPES.JSON}, ${CONTENT_TYPES.SSE}, ${CONTENT_TYPES.TEXT}, */*`
-        };
-
-        // 4. 构建URL - 使用统一的 buildStreamUrl 方法
-        const url = this.buildStreamUrl();
-
-        // 5. 添加认证头（仅对非 Gemini API）
-        if (!this.isGeminiApi() && this.apiKey) {
-          headers['Authorization'] = `Bearer ${this.apiKey}`;
-        }
-
-        // 5. 发送请求
-        const response = await fetch(url, {
-          method: 'POST',
-          headers,
-          body: JSON.stringify(payload),
-          signal: controller.signal
-        });
-
-        // 6. 检查响应状态
-        if (!response.ok) {
-          // 尝试解析错误响应
-          let errorData;
-          try {
-            errorData = await response.json();
-          } catch {
-            errorData = await response.text();
-          }
-
-          // 构造类似 axios 的错误对象以便 formatError 处理
-          const axiosLikeError = {
-            response: {
-              status: response.status,
-              statusText: response.statusText,
-              data: errorData
-            }
-          };
-
-          throw formatError(axiosLikeError);
-        }
-
-        if (!response.body) {
-          throw new ConnectionError("Response body is null");
-        }
-
-        // 7. 检测响应格式
-        const contentType = response.headers.get('Content-Type') || '';
-        logDebug(`[LLMClient] Response content type: ${contentType}`);
-
-        let streamFormat: StreamFormat = StreamFormat.AUTO;
-        if (contentType.includes(CONTENT_TYPES.SSE)) {
-          streamFormat = StreamFormat.SSE;
-        } else if (contentType.includes(CONTENT_TYPES.JSON)) {
-          streamFormat = StreamFormat.JSON;
-        } else if (contentType.includes(CONTENT_TYPES.TEXT)) {
-          streamFormat = StreamFormat.TEXT;
-        }
-
-        // 8. 处理流式响应
-        await this.handleStreamResponse(response.body, streamFormat, streamHandler);
-
-      } catch (fetchError: any) {
-        logDebug(`[LLMClient] Fetch streaming failed:`, fetchError);
-
-        // 处理 fetch 特有的错误
-        if (fetchError.name === 'AbortError') {
-          const error = new ConnectionError('Request aborted', fetchError);
-          if (streamHandler.onError) {
-            streamHandler.onError(error);
-          }
-          return;
-        }
-
-        // 使用 formatError 处理其他错误
-        const formattedError = formatError(fetchError);
-        if (streamHandler.onError) {
-          streamHandler.onError(formattedError);
-        }
-      }
+      // 3. 发送流式请求
+      await this.performStreamRequest(payload, controller, streamHandler);
 
     } catch (error: any) {
-      const errorMsg = error && typeof error === 'object' && 'message' in error ?
-        error.message : 'Unknown stream error';
+      // 对于预期外的错误，尝试降级到常规请求
+      logDebug(`[LLMClient] Stream setup error: ${error.message}`);
 
-      logDebug(`[LLMClient] Stream error: ${errorMsg}`);
-
-      if (fetchAttempted) {
-        return;
-      }
-
-      // 尝试非流式后备方案
       try {
         await this.handleRegularResponse(
           this.requestFormatter.formatRequest(request),
@@ -291,10 +196,101 @@ export class LLMClientImpl implements LLMClient {
         );
       } catch (fallbackError) {
         const formattedError = formatError(fallbackError);
-        if (streamHandler.onError) {
-          streamHandler.onError(formattedError);
-        }
+        logDebug(`[LLMClient] Stream fallback failed: ${formattedError.message}`);
+        streamHandler.onError?.(formattedError);
       }
+    }
+  }
+
+  /**
+   * 执行流式请求的核心逻辑
+   */
+  private async performStreamRequest(
+    payload: any,
+    controller: AbortController,
+    streamHandler: StreamHandler
+  ): Promise<void> {
+    try {
+      // 构建请求头
+      const headers: Record<string, string> = {
+        'Content-Type': CONTENT_TYPES.JSON,
+        'Accept': `${CONTENT_TYPES.JSON}, ${CONTENT_TYPES.SSE}, ${CONTENT_TYPES.TEXT}, */*`
+      };
+
+      // 构建URL
+      let endpoint = this.endpoints.chat;
+      if (this.isGeminiApi() && endpoint.includes(':generateContent')) {
+        endpoint = endpoint.replace(':generateContent', ':streamGenerateContent');
+      }
+      const url = this.buildUrl(endpoint);
+
+      // 添加认证头（仅对非 Gemini API）
+      if (!this.isGeminiApi() && this.apiKey) {
+        headers['Authorization'] = `Bearer ${this.apiKey}`;
+      }
+
+      // 发送请求
+      const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(payload),
+        signal: controller.signal
+      });
+
+      // 检查响应状态
+      if (!response.ok) {
+        let errorData;
+        try {
+          errorData = await response.json();
+        } catch {
+          errorData = await response.text();
+        }
+
+        // 构造类似 axios 的错误对象
+        const axiosLikeError = {
+          response: {
+            status: response.status,
+            statusText: response.statusText,
+            data: errorData
+          }
+        };
+
+        const formattedError = formatError(axiosLikeError);
+        logDebug(`[LLMClient] Stream request failed: ${formattedError.message}`);
+        throw formattedError;
+      }
+
+      if (!response.body) {
+        throw new ConnectionError("Response body is null");
+      }
+
+      // 检测响应格式并处理流式响应
+      const contentType = response.headers.get('Content-Type') || '';
+      logDebug(`[LLMClient] Response content type: ${contentType}`);
+
+      let streamFormat: StreamFormat = StreamFormat.AUTO;
+      if (contentType.includes(CONTENT_TYPES.SSE)) {
+        streamFormat = StreamFormat.SSE;
+      } else if (contentType.includes(CONTENT_TYPES.JSON)) {
+        streamFormat = StreamFormat.JSON;
+      } else if (contentType.includes(CONTENT_TYPES.TEXT)) {
+        streamFormat = StreamFormat.TEXT;
+      }
+
+      await this.handleStreamResponse(response.body, streamFormat, streamHandler);
+
+    } catch (fetchError: any) {
+      // 处理中止错误
+      if (fetchError.name === 'AbortError') {
+        const error = new ConnectionError('Request aborted', fetchError);
+        streamHandler.onError?.(error);
+        return;
+      }
+
+      // 处理其他错误
+      const formattedError = formatError(fetchError);
+      logDebug(`[LLMClient] Stream fetch failed: ${formattedError.message}`);
+      streamHandler.onError?.(formattedError);
     }
   }
 
@@ -311,13 +307,13 @@ export class LLMClientImpl implements LLMClient {
       const response = await this.chat({
         userMessage: 'Hi',
         options: {
-          maxTokens: 1,  // 最小化 token 消耗
-          temperature: 0  // 确定性输出
+          maxTokens: 1,
+          temperature: 0
         }
       });
+
       logDebug(`[LLMClient] Full response: ${response.data.content}`);
 
-      // 检查响应是否有效
       if (response.data) {
         return {
           data: {
@@ -327,13 +323,12 @@ export class LLMClientImpl implements LLMClient {
         };
       }
 
-      // 如果没有数据，抛出解析错误
       throw new ResponseParseError('Empty response from chat endpoint');
 
     } catch (error: any) {
-      logDebug(`[LLMClient] 测试连接失败：`, error);
-      // 直接抛出错误，让上层处理
-      throw error;  // 注意：这里的错误已经被 chat 方法通过 formatError 处理过了
+      // 直接重新抛出，因为 chat 方法已经处理过错误格式化
+      logDebug(`[LLMClient] 测试连接失败：`, error.message);
+      throw error;
     }
   }
 
@@ -380,51 +375,56 @@ export class LLMClientImpl implements LLMClient {
         throw axiosLikeError;
       }
 
-      // 处理不同格式的响应
-      if (Array.isArray(data)) {
-        // 一些API直接返回模型数组
-        return data.map((model: any) => ({
-          id: model.id || model.name,
-          name: model.name || model.id
-        }));
-      } else if (data.data && Array.isArray(data.data)) {
-        // OpenAI格式: { data: [model1, model2, ...] }
-        return data.data.map((model: any) => ({
-          id: model.id,
-          name: model.name || model.id
-        }));
-      } else if (data.models && Array.isArray(data.models)) {
-        // 一些API使用 models 字段
-        return data.models.map((model: any) => ({
-          id: model.id || model.name,
-          name: model.name || model.id
-        }));
-      }
+      // 解析不同格式的模型列表
+      return this.parseModelList(data);
 
-      // 如果没有找到已知格式，尝试推断
-      const possibleArrayFields = Object.keys(data).filter(key =>
-        Array.isArray(data[key]) && data[key].length > 0 &&
-        (data[key][0].id || data[key][0].name)
-      );
-
-      if (possibleArrayFields.length > 0) {
-        return data[possibleArrayFields[0]].map((model: any) => ({
-          id: model.id || model.name,
-          name: model.name || model.id
-        }));
-      }
-
-      // 如果无法解析，则返回空数组
-      logDebug('[LLMClient] 无法解析模型列表格式:' + JSON.stringify(data));
-      return [];
     } catch (error: any) {
-      // 使用 formatError 统一处理错误
       const formattedError = formatError(error);
-      logDebug('[LLMClient] 获取模型列表失败:' + formattedError.message);
-      
-      // 重新抛出格式化后的错误，让上层处理
+      logDebug(`[LLMClient] Get models failed: ${formattedError.message}`);
       throw formattedError;
     }
+  }
+
+  /**
+   * 解析模型列表的辅助方法
+   */
+  private parseModelList(data: any): Array<{ id: string, name?: string }> {
+    if (Array.isArray(data)) {
+      return data.map((model: any) => ({
+        id: model.id || model.name,
+        name: model.name || model.id
+      }));
+    }
+
+    if (data.data && Array.isArray(data.data)) {
+      return data.data.map((model: any) => ({
+        id: model.id,
+        name: model.name || model.id
+      }));
+    }
+
+    if (data.models && Array.isArray(data.models)) {
+      return data.models.map((model: any) => ({
+        id: model.id || model.name,
+        name: model.name || model.id
+      }));
+    }
+
+    // 智能推断
+    const possibleArrayFields = Object.keys(data).filter(key =>
+      Array.isArray(data[key]) && data[key].length > 0 &&
+      (data[key][0].id || data[key][0].name)
+    );
+
+    if (possibleArrayFields.length > 0) {
+      return data[possibleArrayFields[0]].map((model: any) => ({
+        id: model.id || model.name,
+        name: model.name || model.id
+      }));
+    }
+
+    logDebug('[LLMClient] 无法解析模型列表格式:', JSON.stringify(data));
+    return [];
   }
 
   /**
@@ -489,21 +489,6 @@ export class LLMClientImpl implements LLMClient {
     }
 
     return urlString;
-  }
-
-  /**
-   * 构建流式请求URL
-   * @returns 完整URL
-   */
-  private buildStreamUrl(): string {
-    let endpoint = this.endpoints.chat;
-
-    // Gemini API 特殊处理：使用流式端点
-    if (this.isGeminiApi() && endpoint.includes(':generateContent')) {
-      endpoint = endpoint.replace(':generateContent', ':streamGenerateContent');
-    }
-
-    return this.buildUrl(endpoint);
   }
 
   /**

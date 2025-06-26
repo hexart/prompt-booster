@@ -63,6 +63,22 @@ export class AuthenticationError extends LLMClientError {
 }
 
 /**
+ * 配额超限错误
+ * 表示API配额或限制相关错误
+ */
+export class QuotaExceededError extends LLMClientError {
+  /**
+   * @param message 错误消息
+   * @param cause 错误原因
+   * @param retryAfter 建议重试时间(秒)
+   */
+  constructor(message: string, cause?: any) {
+    super(message, cause);
+    this.name = 'QuotaExceededError';
+  }
+}
+
+/**
  * 请求格式错误
  * 表示请求格式化相关错误
  */
@@ -127,7 +143,16 @@ export function formatError(error: any): LLMClientError {
     originalMessage = `HTTP ${status}`;
   }
 
-  // 检查是否是 API key 相关的错误（通过错误消息内容判断）
+  // 检查是否是配额超限错误
+  const isQuotaError = status === 429 || 
+    originalMessage.toLowerCase().includes('quota') ||
+    originalMessage.toLowerCase().includes('rate limit') ||
+    originalMessage.toLowerCase().includes('too many requests') ||
+    originalMessage.toLowerCase().includes('exceeded') ||
+    (data?.error?.code === 429) ||
+    (data?.error?.status === 'RESOURCE_EXHAUSTED');
+
+  // 检查是否是 API key 相关的错误
   const isApiKeyError = originalMessage.toLowerCase().includes('api key') ||
     originalMessage.toLowerCase().includes('api_key') ||
     originalMessage.toLowerCase().includes('unauthorized') ||
@@ -138,9 +163,6 @@ export function formatError(error: any): LLMClientError {
   switch (status) {
     case 400:
     case 422:
-      if (isApiKeyError) {
-        return new AuthenticationError(originalMessage, error);
-      }
       return new RequestFormatError(originalMessage, error);
 
     case 401:
@@ -149,6 +171,8 @@ export function formatError(error: any): LLMClientError {
 
     case 404:
       return new ConnectionError(originalMessage, error);
+    case 429:
+      return new QuotaExceededError(originalMessage, error);
 
     case 500:
     case 502:
@@ -157,7 +181,10 @@ export function formatError(error: any): LLMClientError {
       return new ConnectionError(originalMessage, error);
 
     default:
-      // 其他错误直接返回原始消息
+      // 其他错误根据内容判断
+      if (isQuotaError) {
+        return new QuotaExceededError(originalMessage, error);
+      }
       if (isApiKeyError) {
         return new AuthenticationError(originalMessage, error);
       }
