@@ -61,6 +61,7 @@
     "getModelListFailed": "دریافت لیست مدل‌ها ناموفق بود",
     "getModelListSuccess": "{{count}} مدل با موفقیت دریافت شد",
     "noModelAvailable": "مدلی موجود نیست",
+    "invalidApiKey": "کلید API نامعتبر",
     "interfaceUpdateSuccess": "رابط با موفقیت به‌روزرسانی شد",
     "newInterfaceCreated": "رابط جدید با موفقیت ایجاد شد",
     "saveFailed": "ذخیره ناموفق: {{errorMessage}}",

@@ -61,6 +61,7 @@
     "getModelListFailed": "Gagal mendapatkan daftar model",
     "getModelListSuccess": "Berhasil mendapatkan {{count}} model",
     "noModelAvailable": "Tidak ada model tersedia",
+    "invalidApiKey": "Kunci API tidak valid",
     "interfaceUpdateSuccess": "Antarmuka berhasil diperbarui",
     "newInterfaceCreated": "Antarmuka baru berhasil dibuat",
     "saveFailed": "Penyimpanan gagal: {{errorMessage}}",

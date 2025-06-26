@@ -61,6 +61,7 @@
     "getModelListFailed": "Échec de la récupération de la liste des modèles",
     "getModelListSuccess": "{{count}} modèles obtenus avec succès",
     "noModelAvailable": "Aucun modèle disponible",
+    "invalidApiKey": "Clé API invalide",
     "interfaceUpdateSuccess": "Interface mise à jour avec succès",
     "newInterfaceCreated": "Nouvelle interface créée avec succès",
     "saveFailed": "Échec de l'enregistrement : {{errorMessage}}",

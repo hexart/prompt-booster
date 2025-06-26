@@ -61,6 +61,7 @@
     "getModelListFailed": "Ophalen van modellijst mislukt",
     "getModelListSuccess": "{{count}} modellen succesvol opgehaald",
     "noModelAvailable": "Geen modellen beschikbaar",
+    "invalidApiKey": "Ongeldige API-sleutel",
     "interfaceUpdateSuccess": "Interface succesvol bijgewerkt",
     "newInterfaceCreated": "Nieuwe interface succesvol aangemaakt",
     "saveFailed": "Opslaan mislukt: {{errorMessage}}",

@@ -61,6 +61,7 @@
     "getModelListFailed": "Не удалось получить список моделей",
     "getModelListSuccess": "Успешно получено {{count}} моделей",
     "noModelAvailable": "Нет доступных моделей",
+    "invalidApiKey": "Недействительный ключ API",
     "interfaceUpdateSuccess": "Интерфейс успешно обновлен",
     "newInterfaceCreated": "Новый интерфейс успешно создан",
     "saveFailed": "Сохранение не удалось: {{errorMessage}}",

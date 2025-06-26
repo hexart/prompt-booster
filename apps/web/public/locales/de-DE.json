@@ -61,6 +61,7 @@
     "getModelListFailed": "Abrufen der Modellliste fehlgeschlagen",
     "getModelListSuccess": "Erfolgreich {{count}} Modelle abgerufen",
     "noModelAvailable": "Keine Modelle verfügbar",
+    "invalidApiKey": "Ungültiger API-Schlüssel",
     "interfaceUpdateSuccess": "Schnittstelle erfolgreich aktualisiert",
     "newInterfaceCreated": "Neue Schnittstelle erfolgreich erstellt",
     "saveFailed": "Speichern fehlgeschlagen: {{errorMessage}}",

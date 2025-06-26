@@ -61,6 +61,7 @@
     "getModelListFailed": "मॉडल सूची प्राप्त करने में विफल",
     "getModelListSuccess": "{{count}} मॉडल सफलतापूर्वक प्राप्त किए गए",
     "noModelAvailable": "कोई मॉडल उपलब्ध नहीं",
+    "invalidApiKey": "अमान्य API कुंजी",
     "interfaceUpdateSuccess": "इंटरफेस सफलतापूर्वक अपडेट किया गया",
     "newInterfaceCreated": "नया इंटरफेस सफलतापूर्वक बनाया गया",
     "saveFailed": "सहेजना विफल: {{errorMessage}}",

@@ -26,10 +26,9 @@ import {
 } from '../strategies';
 import {
   ConnectionError,
-  AuthenticationError,
   RequestFormatError,
   ResponseParseError,
-  LLMClientError,
+  formatError
 } from './errors';
 import { isLoggingEnabled } from '../utils';
 import { StreamFormat, splitStreamBuffer } from '../utils';
@@ -151,7 +150,7 @@ export class LLMClientImpl implements LLMClient {
       return { data: parsedResponse };
     } catch (error: any) {
       this.logDebug('Error in chat request:', error);
-      throw this.formatError(error);
+      throw formatError(error);
     }
   }
 
@@ -232,7 +231,7 @@ export class LLMClientImpl implements LLMClient {
             }
           };
 
-          throw this.formatError(axiosLikeError);
+          throw formatError(axiosLikeError);
         }
 
         if (!response.body) {
@@ -268,7 +267,7 @@ export class LLMClientImpl implements LLMClient {
         }
 
         // 使用 formatError 处理其他错误
-        const formattedError = this.formatError(fetchError);
+        const formattedError = formatError(fetchError);
         if (streamHandler.onError) {
           streamHandler.onError(formattedError);
         }
@@ -291,7 +290,7 @@ export class LLMClientImpl implements LLMClient {
           streamHandler
         );
       } catch (fallbackError) {
-        const formattedError = this.formatError(fallbackError);
+        const formattedError = formatError(fallbackError);
         if (streamHandler.onError) {
           streamHandler.onError(formattedError);
         }
@@ -365,11 +364,21 @@ export class LLMClientImpl implements LLMClient {
         headers
       });
 
-      if (!response.ok) {
-        throw new Error(`获取模型列表失败: ${response.status} ${response.statusText}`);
-      }
-
+      // 先读取响应数据
       const data = await response.json();
+
+      // 检查响应状态，如果不成功则抛出错误让 formatError 处理
+      if (!response.ok) {
+        // 构造类似 axios 的错误对象以便 formatError 处理
+        const axiosLikeError = {
+          response: {
+            status: response.status,
+            statusText: response.statusText,
+            data: data
+          }
+        };
+        throw axiosLikeError;
+      }
 
       // 处理不同格式的响应
       if (Array.isArray(data)) {
@@ -408,9 +417,13 @@ export class LLMClientImpl implements LLMClient {
       // 如果无法解析，则返回空数组
       this.logDebug('无法解析模型列表格式:' + JSON.stringify(data));
       return [];
-    } catch (error) {
-      this.logDebug('获取模型列表失败:' + (error instanceof Error ? error.message : String(error)));
-      return [];
+    } catch (error: any) {
+      // 使用 formatError 统一处理错误
+      const formattedError = formatError(error);
+      this.logDebug('获取模型列表失败:' + formattedError.message);
+      
+      // 重新抛出格式化后的错误，让上层处理
+      throw formattedError;
     }
   }
 
@@ -648,65 +661,6 @@ export class LLMClientImpl implements LLMClient {
       if (streamHandler.onError) {
         streamHandler.onError(error instanceof Error ? error : new Error(String(error)));
       }
-    }
-  }
-
-  /**
-   * 格式化错误信息
-   * @param error 错误对象
-   * @returns 格式化后的错误信息
-   */
-  private formatError(error: any): LLMClientError {
-    // 1. 如果已经是 LLMClientError，直接返回
-    if (error instanceof LLMClientError) {
-      return error;
-    }
-
-    // 2. 处理网络/连接错误（没有响应）
-    if (!error.response) {
-      return new ConnectionError(
-        error.message || 'Network connection failed',
-        error
-      );
-    }
-
-    // 3. 处理 HTTP 响应错误
-    const { status, data } = error.response;
-
-    // 提取原始错误消息
-    let originalMessage = '';
-    if (data?.error?.message) {
-      originalMessage = data.error.message;
-    } else if (data?.message) {
-      originalMessage = data.message;
-    } else if (typeof data === 'string') {
-      originalMessage = data;
-    } else {
-      originalMessage = `HTTP ${status}`;
-    }
-
-    // 根据状态码分类错误
-    switch (status) {
-      case 400:
-      case 422:
-        return new RequestFormatError(originalMessage, error);
-
-      case 401:
-      case 403:
-        return new AuthenticationError(originalMessage, error);
-
-      case 404:
-        return new ConnectionError(originalMessage, error);
-
-      case 500:
-      case 502:
-      case 503:
-      case 504:
-        return new ConnectionError(originalMessage, error);
-
-      default:
-        // 其他错误直接返回原始消息
-        return new LLMClientError(originalMessage, error);
     }
   }
 

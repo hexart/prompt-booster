@@ -274,9 +274,15 @@ export const ModelModal: React.FC<ModelModalProps> = ({
                 }));
                 setModelOptions(options);
                 return options;
-              } catch (error) {
-                console.error('获取模型列表失败:', error);
-                toast.error(t('toast.getModelListFailed'));
+              } catch (error: any) {
+                // console.error('获取模型列表失败:', error);
+                
+                // 检查是否是认证错误
+                if (error.name === 'AuthenticationError') {
+                  toast.error(t('toast.invalidApiKey'));
+                } else {
+                  toast.error(t('toast.getModelListFailed'));
+                }
                 return [];
               }
             }}

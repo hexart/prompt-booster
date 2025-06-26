@@ -61,6 +61,7 @@
     "getModelListFailed": "Model listesi alınamadı",
     "getModelListSuccess": "{{count}} model başarıyla alındı",
     "noModelAvailable": "Kullanılabilir model yok",
+    "invalidApiKey": "Geçersiz API anahtarı",
     "interfaceUpdateSuccess": "Arayüz başarıyla güncellendi",
     "newInterfaceCreated": "Yeni arayüz başarıyla oluşturuldu",
     "saveFailed": "Kaydetme başarısız: {{errorMessage}}",

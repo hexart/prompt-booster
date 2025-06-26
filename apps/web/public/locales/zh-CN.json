@@ -61,6 +61,7 @@
     "getModelListFailed": "获取模型列表失败",
     "getModelListSuccess": "成功获取 {{count}} 个模型",
     "noModelAvailable": "没有可用的模型",
+    "invalidApiKey": "无效的 API Key",
     "interfaceUpdateSuccess": "接口更新成功",
     "newInterfaceCreated": "新接口创建成功",
     "saveFailed": "保存失败: {{errorMessage}}",

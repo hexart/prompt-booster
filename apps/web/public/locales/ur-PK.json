@@ -61,6 +61,7 @@
     "getModelListFailed": "ماڈل کی فہرست حاصل کرنا ناکام",
     "getModelListSuccess": "{{count}} ماڈلز کامیابی سے ملے",
     "noModelAvailable": "کوئی ماڈل دستیاب نہیں",
+    "invalidApiKey": "غیر درست API کلید",
     "interfaceUpdateSuccess": "انٹرفیس کامیابی سے اپ ڈیٹ ہوا",
     "newInterfaceCreated": "نیا انٹرفیس کامیابی سے بنایا گیا",
     "saveFailed": "محفوظ کرنا ناکام: {{errorMessage}}",

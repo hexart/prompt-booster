@@ -61,6 +61,7 @@
     "getModelListFailed": "モデルリストの取得に失敗しました",
     "getModelListSuccess": "{{count}}個のモデルを正常に取得しました",
     "noModelAvailable": "利用可能なモデルがありません",
+    "invalidApiKey": "無効なAPIキー",
     "interfaceUpdateSuccess": "インターフェースが正常に更新されました",
     "newInterfaceCreated": "新しいインターフェースが正常に作成されました",
     "saveFailed": "保存に失敗しました: {{errorMessage}}",

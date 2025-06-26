@@ -61,6 +61,7 @@
     "getModelListFailed": "Failed to retrieve the model list",
     "getModelListSuccess": "Successfully obtained {{count}} models",
     "noModelAvailable": "No models available",
+    "invalidApiKey": "Invalid API Key",
     "interfaceUpdateSuccess": "Interface updated successfully",
     "newInterfaceCreated": "New interface created successfully",
     "saveFailed": "Save failed: {{errorMessage}}",

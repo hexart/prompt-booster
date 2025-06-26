@@ -61,6 +61,7 @@
     "getModelListFailed": "فشل في استرداد قائمة النماذج",
     "getModelListSuccess": "تم الحصول على {{count}} نماذج بنجاح",
     "noModelAvailable": "لا توجد نماذج متاحة",
+    "invalidApiKey": "مفتاح API غير صالح",
     "interfaceUpdateSuccess": "تم تحديث الواجهة بنجاح",
     "newInterfaceCreated": "تم إنشاء واجهة جديدة بنجاح",
     "saveFailed": "فشل الحفظ: {{errorMessage}}",

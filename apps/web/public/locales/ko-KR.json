@@ -61,6 +61,7 @@
     "getModelListFailed": "모델 목록을 가져오지 못했습니다",
     "getModelListSuccess": "{{count}}개의 모델을 성공적으로 가져왔습니다",
     "noModelAvailable": "사용 가능한 모델 없음",
+    "invalidApiKey": "잘못된 API 키",
     "interfaceUpdateSuccess": "인터페이스가 성공적으로 업데이트되었습니다",
     "newInterfaceCreated": "새 인터페이스가 성공적으로 생성되었습니다",
     "saveFailed": "저장 실패: {{errorMessage}}",
