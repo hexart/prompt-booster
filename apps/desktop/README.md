@@ -22,7 +22,7 @@ The Prompt Enhancer desktop client is a cross-platform application based on the 
 
 ### 2.1 Technology Stack
 
-- **Desktop Framework**: Electron 36.2.0
+- **Desktop Framework**: Electron 37.1.0
 - **Build Tool**: Electron-Builder 26.0.12
 - **Package Manager**: npm (Note: The desktop client uses npm independently from the rest of the project)
 - **Web Frontend**: React 19.1 + TypeScript

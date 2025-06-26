@@ -22,7 +22,7 @@
 
 ### 2.1 技术栈
 
-- **桌面框架**：Electron 36.0.1
+- **桌面框架**：Electron 37.1.0
 - **构建工具**：Electron-Builder 26.0.12
 - **包管理器**：npm（注意：桌面客户端独立使用npm，与项目其余部分分开）
 - **Web 前端**：React 19.1 + TypeScript

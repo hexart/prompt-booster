@@ -25,14 +25,18 @@ The library has the following peer dependencies:
 
 ```json
 "peerDependencies": {
-  "lucide-react": "^0.488.0",
-  "react": "19.1.0",
-  "react-dom": "19.1.0",
-  "react-hotkeys-hook": "^5.0.1",
-  "@tailwindcss/vite": "^4.1.4",
-  "tailwindcss": "^4.1.4",
-  "tailwindcss-animate": "^1.0.7"
-}
+  "@prompt-booster/api": "workspace:*",
+  "@prompt-booster/core": "workspace:*",
+  "@tailwindcss/vite": "*",
+  "framer-motion": "*",
+  "i18next": "*",
+  "lucide-react": "*",
+  "react-hotkeys-hook": "*",
+  "react-i18next": "*",
+  "sonner": "*",
+  "tailwindcss": "*",
+  "tailwindcss-animate": "*"
+},
 ```
 
 Ensure these dependencies are installed in your project.
