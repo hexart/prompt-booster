@@ -81,18 +81,18 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
           {/* 菜单内容 - 只有菜单本身接收点击事件 */}
           <motion.nav
             ref={menuRef}
-            initial={{ 
-              opacity: 0, 
+            initial={{
+              opacity: 0,
               scale: 0.75,
               y: -10
             }}
-            animate={{ 
-              opacity: 1, 
+            animate={{
+              opacity: 1,
               scale: 1,
               y: 0
             }}
-            exit={{ 
-              opacity: 0, 
+            exit={{
+              opacity: 0,
               scale: 0.75,
               y: -10
             }}
@@ -106,7 +106,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
             className={`absolute top-18 ${isRTL ? 'left-2' : 'right-2'} overflow-hidden rounded-2xl shadow-lg pointer-events-auto mobile-menu-container`}
             aria-label={t('aria.mobileMenu')}
           >
-            <motion.div className="p-2">
+            <motion.div className="p-1 space-y-1">
               {tabs.map((tab, index) => (
                 <motion.button
                   key={tab.id}
@@ -118,11 +118,10 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
                     ease: "easeOut"
                   }}
                   onClick={() => handleTabClick(tab.id)}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 mb-1 last:mb-0 ${
-                    activeTab === tab.id
+                  className={`w-full flex items-center space-x-2 px-4 py-3 ${activeTab === tab.id
                       ? 'mobile-menu-active'
                       : 'mobile-menu-inactive'
-                  }`}
+                    }`}
                   aria-current={activeTab === tab.id ? 'page' : undefined}
                 >
                   {tab.icon && React.createElement(tab.icon, { size: 18 })}
