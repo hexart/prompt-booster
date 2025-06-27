@@ -37,6 +37,8 @@ interface MarkdownProps {
   style?: React.CSSProperties;
   /** 是否为RTL语言 */
   isRTL?: boolean;
+  /** 是否已被用户取消 */
+  isCancelled?: boolean;
 }
 
 // 闪烁光标组件
@@ -121,6 +123,7 @@ export const Markdown: React.FC<MarkdownProps> = ({
   className = '',
   style = {},
   isRTL = false,
+  isCancelled = false,
 }) => {
   // 使用主题上下文获取当前主题
   const { resolvedTheme } = useTheme();
@@ -135,14 +138,14 @@ export const Markdown: React.FC<MarkdownProps> = ({
   // 处理流式内容时的光标
   const processedContent = useMemo(() => {
     // 先预处理 think 标签，传入RTL状态（现在自动包含翻译）
-    const preprocessed = preprocessThinkTagsWithI18n(content, isRTL);
+    const preprocessed = preprocessThinkTagsWithI18n(content, isRTL, isCancelled);
 
     // 再添加流式光标
     if (streaming && typeof preprocessed === 'string') {
       return preprocessed + '\u200B';
     }
     return preprocessed || '';
-  }, [content, streaming, isRTL, preprocessThinkTagsWithI18n]);
+  }, [content, streaming, isRTL, isCancelled, preprocessThinkTagsWithI18n]);
 
   // 使用 useMemo 缓存插件配置，避免不必要的重新计算
   const plugins = useMemo(() => {

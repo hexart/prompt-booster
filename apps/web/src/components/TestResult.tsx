@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { toast, AutoScrollContent, EnhancedDropdown, DraggableNotice, EnhancedTextarea, AnimatedButton } from '@prompt-booster/ui';
-import { StandardModelType } from '@prompt-booster/core/model/models/config';
 import { useModelData } from '../hooks/model-hooks';
 import { cleanOptimizedPrompt, getLanguageInstruction } from '@prompt-booster/core/prompt/utils/promptUtils';
 import { usePrompt } from '@prompt-booster/core/prompt/hooks/usePrompt';
@@ -26,10 +25,7 @@ export const TestResult: React.FC = () => {
   } = useMemoryStore();
 
   const {
-    isCustomInterface,
-    getCustomInterface,
     getEnabledModels,
-    configs
   } = useModelData();
 
   // 状态管理
@@ -39,14 +35,12 @@ export const TestResult: React.FC = () => {
   });
   const [isTestingOriginal, setIsTestingOriginal] = useState(false);
   const [isTestingOptimized, setIsTestingOptimized] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [isMaximized, setIsMaximized] = useState(false);
   const [isOriginalMaximized, setIsOriginalMaximized] = useState(false);
   const [isOptimizedMaximized, setIsOptimizedMaximized] = useState(false);
   const [showMarkdown, setShowMarkdown] = useState(true);
   const [showRequirements, setShowRequirements] = useState(true);
-  const [retryCount, setRetryCount] = useState(0);
-  const maxRetries = 2;
+  const [isUserCancelled, setIsUserCancelled] = useState(false);
 
   // 用于持久化选择的模型 ID
   useEffect(() => {
@@ -55,34 +49,9 @@ export const TestResult: React.FC = () => {
     }
   }, [selectedTestModelId]);
 
-  // 错误通知发送处理
-  useEffect(() => {
-    if (error) {
-      // 主要错误信息
-      toast.error(`${t('toast.testError')}: ${error}`, {
-        duration: 5000,  // 对于多行内容，保持可见的时间更长
-      });
-
-      // 解决方案提示（在主要错误之后显示）
-      setTimeout(() => {
-        toast.error(
-          <>
-            <p className="font-medium">可能的解决方案:</p>
-            <ul className="list-disc ms-5 mt-1">
-              <li>检查您的网络连接</li>
-              <li>验证您的API密钥和端点配置</li>
-              <li>API服务可能暂时不可用，请稍后再试</li>
-            </ul>
-          </>,
-          { duration: 8000 }  // 让解决方案显示更长时间
-        );
-      }, 300);  // 短暂延迟，以确保提示信息按顺序出现
-    }
-  }, [error]);
-
   // 清理效果
   useEffect(() => {
-    return () => stopStreaming();
+    return () => stopStreaming(false);
   }, []);
 
   // 使用 RAF 节流
@@ -144,57 +113,20 @@ export const TestResult: React.FC = () => {
   const originalStreamControllerRef = useRef<AbortController | null>(null);
   const optimizedStreamControllerRef = useRef<AbortController | null>(null);
 
-  // 获取API配置
-  const getClientConfig = (modelId: string) => {
-    if (isCustomInterface(modelId)) {
-      const customInterface = getCustomInterface(modelId);
-      if (!customInterface) {
-        throw new Error('没有找到自定义接口配置');
-      }
-
-      return {
-        provider: customInterface.providerName || customInterface.id, // 使用实际的 provider 名称
-        apiKey: customInterface.apiKey,
-        baseUrl: customInterface.baseUrl,
-        model: customInterface.model,
-        endpoints: {
-          chat: customInterface.endpoint
-        }
-      };
-    } else {
-      const modelConfig = configs[modelId as StandardModelType];
-      return {
-        provider: modelId,
-        apiKey: modelConfig.apiKey,
-        baseUrl: modelConfig.baseUrl,
-        model: modelConfig.model,
-        endpoints: {
-          chat: modelConfig.endpoint
-        }
-      };
-    }
-  };
-
   // 并行运行比较测试
   const runComparisonTest = async () => {
-    if (!originalPrompt?.trim() || !optimizedPrompt?.trim() || !userTestPrompt.trim() || !selectedTestModelId) {
-      setError('请确保您已输入原始提示词、 增强提示词、测试输入，并选择了模型');
-      return;
-    }
-
     const cleanedOptimizedPrompt = cleanOptimizedPrompt(optimizedPrompt);
 
     // 重置状态
     resetState();
-    setError(null);
-    setRetryCount(0);
+    setIsUserCancelled(false);
     setIsTestingOriginal(true);
     setIsTestingOptimized(true);
+    // 创建新的 AbortController 实例
+    originalStreamControllerRef.current = new AbortController();
+    optimizedStreamControllerRef.current = new AbortController();
 
     try {
-      // 使用selectedTestModelId模型配置进行两次测试
-      const clientConfig = getClientConfig(selectedTestModelId);
-
       // 获取当前语言设置
       const currentLanguage = i18n.language;
       const languageInstruction = getLanguageInstruction(currentLanguage);
@@ -213,78 +145,78 @@ export const TestResult: React.FC = () => {
         ? `${cleanedOptimizedPrompt}\n\n${languageInstruction}`
         : cleanedOptimizedPrompt;
 
-      // 添加调试日志
-      console.log('开始对比测试，使用模型:', clientConfig.model);
-
-      // 重置状态
-      setOriginalResponse('');
-      setOptimizedResponse('');
-
-      // 打印原始提示词信息
-      console.log('原始提示词测试信息:');
-      console.log('System prompt (前50字符):', originalPrompt.substring(0, 50));
-      console.log('System prompt (后20字符):', originalSystemPrompt.slice(-20));
-      console.log('User prompt (前50字符):', userTestPrompt.substring(0, 50));
-      console.log('User prompt (后20字符):', userPromptWithLang.slice(-20));
+      // 调试日志
+      // console.log('开始对比测试，使用模型:', selectedTestModelId);
+      // console.log('原始提示词测试信息:');
+      // console.log('System prompt (前50字符):', originalPrompt.substring(0, 50));
+      // console.log('System prompt (后20字符):', originalSystemPrompt.slice(-20));
+      // console.log('User prompt (前50字符):', userTestPrompt.substring(0, 50));
+      // console.log('User prompt (后20字符):', userPromptWithLang.slice(-20));
 
       // 打印增强提示词信息
-      console.log('增强提示词测试信息:');
-      console.log('System prompt (前50字符):', cleanedOptimizedPrompt.substring(0, 50));
-      console.log('System prompt (后20字符):', optimizedSystemPrompt.slice(-20));
+      // console.log('增强提示词测试信息:');
+      // console.log('System prompt (前50字符):', cleanedOptimizedPrompt.substring(0, 50));
+      // console.log('System prompt (后20字符):', optimizedSystemPrompt.slice(-20));
 
-      // 并行执行两个测试
-      await Promise.allSettled([
-        llmService.callLLM({
-          userMessage: userPromptWithLang,
-          systemMessage: originalSystemPrompt,
-          modelId: selectedTestModelId,
-          stream: true,
-          onData: appendToOriginalResponse,
-          onComplete: () => {
-            setIsTestingOriginal(false);
-            toast.success(t('toast.originalResponseCompleted'));
-          },
-          onError: (error: Error) => {
-            console.error('原始提示词测试错误:', error);
-            setIsTestingOriginal(false);
-            toast.error(`${t('toast.originalResponseFailed')}: ${error.message}`);
+      let completedCount = 0;
+      const checkAllComplete = () => {
+        completedCount++;
+        if (completedCount === 2) {
+          console.log('🎉 对比测试全部完成');
+          toast.success(t('toast.comparisonTestAllCompleted'));
+        }
+      };
+
+      // 调用服务层的对比测试方法
+      await llmService.runComparisonTest({
+        userMessage: userPromptWithLang,
+        originalSystemMessage: originalSystemPrompt,
+        optimizedSystemMessage: optimizedSystemPrompt,
+        modelId: selectedTestModelId,
+        onOriginalData: appendToOriginalResponse,
+        onOptimizedData: appendToOptimizedResponse,
+        onOriginalComplete: () => {
+          setIsTestingOriginal(false);
+          toast.success(t('toast.originalResponseCompleted'));
+          checkAllComplete();
+        },
+        onOptimizedComplete: () => {
+          setIsTestingOptimized(false);
+          toast.success(t('toast.enhancedResponseCompleted'));
+          checkAllComplete();
+        },
+        onOriginalError: (error: Error) => {
+          if (error.name === 'AbortError' || isUserCancelled) {
+            return; // 不显示错误 toast
           }
-        }),
+          console.error('原始提示词测试错误:', error);
+          setIsTestingOriginal(false);
+          toast.error(`${t('toast.originalResponseFailed')}: ${error.message}`);
+        },
 
-        llmService.callLLM({
-          userMessage: userPromptWithLang,
-          systemMessage: optimizedSystemPrompt,
-          modelId: selectedTestModelId,
-          stream: true,
-          onData: appendToOptimizedResponse,
-          onComplete: () => {
-            setIsTestingOptimized(false);
-            toast.success(t('toast.enhancedResponseCompleted'));
-          },
-          onError: (error: Error) => {
-            console.error('增强提示词测试错误:', error);
-            setIsTestingOptimized(false);
-            toast.error(`${t('toast.enhancedResponseFailed')}: ${error.message}`);
+        onOptimizedError: (error: Error) => {
+          if (error.name === 'AbortError' || isUserCancelled) {
+            return; // 不显示错误 toast
           }
-        })
-      ]);
-
-      // 检查是否还有正在运行的测试（防止竞态条件）
-      if (!isTestingOriginal && !isTestingOptimized) {
-        console.log('🎉 对比测试全部完成');
-        toast.success(t('toast.comparisonTestAllCompleted') || '对比测试全部完成');
-      }
-
+          console.error('增强提示词测试错误:', error);
+          setIsTestingOptimized(false);
+          toast.error(`${t('toast.enhancedResponseFailed')}: ${error.message}`);
+        },
+        originalAbortController: originalStreamControllerRef.current || undefined,
+        optimizedAbortController: optimizedStreamControllerRef.current || undefined
+      });
     } catch (error) {
-      console.error('对比测试意外错误:', error);
-      setError('对比测试过程中发生意外错误');
+      console.error(`${t('toast.testError')}:`, error);
       setIsTestingOriginal(false);
       setIsTestingOptimized(false);
     }
   };
 
   // 停止所有流式响应
-  const stopStreaming = () => {
+  const stopStreaming = useCallback((showToast: boolean = true) => {
+    const hasActiveStream = originalStreamControllerRef.current || optimizedStreamControllerRef.current;
+
+    setIsUserCancelled(true);
     [originalStreamControllerRef, optimizedStreamControllerRef].forEach(ref => {
       if (ref.current) {
         ref.current.abort();
@@ -293,7 +225,17 @@ export const TestResult: React.FC = () => {
     });
     setIsTestingOriginal(false);
     setIsTestingOptimized(false);
-  };
+
+    // 只在有活动流且需要显示 toast 时才显示
+    if (hasActiveStream && showToast) {
+      toast.info(t('toast.generationStopped'));
+    }
+  }, [t]);
+
+  // 清理效果
+  useEffect(() => {
+    return () => stopStreaming(false);
+  }, [stopStreaming]);
 
   // 渲染响应区域
   const renderResponseArea = (
@@ -363,6 +305,7 @@ export const TestResult: React.FC = () => {
             placeholder={isStreaming ? t('testResult.responding') : t('testResult.noResponseYet')}
             buttonPosition={getButtonPosition('top-right')}
             isRTL={isRTL()}
+            isCancelled={isUserCancelled}
           />
         </div>
 
@@ -464,22 +407,34 @@ export const TestResult: React.FC = () => {
             </AnimatedButton>
           </Tooltip>
           {/* 运行对比测试按钮 */}
-          <Tooltip text={t('testResult.runComparisonTest')}>
+          <Tooltip text={
+            isTestingOriginal || isTestingOptimized
+              ? t('testResult.stopGenerating')
+              : t('testResult.runComparisonTest')
+          }>
             <AnimatedButton
-              className={`flex gap-2 items-center px-3 py-2 h-10 min-w-[30%] truncate transition-colors duration-500 button-confirm ${isTestingOriginal || isTestingOptimized ? 'cursor-not-allowed opacity-50' : ''
+              className={`flex gap-2 items-center px-3 py-2 h-10 min-w-[30%] truncate transition-colors duration-500 ${isTestingOriginal || isTestingOptimized ? 'button-danger' : 'button-confirm'
                 }`}
-              onClick={runComparisonTest}
-              disabled={isTestingOriginal || isTestingOptimized || (
-                !originalPrompt?.trim() ||
-                (!optimizedPrompt?.trim() && !isProcessing) ||
-                !userTestPrompt.trim() ||
-                !selectedTestModelId
-              )}
+              onClick={() => {
+                if (isTestingOriginal || isTestingOptimized) {
+                  stopStreaming();
+                } else {
+                  runComparisonTest();
+                }
+              }}
+              disabled={
+                !isTestingOriginal && !isTestingOptimized && (
+                  !originalPrompt?.trim() ||
+                  (!optimizedPrompt?.trim() && !isProcessing) ||
+                  !userTestPrompt.trim() ||
+                  !selectedTestModelId
+                )
+              }
             >
               <RocketIcon size={16} />
               {isTestingOriginal || isTestingOptimized
-                ? t('testResult.generating')
-                : (retryCount > 0 ? t('testResult.retryingCount', { count: retryCount, max: maxRetries }) : t('testResult.runTest'))
+                ? t('testResult.stopGenerating')
+                : t('testResult.runTest')
               }
             </AnimatedButton>
           </Tooltip>

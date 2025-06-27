@@ -16,9 +16,10 @@ import { useTranslation } from 'react-i18next';
  * @returns 处理后的包含HTML details元素的内容字符串
  */
 export const preprocessThinkTags = (
-  rawContent: string, 
+  rawContent: string,
   isRTL: boolean = false,
-  t: (key: string) => string
+  t: (key: string) => string,
+  isCancelled: boolean = false
 ): string => {
   if (!rawContent) return '';
 
@@ -52,10 +53,16 @@ export const preprocessThinkTags = (
     // 有未闭合的<think>标签，提取内容并替换
     const thinkContent = processedContent.substring(lastThinkIndex + 7); // +7 跳过 <think> 标签
     const inProgressTitle = t('testResult.markDown.thinkProcessInProgress');
+    const progressClass = isCancelled ? '' : 'in-progress';
 
     // 替换最后一个未闭合的<think>标签及其内容
     processedContent = processedContent.substring(0, lastThinkIndex) +
-      `<details class="think-block" open data-streaming="true"><summary class="think-header"><span>${arrowSvg}</span><span class="think-title in-progress">${inProgressTitle}</span></summary><div class="think-content">` +
+      `<details class="think-block" open data-streaming="true">
+        <summary class="think-header">
+          <span>${arrowSvg}</span>
+          <span class="think-title ${progressClass}">${inProgressTitle}</span>
+        </summary>
+        <div class="think-content">` +
       thinkContent +
       '</div></details>';
   }
@@ -72,7 +79,7 @@ export const preprocessThinkTags = (
  * @param t - i18next翻译函数
  */
 export const handleThinkBlocks = (
-  containerElement: HTMLElement | null, 
+  containerElement: HTMLElement | null,
   content: string,
   t: (key: string) => string
 ) => {
@@ -89,7 +96,7 @@ export const handleThinkBlocks = (
   // 如果不再有未闭合的<think>标签，关闭所有流式块
   if (!hasUnclosedThink && streamingBlocks && streamingBlocks.length > 0) {
     const completedTitle = t('testResult.markDown.thinkProcessCompleted');
-    
+
     setTimeout(() => {
       streamingBlocks.forEach(block => {
         // 标记为已完成
@@ -140,8 +147,8 @@ export const addThinkBlocksEventHandlers = (containerElement: HTMLElement | null
 export const useMarkdownThink = () => {
   const { t } = useTranslation();
 
-  const preprocessThinkTagsWithTranslation = (rawContent: string, isRTL: boolean = false) => {
-    return preprocessThinkTags(rawContent, isRTL, t);
+  const preprocessThinkTagsWithTranslation = (rawContent: string, isRTL: boolean = false, isCancelled: boolean = false) => {
+    return preprocessThinkTags(rawContent, isRTL, t, isCancelled);
   };
 
   const handleThinkBlocksWithTranslation = (containerElement: HTMLElement | null, content: string) => {

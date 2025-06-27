@@ -61,6 +61,9 @@ interface AutoScrollContentProps {
 
   /** 是否为RTL语言 */
   isRTL?: boolean;
+
+  /** 是否已被用户取消 */
+  isCancelled?: boolean;
 }
 
 export const AutoScrollContent: React.FC<AutoScrollContentProps> = ({
@@ -79,6 +82,7 @@ export const AutoScrollContent: React.FC<AutoScrollContentProps> = ({
   showDownloadDocx = true,
   buttonPosition = 'top-right',
   isRTL = false,
+  isCancelled = false,
 }) => {
   const {
     elementRef,
@@ -178,6 +182,7 @@ export const AutoScrollContent: React.FC<AutoScrollContentProps> = ({
             allowHtml={allowHtml}
             streaming={streaming}
             isRTL={isRTL}
+            isCancelled={isCancelled}
           />
         ) : (
           // 纯文本模式 - 只处理换行

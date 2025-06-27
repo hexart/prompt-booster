@@ -116,38 +116,29 @@ export class LLMService {
       optimizedAbortController
     } = params;
 
-    // 原始提示词测试
-    const originalPromise = this.callLLM({
-      userMessage,
-      systemMessage: originalSystemMessage,
-      modelId,
-      stream: true,
-      onData: onOriginalData,
-      onComplete: onOriginalComplete,
-      onError: onOriginalError,
-      abortController: originalAbortController,
-    });
-
-    // 优化提示词测试
-    const optimizedPromise = this.callLLM({
-      userMessage,
-      systemMessage: optimizedSystemMessage,
-      modelId,
-      stream: true,
-      onData: onOptimizedData,
-      onComplete: onOptimizedComplete,
-      onError: onOptimizedError,
-      abortController: optimizedAbortController,
-    });
-
-    // 启动两个独立的请求，不等待结果
-    originalPromise.catch(() => {
-      // 错误已在 onError 中处理
-    });
-
-    optimizedPromise.catch(() => {
-      // 错误已在 onError 中处理
-    });
+    // 并行执行两个测试
+    await Promise.allSettled([
+      this.callLLM({
+        userMessage,
+        systemMessage: originalSystemMessage,
+        modelId,
+        stream: true,
+        onData: onOriginalData,
+        onComplete: onOriginalComplete,
+        onError: onOriginalError,
+        abortController: originalAbortController,
+      }),
+      this.callLLM({
+        userMessage,
+        systemMessage: optimizedSystemMessage,
+        modelId,
+        stream: true,
+        onData: onOptimizedData,
+        onComplete: onOptimizedComplete,
+        onError: onOptimizedError,
+        abortController: optimizedAbortController,
+      })
+    ]);
   }
 
   // 获取模型配置
