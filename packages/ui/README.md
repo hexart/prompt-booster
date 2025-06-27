@@ -368,13 +368,14 @@ A customizable loading spinner.
 ```jsx
 import { LoadingIcon } from '@prompt-booster/ui';
 
-<LoadingIcon size="md" color="currentColor" />
+<LoadingIcon size=16 duration=8 className="currentColor" />
 ```
 
 Props:
 
-- `size`: Size of the spinner ('sm', 'md', 'lg')
-- `color`: Color of the spinner
+- `size`: Size of the spinner
+- `duration`: Duration of the spinner
+- `className`: Color of the spinner
 
 ## Hooks
 

@@ -521,7 +521,7 @@ export const PromptBooster: React.FC = () => {
           {/* 处理中指示器 */}
           {isProcessing && (
             <div className="flex-shrink-0 me-4 flex items-center">
-              <LoadingIcon />
+              <LoadingIcon className="text-blue-500" />
             </div>
           )}
 

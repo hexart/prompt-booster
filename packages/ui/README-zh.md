@@ -368,13 +368,14 @@ import { ListCard } from '@prompt-booster/ui';
 ```jsx
 import { LoadingIcon } from '@prompt-booster/ui';
 
-<LoadingIcon size="md" color="currentColor" />
+<LoadingIcon size=16 duration=8 className="currentColor" />
 ```
 
 属性：
 
-- `size`：旋转器的大小（'sm'、'md'、'lg'）
-- `color`：旋转器的颜色
+- `size`：旋转器的大小
+- `duration`：旋转器的持续时间
+- `className`：旋转器的颜色
 
 ## 钩子
 
