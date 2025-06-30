@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import { toast, AutoScrollContent, EnhancedDropdown, DraggableNotice, EnhancedTextarea, AnimatedButton } from '@prompt-booster/ui';
 import { useModelData } from '../hooks/model-hooks';
 import { cleanOptimizedPrompt, getLanguageInstruction } from '@prompt-booster/core/prompt/utils/promptUtils';
@@ -41,6 +42,13 @@ export const TestResult: React.FC = () => {
   const [showMarkdown, setShowMarkdown] = useState(true);
   const [showRequirements, setShowRequirements] = useState(true);
   const [isUserCancelled, setIsUserCancelled] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  // 定义动画配置
+  const animationConfig = {
+    duration: 0.3,
+    ease: [0.4, 0, 0.2, 1] as [number, number, number, number],
+  };
 
   // 用于持久化选择的模型 ID
   useEffect(() => {
@@ -317,10 +325,19 @@ export const TestResult: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full gap-6">
       {/* 用户输入区域 */}
-      {!isMaximized && (
-        <div id="parent-container" className="relative p-4 mb-4 border rounded-xl shadow-2xs flex-none secondary-container">
+      <motion.div
+        animate={{
+          height: isMaximized ? 0 : "auto",
+          opacity: isMaximized ? 0 : 1,
+        }}
+        transition={{
+          duration: animationConfig.duration,
+          ease: animationConfig.ease,
+        }}
+      >
+        <div id="parent-container" className="relative p-4 border rounded-xl shadow-2xs secondary-container">
           <h2 className="inline-flex items-center gap-2 text-xl font-semibold mb-4 title-secondary">
             <BookOpenCheckIcon size={20} />
             {t('testResult.title')}
@@ -367,9 +384,9 @@ export const TestResult: React.FC = () => {
             showDownloadDocx={false}
           />
         </div>
-      )}
+      </motion.div>
       {/* 控制面板 */}
-      <div className="flex flex-row justify-between items-end gap-4 mb-4">
+      <div className="flex flex-row justify-between items-end gap-4">
         {/* 选择模型菜单区域 */}
         <div className="min-w-[33%]">
           <label className="block text-sm font-medium mb-2 whitespace-nowrap truncate input-description" htmlFor='model-select'>
@@ -389,7 +406,7 @@ export const TestResult: React.FC = () => {
           />
         </div>
         {/* 按钮区域 */}
-        <div className="flex items-center justify-end gap-2 flex-shrink min-w-0">
+        <div className="flex items-center justify-end gap-2 flex-shrink min-w-0 z-10">
           {/* Markdown按钮 */}
           <Tooltip text={`${showMarkdown ? t('testResult.disableMarkdown') : t('testResult.enableMarkdown')}`} position="top">
             <AnimatedButton
@@ -441,8 +458,15 @@ export const TestResult: React.FC = () => {
           {/* 最大化/还原按钮 */}
           <AnimatedButton
             className='px-3 py-2 h-10 text-sm flex items-center gap-1 button-third'
-            onClick={() => setIsMaximized(!isMaximized)}
-            disabled={!originalResponse && !optimizedResponse}
+            onClick={() => {
+              setIsAnimating(true);
+              setIsMaximized(!isMaximized);
+              // 动画结束后重置状态
+              setTimeout(() => {
+                setIsAnimating(false);
+              }, animationConfig.duration * 1000);
+            }}
+            disabled={(!originalResponse && !optimizedResponse) || isAnimating}
           >
             {isMaximized ? (
               <>

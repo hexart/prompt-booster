@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { motion } from 'framer-motion';
 import { promptService } from "@prompt-booster/core/prompt/services/promptService";
 import { useTemplates } from "@prompt-booster/core/prompt/hooks/useTemplates";
 import {
@@ -354,6 +355,19 @@ export const PromptBooster: React.FC = () => {
 
   // 最大化状态声明
   const [isMaximized, setIsMaximized] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  // 定义动画配置接口
+  interface AnimationConfig {
+    duration: number;
+    ease: [number, number, number, number];
+  }
+
+  // 动画配置
+  const animationConfig: AnimationConfig = {
+    duration: 0.3,
+    ease: [0.4, 0, 0.2, 1],
+  };
 
   // 重置对话框状态声明
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
@@ -361,8 +375,17 @@ export const PromptBooster: React.FC = () => {
   return (
     <div className="grid-cols-1 gap-6 md:min-h-[550px] flex flex-col flex-grow">
       {/* 原始提示词区域 */}
-      {!isMaximized && (
-        <div className="p-4 border rounded-xl shadow-2xs flex-none secondary-container">
+      <motion.div
+        animate={{
+          height: isMaximized ? 0 : "auto",
+          opacity: isMaximized ? 0 : 1,
+        }}
+        transition={{
+          duration: animationConfig.duration,
+          ease: animationConfig.ease,
+        }}
+      >
+        <div className="p-4 border rounded-xl shadow-2xs secondary-container">
           <div className="flex justify-between items-center mb-4">
             <h2 className="inline-flex items-center gap-2 text-xl font-semibold title-secondary">
               <BookOpenIcon size={20} />
@@ -397,10 +420,10 @@ export const PromptBooster: React.FC = () => {
             showDownloadDocx={false}
           />
         </div>
-      )}
+      </motion.div>
 
       {/* 控制栏 */}
-      <div className="flex items-end gap-3">
+      <motion.div className="flex items-end gap-3">
         <div className="min-w-[26%] inline-block relative">
           <label className="block text-sm font-medium mb-2 whitespace-nowrap truncate input-description" htmlFor="template-select">
             {t("promptBooster.templateSelect")}
@@ -467,12 +490,13 @@ export const PromptBooster: React.FC = () => {
             </span>
           </AnimatedButton>
         </Tooltip>
-      </div>
+      </motion.div>
 
       {/* 增强提示词区域 */}
-      <div
+      <motion.div
+        layoutId="enhanced-prompt-area"
         className={`flex flex-col flex-grow md:min-h-0 p-4 border rounded-xl shadow-2xs secondary-container
-                    ${isMaximized
+        ${isMaximized
             ? "min-h-[calc(100vh-260px)]"
             : "min-h-[calc(100vh-550px)]"
           }`}
@@ -564,8 +588,15 @@ export const PromptBooster: React.FC = () => {
 
             <AnimatedButton
               className="text-sm flex items-center gap-1 px-3 py-2 button-third"
-              onClick={() => setIsMaximized(!isMaximized)}
-              disabled={!displayOriginalPrompt?.trim()}
+              onClick={() => {
+                setIsAnimating(true);
+                setIsMaximized(!isMaximized);
+                // 动画结束后重置状态
+                setTimeout(() => {
+                  setIsAnimating(false);
+                }, animationConfig.duration * 1000);
+              }}
+              disabled={!displayOriginalPrompt?.trim() || isAnimating}
             >
               {isMaximized ? (
                 <>
@@ -637,7 +668,7 @@ export const PromptBooster: React.FC = () => {
             })}
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* 分析结果抽屉 */}
       <AnalysisDrawer
