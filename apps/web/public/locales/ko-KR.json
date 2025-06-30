@@ -132,6 +132,7 @@
       "suggestionsTitle": "반복 제안",
       "copyAll": "모두 복사",
       "deepAnalysis": "심층 분석",
+      "reAnalysis": "재분석",
       "enableModelFirst": "먼저 모델 인터페이스를 활성화하세요",
       "score": {
         "zero": "0점",

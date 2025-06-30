@@ -132,6 +132,7 @@
       "suggestionsTitle": "迭代建议",
       "copyAll": "复制全部",
       "deepAnalysis": "深度分析",
+      "reAnalysis": "重新分析",
       "enableModelFirst": "请先启用模型接口",
       "score": {
         "zero": "0分",

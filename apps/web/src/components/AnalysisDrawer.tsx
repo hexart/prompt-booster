@@ -23,7 +23,7 @@ interface AnalysisDrawerProps {
   hasUsedLLMAnalysis: boolean;
   isActiveModelEnabled: boolean;
   analysisResult: PromptAnalysisResult | null;
-  
+
   // 回调函数
   onClose: () => void;
   onLLMAnalyze: () => void;
@@ -218,8 +218,8 @@ export const AnalysisDrawer: React.FC<AnalysisDrawerProps> = ({
                               <div className="text-xs whitespace-nowrap text-gray-400 font-mono">
                                 {item.passed
                                   ? t("promptBooster.drawer.score.points", {
-                                      points: item.points,
-                                    })
+                                    points: item.points,
+                                  })
                                   : t("promptBooster.drawer.score.zero")}
                               </div>
                             </li>
@@ -265,41 +265,41 @@ export const AnalysisDrawer: React.FC<AnalysisDrawerProps> = ({
                 </>
               )}
               <div className="mt-4 flex gap-2 justify-center">
-                {!hasUsedLLMAnalysis && (
-                  <Tooltip
-                    text={
-                      !isActiveModelEnabled
-                        ? t("promptBooster.drawer.enableModelFirst")
-                        : ""
-                    }
-                    position="top"
-                    disabled={isActiveModelEnabled}
-                  >
-                    <div>
-                      {" "}
-                      {/* 使用div作为disabled按钮的容器，确保onMouseEnter触发 */}
-                      <AnimatedButton
-                        className="px-4 py-2 text-sm button-confirm"
-                        onClick={onLLMAnalyze}
-                        disabled={isAnalyzing || !isActiveModelEnabled}
-                      >
-                        {isAnalyzing ? (
-                          <span className="flex items-center gap-2">
-                            <LoadingIcon />
-                            {t("promptBooster.analyzing")}
-                          </span>
-                        ) : (
-                          t("promptBooster.drawer.deepAnalysis")
-                        )}
-                      </AnimatedButton>
-                    </div>
-                  </Tooltip>
-                )}
+                <Tooltip
+                  text={
+                    !isActiveModelEnabled
+                      ? t("promptBooster.drawer.enableModelFirst")
+                      : ""
+                  }
+                  position="top"
+                  disabled={isActiveModelEnabled}
+                >
+                  <div>
+                    {/* 使用div作为disabled按钮的容器，确保onMouseEnter触发 */}
+                    <AnimatedButton
+                      className="px-4 py-2 text-sm button-confirm"
+                      onClick={onLLMAnalyze}
+                      disabled={isAnalyzing || !isActiveModelEnabled}
+                    >
+                      {isAnalyzing ? (
+                        <span className="flex items-center gap-2">
+                          <LoadingIcon />
+                          {t("promptBooster.analyzing")}
+                        </span>
+                      ) : (
+                        // 根据是否已经使用过LLM分析来显示不同的文本
+                        hasUsedLLMAnalysis
+                          ? t("promptBooster.drawer.reAnalysis")
+                          : t("promptBooster.drawer.deepAnalysis")
+                      )}
+                    </AnimatedButton>
+                  </div>
+                </Tooltip>
                 <AnimatedButton
                   className="px-4 py-2 text-sm button-cancel"
                   onClick={() => {
-                    if (analysisResult?.suggestions?.length || 
-                        analysisResult?.criteria.some((c) => !c.passed && c.suggestion)) {
+                    if (analysisResult?.suggestions?.length ||
+                      analysisResult?.criteria.some((c) => !c.passed && c.suggestion)) {
                       copyAllSuggestions();
                     }
                     onClose();

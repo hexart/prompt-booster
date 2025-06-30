@@ -132,6 +132,7 @@
       "suggestionsTitle": "改善提案",
       "copyAll": "すべてコピー",
       "deepAnalysis": "詳細分析",
+      "reAnalysis": "再分析",
       "enableModelFirst": "最初にモデルインターフェースを有効にしてください",
       "score": {
         "zero": "0点",

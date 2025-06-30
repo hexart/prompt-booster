@@ -134,6 +134,7 @@
       "suggestionsTitle": "Iteration suggestions",
       "copyAll": "Copy All",
       "deepAnalysis": "In-depth analysis",
+      "reAnalysis": "Re-analyze",
       "enableModelFirst": "Please enable the model interface first",
       "score": {
         "zero": "0 points",

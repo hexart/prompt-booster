@@ -142,6 +142,7 @@
       "suggestionsTitle": "اقتراحات التكرار",
       "copyAll": "نسخ الكل",
       "deepAnalysis": "تحليل معمق",
+      "reAnalysis": "إعادة التحليل",
       "enableModelFirst": "قم بتمكين النموذج أولاً",
       "score": {
         "zero": "0 نقطة",

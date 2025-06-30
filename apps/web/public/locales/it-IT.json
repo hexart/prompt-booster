@@ -132,6 +132,7 @@
       "suggestionsTitle": "Suggerimenti di iterazione",
       "copyAll": "Copia tutto",
       "deepAnalysis": "Analisi approfondita",
+      "reAnalysis": "Rianalizza",
       "enableModelFirst": "Abilita prima il modello",
       "score": {
         "zero": "0 punti",

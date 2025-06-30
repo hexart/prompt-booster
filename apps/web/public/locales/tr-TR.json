@@ -134,6 +134,7 @@
       "suggestionsTitle": "İterasyon önerileri",
       "copyAll": "Tümünü Kopyala",
       "deepAnalysis": "Derinlemesine analiz",
+      "reAnalysis": "Yeniden analiz et",
       "enableModelFirst": "Lütfen önce model arayüzünü etkinleştirin",
       "score": {
         "zero": "0 puan",
