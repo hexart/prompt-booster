@@ -157,15 +157,21 @@ export const ModelModal: React.FC<ModelModalProps> = ({
               placeholder={t('settings.apiKeyPlaceholder')}
             />
             {originalApiKey && (
-              <button
+              <AnimatedButton
                 type="button"
-                onMouseDown={() => showApiKey()}
-                onMouseUp={() => hideApiKey()}
-                onMouseLeave={() => hideApiKey()}
+                onPointerDown={(e) => {
+                  e.preventDefault(); // 防止默认行为
+                  showApiKey();
+                }}
+                onPointerUp={() => hideApiKey()}
+                onPointerLeave={() => hideApiKey()}
+                onPointerCancel={() => hideApiKey()}
                 className="absolute inset-y-0 end-0 px-3 flex items-center text-sm input-display-button"
+                style={{ touchAction: 'none' }} // 防止触摸时的滚动等默认行为
+                aria-label={isMaskedApiKey ? t('settings.apiKeyShow') : t('settings.apiKeyHide')}
               >
                 {isMaskedApiKey ? <EyeClosedIcon size={18} /> : <EyeIcon size={18} />}
-              </button>
+              </AnimatedButton>
             )}
           </div>
           <p className="mt-1 text-xs input-description">
@@ -276,7 +282,7 @@ export const ModelModal: React.FC<ModelModalProps> = ({
                 return options;
               } catch (error: any) {
                 // console.error('获取模型列表失败:', error);
-                
+
                 // 检查是否是认证错误
                 if (error.name === 'AuthenticationError') {
                   toast.error(t('toast.invalidApiKey'));

@@ -52,6 +52,10 @@ button:disabled {
   @apply cursor-not-allowed;
 }
 
+label {
+  @apply select-none;
+}
+
 /* 亮色主题 */
 @layer components {
   .titlebar { 
