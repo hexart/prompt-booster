@@ -8,7 +8,7 @@ import { getAllDefaultModelConfigs } from '../model/unifiedModelConfig';
 /**
  * 创建默认模型配置
  */
-export const createDefaultModelConfigs = (): Record<StandardModelType, ModelConfig> => {
+export const defaultModelConfigs = (): Record<StandardModelType, ModelConfig> => {
   const configs: Record<string, ModelConfig> = {};
 
   // 使用新的 API 获取所有默认配置
@@ -31,11 +31,6 @@ export const createDefaultModelConfigs = (): Record<StandardModelType, ModelConf
 
   return configs as Record<StandardModelType, ModelConfig>;
 };
-
-/**
- * 默认模型配置
- */
-export const defaultModelConfigs = createDefaultModelConfigs();
 
 /**
  * 默认优化设置

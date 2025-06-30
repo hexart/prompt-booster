@@ -80,13 +80,3 @@ export interface IterateResult {
     iteratedPrompt: string;
     reasoning?: string;
 }
-
-// LLM调用参数
-export interface LLMCallParams {
-    userMessage: string;
-    systemMessage: string;
-    modelId?: string;
-    onData?: (chunk: string) => void;
-    stream?: boolean;
-    timeout?: number;
-}

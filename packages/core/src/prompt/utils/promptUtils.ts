@@ -81,6 +81,12 @@ export function getLanguageInstruction(language?: string): string {
     return 'Si prega di mostrare il risultato in italiano.';
   } else if (language.includes('id')) {
     return 'Silakan tampilkan hasilnya dalam bahasa Indonesia.';
+  } else if (language.includes('fa')) {
+    return 'لطفاً نتیجه را به زبان فارسی نمایش دهید.';
+  } else if (language.includes('tr')) {
+    return 'Lütfen sonucu Türkçe olarak gösterin.';
+  } else if (language.includes('ur')) {
+    return 'برائے کرم نتیجہ اردو میں دکھائیں۔';
   } else {
     // 默认使用英语
     return 'Please output the result in English.';

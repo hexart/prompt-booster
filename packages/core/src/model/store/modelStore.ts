@@ -61,7 +61,7 @@ export const useModelStore = create<ModelState>()(
       lastUpdate: Date.now(),
 
       // === 配置数据 ===
-      configs: Object.entries(defaultModelConfigs).reduce((acc, [key, value]) => ({
+      configs: Object.entries(defaultModelConfigs()).reduce((acc, [key, value]) => ({
         ...acc,
         [key]: {
           ...value,
@@ -108,7 +108,7 @@ export const useModelStore = create<ModelState>()(
         configs: {
           ...state.configs,
           [model]: {
-            ...defaultModelConfigs[model],
+            ...defaultModelConfigs()[model],
             id: model
           }
         },
@@ -177,7 +177,7 @@ export const useModelStore = create<ModelState>()(
 
       // === 工具方法 ===
       isCustomInterface: (model) => {
-        const standardTypes: string[] = Object.keys(defaultModelConfigs);
+        const standardTypes: string[] = Object.keys(defaultModelConfigs());
         return !standardTypes.includes(model);
       },
 
