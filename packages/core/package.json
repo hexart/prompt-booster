@@ -34,7 +34,7 @@
   "dependencies": {
     "@prompt-booster/api": "workspace:*",
     "uuid": "^11.1.0",
-    "zustand": "^5.0.5"
+    "zustand": "^5.0.6"
   },
   "peerDependencies": {
     "i18next": "^25.2.1",
