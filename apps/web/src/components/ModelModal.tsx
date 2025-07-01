@@ -52,6 +52,10 @@ export const ModelModal: React.FC<ModelModalProps> = ({
   const defaultConfig = getDefaultModelConfig(modelType as StandardModelType);
   const providerName = defaultConfig?.providerName || modelType;
 
+  // 判断是否应该显示 baseUrl 和 endpoint 字段
+  // 自定义接口始终显示，内置模型只有 ollama 显示
+  const shouldShowUrlFields = isCustom || modelType.toLowerCase() === 'ollama';
+
   useEffect(() => {
     if (modelOptions.length > 0) {
       console.log('modelOptions updated:', modelOptions);
@@ -181,59 +185,63 @@ export const ModelModal: React.FC<ModelModalProps> = ({
           </p>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-1 input-label" htmlFor='baseUrl'>
-            {t('settings.apiBaseURL')}
-            {isCustom && formData.baseUrl && (
-              <span className="text-xs input-description">
-                {' → '}{formatBaseUrl(formData.baseUrl)}
-              </span>
-            )}
-          </label>
+        {shouldShowUrlFields && (
+          <div>
+            <label className="block text-sm font-medium mb-1 input-label" htmlFor='baseUrl'>
+              {t('settings.apiBaseURL')}
+              {isCustom && formData.baseUrl && (
+                <span className="text-xs input-description">
+                  {' → '}{formatBaseUrl(formData.baseUrl)}
+                </span>
+              )}
+            </label>
 
-          <input
-            type="text"
-            id="baseUrl"
-            name="baseUrl"
-            value={formData.baseUrl || ''}
-            onChange={handleInputChange}
-            className="w-full p-2 border rounded input"
-            placeholder={isCustom
-              ? t('settings.apiBaseURLPlaceholder')
-              : getDefaultBaseUrl(modelType as StandardModelType)}
-          />
-          <p className="mt-1 text-xs input-description">
-            {isCustom
-              ? t('settings.apiCustomBaseURLDescription')
-              : `${t('settings.apiBaseURLDefault')} ${getDefaultBaseUrl(modelType as StandardModelType) || t('settings.unknownModelInterface')}`
-            }
-          </p>
-        </div>
+            <input
+              type="text"
+              id="baseUrl"
+              name="baseUrl"
+              value={formData.baseUrl || ''}
+              onChange={handleInputChange}
+              className="w-full p-2 border rounded input"
+              placeholder={isCustom
+                ? t('settings.apiBaseURLPlaceholder')
+                : getDefaultBaseUrl(modelType as StandardModelType)}
+            />
+            <p className="mt-1 text-xs input-description">
+              {isCustom
+                ? t('settings.apiCustomBaseURLDescription')
+                : `${t('settings.apiBaseURLDefault')} ${getDefaultBaseUrl(modelType as StandardModelType) || t('settings.unknownModelInterface')}`
+              }
+            </p>
+          </div>
+        )}
 
-        <div>
-          <label className="block text-sm font-medium mb-1 input-label" htmlFor='endpoint'>
-            {t('settings.apiEndpointPath')}
-            {isCustom && formData.endpoint && (
-              <span className="text-xs input-description">
-                {' → '}{formatEndpoint(formData.endpoint)}
-              </span>
-            )}
-          </label>
-          <input
-            type="text"
-            id="endpoint"
-            name="endpoint"
-            value={formData.endpoint || ''}
-            onChange={handleInputChange}
-            className="w-full p-2 border rounded input"
-            placeholder="/chat/completions"
-          />
-          <p className="mt-1 text-xs input-description">
-            {isCustom
-              ? t('settings.apiEndpointCustomHint')
-              : t('settings.apiEndpointBuiltInHint')}
-          </p>
-        </div>
+        {shouldShowUrlFields && (
+          <div>
+            <label className="block text-sm font-medium mb-1 input-label" htmlFor='endpoint'>
+              {t('settings.apiEndpointPath')}
+              {isCustom && formData.endpoint && (
+                <span className="text-xs input-description">
+                  {' → '}{formatEndpoint(formData.endpoint)}
+                </span>
+              )}
+            </label>
+            <input
+              type="text"
+              id="endpoint"
+              name="endpoint"
+              value={formData.endpoint || ''}
+              onChange={handleInputChange}
+              className="w-full p-2 border rounded input"
+              placeholder="/chat/completions"
+            />
+            <p className="mt-1 text-xs input-description">
+              {isCustom
+                ? t('settings.apiEndpointCustomHint')
+                : t('settings.apiEndpointBuiltInHint')}
+            </p>
+          </div>
+        )}
 
         <div>
           <label className="block text-sm font-medium mb-1 input-label" htmlFor='model-selector'>{t('settings.modelList')}</label>
