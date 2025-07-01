@@ -1,6 +1,6 @@
 # @prompt-booster/api
 
-[中文](hREADME-zh.md)
+[中文](README-zh.md)
 
 ## Overview
 
@@ -14,6 +14,7 @@
   - 🛡️ **Comprehensive Error Handling**: A layered system of error types.
   - 🎯 **TypeScript Support**: Complete type definitions.
   - 🔧 **Flexible Configuration**: Supports custom endpoints and authentication methods.
+  - 🌐 **CORS Support**: Built-in proxy support for browser environments.
 
 ## Installation
 
@@ -76,6 +77,36 @@ await client.streamChat({
   }
 }, streamHandler);
 ```
+
+## CORS Support
+
+The API package includes built-in CORS proxy support for connecting to local or CORS-restricted API services in browser environments.
+
+```typescript
+// Enable CORS proxy for local services
+const client = createClient({
+  provider: 'custom',
+  apiKey: 'your-api-key',
+  baseUrl: 'http://localhost:11434',
+  cors: { enabled: true }
+});
+
+// Add custom headers without using proxy
+const clientWithHeaders = createClient({
+  provider: 'custom',
+  apiKey: 'your-api-key',
+  baseUrl: 'https://api.example.com',
+  cors: {
+    enabled: false,
+    headers: {
+      'X-API-Version': '2.0',
+      'X-Client-Id': 'my-app'
+    }
+  }
+});
+```
+
+For detailed configuration options and examples, see the [CORS Configuration Guide](./docs/CORS.md).
 
 ## Architecture Design
 
@@ -159,6 +190,12 @@ interface ClientConfig {
     type: 'openai_compatible' | 'gemini' | 'ollama' | 'custom';
     parseStreamFn?: Function;  // Custom stream parsing function
     parseFullFn?: Function;    // Custom full response parsing function
+  };
+  cors?: {                   // CORS configuration (see CORS guide for details)
+    enabled?: boolean;
+    proxyUrl?: string;
+    headers?: Record<string, string>;
+    withCredentials?: boolean;
   };
 }
 ```
@@ -363,7 +400,7 @@ if (process.env.NODE_ENV === 'development') {
 <!-- end list -->
 
   - **403 Error**: Check if the `apiKey` and `baseUrl` are correct.
-  - **CORS Error**: Ensure the `baseUrl` format is correct (including the protocol).
+  - **CORS Error**: Ensure the `baseUrl` format is correct (including the protocol), or try enabling the CORS proxy.
   - **Stream Interruption**: Check if the `AbortController` is being triggered unexpectedly.
 
 ## Extending the Library

@@ -124,6 +124,17 @@ export interface ClientConfig {
     type: string;
     [key: string]: any;
   };
+  /** CORS 配置 */
+  cors?: {
+    /** 是否启用 CORS 代理 */
+    enabled?: boolean;
+    /** 代理服务器 URL */
+    proxyUrl?: string;
+    /** 自定义请求头 */
+    headers?: Record<string, string>;
+    /** 是否包含凭证 */
+    withCredentials?: boolean;
+  };
 }
 
 /**

@@ -32,6 +32,7 @@ import {
 } from './errors';
 import { logDebug } from '../utils/apiLogging';
 import { StreamFormat, splitStreamBuffer } from '../utils';
+import { needsCorsProxy, buildProxyUrl, buildCorsHeaders } from '../utils/cors';
 
 /**
  * 统一LLM客户端
@@ -59,6 +60,7 @@ export class LLMClientImpl implements LLMClient {
     chat: string;
     models: string;
   };
+  private corsConfig?: ClientConfig['cors'];
 
   /**
    * 构造函数
@@ -100,6 +102,14 @@ export class LLMClientImpl implements LLMClient {
       (config) => this.authStrategy.applyAuth(config),
       (error) => Promise.reject(error)
     );
+
+    this.corsConfig = config.cors;
+
+    // 如果启用了 CORS 且需要代理，修改 baseUrl
+    if (this.corsConfig?.enabled && this.baseUrl && needsCorsProxy(this.baseUrl)) {
+      this.baseUrl = buildProxyUrl(this.baseUrl, this.corsConfig.proxyUrl);
+      logDebug(`[LLMClient] Using CORS proxy: ${this.baseUrl}`);
+    }
 
     logDebug(`[LLMClient] initialized with model: ${this.model}`);
   }
@@ -212,10 +222,13 @@ export class LLMClientImpl implements LLMClient {
   ): Promise<void> {
     try {
       // 构建请求头
-      const headers: Record<string, string> = {
+      const baseHeaders: Record<string, string> = {
         'Content-Type': CONTENT_TYPES.JSON,
         'Accept': `${CONTENT_TYPES.JSON}, ${CONTENT_TYPES.SSE}, ${CONTENT_TYPES.TEXT}, */*`
       };
+
+      // 应用 CORS 头
+      const headers = buildCorsHeaders(baseHeaders, this.corsConfig);
 
       // 构建URL
       let endpoint = this.endpoints.chat;
@@ -229,13 +242,20 @@ export class LLMClientImpl implements LLMClient {
         headers['Authorization'] = `Bearer ${this.apiKey}`;
       }
 
-      // 发送请求
-      const response = await fetch(url, {
+      // 发送请求时包含 CORS 配置
+      const fetchOptions: RequestInit = {
         method: 'POST',
         headers,
         body: JSON.stringify(payload),
         signal: controller.signal
-      });
+      };
+
+      // 如果配置了 credentials
+      if (this.corsConfig?.withCredentials) {
+        fetchOptions.credentials = 'include';
+      }
+
+      const response = await fetch(url, fetchOptions);
 
       // 检查响应状态
       if (!response.ok) {
@@ -432,12 +452,19 @@ export class LLMClientImpl implements LLMClient {
    * @returns Axios实例
    */
   private createAxiosInstance(): AxiosInstance {
+    const headers = buildCorsHeaders(
+      {
+        'Content-Type': CONTENT_TYPES.JSON
+      },
+      this.corsConfig
+    );
+
     return axios.create({
       baseURL: this.baseUrl,
       timeout: this.timeout || DEFAULT_TIMEOUT,
-      headers: {
-        'Content-Type': CONTENT_TYPES.JSON
-      }
+      headers,
+      // 如果配置了 withCredentials
+      withCredentials: this.corsConfig?.withCredentials
     });
   }
 
@@ -461,10 +488,10 @@ export class LLMClientImpl implements LLMClient {
   }
 
   /**
-   * 构建请求URL
-   * @param endpoint 端点路径
-   * @returns 完整URL
-   */
+ * 构建请求URL
+ * @param endpoint 端点路径
+ * @returns 完整URL
+ */
   private buildUrl(endpoint: string): string {
     // 替换模型占位符
     endpoint = endpoint.replace('{model}', this.model);
@@ -485,7 +512,14 @@ export class LLMClientImpl implements LLMClient {
     if (this.isGeminiApi() && this.apiKey) {
       const url = new URL(urlString);
       url.searchParams.set('key', this.apiKey);
-      return url.toString();
+      urlString = url.toString();
+    }
+
+    // 如果启用了 CORS 且这是一个需要代理的 URL
+    // 注意：这应该在所有 URL 处理完成后进行
+    if (this.corsConfig?.enabled && needsCorsProxy(urlString)) {
+      urlString = buildProxyUrl(urlString, this.corsConfig.proxyUrl);
+      logDebug(`[LLMClient] Using CORS proxy for endpoint: ${urlString}`);
     }
 
     return urlString;

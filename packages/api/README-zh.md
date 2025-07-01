@@ -14,6 +14,7 @@
 - 🛡️ **完整的错误处理**：分层的错误类型系统
 - 🎯 **TypeScript 支持**：完整的类型定义
 - 🔧 **灵活配置**：支持自定义端点和认证方式
+- 🌐 **CORS 支持**：内置代理支持，适用于浏览器环境
 
 ## 安装
 
@@ -76,6 +77,36 @@ await client.streamChat({
   }
 }, streamHandler);
 ```
+
+## CORS 支持
+
+API 包内置了 CORS 代理支持，方便在浏览器环境中连接本地或受 CORS 限制的 API 服务。
+
+```typescript
+// 为本地服务启用 CORS 代理
+const client = createClient({
+  provider: 'custom',
+  apiKey: 'your-api-key',
+  baseUrl: 'http://localhost:11434',
+  cors: { enabled: true }
+});
+
+// 添加自定义请求头而不使用代理
+const clientWithHeaders = createClient({
+  provider: 'custom',
+  apiKey: 'your-api-key',
+  baseUrl: 'https://api.example.com',
+  cors: {
+    enabled: false,
+    headers: {
+      'X-API-Version': '2.0',
+      'X-Client-Id': 'my-app'
+    }
+  }
+});
+```
+
+详细配置选项和示例请参见 [CORS 配置指南](./docs/CORS-zh.md)。
 
 ## 架构设计
 
@@ -159,6 +190,12 @@ interface ClientConfig {
     type: 'openai_compatible' | 'gemini' | 'ollama' | 'custom';
     parseStreamFn?: Function;  // 自定义流解析函数
     parseFullFn?: Function;    // 自定义完整响应解析函数
+  };
+  cors?: {                   // CORS 配置（详见 CORS 指南）
+    enabled?: boolean;       // 是否启用 CORS 代理
+    proxyUrl?: string;       // 代理服务器 URL
+    headers?: Record<string, string>;  // 自定义请求头
+    withCredentials?: boolean;  // 是否包含凭证
   };
 }
 ```
@@ -348,7 +385,7 @@ if (process.env.NODE_ENV === 'development') {
 3. **常见问题排查**
 
 - **403 错误**：检查 API 密钥和 baseUrl 是否正确
-- **CORS 错误**：确认 baseUrl 格式正确（包含协议）
+- **CORS 错误**：确认 baseUrl 格式正确（包含协议），或尝试启用 CORS 代理
 - **流式响应中断**：检查 AbortController 是否被意外触发
 
 ## 扩展开发

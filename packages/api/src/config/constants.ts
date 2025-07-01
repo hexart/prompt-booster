@@ -206,3 +206,20 @@ export const CONTENT_TYPES = {
   SSE: 'text/event-stream',
   TEXT: 'text/plain'
 };
+
+// 添加 CORS 相关常量
+export const CORS_CONFIG = {
+  /** 默认 CORS 代理服务器列表 */
+  DEFAULT_PROXIES: [
+    'https://cors-anywhere.herokuapp.com',
+    'https://api.allorigins.win/raw?url=',
+    'https://cors-proxy.htmldriven.com/?url='
+  ],
+  /** 需要 CORS 代理的域名模式 */
+  CORS_REQUIRED_PATTERNS: [
+    // 添加已知需要 CORS 的域名模式
+    /^http:\/\/localhost(?::\d+)?/,  // 本地服务
+    /^http:\/\/127\.0\.0\.1(?::\d+)?/,  // 本地 IP
+    // 可以添加更多模式
+  ]
+};
