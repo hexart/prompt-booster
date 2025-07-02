@@ -177,14 +177,14 @@ export const PromptBooster: React.FC = () => {
       return;
     }
 
+    const activeModelInfo = getEnabledModels().find(
+      (model) => model.id === activeModel
+    );
+    const modelName = activeModelInfo?.name || activeModel;
+
+    const toastId = toast.loading(t("toast.enhancingWithModel", { modelName }));
+
     try {
-      const activeModelInfo = getEnabledModels().find(
-        (model) => model.id === activeModel
-      );
-      const modelName = activeModelInfo?.name || activeModel;
-
-      toast.info(t("toast.enhancingWithModel", { modelName }));
-
       // 直接调用函数获取实际模板ID
       const actualTemplateId = getActualTemplateId(selectedTemplateId);
 
@@ -195,10 +195,17 @@ export const PromptBooster: React.FC = () => {
         language: i18n.language,
       });
 
-      toast.success(t("toast.enhancePromptSuccess"));
+      // 更新为成功状态
+      toast.success(t("toast.enhancePromptSuccess"), {
+        id: toastId,
+      });
     } catch (error) {
       console.error("增强过程中出错:", error);
-      toast.error(t("toast.enhancePromptFailed"));
+
+      // 更新为错误状态
+      toast.error(t("toast.enhancePromptFailed"), {
+        id: toastId,
+      });
     }
   };
 
@@ -309,6 +316,15 @@ export const PromptBooster: React.FC = () => {
   ) => {
     if (!activeGroup) return;
 
+    // 获取模型名称用于 toast 消息
+    const activeModelInfo = getEnabledModels().find(
+      (model) => model.id === activeModel
+    );
+    const modelName = activeModelInfo?.name || activeModel;
+
+    // 创建 loading toast
+    const toastId = toast.loading(t("toast.iteratingWithModel", { modelName }));
+
     try {
       // 获取实际的模板ID
       const actualTemplateId = getActualTemplateId(templateId);
@@ -322,9 +338,18 @@ export const PromptBooster: React.FC = () => {
       });
 
       setIsIterationDialogOpen(false);
+
+      // 更新为成功状态
+      toast.success(t("toast.iterationSuccess"), {
+        id: toastId
+      });
     } catch (error) {
       console.error("迭代失败:", error);
-      toast.error(t("toast.iterationFailed"));
+
+      // 更新为错误状态
+      toast.error(t("toast.iterationFailed"), {
+        id: toastId
+      });
     }
   };
 

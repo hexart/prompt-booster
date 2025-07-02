@@ -18,6 +18,10 @@
   font-family: var(--font-latin);
 }
 @layer utilities {
+  /* 设定toast.loading在暗色模式下的样式 */
+  .dark [data-sonner-toast][data-type="loading"] {
+    @apply !bg-gray-900 !border-gray-800 !text-gray-200;
+  }
 }
 
 @layer base {

@@ -16,6 +16,8 @@ export const Toaster = ({ position = 'top-right' }: ToasterProps) => {
       duration={2000}
       theme={theme}
       className="toaster"
+      offset={{ top: 90 }}
+      closeButton
     />
   );
 };
