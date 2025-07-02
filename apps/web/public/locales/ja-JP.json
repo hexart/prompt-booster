@@ -46,6 +46,8 @@
     "saveAsNewVersionFailed": "変更の保存に失敗しました",
     "analyzePromptFailed": "プロンプト分析に失敗しました",
     "analyzePromptLLMFailed": "LLM分析に失敗しました。ローカル分析に戻ります",
+    "iteratingWithModel": "{{modelName}} で反復中...",
+    "iterationSuccess": "プロンプトの反復が成功しました",
     "iterationFailed": "反復処理中にエラーが発生しました",
     "workspaceResetSuccess": "ワークスペースがリセットされました",
     "testError": "テスト処理中にエラーが発生しました",

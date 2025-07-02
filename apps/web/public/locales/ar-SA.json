@@ -46,6 +46,8 @@
     "saveAsNewVersionFailed": "فشل حفظ التغييرات",
     "analyzePromptFailed": "فشل تحليل النص",
     "analyzePromptLLMFailed": "فشل تحليل LLM، تم الرجوع إلى التحليل المحلي",
+    "iteratingWithModel": "جارٍ التكرار باستخدام {{modelName}}...",
+    "iterationSuccess": "نجح تكرار المطالبة",
     "iterationFailed": "حدث خطأ أثناء عملية التكرار",
     "workspaceResetSuccess": "تم إعادة ضبط مساحة العمل",
     "testError": "حدث خطأ أثناء عملية الاختبار",

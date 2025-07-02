@@ -46,6 +46,8 @@
     "saveAsNewVersionFailed": "Gagal menyimpan perubahan",
     "analyzePromptFailed": "Analisis prompt gagal",
     "analyzePromptLLMFailed": "Analisis LLM gagal, menggunakan analisis lokal",
+    "iteratingWithModel": "Mengiterasi dengan {{modelName}}...",
+    "iterationSuccess": "Iterasi prompt berhasil",
     "iterationFailed": "Terjadi kesalahan selama proses iterasi",
     "workspaceResetSuccess": "Ruang kerja direset",
     "testError": "Terjadi kesalahan selama proses pengujian",

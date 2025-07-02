@@ -46,6 +46,8 @@
     "saveAsNewVersionFailed": "Speichern der Änderungen fehlgeschlagen",
     "analyzePromptFailed": "Prompt-Analyse fehlgeschlagen",
     "analyzePromptLLMFailed": "LLM-Analyse fehlgeschlagen, zurück zur lokalen Analyse",
+    "iteratingWithModel": "Iteration mit {{modelName}}...",
+    "iterationSuccess": "Prompt-Iteration erfolgreich",
     "iterationFailed": "Während des Iterationsprozesses ist ein Fehler aufgetreten",
     "workspaceResetSuccess": "Arbeitsbereich wurde zurückgesetzt",
     "testError": "Während des Testvorgangs ist ein Fehler aufgetreten",

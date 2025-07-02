@@ -46,6 +46,8 @@
     "saveAsNewVersionFailed": "Değişiklikleri kaydetme başarısız",
     "analyzePromptFailed": "Prompt analizi başarısız",
     "analyzePromptLLMFailed": "LLM analizi başarısız, yerel analize geri dönüldü.",
+    "iteratingWithModel": "{{modelName}} ile yineleniyor...",
+    "iterationSuccess": "Prompt yinelemesi başarılı",
     "iterationFailed": "İterasyon işlemi sırasında hata oluştu.",
     "workspaceResetSuccess": "Çalışma alanı sıfırlandı",
     "testError": "Test işlemi sırasında hata oluştu.",

@@ -46,6 +46,8 @@
     "saveAsNewVersionFailed": "Wijzigingen opslaan mislukt",
     "analyzePromptFailed": "Prompt-analyse mislukt",
     "analyzePromptLLMFailed": "LLM-analyse mislukt, teruggevallen op lokale analyse",
+    "iteratingWithModel": "Itereren met {{modelName}}...",
+    "iterationSuccess": "Prompt-iteratie succesvol",
     "iterationFailed": "Er is een fout opgetreden tijdens het iteratieproces",
     "workspaceResetSuccess": "Werkruimte is gereset",
     "testError": "Er is een fout opgetreden tijdens het testproces",

@@ -46,6 +46,8 @@
     "saveAsNewVersionFailed": "تبدیلیاں محفوظ کرنے میں ناکام",
     "analyzePromptFailed": "متن کا تجزیہ ناکام",
     "analyzePromptLLMFailed": "LLM تجزیہ ناکام، مقامی تجزیے پر واپس آ گیا",
+    "iteratingWithModel": "{{modelName}} کے ساتھ تکرار ہو رہی ہے...",
+    "iterationSuccess": "پرامپٹ کی تکرار کامیاب رہی",
     "iterationFailed": "تکرار کے عمل میں خرابی",
     "workspaceResetSuccess": "ورک سپیس ری سیٹ ہو گئی",
     "testError": "ٹیسٹ کے عمل میں خرابی",

@@ -46,6 +46,8 @@
     "saveAsNewVersionFailed": "변경 사항 저장 실패",
     "analyzePromptFailed": "프롬프트 분석 실패",
     "analyzePromptLLMFailed": "LLM 분석 실패, 로컬 분석으로 롤백했습니다.",
+    "iteratingWithModel": "{{modelName}}으로 반복 중...",
+    "iterationSuccess": "프롬프트 반복 성공",
     "iterationFailed": "반복 과정 중 오류가 발생했습니다.",
     "workspaceResetSuccess": "작업 공간이 초기화되었습니다",
     "testError": "테스트 과정 중 오류가 발생했습니다.",

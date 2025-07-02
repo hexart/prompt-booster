@@ -46,6 +46,8 @@
     "saveAsNewVersionFailed": "ذخیره تغییرات ناموفق بود",
     "analyzePromptFailed": "تحلیل متن ناموفق بود",
     "analyzePromptLLMFailed": "تحلیل LLM ناموفق بود، به تحلیل محلی بازگشت",
+    "iteratingWithModel": "در حال تکرار با {{modelName}}...",
+    "iterationSuccess": "تکرار پرامپت موفقیت‌آمیز بود",
     "iterationFailed": "خطا در فرآیند تکرار",
     "workspaceResetSuccess": "فضای کاری بازنشانی شد",
     "testError": "خطا در فرآیند تست",

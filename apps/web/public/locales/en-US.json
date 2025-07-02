@@ -46,6 +46,8 @@
     "saveAsNewVersionFailed": "Failed to save changes",
     "analyzePromptFailed": "Prompt analysis failed",
     "analyzePromptLLMFailed": "LLM analysis failed, rolled back to local analysis.",
+    "iteratingWithModel": "Iterating with {{modelName}}...",
+    "iterationSuccess": "Prompt iteration successful",
     "iterationFailed": "An error occurred during the iteration process.",
     "workspaceResetSuccess": "Workspace has been reset",
     "testError": "An error occurred during the testing process.",

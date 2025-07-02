@@ -46,6 +46,8 @@
     "saveAsNewVersionFailed": "परिवर्तन सहेजने में विफल",
     "analyzePromptFailed": "प्रॉम्प्ट विश्लेषण विफल",
     "analyzePromptLLMFailed": "LLM विश्लेषण विफल, स्थानीय विश्लेषण पर वापस आ गया",
+    "iteratingWithModel": "{{modelName}} के साथ पुनरावृत्ति हो रही है...",
+    "iterationSuccess": "प्रॉम्प्ट पुनरावृत्ति सफल",
     "iterationFailed": "पुनरावृत्ति प्रक्रिया के दौरान त्रुटि हुई",
     "workspaceResetSuccess": "कार्यक्षेत्र रीसेट कर दिया गया है",
     "testError": "परीक्षण प्रक्रिया के दौरान त्रुटि हुई",

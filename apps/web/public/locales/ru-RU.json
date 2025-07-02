@@ -46,6 +46,8 @@
     "saveAsNewVersionFailed": "Не удалось сохранить изменения",
     "analyzePromptFailed": "Анализ запроса не удался",
     "analyzePromptLLMFailed": "Анализ LLM не удался, возврат к локальному анализу",
+    "iteratingWithModel": "Итерация с {{modelName}}...",
+    "iterationSuccess": "Итерация промпта выполнена успешно",
     "iterationFailed": "Произошла ошибка во время процесса итерации",
     "workspaceResetSuccess": "Рабочая область была сброшена",
     "testError": "Произошла ошибка во время процесса тестирования",

@@ -46,6 +46,8 @@
     "saveAsNewVersionFailed": "儲存修改失敗",
     "analyzePromptFailed": "提示詞分析失敗",
     "analyzePromptLLMFailed": "LLM分析失敗，已回退到本地分析",
+    "iteratingWithModel": "使用 {{modelName}} 進行迭代中...",
+    "iterationSuccess": "迭代提示詞成功",
     "iterationFailed": "迭代過程中出錯",
     "workspaceResetSuccess": "已重置工作區",
     "testError": "測試過程中出錯",
