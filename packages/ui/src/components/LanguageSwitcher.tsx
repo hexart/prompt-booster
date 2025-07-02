@@ -30,8 +30,8 @@ const languageConfig: Record<LanguageCode, {
   'zh-Hant': {
     icon: '🇨🇳',
     label: '繁體中文',
-    shortcut: '⌥+H',
-    hotkey: 'alt+h',
+    shortcut: '⌥+T',
+    hotkey: 'alt+t',
     display: true
   },
   'en-US': {
@@ -39,6 +39,13 @@ const languageConfig: Record<LanguageCode, {
     label: 'English',
     shortcut: '⌥+E',
     hotkey: 'alt+e',
+    display: true
+  },
+  'hi-IN': {
+    icon: '🇮🇳',
+    label: 'हिन्दी',
+    shortcut: '⌥+H',
+    hotkey: 'alt+h',
     display: true
   },
   'es-ES': {
@@ -53,13 +60,6 @@ const languageConfig: Record<LanguageCode, {
     label: 'العربية',
     shortcut: '⌥+A',
     hotkey: 'alt+a',
-    display: true
-  },
-  'hi-IN': {
-    icon: '🇮🇳',
-    label: 'हिन्दी',
-    shortcut: '⌥+I',
-    hotkey: 'alt+i',
     display: true
   },
   'pt-BR': {
@@ -83,6 +83,13 @@ const languageConfig: Record<LanguageCode, {
     hotkey: 'alt+j',
     display: true
   },
+  'de-DE': {
+    icon: '🇩🇪',
+    label: 'Deutsch',
+    shortcut: '⌥+G',
+    hotkey: 'alt+g',
+    display: true
+  },
   'fr-FR': {
     icon: '🇫🇷',
     label: 'Français',
@@ -90,11 +97,11 @@ const languageConfig: Record<LanguageCode, {
     hotkey: 'alt+f',
     display: true
   },
-  'de-DE': {
-    icon: '🇩🇪',
-    label: 'Deutsch',
-    shortcut: '⌥+D',
-    hotkey: 'alt+d',
+  'ko-KR': {
+    icon: '🇰🇷',
+    label: '한국어',
+    shortcut: '⌥+K',
+    hotkey: 'alt+k',
     display: true
   },
   'tr-TR': {
@@ -104,11 +111,18 @@ const languageConfig: Record<LanguageCode, {
     hotkey: 'alt+y',
     display: true
   },
-  'ko-KR': {
-    icon: '🇰🇷',
-    label: '한국어',
-    shortcut: '⌥+K',
-    hotkey: 'alt+k',
+  'it-IT': {
+    icon: '🇮🇹',
+    label: 'Italiano',
+    shortcut: '⌥+I',
+    hotkey: 'alt+i',
+    display: true
+  },
+  'id-ID': {
+    icon: '🇮🇩',
+    label: 'Bahasa Indonesia',
+    shortcut: '⌥+N',
+    hotkey: 'alt+n',
     display: true
   },
   'ur-PK': {
@@ -121,22 +135,8 @@ const languageConfig: Record<LanguageCode, {
   'fa-IR': {
     icon: '🇮🇷',
     label: 'فارسی',
-    shortcut: '⌥+G',  // 使用 G 因为 F 已被法语占用
-    hotkey: 'alt+g',
-    display: true
-  },
-  'it-IT': {
-    icon: '🇮🇹',
-    label: 'Italiano',
-    shortcut: '⌥+T',  // 使用 T 因为 I 已被印地语占用
-    hotkey: 'alt+t',
-    display: true
-  },
-  'id-ID': {
-    icon: '🇮🇩',
-    label: 'Bahasa Indonesia',
-    shortcut: '⌥+B',  // 使用 B 因为 I 已被占用
-    hotkey: 'alt+b',
+    shortcut: '⌥+V',
+    hotkey: 'alt+v',
     display: true
   }
 };
