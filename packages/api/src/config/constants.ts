@@ -61,7 +61,7 @@ export const PROVIDER_CONFIG: Record<string, any> = {
       chat: '/chat/completions',
       models: '/models'
     },
-    defaultModel: 'gpt-3.5-turbo',
+    defaultModel: 'gpt-4o-mini',
     timeout: 60000,
     auth: {
       type: AuthType.BEARER
