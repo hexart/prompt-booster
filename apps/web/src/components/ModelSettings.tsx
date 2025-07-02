@@ -209,7 +209,7 @@ export const ModelSettings: React.FC = () => {
       </div>
 
       {/* 模型列表 */}
-      <div className='flex-col h-full overflow-y-scroll pb-3'>
+      <div className='flex-col h-full overflow-y-scroll'>
         {allModels.map((model, index) => (
           <motion.div
             key={model.id}
