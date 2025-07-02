@@ -86,7 +86,7 @@ export const AnalysisDrawer: React.FC<AnalysisDrawerProps> = ({
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 z-40 drawer-mask" />
         <Drawer.Content className="drawer-content-container backdrop-blur-md flex flex-col rounded-t-2xl drop-shadow-[0_-15px_15px_rgba(0,0,0,0.15)] fixed bottom-0 left-0 right-0 max-h-[85vh] z-40">
-          <div className="p-3 pt-2 overflow-y-auto">
+          <div className="p-3 pt-2 overflow-y-auto select-none cursor-grab active:cursor-grabbing">
             {/* 🎉 满分彩带 */}
             {analysisResult && analysisResult.score >= 10 && (
               <Confetti

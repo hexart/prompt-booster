@@ -273,11 +273,13 @@ export const PromptBooster: React.FC = () => {
         console.warn("[Fallback] LLM 评分失败，尝试使用本地分析:", e);
         result = analyzePromptQuality(optimizedPrompt, i18n.language);
         toast.warning(t("toast.analyzePromptLLMFailed"));
+        setIsDrawerDismissible(true);
       }
 
       setAnalysisResult(result);
     } catch (err: any) {
       toast.error(err.message || t("toast.analyzePromptFailed"));
+      setIsDrawerDismissible(true);
     } finally {
       setIsAnalyzing(false);
     }
@@ -496,7 +498,7 @@ export const PromptBooster: React.FC = () => {
 
         <Tooltip text={t("promptBooster.enhancePrompt")}>
           <AnimatedButton
-            className={`flex gap-2 items-center h-10 px-4 py-2 truncate button-confirm 
+            className={`flex gap-2 justify-center items-center h-10 w-10 sm:w-auto sm:px-4 truncate button-confirm 
                         ${isProcessing ? "cursor-not-allowed opacity-50" : ""}`}
             onClick={handleOptimize}
             disabled={
