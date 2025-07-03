@@ -15,11 +15,11 @@ export const RefreshDetector: React.FC = () => {
 
     if (!pageLoadFlag) {
       // 第一次加载页面 - 标记页面已加载
-      console.log('页面初次加载，设置标记');
+      // console.log('页面初次加载，设置标记');
       sessionStorage.setItem(PAGE_LOAD_KEY, 'loaded');
     } else {
       // 页面已经加载过，这是一个刷新
-      console.log('检测到页面刷新，正在重置状态...');
+      // console.log('检测到页面刷新，正在重置状态...');
 
       // 安全调用重置函数，使用setTimeout避免在渲染周期中触发状态更新
       setTimeout(() => {
@@ -31,7 +31,7 @@ export const RefreshDetector: React.FC = () => {
           useMemoryStore.getState().clearAll();
 
           // toast.info('已重置工作区');
-          console.log('状态重置完成');
+          // console.log('状态重置完成');
         } catch (error) {
           console.error('重置状态时出错:', error);
         }

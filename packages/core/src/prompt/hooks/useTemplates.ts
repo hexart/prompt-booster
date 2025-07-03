@@ -40,11 +40,11 @@ export const useTemplates = () => {
         setTemplateIdMapping(mappings);
 
         if (Object.keys(templatesRecord).length > 0) {
-          console.log(
-            t("toast.loadTemplatesSuccess", {
-              count: Object.keys(templatesRecord).length,
-            })
-          );
+          // console.log(
+          //   t("toast.loadTemplatesSuccess", {
+          //     count: Object.keys(templatesRecord).length,
+          //   })
+          // );
         } else {
           console.info(t("toast.noTemplatesAvailable"));
         }
