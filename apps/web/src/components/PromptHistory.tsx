@@ -4,7 +4,7 @@ import { Dialog } from '@prompt-booster/ui/components/Dialog';
 import { usePrompt } from '@prompt-booster/core/prompt/hooks/usePrompt';
 import { PromptGroup } from '@prompt-booster/core/prompt/models/prompt';
 import { Tooltip, ActionButtons, AnimatedButton } from '@prompt-booster/ui/components';
-import { GalleryVerticalEndIcon, Trash2Icon, ChevronsDownIcon, ChevronsUpIcon, ZapIcon } from 'lucide-react';
+import { GalleryVerticalEndIcon, Trash2Icon, ChevronsDownIcon, ChevronsUpIcon, ZapIcon, ClockIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { PROVIDER_USER_EDIT } from '@prompt-booster/core/prompt/services/promptService';
 import { isRTL } from '../rtl';
@@ -58,10 +58,43 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
 
   if (sortedGroups.length === 0) {
     return (
-      <div className="p-4 border rounded-xl shadow-2xs h-full listcard-container">
-        <div className="p-8 text-center h-full items-center listcard-description">
-          <p>{t('history.noHistory')}</p>
-          <p className="text-sm mt-2">{t('history.noHistoryHint')}</p>
+      <div className="p-4 border rounded-xl shadow-2xs h-full secondary-container">
+        <div className="p-8 flex flex-col justify-center text-center h-full">
+          <motion.p
+            className='flex justify-center mb-4'
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.5,
+              ease: "easeOut",
+              delay: 0.1
+            }}
+          >
+            <ClockIcon size={32} className='input-description' strokeWidth={1} />
+          </motion.p>
+          <motion.p
+            className='input-description'
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.5,
+              ease: "easeOut",
+              delay: 0.2
+            }}
+          >
+            {t('history.noHistory')}
+          </motion.p>
+          <motion.p
+            className="text-xs mt-2 input-description"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.5,
+              ease: "easeOut",
+              delay: 0.3
+            }}
+          >{t('history.noHistoryHint')}
+          </motion.p>
         </div>
       </div>
     );

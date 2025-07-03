@@ -225,7 +225,7 @@ export class PromptService {
         },
         onComplete: () => {
           // 可选：添加完成回调
-          console.log('Enhancement completed');
+          // console.log('Enhancement completed');
         }
       });
 
