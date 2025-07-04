@@ -142,7 +142,7 @@ export const ModelModal: React.FC<ModelModalProps> = ({
               name="providerName"
               value={(formData as CustomInterface).providerName || ''}
               onChange={handleInputChange}
-              className="w-full p-2 border rounded input"
+              className="text-sm w-full p-2 border rounded input"
               placeholder={t('settings.providerNamePlaceholder')}
             />
           </div>
@@ -157,7 +157,7 @@ export const ModelModal: React.FC<ModelModalProps> = ({
               name="apiKey"
               value={formData.apiKey || ''}
               onChange={handleInputChange}
-              className="w-full overflow-hidden truncate p-2 pe-10 border rounded input"
+              className="text-sm w-full overflow-hidden truncate p-2 pe-10 border rounded input"
               placeholder={t('settings.apiKeyPlaceholder')}
             />
             {originalApiKey && (
@@ -202,7 +202,7 @@ export const ModelModal: React.FC<ModelModalProps> = ({
               name="baseUrl"
               value={formData.baseUrl || ''}
               onChange={handleInputChange}
-              className="w-full p-2 border rounded input"
+              className="text-sm w-full p-2 border rounded input"
               placeholder={isCustom
                 ? t('settings.apiBaseURLPlaceholder')
                 : getDefaultBaseUrl(modelType as StandardModelType)}
@@ -232,7 +232,7 @@ export const ModelModal: React.FC<ModelModalProps> = ({
               name="endpoint"
               value={formData.endpoint || ''}
               onChange={handleInputChange}
-              className="w-full p-2 border rounded input"
+              className="text-sm w-full p-2 border rounded input"
               placeholder="/chat/completions"
             />
             <p className="mt-1 text-xs input-description">
@@ -301,7 +301,7 @@ export const ModelModal: React.FC<ModelModalProps> = ({
               }
             }}
             placeholder={t('settings.modelListPlaceholder')}
-            className="w-full"
+            className="text-sm w-full"
             disabled={!formData.apiKey || !formData.baseUrl}
           />
         </div>
@@ -315,7 +315,7 @@ export const ModelModal: React.FC<ModelModalProps> = ({
               name="name"
               value={formatModelDisplayName(formData.providerName, formData.model)}
               disabled={true}
-              className="w-full p-2 border rounded input input-disabled"
+              className="text-sm w-full p-2 border rounded input input-disabled"
               placeholder={t('settings.interfaceNamePlaceholder')}
               autoComplete="off"
             />

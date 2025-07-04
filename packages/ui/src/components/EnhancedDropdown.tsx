@@ -115,7 +115,7 @@ export const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
         type="button"
         id={id}
         onClick={() => !disabled && setIsOpen(!isOpen)}
-        className={`w-full flex items-center justify-between rounded-lg border input-dropdown-button ${className}
+        className={`text-sm font-medium w-full flex items-center justify-between rounded-lg border input-dropdown-button ${className}
                     ${disabled
             ? 'input-disabled cursor-not-allowed'
             : ''
