@@ -2,6 +2,13 @@
 import { llmService } from '../services/llmService';
 import { getAllTemplatesAsRecord } from '../services/templateService';
 import { Template } from '../models/template';
+import {
+  ConnectionError,
+  AuthenticationError,
+  RequestFormatError,
+  ResponseParseError
+} from '@prompt-booster/api';
+import { ErrorType } from "../../model/models/config";
 
 let templatesCache: Record<string, Template> | null = null;
 
@@ -258,11 +265,38 @@ export async function analyzePromptWithLLM(
     } catch (parseError) {
       console.error('[LLM❌Parse Error]', parseError);
       console.error('[LLM❌Full Response]', result);
-      throw new Error('LLM 评分结果解析失败');
+      // 创建解析错误并附加错误类型
+      const error = new Error('LLM 评分结果解析失败');
+      (error as any).errorType = 'parse';
+      throw error;
     }
-  } catch (templateError) {
-    console.error('[Template❌Load Error]', templateError);
-    throw new Error('模板加载失败，将使用本地分析');
+  } catch (error) {
+    console.error('[Analysis❌Error]', error);
+
+    // 判断错误类型并映射到 ErrorType
+    let errorType: ErrorType = 'unknown';
+
+    if (error instanceof ConnectionError) {
+      errorType = 'connection';
+    } else if (error instanceof AuthenticationError) {
+      errorType = 'auth';
+    } else if (error instanceof RequestFormatError) {
+      errorType = 'validation';
+    } else if (error instanceof ResponseParseError) {
+      errorType = 'parse';
+    } else if (error instanceof Error) {
+      // 对于 Error 实例，检查消息内容
+      if (error.message?.includes('模板') || error.message?.includes('template')) {
+        errorType = 'validation'; // 模板加载失败归类为验证错误
+      }
+    }
+
+    // 创建新的错误对象并附加错误类型
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const enhancedError = new Error(errorMessage || '分析过程中发生错误');
+    (enhancedError as any).errorType = errorType;
+
+    throw enhancedError;
   }
 }
 

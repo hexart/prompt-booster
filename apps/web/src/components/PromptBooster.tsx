@@ -258,6 +258,15 @@ export const PromptBooster: React.FC = () => {
   const handleLLMAnalyze = async () => {
     if (!optimizedPrompt || !optimizedPrompt.trim()) return;
 
+    // 获取当前模型名称
+    const activeModelInfo = getEnabledModels().find(
+      (model) => model.id === activeModel
+    );
+    const modelName = activeModelInfo?.name || activeModel;
+
+    // 创建 loading toast
+    const toastId = toast.loading(t("toast.analyzingWithModel", { modelName }));
+
     try {
       setIsAnalyzing(true);
       // 设置抽屉为不可关闭状态
@@ -269,8 +278,43 @@ export const PromptBooster: React.FC = () => {
         result = await analyzePromptWithLLM(optimizedPrompt, displayOriginalPrompt, i18n.language);
         // 标记已使用LLM分析
         setHasUsedLLMAnalysis(true);
-      } catch (e) {
-        console.warn("[Fallback] LLM 评分失败，尝试使用本地分析:", e);
+
+        // 更新为成功状态
+        toast.success(t("toast.analyzingSuccess"), {
+          id: toastId,
+        });
+      } catch (e: any) {
+        const errorType = e.errorType || 'unknown';
+
+        // 根据错误类型显示不同的toast错误信息
+        switch (errorType) {
+          case 'connection':
+            toast.error(t("toast.connection.error", { error: e.message }), {
+              id: toastId,
+            });
+            break;
+          case 'auth':
+            toast.error(t("toast.connection.authFailed", { error: e.message }), {
+              id: toastId,
+            });
+            break;
+          case 'validation':
+            toast.error(t("toast.connection.requestError", { error: e.message }), {
+              id: toastId,
+            });
+            break;
+          case 'parse':
+            toast.error(t("toast.connection.parseError", { error: e.message }), {
+              id: toastId,
+            });
+            break;
+          default:
+            toast.error(t("toast.connection.unexpectedError", { error: e.message }), {
+              id: toastId,
+            });
+        }
+
+        console.warn("[Fallback] LLM 评分失败，尝试使用本地分析");
         result = analyzePromptQuality(optimizedPrompt, i18n.language);
         toast.warning(t("toast.analyzePromptLLMFailed"));
         setIsDrawerDismissible(true);
@@ -278,7 +322,9 @@ export const PromptBooster: React.FC = () => {
 
       setAnalysisResult(result);
     } catch (err: any) {
-      toast.error(err.message || t("toast.analyzePromptFailed"));
+      toast.error(err.message || t("toast.analyzePromptFailed"), {
+        id: toastId,
+      });
       setIsDrawerDismissible(true);
     } finally {
       setIsAnalyzing(false);

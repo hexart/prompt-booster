@@ -44,6 +44,8 @@
     "enhancePromptFailed": "Произошла ошибка при улучшении запроса",
     "saveAsNewVersionSuccess": "Ваши изменения сохранены как новая версия",
     "saveAsNewVersionFailed": "Не удалось сохранить изменения",
+    "analyzingWithModel": "Анализ с помощью {{modelName}}...",
+    "analyzingSuccess": "Анализ завершён!",
     "analyzePromptFailed": "Анализ запроса не удался",
     "analyzePromptLLMFailed": "Анализ LLM не удался, возврат к локальному анализу",
     "iteratingWithModel": "Итерация с {{modelName}}...",

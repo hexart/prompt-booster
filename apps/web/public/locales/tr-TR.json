@@ -44,6 +44,8 @@
     "enhancePromptFailed": "Prompt güçlendirme sırasında hata oluştu",
     "saveAsNewVersionSuccess": "Değişiklikleriniz yeni sürüm olarak kaydedildi.",
     "saveAsNewVersionFailed": "Değişiklikleri kaydetme başarısız",
+    "analyzingWithModel": "{{modelName}} ile analiz ediliyor...",
+    "analyzingSuccess": "Analiz tamamlandı!",
     "analyzePromptFailed": "Prompt analizi başarısız",
     "analyzePromptLLMFailed": "LLM analizi başarısız, yerel analize geri dönüldü.",
     "iteratingWithModel": "{{modelName}} ile yineleniyor...",

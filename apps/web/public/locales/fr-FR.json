@@ -44,6 +44,8 @@
     "enhancePromptFailed": "Erreur lors de l'amélioration du prompt",
     "saveAsNewVersionSuccess": "Vos modifications ont été enregistrées en tant que nouvelle version",
     "saveAsNewVersionFailed": "Échec de l'enregistrement des modifications",
+    "analyzingWithModel": "Analyse en cours avec {{modelName}}...",
+    "analyzingSuccess": "Analyse terminée !",
     "analyzePromptFailed": "Échec de l'analyse du prompt",
     "analyzePromptLLMFailed": "Échec de l'analyse LLM, recours à l'analyse locale",
     "iteratingWithModel": "Itération avec {{modelName}}...",

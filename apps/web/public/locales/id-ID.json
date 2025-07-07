@@ -44,6 +44,8 @@
     "enhancePromptFailed": "Gagal memperkuat prompt",
     "saveAsNewVersionSuccess": "Perubahan Anda telah disimpan sebagai versi baru",
     "saveAsNewVersionFailed": "Gagal menyimpan perubahan",
+    "analyzingWithModel": "Menganalisis dengan {{modelName}}...",
+    "analyzingSuccess": "Analisis selesai!",
     "analyzePromptFailed": "Analisis prompt gagal",
     "analyzePromptLLMFailed": "Analisis LLM gagal, menggunakan analisis lokal",
     "iteratingWithModel": "Mengiterasi dengan {{modelName}}...",

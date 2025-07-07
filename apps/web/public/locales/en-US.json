@@ -44,6 +44,8 @@
     "enhancePromptFailed": "Error occurred while enhancing prompts",
     "saveAsNewVersionSuccess": "Your changes have been saved as a new version.",
     "saveAsNewVersionFailed": "Failed to save changes",
+    "analyzingWithModel": "Analyzing with {{modelName}}...",
+    "analyzingSuccess": "Analysis completed!",
     "analyzePromptFailed": "Prompt analysis failed",
     "analyzePromptLLMFailed": "LLM analysis failed, rolled back to local analysis.",
     "iteratingWithModel": "Iterating with {{modelName}}...",

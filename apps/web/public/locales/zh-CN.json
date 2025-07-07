@@ -44,6 +44,8 @@
     "enhancePromptFailed": "增强提示词时出错",
     "saveAsNewVersionSuccess": "已保存您的修改为新版本",
     "saveAsNewVersionFailed": "保存修改失败",
+    "analyzingWithModel": "正在使用 {{modelName}} 分析...",
+    "analyzingSuccess": "分析完成！",
     "analyzePromptFailed": "提示词分析失败",
     "analyzePromptLLMFailed": "LLM分析失败，已回退到本地分析",
     "iteratingWithModel": "使用 {{modelName}} 进行迭代中...",

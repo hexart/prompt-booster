@@ -44,6 +44,8 @@
     "enhancePromptFailed": "خطا در بهبود متن",
     "saveAsNewVersionSuccess": "تغییرات به عنوان نسخه جدید ذخیره شد",
     "saveAsNewVersionFailed": "ذخیره تغییرات ناموفق بود",
+    "analyzingWithModel": "در حال تجزیه و تحلیل با {{modelName}}...",
+    "analyzingSuccess": "تجزیه و تحلیل کامل شد!",
     "analyzePromptFailed": "تحلیل متن ناموفق بود",
     "analyzePromptLLMFailed": "تحلیل LLM ناموفق بود، به تحلیل محلی بازگشت",
     "iteratingWithModel": "در حال تکرار با {{modelName}}...",

@@ -44,6 +44,8 @@
     "enhancePromptFailed": "Fout opgetreden bij het verbeteren van prompts",
     "saveAsNewVersionSuccess": "Uw wijzigingen zijn opgeslagen als nieuwe versie",
     "saveAsNewVersionFailed": "Wijzigingen opslaan mislukt",
+    "analyzingWithModel": "Analyseren met {{modelName}}...",
+    "analyzingSuccess": "Analyse voltooid!",
     "analyzePromptFailed": "Prompt-analyse mislukt",
     "analyzePromptLLMFailed": "LLM-analyse mislukt, teruggevallen op lokale analyse",
     "iteratingWithModel": "Itereren met {{modelName}}...",

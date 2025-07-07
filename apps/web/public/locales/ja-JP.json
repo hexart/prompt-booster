@@ -44,6 +44,8 @@
     "enhancePromptFailed": "プロンプト強化中にエラーが発生しました",
     "saveAsNewVersionSuccess": "変更が新しいバージョンとして保存されました",
     "saveAsNewVersionFailed": "変更の保存に失敗しました",
+    "analyzingWithModel": "{{modelName}}で分析中...",
+    "analyzingSuccess": "分析完了！",
     "analyzePromptFailed": "プロンプト分析に失敗しました",
     "analyzePromptLLMFailed": "LLM分析に失敗しました。ローカル分析に戻ります",
     "iteratingWithModel": "{{modelName}} で反復中...",

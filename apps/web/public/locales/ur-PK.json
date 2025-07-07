@@ -44,6 +44,8 @@
     "enhancePromptFailed": "متن بہتر کرتے وقت خرابی",
     "saveAsNewVersionSuccess": "تبدیلیاں نئے ورژن کے طور پر محفوظ ہوئیں",
     "saveAsNewVersionFailed": "تبدیلیاں محفوظ کرنے میں ناکام",
+    "analyzingWithModel": "{{modelName}} کے ساتھ تجزیہ کر رہے ہیں...",
+    "analyzingSuccess": "تجزیہ مکمل ہوا!",
     "analyzePromptFailed": "متن کا تجزیہ ناکام",
     "analyzePromptLLMFailed": "LLM تجزیہ ناکام، مقامی تجزیے پر واپس آ گیا",
     "iteratingWithModel": "{{modelName}} کے ساتھ تکرار ہو رہی ہے...",

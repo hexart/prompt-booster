@@ -44,6 +44,8 @@
     "enhancePromptFailed": "프롬프트 향상 중 오류 발생",
     "saveAsNewVersionSuccess": "변경 사항이 새 버전으로 저장되었습니다.",
     "saveAsNewVersionFailed": "변경 사항 저장 실패",
+    "analyzingWithModel": "{{modelName}}로 분석 중...",
+    "analyzingSuccess": "분석 완료!",
     "analyzePromptFailed": "프롬프트 분석 실패",
     "analyzePromptLLMFailed": "LLM 분석 실패, 로컬 분석으로 롤백했습니다.",
     "iteratingWithModel": "{{modelName}}으로 반복 중...",

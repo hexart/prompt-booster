@@ -44,6 +44,8 @@
     "enhancePromptFailed": "حدث خطأ أثناء تحسين النصوص",
     "saveAsNewVersionSuccess": "تم حفظ التغييرات كإصدار جديد",
     "saveAsNewVersionFailed": "فشل حفظ التغييرات",
+    "analyzingWithModel": "جاري التحليل باستخدام {{modelName}}...",
+    "analyzingSuccess": "اكتمل التحليل!",
     "analyzePromptFailed": "فشل تحليل النص",
     "analyzePromptLLMFailed": "فشل تحليل LLM، تم الرجوع إلى التحليل المحلي",
     "iteratingWithModel": "جارٍ التكرار باستخدام {{modelName}}...",
