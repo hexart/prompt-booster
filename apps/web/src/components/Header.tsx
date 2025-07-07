@@ -153,7 +153,7 @@ const Header: React.FC<HeaderProps> = ({
                   style={nonDraggableStyle}
                 />
               </Tooltip>
-              <h1 className="text-xl sm:text-2xl font-bold whitespace-nowrap truncate title">
+              <h1 className="text-xl sm:text-2xl font-bold whitespace-nowrap cursor-default select-none truncate title">
                 {t('common.appName')}
               </h1>
             </div>

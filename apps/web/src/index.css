@@ -46,7 +46,7 @@ textarea {
 }
 
 button {
-  @apply cursor-pointer rounded-xl;
+  @apply cursor-pointer select-none rounded-xl;
 }
 
 button:disabled {
