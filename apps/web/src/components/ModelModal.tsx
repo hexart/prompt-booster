@@ -67,7 +67,10 @@ export const ModelModal: React.FC<ModelModalProps> = ({
     updateFormWithInitialData(initialData, !isCustom, modelType);
   }, [initialData, isCustom, modelType]);
 
-  const handleSave = async () => {
+  /**
+   * 处理表单提交：验证数据、格式化字段，然后调用父组件的保存方法
+   */
+  const handleSubmit = async () => {
     // 1. 合并默认配置
     const completeFormData = getCompleteModelConfig(formData, !isCustom, modelType);
     // 2. 验证表单
@@ -99,9 +102,6 @@ export const ModelModal: React.FC<ModelModalProps> = ({
     try {
       await onSave(dataToSave, modelId);
       onClose();
-    } catch (error) {
-      console.error('保存模型配置失败:', error);
-      toast.error(t('toast.savingFailed'));
     } finally {
       setIsSaving(false);
     }
@@ -123,7 +123,7 @@ export const ModelModal: React.FC<ModelModalProps> = ({
             {t('common.buttons.cancel')}
           </AnimatedButton>
           <AnimatedButton
-            onClick={handleSave}
+            onClick={handleSubmit}
             disabled={isSaving || !formData.apiKey}
             className="px-4 py-2 transition-colors button-confirm"
           >

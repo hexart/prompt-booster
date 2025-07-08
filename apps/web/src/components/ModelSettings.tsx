@@ -168,7 +168,7 @@ export const ModelSettings: React.FC = () => {
       );
       modalState.closeModal();
     } catch (error) {
-      console.error('保存失败:', error);
+      // 静默处理，保持模态框打开
     }
   };
 
