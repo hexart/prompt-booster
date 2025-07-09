@@ -40,7 +40,7 @@
     "react-dom": "^19.1.0",
     "turbo": "^2.5.4",
     "typescript": "^5.8.3",
-    "vite": "^6.3.5",
+    "vite": "^7.0.3",
     "vite-plugin-dts": "^4.5.4",
     "vite-tsconfig-paths": "^5.1.4"
   },
@@ -50,15 +50,8 @@
   "packageManager": "pnpm@10.12.4+sha512.5ea8b0deed94ed68691c9bad4c955492705c5eeb8a87ef86bc62c74a26b037b08ff9570f108b2e4dbd1dd1a9186fea925e527f141c648e85af45631074680184",
   "pnpm": {
     "overrides": {
-      "axios": "^1.10.0",
       "@humanwhocodes/config-array": "^0.14.0",
       "@humanwhocodes/object-schema": "^2.0.4",
-      "glob": "^9.3.5",
-      "rimraf": "^5.0.5",
-      "@npmcli/move-file": "^3.0.0",
-      "boolean": "^3.2.0",
-      "inflight": "^1.0.6",
-      "lodash.isequal": "^4.5.0",
       "prismjs": ">=1.30.0",
       "refractor>prismjs": ">=1.30.0"
     },
