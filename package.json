@@ -27,7 +27,6 @@
     "@types/node": "^24.0.10",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
-    "@types/react-syntax-highlighter": "^15.5.13",
     "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^8.35.1",
     "@typescript-eslint/parser": "^8.35.1",
@@ -59,7 +58,9 @@
       "@npmcli/move-file": "^3.0.0",
       "boolean": "^3.2.0",
       "inflight": "^1.0.6",
-      "lodash.isequal": "^4.5.0"
+      "lodash.isequal": "^4.5.0",
+      "prismjs": ">=1.30.0",
+      "refractor>prismjs": ">=1.30.0"
     },
     "onlyBuiltDependencies": [
       "@tailwindcss/oxide",
