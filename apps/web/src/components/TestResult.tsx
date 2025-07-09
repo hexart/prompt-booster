@@ -134,6 +134,10 @@ export const TestResult: React.FC = () => {
     originalStreamControllerRef.current = new AbortController();
     optimizedStreamControllerRef.current = new AbortController();
 
+    // 创建 loading toast
+    const originalToastId = toast.loading(t('toast.originalResponseGenerating'));
+    const optimizedToastId = toast.loading(t('toast.enhancedResponseGenerating'));
+
     try {
       // 获取当前语言设置
       const currentLanguage = i18n.language;
@@ -185,30 +189,31 @@ export const TestResult: React.FC = () => {
         onOptimizedData: appendToOptimizedResponse,
         onOriginalComplete: () => {
           setIsTestingOriginal(false);
-          toast.success(t('toast.originalResponseCompleted'));
+          toast.success(t('toast.originalResponseCompleted'), { id: originalToastId });
           checkAllComplete();
         },
         onOptimizedComplete: () => {
           setIsTestingOptimized(false);
-          toast.success(t('toast.enhancedResponseCompleted'));
+          toast.success(t('toast.enhancedResponseCompleted'), { id: optimizedToastId });
           checkAllComplete();
         },
         onOriginalError: (error: Error) => {
           if (error.name === 'AbortError' || isUserCancelled) {
-            return; // 不显示错误 toast
+            toast.dismiss(originalToastId);
+            return;
           }
           console.error('原始提示词测试错误:', error);
           setIsTestingOriginal(false);
-          toast.error(`${t('toast.originalResponseFailed')}: ${error.message}`);
+          toast.error(`${t('toast.originalResponseFailed')}: ${error.message}`, { id: originalToastId });
         },
-
         onOptimizedError: (error: Error) => {
           if (error.name === 'AbortError' || isUserCancelled) {
-            return; // 不显示错误 toast
+            toast.dismiss(optimizedToastId);
+            return;
           }
           console.error('增强提示词测试错误:', error);
           setIsTestingOptimized(false);
-          toast.error(`${t('toast.enhancedResponseFailed')}: ${error.message}`);
+          toast.error(`${t('toast.enhancedResponseFailed')}: ${error.message}`, { id: optimizedToastId });
         },
         originalAbortController: originalStreamControllerRef.current || undefined,
         optimizedAbortController: optimizedStreamControllerRef.current || undefined
@@ -217,6 +222,9 @@ export const TestResult: React.FC = () => {
       console.error(`${t('toast.testError')}:`, error);
       setIsTestingOriginal(false);
       setIsTestingOptimized(false);
+      // 更新两个 toast 为错误状态
+      toast.error(t('toast.testError'), { id: originalToastId });
+      toast.error(t('toast.testError'), { id: optimizedToastId });
     }
   };
 
