@@ -140,10 +140,10 @@ label {
       @apply bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300;
     }
     .listcard-prompt-container {
-      @apply bg-gray-100 text-gray-500 whitespace-pre-wrap dark:bg-gray-800 dark:text-gray-300;
+      @apply bg-gray-100 text-gray-500 whitespace-pre-wrap dark:bg-gray-800/60 dark:text-gray-300;
     }
     .iteration-prompt-container {
-      @apply  bg-gray-100 text-blue-600 dark:bg-gray-800/80 dark:text-blue-300;
+      @apply  bg-gray-100 text-blue-600 dark:bg-gray-800/70 dark:text-blue-300;
     }
   }
   .footer {
