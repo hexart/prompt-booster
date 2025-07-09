@@ -1,5 +1,5 @@
 # Build stage
-FROM node:20.11.1-alpine3.19 AS build
+FROM node:22-alpine AS build
 
 WORKDIR /app
 
@@ -23,7 +23,7 @@ COPY . .
 RUN pnpm build
 
 # Production stage
-FROM nginx:1.25.4-alpine
+FROM nginx:1.27-alpine
 
 # Copy built files to nginx
 COPY --from=build /app/apps/web/dist /usr/share/nginx/html
