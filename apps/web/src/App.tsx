@@ -73,9 +73,9 @@ function App() {
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
               transition={{ duration: 0.2, ease: "easeInOut" }}
               className="flex flex-col flex-grow rounded-3xl shadow p-4 md:p-6 w-full h-full main-container"
               aria-hidden="false"

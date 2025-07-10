@@ -71,11 +71,11 @@ export const IterationDialog: React.FC<IterationDialogProps> = ({
     >
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium mb-2 input-description" htmlFor='template-select'>
+          <label className="block text-sm font-medium mb-2 input-description" htmlFor='iteration-template-select'>
             {t('promptBooster.iterationDialog.selectTemplate')}
           </label>
           <EnhancedDropdown
-            id="template-select"
+            id="iteration-template-select"
             options={iterateTemplateOptions}
             value={selectedTemplateId}
             onChange={setSelectedTemplateId}

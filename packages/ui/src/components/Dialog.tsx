@@ -165,7 +165,7 @@ export const Dialog: React.FC<DialogProps> = ({
               perspectiveOrigin: '50% 50%',
             }}
             initial={{ opacity: 0, backdropFilter: 'blur(0px)' }}
-            animate={{ opacity: 1, backdropFilter: 'blur(4px)' }}
+            animate={{ opacity: 1, backdropFilter: 'blur(8px)' }}
             exit={{ opacity: 0, backdropFilter: 'blur(0px)' }}
             transition={{ duration: 0.3, ease: "easeOut" }}
           >
@@ -199,7 +199,7 @@ export const Dialog: React.FC<DialogProps> = ({
             >
               {/* 固定标题栏 */}
               {(title || showCloseButton) && (
-                <div className="mb-4 flex justify-between items-center">
+                <div className="mb-4 flex justify-between items-center select-none">
                   {title && (
                     <h2 className="text-xl font-semibold dialog-title">
                       {title}
