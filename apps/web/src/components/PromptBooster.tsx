@@ -446,7 +446,7 @@ export const PromptBooster: React.FC = () => {
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
 
   return (
-    <div className="grid-cols-1 gap-6 md:min-h-[550px] flex flex-col flex-grow">
+    <div className="flex flex-col h-full gap-6">
       {/* 原始提示词区域 */}
       <motion.div
         animate={{
@@ -568,10 +568,10 @@ export const PromptBooster: React.FC = () => {
       {/* 增强提示词区域 */}
       <motion.div
         layoutId="enhanced-prompt-area"
-        className={`flex flex-col flex-grow md:min-h-0 p-4 border rounded-xl shadow-2xs secondary-container
+        className={`flex flex-col flex-grow p-4 border rounded-xl shadow-2xs secondary-container
         ${isMaximized
-            ? "min-h-[calc(100vh-260px)]"
-            : "min-h-[calc(100vh-550px)]"
+            ? "h-[calc(100vh-270px)] md:h-full"
+            : "h-[calc(100vh-550px)] md:h-full"
           }`}
       >
         {/* 标题栏 */}

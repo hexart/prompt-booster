@@ -11,6 +11,7 @@ import { Toaster } from '@prompt-booster/ui';
 import { useTranslation } from 'react-i18next';
 import { setDirectionByLanguage, getButtonPosition } from './rtl';
 import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
+import { motion, AnimatePresence } from 'framer-motion';
 import { setApiLogging } from '@prompt-booster/api/utils/apiLogging';
 
 // 在应用初始化时禁用 API 客户端日志
@@ -69,12 +70,22 @@ function App() {
         <main className="w-full h-auto mac-top-margin md:h-[calc(100vh-126px)] overflow-y-auto md:overflow-hidden max-w-(--breakpoint-2xl) mx-auto p-2 md:px-6 md:py-4">
           <Toaster position={toastPosition} />
           {/* 内容区域 */}
-          <div className="flex flex-col flex-grow rounded-3xl shadow p-4 md:p-6 w-full h-full main-container" aria-hidden="false">
-            {activeTab === 'booster' && <PromptBooster />}
-            {activeTab === 'test' && <TestResult />}
-            {activeTab === 'history' && <PromptHistory onNavigateToEditor={navigateToEditor} />}
-            {activeTab === 'settings' && <ModelSettings />}
-          </div>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2, ease: "easeInOut" }}
+              className="flex flex-col flex-grow rounded-3xl shadow p-4 md:p-6 w-full h-full main-container"
+              aria-hidden="false"
+            >
+              {activeTab === 'booster' && <PromptBooster />}
+              {activeTab === 'test' && <TestResult />}
+              {activeTab === 'history' && <PromptHistory onNavigateToEditor={navigateToEditor} />}
+              {activeTab === 'settings' && <ModelSettings />}
+            </motion.div>
+          </AnimatePresence>
         </main>
 
         <footer className="mt-auto rounded-t-xl footer">
