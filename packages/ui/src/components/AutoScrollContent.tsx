@@ -164,7 +164,7 @@ export const AutoScrollContent: React.FC<AutoScrollContentProps> = ({
     >
       <div
         ref={elementRef}
-        className={`w-full h-full overflow-auto ${className}
+        className={`w-full h-auto overflow-auto ${className}
                 ${isHovered
             ? 'autoscroll-border-hover'
             : 'autoscroll-border'
