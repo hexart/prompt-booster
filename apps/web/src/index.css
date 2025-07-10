@@ -98,7 +98,7 @@ label {
       @apply  bg-white border-gray-300/40 dark:bg-gray-800 dark:border-gray-700 drop-shadow-xs;
     }
     .title-secondary {
-      @apply text-gray-600 dark:text-gray-300;
+      @apply text-gray-600 dark:text-gray-300 select-none;
     }
   }
   .dragable-notice-container {
