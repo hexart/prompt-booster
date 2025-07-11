@@ -570,16 +570,16 @@ export const PromptBooster: React.FC = () => {
         layoutId="enhanced-prompt-area"
         className={`flex flex-col flex-grow p-4 border rounded-xl shadow-2xs secondary-container
         ${isMaximized
-            ? "h-[calc(100vh-270px)] md:h-full"
-            : "h-[calc(100vh-550px)] md:h-full"
+            ? "h-[calc(100vh-280px)] md:h-full"
+            : "h-full"
           }`}
       >
         {/* 标题栏 */}
         <div className="flex w-full mb-4 gap-2 items-center">
           {/* 标题 */}
-          <div className="flex-shrink  md:w-fit min-w-[95px]">
-            <h2 className="inline-flex items-center gap-2 text-xl font-semibold truncate title-secondary">
-              <BookOpenTextIcon size={20} />
+          <div className="inline-flex flex-shrink items-center gap-2 md:w-fit min-w-[65px] truncate">
+            <BookOpenTextIcon size={20} />
+            <h2 className="text-xl font-semibold title-secondary">
               {t("promptBooster.enhancedPrompt")}
             </h2>
           </div>
@@ -691,13 +691,13 @@ export const PromptBooster: React.FC = () => {
         </div>
 
         {/* 增强提示词文本域 */}
-        <div className="relative flex-grow flex flex-col">
+        <div className="relative flex-grow flex flex-col h-[calc(100vh-650px)] md:h-full">
           <AutoScrollTextarea
             id="enhancement-textarea"
             className={`flex-grow rounded-lg border autoscroll-content 
                             ${!optimizedPrompt && !isProcessing
                 ? "flex justify-center items-center text-center"
-                : ""
+                : "h-full"
               }`}
             value={isEditMode ? editablePrompt : getDisplayOptimizedPrompt()}
             onChange={handleOptimizedPromptChange}
