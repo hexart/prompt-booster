@@ -142,9 +142,9 @@ export function maskApiKey(key: string): string {
 }
 
 /**
- * 检查用户的模型配置是否有效
+ * 验证基础配置字段（不包括model字段）
  */
-export function validateModelConfig(config: ModelConfig | CustomInterface, t?: TranslationFunction): {
+function validateBaseConfig(config: ModelConfig | CustomInterface, t?: TranslationFunction): {
   valid: boolean;
   message?: string
 } {
@@ -162,17 +162,34 @@ export function validateModelConfig(config: ModelConfig | CustomInterface, t?: T
     };
   }
 
-  if (!config.model) {
-    return {
-      valid: false,
-      message: t?.('toast.validation.modelNameRequired') || 'Model name required'
-    };
-  }
-
   if (!config.baseUrl || config.baseUrl.trim() === '') {
     return {
       valid: false,
       message: t?.('toast.validation.baseUrlRequired') || 'Base URL required'
+    };
+  }
+
+  return { valid: true };
+}
+
+/**
+ * 检查用户的模型配置是否有效
+ */
+export function validateModelConfig(config: ModelConfig | CustomInterface, t?: TranslationFunction): {
+  valid: boolean;
+  message?: string
+} {
+  // 1. 先验证基础字段
+  const baseValidation = validateBaseConfig(config, t);
+  if (!baseValidation.valid) {
+    return baseValidation;
+  }
+
+  // 2. 再验证model字段
+  if (!config.model) {
+    return {
+      valid: false,
+      message: t?.('toast.validation.modelNameRequired') || 'Model name required'
     };
   }
 
@@ -310,8 +327,8 @@ export async function fetchModelList(
   originalApiKey?: string
 ): Promise<ModelOption[]> {
   try {
-    // 1. 验证配置
-    const validation = validateModelConfig(config);
+    // 1. 验证配置（获取模型列表时不验证model字段）
+    const validation = validateBaseConfig(config);
     if (!validation.valid) {
       throw new Error(validation.message);
     }
