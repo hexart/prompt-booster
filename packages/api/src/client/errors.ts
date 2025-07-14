@@ -145,6 +145,7 @@ export function formatError(error: any): LLMClientError {
 
   // 检查是否是配额超限错误
   const isQuotaError = status === 429 || 
+    originalMessage.toLowerCase().includes('credit') ||
     originalMessage.toLowerCase().includes('quota') ||
     originalMessage.toLowerCase().includes('rate limit') ||
     originalMessage.toLowerCase().includes('too many requests') ||

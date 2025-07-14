@@ -94,10 +94,19 @@ export function createAuthStrategy(
       return new QueryParamAuthStrategy(apiKey, options?.paramName);
 
     case AuthType.CUSTOM:
+      // 如果提供了 headerName，创建一个设置自定义头的策略
+      if (options?.headerName) {
+        return new CustomAuthStrategy(config => {
+          config.headers = config.headers || {};
+          config.headers[options.headerName] = options.headerValue || apiKey;
+          return config;
+        });
+      }
+      // 如果提供了自定义函数
       if (options?.applyAuthFn && typeof options.applyAuthFn === 'function') {
         return new CustomAuthStrategy(options.applyAuthFn);
       }
-      // 无需认证的情况，返回一个不修改配置的策略
+      // 默认：不修改配置
       return new CustomAuthStrategy(config => config);
 
     default:

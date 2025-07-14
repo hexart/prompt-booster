@@ -237,8 +237,16 @@ export class LLMClientImpl implements LLMClient {
       }
       const url = this.buildUrl(endpoint);
 
-      // 添加认证头（仅对非 Gemini API）
-      if (!this.isGeminiApi() && this.apiKey) {
+      // 处理认证头
+      if (this.isGeminiApi()) {
+        // Gemini 使用查询参数，已在 buildUrl 中处理
+      } else if (this.isClaudeApi()) {
+        // Claude 使用 x-api-key
+        headers['x-api-key'] = this.apiKey;
+        headers['anthropic-version'] = '2023-06-01';
+        headers['anthropic-dangerous-direct-browser-access'] = 'true';
+      } else {
+        // 其他使用 Bearer
         headers['Authorization'] = `Bearer ${this.apiKey}`;
       }
 
@@ -368,8 +376,17 @@ export class LLMClientImpl implements LLMClient {
         'Content-Type': 'application/json'
       };
 
-      // 添加认证头（仅对非 Gemini API）
-      if (!this.isGeminiApi() && this.apiKey) {
+
+      // 处理不同 API 的认证和特殊头
+      if (this.isGeminiApi()) {
+        // Gemini 使用查询参数，已在 buildUrl 中处理
+      } else if (this.isClaudeApi()) {
+        // Claude 需要特殊的头
+        headers['x-api-key'] = this.apiKey;
+        headers['anthropic-version'] = '2023-06-01';
+        headers['anthropic-dangerous-direct-browser-access'] = 'true';
+      } else if (this.apiKey) {
+        // 其他 API 使用 Bearer token
         headers['Authorization'] = `Bearer ${this.apiKey}`;
       }
 
@@ -408,43 +425,50 @@ export class LLMClientImpl implements LLMClient {
   /**
    * 解析模型列表的辅助方法
    */
-  private parseModelList(data: any): Array<{ id: string, name?: string }> {
+  private parseModelList(data: any): Array<{ id: string; name?: string }> {
+    // 辅助函数：确保模型有 id
+    const ensureValidModel = (model: any): { id: string; name?: string } | null => {
+      if (!model || (!model.id && !model.name)) {
+        return null;
+      }
+
+      return {
+        id: model.id || model.name,
+        name: model.name
+      };
+    };
+
+    let models: any[] = [];
+
+    // 提取模型数组
     if (Array.isArray(data)) {
-      return data.map((model: any) => ({
-        id: model.id || model.name,
-        name: model.name || model.id
-      }));
+      models = data;
+    } else if (data.data && Array.isArray(data.data)) {
+      models = data.data;
+    } else if (data.models && Array.isArray(data.models)) {
+      models = data.models;
+    } else {
+      // 智能推断
+      const possibleArrayFields = Object.keys(data).filter(key =>
+        Array.isArray(data[key]) && data[key].length > 0 &&
+        data[key][0] && (data[key][0].id || data[key][0].name)
+      );
+
+      if (possibleArrayFields.length > 0) {
+        models = data[possibleArrayFields[0]];
+      }
     }
 
-    if (data.data && Array.isArray(data.data)) {
-      return data.data.map((model: any) => ({
-        id: model.id,
-        name: model.name || model.id
-      }));
+    // 统一处理所有模型
+    const validModels = models
+      .map(ensureValidModel)
+      .filter((model): model is { id: string; name?: string } => model !== null);
+
+    if (validModels.length === 0) {
+      logDebug('[LLMClient] 无法解析模型列表格式:', JSON.stringify(data));
     }
 
-    if (data.models && Array.isArray(data.models)) {
-      return data.models.map((model: any) => ({
-        id: model.id || model.name,
-        name: model.name || model.id
-      }));
-    }
-
-    // 智能推断
-    const possibleArrayFields = Object.keys(data).filter(key =>
-      Array.isArray(data[key]) && data[key].length > 0 &&
-      (data[key][0].id || data[key][0].name)
-    );
-
-    if (possibleArrayFields.length > 0) {
-      return data[possibleArrayFields[0]].map((model: any) => ({
-        id: model.id || model.name,
-        name: model.name || model.id
-      }));
-    }
-
-    logDebug('[LLMClient] 无法解析模型列表格式:', JSON.stringify(data));
-    return [];
+    return validModels;
   }
 
   /**
@@ -458,6 +482,13 @@ export class LLMClientImpl implements LLMClient {
       },
       this.corsConfig
     );
+
+    // 如果是 Claude API，添加必需的版本头
+    if (this.isClaudeApi()) {
+      headers['x-api-key'] = this.apiKey;
+      headers['anthropic-version'] = '2023-06-01';
+      headers['anthropic-dangerous-direct-browser-access'] = 'true';
+    }
 
     return axios.create({
       baseURL: this.baseUrl,
@@ -531,6 +562,12 @@ export class LLMClientImpl implements LLMClient {
    */
   private isGeminiApi(): boolean {
     return this.baseUrl.includes('generativelanguage.googleapis.com');
+  }
+
+  // 在 LLMClientImpl 类中添加一个辅助方法
+  private isClaudeApi(): boolean {
+    return this.baseUrl.includes('anthropic.com') ||
+      this.baseUrl.includes('claude');
   }
 
   /**

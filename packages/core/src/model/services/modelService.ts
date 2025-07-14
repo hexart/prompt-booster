@@ -286,3 +286,168 @@ export function prepareModelsForDisplay(
       return aName.localeCompare(bName);
     });
 }
+
+/**
+ * 模型选项类型（用于UI展示）
+ */
+export interface ModelOption {
+  id: string;
+  name: string;
+}
+
+/**
+ * 获取模型列表
+ * @param config 模型配置
+ * @param isCustom 是否为自定义接口
+ * @param modelType 模型类型（用于内置模型）
+ * @param originalApiKey 原始API密钥（用于处理掩码的情况）
+ * @returns 模型选项列表
+ */
+export async function fetchModelList(
+  config: ModelConfig | CustomInterface,
+  isCustom: boolean,
+  modelType?: string,
+  originalApiKey?: string
+): Promise<ModelOption[]> {
+  try {
+    // 1. 验证配置
+    const validation = validateModelConfig(config);
+    if (!validation.valid) {
+      throw new Error(validation.message);
+    }
+
+    // 2. 准备客户端配置
+    const provider = isCustom
+      ? (config as CustomInterface).providerName || 'custom'
+      : modelType || 'unknown';
+
+    // 重要：使用原始 API Key，而不是可能被掩码的
+    const apiKey = originalApiKey || config.apiKey;
+
+    if (!apiKey || !config.baseUrl) {
+      throw new Error('API Key and Base URL are required');
+    }
+
+    // 3. 创建客户端配置 - 与原始代码保持一致
+    const clientConfig: any = {
+      provider,
+      apiKey: originalApiKey || config.apiKey,
+      baseUrl: config.baseUrl,
+      model: 'default'
+    };
+
+    // 4. 不主动设置 endpoints，让 API 包使用默认值
+    // 只有在明确有自定义端点时才设置
+    if (config.endpoint && config.endpoint !== '/chat/completions') {
+      clientConfig.endpoints = {
+        chat: config.endpoint
+      };
+    }
+
+    const client = createClient(clientConfig);
+
+    // 5. 获取模型列表
+    const models = await client.getModels();
+
+    // 6. 转换为 ModelOption 格式
+    return formatModelOptions(models);
+
+  } catch (error: any) {
+    // 重新抛出错误，让调用方处理
+    throw error;
+  }
+}
+
+/**
+ * 格式化模型选项
+ * @param models 原始模型列表
+ * @returns 格式化后的模型选项
+ */
+export function formatModelOptions(
+  models: Array<{ id: string; name?: string }>
+): ModelOption[] {
+  return models.map(model => ({
+    id: model.id,
+    name: model.name || model.id  // 如果没有 name，使用 id
+  }));
+}
+
+/**
+ * 合并配置与默认值
+ * @param formData 表单数据
+ * @param isStandard 是否为标准模型
+ * @param modelType 模型类型
+ * @returns 完整的配置
+ */
+export function mergeWithDefaults(
+  formData: Partial<ModelConfig | CustomInterface>,
+  isStandard: boolean,
+  modelType?: string
+): ModelConfig | CustomInterface {
+  if (isStandard && modelType) {
+    const defaultConfig = getDefaultModelConfig(modelType as StandardModelType);
+    if (defaultConfig) {
+      return {
+        ...defaultConfig,
+        ...formData,
+        // 确保某些字段不被覆盖
+        providerName: defaultConfig.providerName,
+        baseUrl: formData.baseUrl || defaultConfig.baseUrl,
+        endpoint: formData.endpoint || defaultConfig.endpoint
+      } as ModelConfig;
+    }
+  }
+
+  // 自定义接口或找不到默认配置时
+  return {
+    ...formData,
+    // 确保必要字段存在
+    baseUrl: formData.baseUrl || '',
+    model: formData.model || '',
+    enabled: formData.enabled ?? false
+  } as ModelConfig | CustomInterface;
+}
+
+/**
+ * 格式化模型服务错误
+ * @param error 原始错误
+ * @returns 格式化的错误信息，包含错误类型
+ */
+export function formatModelServiceError(error: any): {
+  type: ErrorType;
+  message: string;
+} {
+  // 利用 API 包的错误类型
+  if (error instanceof AuthenticationError || error.name === 'AuthenticationError') {
+    return {
+      type: 'auth',
+      message: error.message || 'Invalid API key'
+    };
+  }
+
+  if (error instanceof ConnectionError || error.name === 'ConnectionError') {
+    return {
+      type: 'connection',
+      message: error.message || 'Connection failed'
+    };
+  }
+
+  if (error.message?.includes('required')) {
+    return {
+      type: 'validation',
+      message: error.message
+    };
+  }
+
+  if (error.message?.includes('parse') || error.message?.includes('JSON')) {
+    return {
+      type: 'parse',
+      message: error.message || 'Failed to parse response'
+    };
+  }
+
+  return {
+    type: 'unknown',
+    message: error.message || 'Unknown error occurred'
+  };
+}

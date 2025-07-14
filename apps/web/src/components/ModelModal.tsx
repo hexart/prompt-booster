@@ -1,8 +1,15 @@
 // apps/web/src/components/ModelModal.tsx
 import React, { useEffect } from 'react';
 import { type StandardModelType, type ModelConfig, type CustomInterface } from '@prompt-booster/core/model/models/config';
-import { createClient } from '@prompt-booster/api/factory';
-import { validateModelConfig, formatBaseUrl, formatEndpoint, getDefaultBaseUrl } from '@prompt-booster/core/model/services/modelService';
+import {
+  validateModelConfig,
+  formatBaseUrl,
+  formatEndpoint,
+  getDefaultBaseUrl,
+  fetchModelList,
+  mergeWithDefaults,
+  formatModelServiceError
+} from '@prompt-booster/core/model/services/modelService';
 import { Dialog, ModelSelector, toast, AnimatedButton } from '@prompt-booster/ui';
 import { useModelForm } from '../hooks/model-hooks';
 import { EyeIcon, EyeClosedIcon } from 'lucide-react';
@@ -38,14 +45,13 @@ export const ModelModal: React.FC<ModelModalProps> = ({
     isMaskedApiKey,
     originalApiKey,
     enableAfterSave,
-    modelOptions,
+    // modelOptions,
     setModelOptions,
     setEnableAfterSave,
     handleInputChange,
     updateFormWithInitialData,
     showApiKey,
     hideApiKey,
-    getCompleteModelConfig
   } = useModelForm(initialData);
 
   const [isSaving, setIsSaving] = React.useState(false);
@@ -56,11 +62,11 @@ export const ModelModal: React.FC<ModelModalProps> = ({
   // 自定义接口始终显示，内置模型只有 ollama 显示
   const shouldShowUrlFields = isCustom || modelType.toLowerCase() === 'ollama';
 
-  useEffect(() => {
-    if (modelOptions.length > 0) {
-      console.log('modelOptions updated:', modelOptions);
-    }
-  }, [modelOptions]);
+  // useEffect(() => {
+  //   if (modelOptions.length > 0) {
+  //     console.log('modelOptions updated:', modelOptions);
+  //   }
+  // }, [modelOptions]);
 
   // 当初始数据变化时更新表单
   useEffect(() => {
@@ -71,10 +77,11 @@ export const ModelModal: React.FC<ModelModalProps> = ({
    * 处理表单提交：验证数据、格式化字段，然后调用父组件的保存方法
    */
   const handleSubmit = async () => {
-    // 1. 合并默认配置
-    const completeFormData = getCompleteModelConfig(formData, !isCustom, modelType);
-    // 2. 验证表单
-    const validation = validateModelConfig(completeFormData);
+    // 1. 使用 CORE 包的合并函数
+    const completeFormData = mergeWithDefaults(formData, !isCustom, modelType);
+
+    // 2. 验证表单（使用带翻译的验证）
+    const validation = validateModelConfig(completeFormData, t);
     if (!validation.valid) {
       toast.error(validation.message);
       return;
@@ -260,40 +267,25 @@ export const ModelModal: React.FC<ModelModalProps> = ({
             }}
             fetchModels={async () => {
               try {
-                // ✅ 使用合并后的完整配置
-                const completeConfig = getCompleteModelConfig(formData, !isCustom, modelType);
+                // 使用 CORE 包的 fetchModelList
+                const models = await fetchModelList(
+                  formData,
+                  isCustom,
+                  modelType,
+                  originalApiKey
+                );
 
-                // 只有当有 apiKey 和 baseUrl 时才尝试获取模型列表
-                if (!completeConfig.apiKey || !completeConfig.baseUrl) {
-                  toast.error(t('toast.fillAPIKey_BaseURL'));
-                  return [];
-                }
-
-                const provider = isCustom ?
-                  (completeConfig as CustomInterface).providerName || 'custom' :
-                  modelType;
-
-                const client = createClient({
-                  provider,
-                  apiKey: originalApiKey,
-                  baseUrl: completeConfig.baseUrl,
-                  model: 'default'
-                });
-
-                // 获取模型列表
-                const models = await client.getModels();
-                const options = models.map(model => ({
-                  id: model.id,
-                  name: model.name || model.id
-                }));
-                setModelOptions(options);
-                return options;
+                setModelOptions(models);
+                return models;
               } catch (error: any) {
-                // console.error('获取模型列表失败:', error);
+                // 使用 CORE 包的错误格式化
+                const formattedError = formatModelServiceError(error);
 
-                // 检查是否是认证错误
-                if (error.name === 'AuthenticationError') {
+                // 根据错误类型显示不同的提示
+                if (formattedError.type === 'auth') {
                   toast.error(t('toast.invalidApiKey'));
+                } else if (formattedError.type === 'validation') {
+                  toast.error(formattedError.message);
                 } else {
                   toast.error(t('toast.getModelListFailed'));
                 }
