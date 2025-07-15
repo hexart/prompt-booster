@@ -15,13 +15,12 @@ export default defineConfig({
     tailwindcss(),
     react(),
     nodePolyfills({
-      include: ['buffer'],
-      // 全局变量
       globals: {
         Buffer: true,
         global: true,
         process: true,
       },
+      protocolImports: true,
     })
   ],
   define: {
@@ -39,9 +38,8 @@ export default defineConfig({
   optimizeDeps: {
     include: [
       'crypto-js',
-      'buffer'
+      '@mohtasham/md-to-docx',
     ],
-    exclude: ['']
   },
   build: {
     rollupOptions: {
