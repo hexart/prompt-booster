@@ -24,12 +24,12 @@
   "author": "Hexart Studio <hexart@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^37.2.0",
+    "electron": "^37.2.1",
     "electron-builder": "^26.0.12",
     "fs": "^0.0.1-security",
     "node-gyp": "^11.2.0",
     "path": "^0.12.7",
-    "vite": "^7.0.3"
+    "vite": "^7.0.4"
   },
   "dependencies": {
     "electron-log": "^5.4.1",
