@@ -241,7 +241,7 @@ label {
     @apply text-gray-400 dark:text-gray-600;
   }
   .dropdown-menu {
-    @apply bg-white/80 dark:bg-gray-800/80 border border-gray-300 dark:border-gray-700;
+    @apply bg-white/90 dark:bg-gray-800/80 border border-gray-300 dark:border-gray-700;
   }
   .dropdown-item-active {
     @apply bg-blue-500 hover:bg-blue-400 dark:bg-blue-900 dark:hover:bg-blue-800;
