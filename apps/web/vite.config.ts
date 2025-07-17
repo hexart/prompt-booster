@@ -20,7 +20,7 @@ export default defineConfig({
         global: true,
         process: true,
       },
-      protocolImports: true,
+      protocolImports: false,
     })
   ],
   define: {
