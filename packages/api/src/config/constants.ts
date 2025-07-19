@@ -10,6 +10,7 @@
  */
 export enum LLMProvider {
   OPENAI = 'openai',
+  CLAUDE = 'claude',
   GEMINI = 'gemini',
   DEEPSEEK = 'deepseek',
   HUNYUAN = 'hunyuan',
@@ -24,6 +25,7 @@ export enum LLMProvider {
 export enum AuthType {
   BEARER = 'bearer',
   QUERY_PARAM = 'query_param',
+  X_API_KEY = 'x-api-key',
   CUSTOM = 'custom'
 }
 
@@ -65,6 +67,25 @@ export const PROVIDER_CONFIG: Record<string, any> = {
     timeout: 60000,
     auth: {
       type: AuthType.BEARER
+    },
+    request: {
+      type: RequestFormatType.OPENAI_COMPATIBLE
+    },
+    response: {
+      type: ResponseParseType.OPENAI_COMPATIBLE
+    }
+  },
+  [LLMProvider.CLAUDE]: {
+    providerName: 'Claude',
+    baseUrl: 'https://api.anthropic.com/v1',
+    endpoints: {
+      chat: '/chat/completions',
+      models: '/models'
+    },
+    defaultModel: 'claude-sonnet-4-20250514',
+    timeout: 60000,
+    auth: {
+      type: AuthType.X_API_KEY
     },
     request: {
       type: RequestFormatType.OPENAI_COMPATIBLE
