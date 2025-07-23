@@ -8,6 +8,7 @@ import { StandardModelType } from './models/config';
  */
 const MODEL_TYPE_TO_PROVIDER: Record<StandardModelType, LLMProvider> = {
   'openai': LLMProvider.OPENAI,
+  'claude': LLMProvider.CLAUDE,
   'ollama': LLMProvider.OLLAMA,
   'gemini': LLMProvider.GEMINI,
   'deepseek': LLMProvider.DEEPSEEK,
