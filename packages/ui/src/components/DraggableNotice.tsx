@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquareWarningIcon, XIcon, AlertTriangleIcon } from 'lucide-react';
 
@@ -118,9 +118,33 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
   };
 
   // 处理关闭动画
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     onClose();
-  };
+  }, [onClose]);
+
+  // 键盘事件监听
+  useEffect(() => {
+    if (!isVisible) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement) {
+        return;
+      }
+
+      switch (e.key) {
+        case 'Escape':
+          e.preventDefault();
+          handleClose();
+          break;
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isVisible, handleClose]);
 
   // 统一的内容渲染
   const renderContent = (isWarning = false) => {
@@ -187,7 +211,6 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
           cursor: grabbing !important;
         }
       `}</style>
-      
       <AnimatePresence>
         {isVisible && (
           <motion.div
