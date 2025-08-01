@@ -62,10 +62,6 @@ export default defineConfig({
             '@prompt-booster/core',
             '@prompt-booster/api'
           ]
-          // 注释掉或移除 ui-components 分包，让它与主应用打包在一起
-          // 'ui-components': [
-          //   '@prompt-booster/ui'
-          // ]
         },
         globals: {
           fs: '{}',
