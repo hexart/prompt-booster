@@ -39,6 +39,8 @@ export default defineConfig({
     include: [
       'crypto-js',
       '@mohtasham/md-to-docx',
+      'i18next',
+      'react-i18next'
     ],
   },
   build: {
@@ -50,13 +52,20 @@ export default defineConfig({
             'react',
             'react-dom'
           ],
+          'i18n-vendor': [     // 添加：将 i18n 相关依赖单独分包
+            'i18next',
+            'react-i18next',
+            'i18next-browser-languagedetector',
+            'i18next-http-backend'
+          ],
           'core-api': [
             '@prompt-booster/core',
             '@prompt-booster/api'
-          ],
-          'ui-components': [
-            '@prompt-booster/ui'
           ]
+          // 注释掉或移除 ui-components 分包，让它与主应用打包在一起
+          // 'ui-components': [
+          //   '@prompt-booster/ui'
+          // ]
         },
         globals: {
           fs: '{}',
