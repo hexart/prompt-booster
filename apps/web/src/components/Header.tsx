@@ -213,6 +213,7 @@ const Header: React.FC<HeaderProps> = ({
 
               {/* 语言切换器 */}
               <LanguageSwitcher
+                i18nInstance={i18n}
                 tooltipPosition={tooltipPositions.mobile}
                 menuTooltipPosition={tooltipPositions.mobileMenu}
               />
