@@ -49,7 +49,9 @@ const initializeI18n = () => {
                     caches: ['localStorage']
                 },
                 backend: {
-                    loadPath: '/locales/{{lng}}.json'
+                    loadPath: process.env.NODE_ENV === 'production' 
+                        ? './locales/{{lng}}.json'  // 生产环境使用相对路径
+                        : '/locales/{{lng}}.json'   // 开发环境使用绝对路径
                 },
                 react: {
                     useSuspense: false
