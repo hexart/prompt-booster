@@ -54,7 +54,9 @@ i18n
       loadPath: './locales/{{lng}}.json'
     },
     react: {
-      useSuspense: false
+      useSuspense: false,  // 关键：React 19 兼容性
+      bindI18n: 'languageChanged loaded',  // 添加：确保事件绑定
+      bindI18nStore: 'added removed'  // 添加：确保存储事件绑定
     }
   });
 
