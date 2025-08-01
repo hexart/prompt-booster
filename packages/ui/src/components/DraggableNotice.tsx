@@ -26,6 +26,7 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
   isRTL = false,
   constraintsId // 必需：约束容器 ID
 }) => {
+  // 所有 Hooks 必须在任何条件判断之前调用
   const [hasValidParent, setHasValidParent] = useState(true);
   const [isVisible, setIsVisible] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -81,9 +82,42 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
     return () => clearTimeout(timer);
   }, [constraintsId]);
 
-  // 过滤需要显示的项目
+  // 处理关闭动画
+  const handleClose = useCallback(() => {
+    onClose();
+  }, [onClose]);
+
+  // 键盘事件监听
+  useEffect(() => {
+    if (!isVisible) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement) {
+        return;
+      }
+
+      switch (e.key) {
+        case 'Escape':
+          e.preventDefault();
+          handleClose();
+          break;
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isVisible, handleClose]);
+
+  // 过滤需要显示的项目 - 移到所有 Hooks 之后
   const filteredItems = items.filter(item => item.isNeeded);
-  if (filteredItems.length === 0) return null;
+  
+  // 如果没有需要显示的项目，返回 null（但所有 Hooks 都已正确调用）
+  if (filteredItems.length === 0) {
+    return null;
+  }
 
   // 计算初始样式（用于CSS定位）
   const getInitialStyle = () => {
@@ -116,35 +150,6 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
       };
     }
   };
-
-  // 处理关闭动画
-  const handleClose = useCallback(() => {
-    onClose();
-  }, [onClose]);
-
-  // 键盘事件监听
-  useEffect(() => {
-    if (!isVisible) return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement) {
-        return;
-      }
-
-      switch (e.key) {
-        case 'Escape':
-          e.preventDefault();
-          handleClose();
-          break;
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isVisible, handleClose]);
 
   // 统一的内容渲染
   const renderContent = (isWarning = false) => {

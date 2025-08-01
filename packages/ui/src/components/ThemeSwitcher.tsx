@@ -1,10 +1,11 @@
 // packages/ui/src/components/ThemeSwitcher.tsx
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from './ThemeContext';
 import { Moon, Sun, MonitorCog } from 'lucide-react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { Tooltip } from './Tooltip';
+import type { i18n as I18nextInstance } from 'i18next';
 
 // 支持的提示框位置类型
 type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
@@ -58,6 +59,11 @@ interface ThemeSwitcherProps {
    * @default 'bottom'
    */
   desktopTooltipPosition?: TooltipPosition;
+
+  /**
+   * 可选的外部 i18n 实例，用于解决跨 chunk 的兼容性问题
+   */
+  i18nInstance?: I18nextInstance;
 }
 
 const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
@@ -65,14 +71,42 @@ const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
   enableHotkeys = true,
   mobileTooltipPosition = 'left',
   mobileMenuTooltipPosition = 'left',
-  desktopTooltipPosition = 'bottom'
+  desktopTooltipPosition = 'bottom',
+  i18nInstance
 }) => {
-  const { t } = useTranslation();
+  // 始终调用 hooks（遵循 Hooks 规则）
+  const hookResult = useTranslation();
   const { theme, setTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // 主题配置
+  // 优先使用外部传入的 i18n 实例，否则使用 hook 返回的实例
+  const i18n = i18nInstance || hookResult.i18n;
+  const t = hookResult.t;
+
+  // 检查 i18n 实例是否可用
+  const isI18nReady = Boolean(
+    i18n && 
+    i18n.isInitialized && 
+    typeof i18n.changeLanguage === 'function' &&
+    i18n.language
+  );
+
+  // 安全的翻译函数，提供 fallback
+  const safeT = useCallback((key: string, fallback: string) => {
+    if (!isI18nReady) {
+      return fallback;
+    }
+    try {
+      const result = t(key);
+      return result || fallback;
+    } catch (error) {
+      console.warn('Translation error for key:', key, error);
+      return fallback;
+    }
+  }, [t, isI18nReady]);
+
+  // 主题配置 - 使用安全的翻译函数
   const themeConfig: Record<ThemeType, {
     icon: React.ComponentType<{ size?: number }>,
     label: string,
@@ -82,21 +116,21 @@ const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
   }> = {
     light: {
       icon: Sun,
-      label: t('common.theme.light'),
+      label: safeT('common.theme.light', '亮色模式'),
       getStyleType: () => 'light',
       shortcut: '⇧+L',
       hotkey: 'shift+l'
     },
     dark: {
       icon: Moon,
-      label: t('common.theme.dark'),
+      label: safeT('common.theme.dark', '暗色模式'),
       getStyleType: () => 'dark',
       shortcut: '⇧+D',
       hotkey: 'shift+d'
     },
     system: {
       icon: MonitorCog,
-      label: t('common.theme.system'),
+      label: safeT('common.theme.system', '跟随系统'),
       getStyleType: (isDarkMode) => isDarkMode ? 'dark' : 'light',
       shortcut: '⇧+S',
       hotkey: 'shift+s'
@@ -112,18 +146,27 @@ const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
     return false;
   });
 
-  // 设置快捷键
-  if (enableHotkeys) {
-    Object.entries(themeConfig).forEach(([themeKey, config]) => {
-      useHotkeys(config.hotkey, (event) => {
+  // 设置快捷键 - 只在启用时设置
+  Object.entries(themeConfig).forEach(([themeKey, config]) => {
+    useHotkeys(
+      config.hotkey,
+      (event) => {
+        if (!enableHotkeys) return;
         event.preventDefault();
         setTheme(themeKey as ThemeType);
-      }, { enableOnFormTags: true }, [setTheme]);
-    });
-  }
+      },
+      { 
+        enableOnFormTags: true,
+        enabled: enableHotkeys
+      },
+      [setTheme, enableHotkeys]
+    );
+  });
 
   // 监听系统主题变化
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
     const handleChange = (e: MediaQueryListEvent) => {
@@ -150,14 +193,14 @@ const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
   }, []);
 
   // 获取当前主题的样式类
-  const getButtonStyle = (themeType: ThemeType) => {
+  const getButtonStyle = useCallback((themeType: ThemeType) => {
     const styleType = themeConfig[themeType].getStyleType(isDarkMode);
     const isActive = theme === themeType;
 
     return isActive
       ? THEME_CLASSES[styleType].active
       : THEME_CLASSES[styleType].inactive;
-  };
+  }, [themeConfig, isDarkMode, theme]);
 
   // 关闭下拉菜单的点击外部处理
   useEffect(() => {
@@ -174,13 +217,13 @@ const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
   }, []);
 
   // 处理主题切换并关闭下拉菜单
-  const handleThemeChange = (newTheme: ThemeType) => {
+  const handleThemeChange = useCallback((newTheme: ThemeType) => {
     setTheme(newTheme);
     setIsOpen(false);
-  };
+  }, [setTheme]);
 
   // 渲染主题按钮
-  const renderThemeButton = (themeType: ThemeType, tooltipPosition: TooltipPosition) => {
+  const renderThemeButton = useCallback((themeType: ThemeType, tooltipPosition: TooltipPosition) => {
     const { icon: Icon, label, shortcut } = themeConfig[themeType];
     const tooltipText = enableHotkeys ? `${label}\n(${shortcut})` : label;
 
@@ -195,13 +238,15 @@ const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
         </button>
       </Tooltip>
     );
-  };
+  }, [themeConfig, enableHotkeys, handleThemeChange, getButtonStyle, iconSize]);
 
   // 获取当前主题图标和标签
-  const CurrentThemeIcon = themeConfig[theme as ThemeType]?.icon || Sun;
-  const currentThemeLabel = themeConfig[theme as ThemeType]?.label || '切换主题';
-  const currentShortcut = enableHotkeys ? themeConfig[theme as ThemeType]?.shortcut : '';
-  const tooltipText = enableHotkeys && currentShortcut ? `${currentThemeLabel}\n(${currentShortcut})` : currentThemeLabel;
+  const currentConfig = themeConfig[theme as ThemeType];
+  const CurrentThemeIcon = currentConfig?.icon || Sun;
+  const currentThemeLabel = currentConfig?.label || safeT('common.theme.system', '切换主题');
+  const currentShortcut = enableHotkeys ? currentConfig?.shortcut : '';
+  const tooltipText = enableHotkeys && currentShortcut ? 
+    `${currentThemeLabel}\n(${currentShortcut})` : currentThemeLabel;
 
   // 下拉菜单切换按钮样式
   const dropdownButtonStyle = isOpen
@@ -226,7 +271,7 @@ const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
               className={`${THEME_CLASSES.button} ${dropdownButtonStyle}`}
               aria-expanded={isOpen}
               aria-haspopup="true"
-              aria-label="切换主题"
+              aria-label={safeT('common.theme.switch', '切换主题')}
             >
               <CurrentThemeIcon size={iconSize} />
             </button>

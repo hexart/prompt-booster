@@ -206,6 +206,7 @@ const Header: React.FC<HeaderProps> = ({
 
               {/* 主题切换按钮 */}
               <ThemeSwitcher
+                i18nInstance={i18n}
                 mobileTooltipPosition={tooltipPositions.mobile}
                 mobileMenuTooltipPosition={tooltipPositions.mobileMenu}
                 desktopTooltipPosition="bottom"
