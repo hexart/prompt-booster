@@ -48,20 +48,11 @@ export default defineConfig({
       external: ['fs', 'path'],
       output: {
         manualChunks: {
-          'react-vendor': [
-            'react',
-            'react-dom'
-          ],
-          'i18n-vendor': [     // 添加：将 i18n 相关依赖单独分包
-            'i18next',
-            'react-i18next',
-            'i18next-browser-languagedetector',
-            'i18next-http-backend'
-          ],
-          'core-api': [
-            '@prompt-booster/core',
-            '@prompt-booster/api'
-          ]
+          'react-vendor': ['react', 'react-dom'],
+          'i18n-vendor': ['i18next', 'react-i18next', 'i18next-browser-languagedetector', 'i18next-http-backend'],
+          'animation-vendor': ['framer-motion'],
+          'icons-vendor': ['lucide-react'],
+          'core-api': ['@prompt-booster/core', '@prompt-booster/api']
         },
         globals: {
           fs: '{}',
