@@ -43,6 +43,11 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
     document.body.classList.remove('dragging-active');
   };
 
+  // 处理关闭动画
+  const handleClose = useCallback(() => {
+    onClose();
+  }, [onClose]);
+
   // 组件卸载时清理
   useEffect(() => {
     return () => {
@@ -81,9 +86,29 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
     return () => clearTimeout(timer);
   }, [constraintsId]);
 
-  // 过滤需要显示的项目
-  const filteredItems = items.filter(item => item.isNeeded);
-  if (filteredItems.length === 0) return null;
+  // 键盘事件监听
+  useEffect(() => {
+    if (!isVisible) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement) {
+        return;
+      }
+
+      switch (e.key) {
+        case 'Escape':
+          e.preventDefault();
+          handleClose();
+          break;
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isVisible, handleClose]);
 
   // 计算初始样式（用于CSS定位）
   const getInitialStyle = () => {
@@ -117,34 +142,9 @@ export const DraggableNotice: React.FC<DraggableNoticeProps> = ({
     }
   };
 
-  // 处理关闭动画
-  const handleClose = useCallback(() => {
-    onClose();
-  }, [onClose]);
-
-  // 键盘事件监听
-  useEffect(() => {
-    if (!isVisible) return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement) {
-        return;
-      }
-
-      switch (e.key) {
-        case 'Escape':
-          e.preventDefault();
-          handleClose();
-          break;
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isVisible, handleClose]);
+  // 过滤需要显示的项目
+  const filteredItems = items.filter(item => item.isNeeded);
+  if (filteredItems.length === 0) return null;
 
   // 统一的内容渲染
   const renderContent = (isWarning = false) => {
