@@ -135,7 +135,7 @@ importers:
     devDependencies:
       '@tailwindcss/vite':
         specifier: ^4.1.11
-        version: 4.1.11(vite@7.0.5(@types/node@24.1.0)(jiti@2.4.2)(lightningcss@1.30.1))
+        version: 4.1.11(vite@7.0.5(@types/node@24.2.0)(jiti@2.4.2)(lightningcss@1.30.1))
       buffer:
         specifier: ^6.0.3
         version: 6.0.3
@@ -150,7 +150,7 @@ importers:
         version: 4.1.11
       vite-plugin-node-polyfills:
         specifier: ^0.24.0
-        version: 0.24.0(rollup@4.45.1)(vite@7.0.5(@types/node@24.1.0)(jiti@2.4.2)(lightningcss@1.30.1))
+        version: 0.24.0(rollup@4.45.1)(vite@7.0.5(@types/node@24.2.0)(jiti@2.4.2)(lightningcss@1.30.1))
 
   packages/api:
     dependencies:
@@ -192,8 +192,8 @@ importers:
   packages/ui:
     dependencies:
       '@mohtasham/md-to-docx':
-        specifier: ^2.0.0
-        version: 2.0.1
+        specifier: ^2.0.3
+        version: 2.0.3
       '@prompt-booster/api':
         specifier: workspace:*
         version: link:../api
@@ -584,8 +584,8 @@ packages:
   '@microsoft/tsdoc@0.15.1':
     resolution: {integrity: sha512-4aErSrCR/On/e5G2hDP0wjooqDdauzEbIq8hIkIe5pXV0rtWJZvdCEKL0ykZxex+IxIwBp0eGeV48hQN07dXtw==}
 
-  '@mohtasham/md-to-docx@2.0.1':
-    resolution: {integrity: sha512-ox2S6yYwXUEDpAKhuN+ZSKryP3WmiyTYzptx3AAsLcKjbeFZN4aIyR123+bqNIA3Xkuw8jkSJ+Vh3NiUNn8JMw==}
+  '@mohtasham/md-to-docx@2.0.3':
+    resolution: {integrity: sha512-RID4Bvu8o5NiTooZqRoScO0S6qpPFY7T3t4Zn4VWfVfCM4ZleROGkIUuqqkXXbidKCYSztXxfezi/hlSoH4GMw==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1050,6 +1050,9 @@ packages:
 
   '@types/node@24.1.0':
     resolution: {integrity: sha512-ut5FthK5moxFKH2T1CUOC6ctR67rQRvvHdFLCD2Ql6KXmMuCrjsSsRI9UsLCm9M18BMwClv4pn327UvB7eeO1w==}
+
+  '@types/node@24.2.0':
+    resolution: {integrity: sha512-3xyG3pMCq3oYCNg7/ZP+E1ooTaGB4cG8JWRsqqOYQdbWNY4zbaV0Ennrd7stjiJEFZCaybcIgpTjJWHRfBSIDw==}
 
   '@types/react-dom@19.1.6':
     resolution: {integrity: sha512-4hOiT/dwO8Ko0gV1m/TJZYk3y0KBnY9vzDh7W+DH17b2HFSOGgdj33dhihPeuy3l0q23+4e+hoXHV6hCC4dCXw==}
@@ -2911,6 +2914,9 @@ packages:
   ufo@1.6.1:
     resolution: {integrity: sha512-9a4/uxlTWJ4+a5i0ooc1rU7C7YOw3wT+UGqdeNNHWnOF9qcMBgLRS+4IYUqbczewFx4mLEig6gawh7X6mFlEkA==}
 
+  undici-types@7.10.0:
+    resolution: {integrity: sha512-t5Fy/nfn+14LuOc2KNYg75vZqClpAiqscVvMygNnlsHBFpSXdJaYtXMcdNLpl/Qvc3P2cB3s6lOV51nqsFq4ag==}
+
   undici-types@7.8.0:
     resolution: {integrity: sha512-9UJ2xGDvQ43tYyVMpuHlsgApydB8ZKfVYTsLDhXkFL/6gfkp+U8xTGdh8pMJv1SpZna0zxG1DwsKZsreLbXBxw==}
 
@@ -3443,7 +3449,7 @@ snapshots:
 
   '@microsoft/tsdoc@0.15.1': {}
 
-  '@mohtasham/md-to-docx@2.0.1':
+  '@mohtasham/md-to-docx@2.0.3':
     dependencies:
       docx: 9.5.1
       file-saver: 2.0.5
@@ -3786,6 +3792,13 @@ snapshots:
       tailwindcss: 4.1.11
       vite: 7.0.5(@types/node@24.1.0)(jiti@2.4.2)(lightningcss@1.30.1)
 
+  '@tailwindcss/vite@4.1.11(vite@7.0.5(@types/node@24.2.0)(jiti@2.4.2)(lightningcss@1.30.1))':
+    dependencies:
+      '@tailwindcss/node': 4.1.11
+      '@tailwindcss/oxide': 4.1.11
+      tailwindcss: 4.1.11
+      vite: 7.0.5(@types/node@24.2.0)(jiti@2.4.2)(lightningcss@1.30.1)
+
   '@types/argparse@1.0.38': {}
 
   '@types/babel__core@7.20.5':
@@ -3842,6 +3855,10 @@ snapshots:
   '@types/node@24.1.0':
     dependencies:
       undici-types: 7.8.0
+
+  '@types/node@24.2.0':
+    dependencies:
+      undici-types: 7.10.0
 
   '@types/react-dom@19.1.6(@types/react@19.1.8)':
     dependencies:
@@ -4377,7 +4394,7 @@ snapshots:
 
   docx@9.5.1:
     dependencies:
-      '@types/node': 24.1.0
+      '@types/node': 24.2.0
       hash.js: 1.1.7
       jszip: 3.10.1
       nanoid: 5.1.5
@@ -6128,6 +6145,8 @@ snapshots:
 
   ufo@1.6.1: {}
 
+  undici-types@7.10.0: {}
+
   undici-types@7.8.0: {}
 
   unified@11.0.5:
@@ -6250,11 +6269,11 @@ snapshots:
       - rollup
       - supports-color
 
-  vite-plugin-node-polyfills@0.24.0(rollup@4.45.1)(vite@7.0.5(@types/node@24.1.0)(jiti@2.4.2)(lightningcss@1.30.1)):
+  vite-plugin-node-polyfills@0.24.0(rollup@4.45.1)(vite@7.0.5(@types/node@24.2.0)(jiti@2.4.2)(lightningcss@1.30.1)):
     dependencies:
       '@rollup/plugin-inject': 5.0.5(rollup@4.45.1)
       node-stdlib-browser: 1.3.1
-      vite: 7.0.5(@types/node@24.1.0)(jiti@2.4.2)(lightningcss@1.30.1)
+      vite: 7.0.5(@types/node@24.2.0)(jiti@2.4.2)(lightningcss@1.30.1)
     transitivePeerDependencies:
       - rollup
 
@@ -6279,6 +6298,20 @@ snapshots:
       tinyglobby: 0.2.14
     optionalDependencies:
       '@types/node': 24.1.0
+      fsevents: 2.3.3
+      jiti: 2.4.2
+      lightningcss: 1.30.1
+
+  vite@7.0.5(@types/node@24.2.0)(jiti@2.4.2)(lightningcss@1.30.1):
+    dependencies:
+      esbuild: 0.25.8
+      fdir: 6.4.6(picomatch@4.0.3)
+      picomatch: 4.0.3
+      postcss: 8.5.6
+      rollup: 4.45.1
+      tinyglobby: 0.2.14
+    optionalDependencies:
+      '@types/node': 24.2.0
       fsevents: 2.3.3
       jiti: 2.4.2
       lightningcss: 1.30.1
