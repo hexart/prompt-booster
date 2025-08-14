@@ -110,7 +110,7 @@ importers:
         version: 3.0.2
       lucide-react:
         specifier: latest
-        version: 0.536.0(react@19.1.0)
+        version: 0.539.0(react@19.1.0)
       react:
         specifier: ^19.1.0
         version: 19.1.0
@@ -135,7 +135,7 @@ importers:
     devDependencies:
       '@tailwindcss/vite':
         specifier: ^4.1.11
-        version: 4.1.11(vite@7.0.5(@types/node@24.2.0)(jiti@2.4.2)(lightningcss@1.30.1))
+        version: 4.1.11(vite@7.0.5(@types/node@24.2.1)(jiti@2.4.2)(lightningcss@1.30.1))
       buffer:
         specifier: ^6.0.3
         version: 6.0.3
@@ -150,7 +150,7 @@ importers:
         version: 4.1.11
       vite-plugin-node-polyfills:
         specifier: ^0.24.0
-        version: 0.24.0(rollup@4.45.1)(vite@7.0.5(@types/node@24.2.0)(jiti@2.4.2)(lightningcss@1.30.1))
+        version: 0.24.0(rollup@4.45.1)(vite@7.0.5(@types/node@24.2.1)(jiti@2.4.2)(lightningcss@1.30.1))
 
   packages/api:
     dependencies:
@@ -192,8 +192,8 @@ importers:
   packages/ui:
     dependencies:
       '@mohtasham/md-to-docx':
-        specifier: ^2.0.3
-        version: 2.0.3
+        specifier: ^2.2.1
+        version: 2.2.1
       '@prompt-booster/api':
         specifier: workspace:*
         version: link:../api
@@ -584,8 +584,8 @@ packages:
   '@microsoft/tsdoc@0.15.1':
     resolution: {integrity: sha512-4aErSrCR/On/e5G2hDP0wjooqDdauzEbIq8hIkIe5pXV0rtWJZvdCEKL0ykZxex+IxIwBp0eGeV48hQN07dXtw==}
 
-  '@mohtasham/md-to-docx@2.0.3':
-    resolution: {integrity: sha512-RID4Bvu8o5NiTooZqRoScO0S6qpPFY7T3t4Zn4VWfVfCM4ZleROGkIUuqqkXXbidKCYSztXxfezi/hlSoH4GMw==}
+  '@mohtasham/md-to-docx@2.2.1':
+    resolution: {integrity: sha512-tOAP1Abpaq2ZqUhiM1okAiqjahr4seP6liHJjKn77iRIl7PsinWlAQF0j46Puc+D9hnOfwm3wSBtabR+gzXAQQ==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1050,6 +1050,9 @@ packages:
 
   '@types/node@24.2.0':
     resolution: {integrity: sha512-3xyG3pMCq3oYCNg7/ZP+E1ooTaGB4cG8JWRsqqOYQdbWNY4zbaV0Ennrd7stjiJEFZCaybcIgpTjJWHRfBSIDw==}
+
+  '@types/node@24.2.1':
+    resolution: {integrity: sha512-DRh5K+ka5eJic8CjH7td8QpYEV6Zo10gfRkjHCO3weqZHWDtAaSTFtl4+VMqOJ4N5jcuhZ9/l+yy8rVgw7BQeQ==}
 
   '@types/react-dom@19.1.6':
     resolution: {integrity: sha512-4hOiT/dwO8Ko0gV1m/TJZYk3y0KBnY9vzDh7W+DH17b2HFSOGgdj33dhihPeuy3l0q23+4e+hoXHV6hCC4dCXw==}
@@ -2133,8 +2136,8 @@ packages:
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  lucide-react@0.536.0:
-    resolution: {integrity: sha512-2PgvNa9v+qz4Jt/ni8vPLt4jwoFybXHuubQT8fv4iCW5TjDxkbZjNZZHa485ad73NSEn/jdsEtU57eE1g+ma8A==}
+  lucide-react@0.539.0:
+    resolution: {integrity: sha512-VVISr+VF2krO91FeuCrm1rSOLACQUYVy7NQkzrOty52Y8TlTPcXcMdQFj9bYzBgXbWCiywlwSZ3Z8u6a+6bMlg==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -3460,7 +3463,7 @@ snapshots:
 
   '@microsoft/tsdoc@0.15.1': {}
 
-  '@mohtasham/md-to-docx@2.0.3':
+  '@mohtasham/md-to-docx@2.2.1':
     dependencies:
       docx: 9.5.1
       file-saver: 2.0.5
@@ -3803,6 +3806,13 @@ snapshots:
       tailwindcss: 4.1.11
       vite: 7.0.5(@types/node@24.2.0)(jiti@2.4.2)(lightningcss@1.30.1)
 
+  '@tailwindcss/vite@4.1.11(vite@7.0.5(@types/node@24.2.1)(jiti@2.4.2)(lightningcss@1.30.1))':
+    dependencies:
+      '@tailwindcss/node': 4.1.11
+      '@tailwindcss/oxide': 4.1.11
+      tailwindcss: 4.1.11
+      vite: 7.0.5(@types/node@24.2.1)(jiti@2.4.2)(lightningcss@1.30.1)
+
   '@types/argparse@1.0.38': {}
 
   '@types/babel__core@7.20.5':
@@ -3857,6 +3867,10 @@ snapshots:
   '@types/ms@2.1.0': {}
 
   '@types/node@24.2.0':
+    dependencies:
+      undici-types: 7.10.0
+
+  '@types/node@24.2.1':
     dependencies:
       undici-types: 7.10.0
 
@@ -4394,7 +4408,7 @@ snapshots:
 
   docx@9.5.1:
     dependencies:
-      '@types/node': 24.2.0
+      '@types/node': 24.2.1
       hash.js: 1.1.7
       jszip: 3.10.1
       nanoid: 5.1.5
@@ -5083,7 +5097,7 @@ snapshots:
     dependencies:
       react: 19.1.0
 
-  lucide-react@0.536.0(react@19.1.0):
+  lucide-react@0.539.0(react@19.1.0):
     dependencies:
       react: 19.1.0
 
@@ -6280,11 +6294,11 @@ snapshots:
       - rollup
       - supports-color
 
-  vite-plugin-node-polyfills@0.24.0(rollup@4.45.1)(vite@7.0.5(@types/node@24.2.0)(jiti@2.4.2)(lightningcss@1.30.1)):
+  vite-plugin-node-polyfills@0.24.0(rollup@4.45.1)(vite@7.0.5(@types/node@24.2.1)(jiti@2.4.2)(lightningcss@1.30.1)):
     dependencies:
       '@rollup/plugin-inject': 5.0.5(rollup@4.45.1)
       node-stdlib-browser: 1.3.1
-      vite: 7.0.5(@types/node@24.2.0)(jiti@2.4.2)(lightningcss@1.30.1)
+      vite: 7.0.5(@types/node@24.2.1)(jiti@2.4.2)(lightningcss@1.30.1)
     transitivePeerDependencies:
       - rollup
 
@@ -6309,6 +6323,20 @@ snapshots:
       tinyglobby: 0.2.14
     optionalDependencies:
       '@types/node': 24.2.0
+      fsevents: 2.3.3
+      jiti: 2.4.2
+      lightningcss: 1.30.1
+
+  vite@7.0.5(@types/node@24.2.1)(jiti@2.4.2)(lightningcss@1.30.1):
+    dependencies:
+      esbuild: 0.25.8
+      fdir: 6.4.6(picomatch@4.0.3)
+      picomatch: 4.0.3
+      postcss: 8.5.6
+      rollup: 4.45.1
+      tinyglobby: 0.2.14
+    optionalDependencies:
+      '@types/node': 24.2.1
       fsevents: 2.3.3
       jiti: 2.4.2
       lightningcss: 1.30.1
