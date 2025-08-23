@@ -263,7 +263,7 @@ docker pull ghcr.io/hexart/prompt-booster:latest \
 - **前端**：React 19.1、TailwindCSS 4.1
 - **状态管理**：Zustand 5.0
 - **构建工具**：Vite、Turborepo、PNPM
-- **桌面**：Electron 36
+- **桌面**：Electron 37
 - **后端**（计划）：FastAPI、PostgreSQL
 - **容器化**：Docker
 
