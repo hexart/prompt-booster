@@ -24,7 +24,7 @@
   "dependencies": {
     "@mohtasham/md-to-docx": "^2.2.1",
     "react-markdown": "^10.1.0",
-    "react-syntax-highlighter": "^15.6.1",
+    "react-syntax-highlighter": "^15.6.3",
     "rehype-raw": "^7.0.0",
     "remark-gfm": "^4.0.1",
     "unist-util-visit": "^5.0.0"
@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "@types/react-syntax-highlighter": "^15.5.13",
-    "i18next": "^25.3.0",
+    "i18next": "^25.4.0",
     "react-hotkeys-hook": "^5.1.0"
   }
 }
