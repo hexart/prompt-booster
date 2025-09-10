@@ -6,9 +6,9 @@
 A comprehensive monorepo project for optimizing and enhancing prompts for large language models (LLMs) across multiple platforms.
 
 ![License: MIT/Apache-2.0](https://img.shields.io/badge/License-MIT%2FApache--2.0-blue.svg)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue)](https://www.typescriptlang.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-19.1-61DAFB?logo=react&logoColor=white)](https://react.dev/)
-[![Electron](https://img.shields.io/badge/Electron-37.1-47848F?logo=electron&logoColor=white)](https://www.electronjs.org/)
+[![Electron](https://img.shields.io/badge/Electron-37.3-47848F?logo=electron&logoColor=white)](https://www.electronjs.org/)
 [![TailwindCSS](https://img.shields.io/badge/Tailwind-4.1-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Zustand](https://img.shields.io/badge/Zustand-5.0-orange)](https://zustand-demo.pmnd.rs/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
@@ -274,7 +274,7 @@ Additional documentation is available:
 - **Frontend**: React 19.1, TailwindCSS 4.1
 - **State Management**: Zustand 5.0
 - **Build Tools**: Vite, Turborepo, PNPM
-- **Desktop**: Electron 36
+- **Desktop**: Electron 37
 - **Backend** (planned): FastAPI, PostgreSQL
 - **Containerization**: Docker
 

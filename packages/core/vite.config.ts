@@ -1,3 +1,4 @@
+// packages/core/vite.config.ts
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
 import dts from 'vite-plugin-dts';

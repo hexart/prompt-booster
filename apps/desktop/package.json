@@ -1,6 +1,6 @@
 {
   "name": "prompt-booster",
-  "version": "0.7.10",
+  "version": "0.8.0",
   "description": "Prompt Booster Desktop App",
   "private": true,
   "main": "main.js",
@@ -24,15 +24,15 @@
   "author": "Hexart Studio <hexart@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^37.2.3",
+    "electron": "^38.0.0",
     "electron-builder": "^26.0.12",
     "fs": "^0.0.1-security",
-    "node-gyp": "^11.2.0",
+    "node-gyp": "^11.4.2",
     "path": "^0.12.7",
-    "vite": "^7.0.5"
+    "vite": "^7.1.5"
   },
   "dependencies": {
-    "electron-log": "^5.4.1",
+    "electron-log": "^5.4.3",
     "electron-updater": "^6.6.2",
     "update-electron-app": "^3.1.1"
   }
