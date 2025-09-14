@@ -22,7 +22,7 @@
     "clean": "rm -rf .turbo node_modules dist"
   },
   "dependencies": {
-    "axios": "^1.11.0",
+    "axios": "^1.12.1",
     "crypto-js": "^4.2.0"
   },
   "peerDependencies": {
