@@ -46,7 +46,8 @@
             "@prompt-booster/web": [
                 "packages/web/src"
             ]
-        }
+        },
+        "types": []
     },
     "include": [
         "./**/*.ts",

@@ -41,7 +41,5 @@
     "react": "^19.1.0",
     "react-i18next": "^15.5.3"
   },
-  "devDependencies": {
-    "@types/uuid": "^11.0.0"
-  }
+  "devDependencies": {}
 }
