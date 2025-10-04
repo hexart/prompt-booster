@@ -24,35 +24,37 @@
   "devDependencies": {
     "@types/crypto-js": "^4.2.2",
     "@types/lodash": "^4.17.20",
-    "@types/node": "^24.5.2",
-    "@types/react": "^19.1.13",
-    "@types/react-dom": "^19.1.9",
-    "@typescript-eslint/eslint-plugin": "^8.44.1",
-    "@typescript-eslint/parser": "^8.44.1",
-    "@vitejs/plugin-react": "^5.0.3",
-    "eslint": "^9.36.0",
+    "@types/node": "^24.6.2",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@typescript-eslint/eslint-plugin": "^8.45.0",
+    "@typescript-eslint/parser": "^8.45.0",
+    "@vitejs/plugin-react": "^5.0.4",
+    "eslint": "^9.37.0",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.21",
+    "eslint-plugin-react-hooks": "^6.1.1",
+    "eslint-plugin-react-refresh": "^0.4.23",
     "prettier": "latest",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "turbo": "^2.5.6",
-    "typescript": "^5.9.2",
-    "vite": "^7.1.7",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "turbo": "^2.5.8",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.9",
     "vite-plugin-dts": "^4.5.4",
     "vite-tsconfig-paths": "^5.1.4"
   },
   "engines": {
     "node": ">=14.0.0"
   },
-  "packageManager": "pnpm@10.16.1+sha512.0e155aa2629db8672b49e8475da6226aa4bdea85fdcdfdc15350874946d4f3c91faaf64cbdc4a5d1ab8002f473d5c3fcedcd197989cf0390f9badd3c04678706",
+  "packageManager": "pnpm@10.18.0",
   "pnpm": {
     "overrides": {
       "@humanwhocodes/config-array": "^0.14.0",
       "@humanwhocodes/object-schema": "^2.0.4",
       "prismjs": ">=1.30.0",
-      "refractor>prismjs": ">=1.30.0"
+      "refractor>prismjs": ">=1.30.0",
+      "react": "^19.2.0",
+      "react-dom": "^19.2.0"
     },
     "onlyBuiltDependencies": [
       "@tailwindcss/oxide",

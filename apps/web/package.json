@@ -16,25 +16,25 @@
     "@prompt-booster/core": "workspace:*",
     "@prompt-booster/ui": "workspace:*",
     "crypto-js": "^4.2.0",
-    "framer-motion": "^12.23.19",
+    "framer-motion": "^12.23.22",
     "i18next": "^25.4.0",
     "i18next-browser-languagedetector": "^8.2.0",
     "i18next-http-backend": "^3.0.2",
     "lucide-react": "latest",
-    "react": "^19.1.1",
+    "react": "^19.2.0",
     "react-confetti": "^6.4.0",
-    "react-dom": "^19.1.1",
+    "react-dom": "^19.2.0",
     "react-hotkeys-hook": "^5.1.0",
     "react-i18next": "^15.7.1",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^1.1.2"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.1.13",
+    "@tailwindcss/vite": "^4.1.14",
     "buffer": "^6.0.3",
     "process": "^0.11.10",
     "stream-browserify": "^3.0.0",
-    "tailwindcss": "^4.1.13",
+    "tailwindcss": "^4.1.14",
     "vite-plugin-node-polyfills": "^0.24.0"
   }
 }
