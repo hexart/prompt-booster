@@ -32,7 +32,7 @@ export const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const optionsContainerRef = useRef<HTMLDivElement>(null);
-  const selectedOptionRef = useRef<HTMLLIElement>(null);
+  // selectedOptionRef 已移除，因为在React 19中不再需要，改用data-value属性查找
 
   // Find the selected option for display
   const selectedOption = options.find(option => option.value === value);
@@ -168,7 +168,7 @@ export const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
                   <motion.li
                     key={option.value}
                     data-value={option.value}
-                    ref={option.value === value ? selectedOptionRef : null}
+                    data-selected={option.value === value ? 'true' : 'false'}
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 0 }}
