@@ -201,7 +201,14 @@ export async function analyzePromptWithLLM(
     const systemPrompt = `${template.content}\n\n${languageInstruction}`;
 
     // 构建用户消息：保持语言指令重复以确保优先级
-    const userMessage = `请对以下提示词进行质量分析。如果它确实表现优秀，请给予高分评价；如果有不足，请如实指出并提供改进建议：\n\n${cleanedPrompt}\n\n参考信息 - 原始提示词：\n${cleanedOriginalPrompt}\n\n##Important: ${languageInstruction}`;
+    const userMessage = `请对以下提示词进行质量分析。如果它确实表现优秀，请给予高分评价；如果有不足，请如实指出并提供改进建议：
+
+${cleanedPrompt}
+
+参考信息 - 原始提示词：
+${cleanedOriginalPrompt}
+
+##Important: ${languageInstruction}`;
 
     console.log('🔍 系统提示词最后20字符:', systemPrompt.slice(-20));
     console.log('🔍 用户消息最后20字符:', userMessage.slice(-20));
@@ -332,8 +339,8 @@ export const handleTemplateLocalization = (
   displayTemplates: Record<string, any>;
   getActualTemplateId: (displayId: string) => string;
 } => {
-  // 提取简化的语言代码
-  const simpleLang = currentLanguage.split('-')[0];
+  // 提取简化的语言代码，如果currentLanguage为空或undefined，使用默认值'en'
+  const simpleLang = (currentLanguage || 'en').split('-')[0];
 
   // 创建返回的结果对象
   const displayTemplates: Record<string, any> = {};

@@ -29,10 +29,11 @@ function App() {
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    document.documentElement.lang = i18n.language;
+    const currentLang = i18n.language || 'zh-CN';
+    document.documentElement.lang = currentLang;
     document.title = t('common.appName');
 
-    setDirectionByLanguage(i18n.language);
+    setDirectionByLanguage(currentLang);
   }, [t, i18n.language]);
 
   // 检测窗口大小变化以适应响应式布局

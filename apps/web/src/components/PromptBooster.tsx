@@ -192,7 +192,7 @@ export const PromptBooster: React.FC = () => {
         originalPrompt: localOriginalPrompt,
         templateId: actualTemplateId,
         modelId: activeModel,
-        language: i18n.language,
+        language: i18n.language || 'zh-CN',
       });
 
       // 更新为成功状态
@@ -241,8 +241,8 @@ export const PromptBooster: React.FC = () => {
       // 设置抽屉为可关闭状态
       setIsDrawerDismissible(true);
 
-      // 使用本地分析方法
-      const result = analyzePromptQuality(optimizedPrompt, i18n.language);
+      // 使用本地分析方法，确保i18n.language有默认值
+      const result = analyzePromptQuality(optimizedPrompt, i18n.language || 'zh-CN');
       setAnalysisResult(result);
 
       // 重置LLM分析使用状态(每次打开抽屉时重置)
@@ -275,7 +275,7 @@ export const PromptBooster: React.FC = () => {
       // 尝试使用LLM分析
       let result;
       try {
-        result = await analyzePromptWithLLM(optimizedPrompt, displayOriginalPrompt, i18n.language);
+        result = await analyzePromptWithLLM(optimizedPrompt, displayOriginalPrompt, i18n.language || 'zh-CN');
         // 标记已使用LLM分析
         setHasUsedLLMAnalysis(true);
 
@@ -315,7 +315,7 @@ export const PromptBooster: React.FC = () => {
         }
 
         console.warn("[Fallback] LLM 评分失败，尝试使用本地分析");
-        result = analyzePromptQuality(optimizedPrompt, i18n.language);
+        result = analyzePromptQuality(optimizedPrompt, i18n.language || 'zh-CN');
         toast.warning(t("toast.analyzePromptLLMFailed"));
         setIsDrawerDismissible(true);
       }
@@ -382,7 +382,7 @@ export const PromptBooster: React.FC = () => {
         direction,
         templateId: actualTemplateId,
         modelId: activeModel,
-        language: i18n.language,
+        language: i18n.language || 'zh-CN',
       });
 
       setIsIterationDialogOpen(false);

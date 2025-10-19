@@ -139,8 +139,8 @@ export const TestResult: React.FC = () => {
     const optimizedToastId = toast.loading(t('toast.enhancedResponseGenerating'));
 
     try {
-      // 获取当前语言设置
-      const currentLanguage = i18n.language;
+      // 获取当前语言设置，如果未初始化则使用默认值
+      const currentLanguage = i18n.language || 'zh-CN';
       const languageInstruction = getLanguageInstruction(currentLanguage);
 
       // 为用户提示词添加语言指令

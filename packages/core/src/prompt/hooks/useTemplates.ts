@@ -24,11 +24,12 @@ export const useTemplates = () => {
         const templatesRecord = await getAllTemplatesAsRecord();
         setTemplates(templatesRecord);
 
-        // 应用模板本地化
+        // 应用模板本地化，确保i18n.language有默认值
+        const currentLang = i18n.language || 'zh-CN';
         const {
           displayTemplates: localizedTemplates,
           getActualTemplateId: idMapper,
-        } = handleTemplateLocalization(templatesRecord, i18n.language);
+        } = handleTemplateLocalization(templatesRecord, currentLang);
         
         setDisplayTemplates(localizedTemplates);
         
@@ -110,6 +111,6 @@ export const useTemplates = () => {
     templateCount: Object.keys(templates).length,
     
     // 当前语言信息（调试用）
-    currentLanguage: i18n.language,
+    currentLanguage: i18n.language || 'zh-CN',
   };
 };

@@ -41,7 +41,15 @@ i18n
             caches: ['localStorage']
         },
         backend: {
-            loadPath: './locales/{{lng}}.json'
+            loadPath: './locales/{{lng}}.json',
+            // 添加跨域支持
+            crossDomain: false,
+            // 异步加载
+            requestOptions: {
+                mode: 'cors',
+                credentials: 'same-origin',
+                cache: 'default'
+            }
         }
     });
 
