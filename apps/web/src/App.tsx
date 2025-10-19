@@ -1,5 +1,5 @@
 // apps/web/src/App.tsx
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import { RefreshDetector } from './components/RefreshDetector';
 import { PromptBooster } from './components/PromptBooster';
 import { TestResult } from './components/TestResult';
@@ -57,7 +57,8 @@ function App() {
   const toastPosition = getButtonPosition('top-right');
 
   return (
-    <ThemeProvider defaultTheme="system" storageKey="my-app-theme">
+    <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>Loading...</div>}>
+      <ThemeProvider defaultTheme="system" storageKey="my-app-theme">
       <RefreshDetector />
       <div className="min-h-screen antialiased overflow-x-hidden">
         <Header
@@ -114,6 +115,7 @@ function App() {
         </footer>
       </div>
     </ThemeProvider>
+    </Suspense>
   );
 }
 
