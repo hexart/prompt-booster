@@ -15,9 +15,17 @@ export const useTemplates = () => {
   // 本地化相关状态
   const [displayTemplates, setDisplayTemplates] = useState<Record<string, Template>>({});
   const [templateIdMapping, setTemplateIdMapping] = useState<Record<string, string>>({});
+  
+  // 检查i18n是否已初始化
+  const isI18nReady = i18n && typeof i18n.language === 'string';
 
   // 加载模板
   useEffect(() => {
+    // 如果i18n还没准备好，不执行加载
+    if (!isI18nReady) {
+      return;
+    }
+    
     const loadTemplates = async () => {
       try {
         setIsTemplatesLoading(true);
@@ -57,7 +65,7 @@ export const useTemplates = () => {
     };
 
     loadTemplates();
-  }, [i18n.language]);
+  }, [i18n.language, isI18nReady, t]); // 添加isI18nReady到依赖
 
   // 获取实际模板ID的函数（现在是纯函数，不存储在状态中）
   const getActualTemplateId = useCallback((displayId: string): string => {

@@ -50,17 +50,14 @@ export default defineConfig({
             'react',
             'react-dom'
           ],
-          'i18n': [
+          // 将i18n、core、api、ui打包在一起，确保i18n先初始化
+          'app-core': [
             'i18next',
             'react-i18next',
             'i18next-browser-languagedetector',
-            'i18next-http-backend'
-          ],
-          'core-api': [
+            'i18next-http-backend',
             '@prompt-booster/core',
-            '@prompt-booster/api'
-          ],
-          'ui-components': [
+            '@prompt-booster/api',
             '@prompt-booster/ui'
           ]
         },
