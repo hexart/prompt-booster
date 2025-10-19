@@ -19,10 +19,11 @@ if (!currentLanguage) {
     }
 }
 
+// 确保initReactI18next在use链中，这样才能让react-i18next识别到i18n实例
 i18n
     .use(Backend)
     .use(LanguageDetector)
-    .use(initReactI18next)
+    .use(initReactI18next) // 这一步很关键，必须在init之前调用
     .init({
         fallbackLng: 'zh-CN',
         supportedLngs: [
@@ -50,6 +51,10 @@ i18n
                 credentials: 'same-origin',
                 cache: 'default'
             }
+        },
+        // 确保react集成
+        react: {
+            useSuspense: true
         }
     });
 
