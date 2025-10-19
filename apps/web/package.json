@@ -16,7 +16,7 @@
     "@prompt-booster/core": "workspace:*",
     "@prompt-booster/ui": "workspace:*",
     "crypto-js": "^4.2.0",
-    "framer-motion": "^12.23.22",
+    "framer-motion": "^12.23.24",
     "i18next": "^25.4.0",
     "i18next-browser-languagedetector": "^8.2.0",
     "i18next-http-backend": "^3.0.2",
@@ -24,7 +24,7 @@
     "react": "^19.2.0",
     "react-confetti": "^6.4.0",
     "react-dom": "^19.2.0",
-    "react-hotkeys-hook": "^5.1.0",
+    "react-hotkeys-hook": "^5.2.1",
     "react-i18next": "^15.7.1",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^1.1.2"
