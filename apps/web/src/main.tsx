@@ -1,13 +1,16 @@
 import './env';
 
-// 关键：先导入并初始化i18n，等待它完成
-import i18n from './i18n';
+// 关键：先导入i18n配置和Promise
+import i18n, { i18nPromise } from './i18n';
 
 // 等待i18n初始化完成后再渲染应用
 const init = async () => {
-  // 确保i18n已经初始化
-  if (!i18n.isInitialized) {
-    await i18n;
+  try {
+    // 等待i18n完全初始化
+    await i18nPromise;
+    console.log('✅ i18n初始化完成，开始加载React应用');
+  } catch (error) {
+    console.error('❌ i18n初始化失败:', error);
   }
   
   // 现在才开始加载React和组件

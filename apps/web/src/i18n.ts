@@ -20,7 +20,7 @@ if (!currentLanguage) {
 }
 
 // 确保initReactI18next在use链中，这样才能让react-i18next识别到i18n实例
-i18n
+const i18nPromise = i18n
     .use(Backend)
     .use(LanguageDetector)
     .use(initReactI18next) // 这一步很关键，必须在init之前调用
@@ -60,7 +60,9 @@ i18n
 
 // 简单记录初始化完成
 i18n.on('initialized', () => {
-    // console.log('i18next初始化完成，当前语言:', i18n.language);
+    console.log('✅ i18next初始化完成，当前语言:', i18n.language);
 });
 
+// 导出Promise和实例
+export { i18nPromise };
 export default i18n;
