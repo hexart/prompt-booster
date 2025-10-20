@@ -14,8 +14,8 @@ import {
   EnhancedDropdown,
   Dialog,
   AnimatedButton,
-} from "~/components/ui";
-import LoadingIcon from "~/components/ui/components/LoadingIcon";
+} from "./ui";
+import LoadingIcon from "./ui/components/LoadingIcon";
 import {
   RocketIcon,
   ListRestartIcon,
@@ -28,7 +28,7 @@ import {
   BookOpenTextIcon
 } from "lucide-react";
 import { AnalysisDrawer } from "./AnalysisDrawer";
-import { Tooltip } from "~/components/ui/components/Tooltip";
+import { Tooltip } from "./ui/components/Tooltip";
 import { IterationDialog } from "./IterationDialog";
 import { usePrompt } from "@prompt-booster/core/prompt/hooks/usePrompt";
 import { useModelData } from '../hooks/model-hooks';

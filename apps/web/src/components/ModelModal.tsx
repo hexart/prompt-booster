@@ -10,7 +10,7 @@ import {
   mergeWithDefaults,
   formatModelServiceError
 } from '@prompt-booster/core/model/services/modelService';
-import { Dialog, ModelSelector, toast, AnimatedButton } from '~/components/ui';
+import { Dialog, ModelSelector, toast, AnimatedButton } from './ui';
 import { useModelForm } from '../hooks/model-hooks';
 import { EyeIcon, EyeClosedIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';

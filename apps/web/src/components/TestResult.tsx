@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { toast, AutoScrollContent, EnhancedDropdown, DraggableNotice, EnhancedTextarea, AnimatedButton } from '~/components/ui';
+import { toast, AutoScrollContent, EnhancedDropdown, DraggableNotice, EnhancedTextarea, AnimatedButton } from './ui';
 import { useModelData } from '../hooks/model-hooks';
 import { cleanOptimizedPrompt, getLanguageInstruction } from '@prompt-booster/core/prompt/utils/promptUtils';
 import { usePrompt } from '@prompt-booster/core/prompt/hooks/usePrompt';
 import { useMemoryStore } from '@prompt-booster/core/storage/memoryStorage';
 import { llmService } from '@prompt-booster/core/prompt/services/llmService';
-import { Tooltip } from '~/components/ui/components/Tooltip';
+import { Tooltip } from './ui/components/Tooltip';
 import { BookOpenCheckIcon, RocketIcon, MinimizeIcon, MaximizeIcon, ArrowLeftFromLineIcon, ArrowRightFromLineIcon, ArrowDownFromLineIcon, ArrowUpFromLineIcon } from 'lucide-react';
-import LoadingIcon from '~/components/ui/components/LoadingIcon';
+import LoadingIcon from './ui/components/LoadingIcon';
 import { useTranslation } from 'react-i18next';
 import { isRTL, getButtonPosition } from '../rtl';
 

@@ -1,9 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Dialog } from '~/components/ui/components/Dialog';
+import { Dialog } from './ui/components/Dialog';
 import { usePrompt } from '@prompt-booster/core/prompt/hooks/usePrompt';
 import { PromptGroup } from '@prompt-booster/core/prompt/models/prompt';
-import { Tooltip, ActionButtons, AnimatedButton } from '~/components/ui/components';
+import { Tooltip, ActionButtons, AnimatedButton } from './ui/components';
 import { GalleryVerticalEndIcon, Trash2Icon, ChevronsDownIcon, ChevronsUpIcon, ZapIcon, ClockIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { PROVIDER_USER_EDIT } from '@prompt-booster/core/prompt/services/promptService';

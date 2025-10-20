@@ -16,13 +16,20 @@ export const useTemplates = () => {
   const [displayTemplates, setDisplayTemplates] = useState<Record<string, Template>>({});
   const [templateIdMapping, setTemplateIdMapping] = useState<Record<string, string>>({});
   
-  // 检查i18n是否已初始化
-  const isI18nReady = i18n && typeof i18n.language === 'string';
+  // 检查i18n是否已初始化 - 更严格的检查
+  const isI18nReady = Boolean(
+    i18n && 
+    typeof i18n.language === 'string' && 
+    i18n.language.length > 0 &&
+    typeof t === 'function'
+  );
 
   // 加载模板
   useEffect(() => {
-    // 如果i18n还没准备好，不执行加载
+    // 如果i18n还没准备好，延迟执行
     if (!isI18nReady) {
+      console.warn('⏳ i18n未就绪，延迟加载模板...');
+      setIsTemplatesLoading(true);
       return;
     }
     
@@ -49,16 +56,12 @@ export const useTemplates = () => {
         setTemplateIdMapping(mappings);
 
         if (Object.keys(templatesRecord).length > 0) {
-          // console.log(
-          //   t("toast.loadTemplatesSuccess", {
-          //     count: Object.keys(templatesRecord).length,
-          //   })
-          // );
+          console.log('✅ 模板加载成功:', Object.keys(templatesRecord).length);
         } else {
           console.info(t("toast.noTemplatesAvailable"));
         }
       } catch (error) {
-        console.error(t("toast.loadTemplatesFailed"), error);
+        console.error('❌ 加载模板失败:', error);
       } finally {
         setIsTemplatesLoading(false);
       }

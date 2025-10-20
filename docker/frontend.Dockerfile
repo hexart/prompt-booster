@@ -8,7 +8,6 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/web/package.json ./apps/web/
 COPY packages/api/package.json ./packages/api/
 COPY packages/core/package.json ./packages/core/
-COPY packages/ui/package.json ./packages/ui/
 
 # Install pnpm
 RUN npm install -g pnpm

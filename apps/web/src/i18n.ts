@@ -52,7 +52,7 @@ const i18nPromise = i18n
                 cache: 'default'
             }
         },
-        // 确保react集成
+        // 确俛react集成
         react: {
             useSuspense: true
         }

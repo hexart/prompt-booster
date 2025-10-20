@@ -3,11 +3,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { RocketIcon, BookOpenCheckIcon, GalleryVerticalEndIcon, CogIcon } from 'lucide-react';
-import ThemeSwitcher from '~/components/ui/components/ThemeSwitcher';
+import ThemeSwitcher from './ui/components/ThemeSwitcher';
 import MobileMenu, { TabItem } from './MobileMenu';
 import logo from '../assets/logo.svg';
-import { Tooltip } from '~/components/ui/components/Tooltip';
-import { LanguageSwitcher } from '~/components/ui/components/LanguageSwitcher';
+import { Tooltip } from './ui/components/Tooltip';
+import { LanguageSwitcher } from './ui/components/LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
 import { getTooltipPosition, isRTL } from '../rtl';
 
