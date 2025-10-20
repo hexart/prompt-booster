@@ -13,7 +13,7 @@ import medalImage from "../assets/medal.png";
 import {
   PromptAnalysisResult,
   CriterionItem,
-} from "@prompt-booster/core/prompt/utils/promptUtils";
+} from "~/core/prompt/utils/promptUtils";
 
 interface AnalysisDrawerProps {
   // 状态

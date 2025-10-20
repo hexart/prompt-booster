@@ -31,7 +31,6 @@ export default defineConfig({
     alias: {
       '~': resolve(__dirname, './src'),
       '@': resolve(__dirname, './src'),
-      '@prompt-booster/core': path.resolve(__dirname, '../../packages/core/src'),
       '@prompt-booster/api': path.resolve(__dirname, '../../packages/api/src')
     }
   },
@@ -50,13 +49,15 @@ export default defineConfig({
             'react',
             'react-dom'
           ],
-          // 将i18n、core、api打包在一起，确保i18n先初始化
-          'app-core': [
+          // i18n相关库统一打包，确保初始化顺序
+          'i18n': [
             'i18next',
             'react-i18next',
             'i18next-browser-languagedetector',
-            'i18next-http-backend',
-            '@prompt-booster/core',
+            'i18next-http-backend'
+          ],
+          // API客户端单独打包
+          'api-client': [
             '@prompt-booster/api'
           ]
         },

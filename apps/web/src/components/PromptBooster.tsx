@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion } from 'framer-motion';
-import { promptService } from "@prompt-booster/core/prompt/services/promptService";
-import { useTemplates } from "@prompt-booster/core/prompt/hooks/useTemplates";
+import { promptService } from "~/core/prompt/services/promptService";
+import { useTemplates } from "~/core/prompt/hooks/useTemplates";
 import {
   analyzePromptWithLLM,
   PromptAnalysisResult,
-} from "@prompt-booster/core/prompt/utils/promptUtils";
-import { analyzePromptQuality } from "@prompt-booster/core/prompt/utils/promptAnalysisUtils";
+} from "~/core/prompt/utils/promptUtils";
+import { analyzePromptQuality } from "~/core/prompt/utils/promptAnalysisUtils";
 import {
   toast,
   EnhancedTextarea,
@@ -30,11 +30,11 @@ import {
 import { AnalysisDrawer } from "./AnalysisDrawer";
 import { Tooltip } from "./ui/components/Tooltip";
 import { IterationDialog } from "./IterationDialog";
-import { usePrompt } from "@prompt-booster/core/prompt/hooks/usePrompt";
+import { usePrompt } from "~/core/prompt/hooks/usePrompt";
 import { useModelData } from '../hooks/model-hooks';
-import { PromptVersion } from "@prompt-booster/core/prompt/models/prompt";
+import { PromptVersion } from "~/core/prompt/models/prompt";
 import { useTranslation } from "react-i18next";
-import { PROMPT_PENDING_MARKER } from '@prompt-booster/core/prompt/services/promptGroupManager';
+import { PROMPT_PENDING_MARKER } from '~/core/prompt/services/promptGroupManager';
 import { getVersionTooltipText } from '../utils/displayUtils';
 import { getButtonPosition } from '../rtl';
 

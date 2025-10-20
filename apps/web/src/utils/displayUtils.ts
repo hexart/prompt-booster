@@ -1,6 +1,6 @@
 // apps/web/src/utils/displayUtils.ts
 import { isRTL } from '../rtl';
-import { PROVIDER_USER_EDIT } from '@prompt-booster/core/prompt/services/promptService';
+import { PROVIDER_USER_EDIT } from '~/core/prompt/services/promptService';
 
 /**
  * 格式化模型接口显示名称，支持RTL适配

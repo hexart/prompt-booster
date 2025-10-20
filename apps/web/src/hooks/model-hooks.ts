@@ -1,9 +1,9 @@
 // apps/web/src/hooks/model-hooks.ts
 import { useState, useMemo, useEffect } from 'react';
 import { toast } from '~/components/ui';
-import { useModelStore, type StandardModelType } from '@prompt-booster/core';
-import { testModelConnection, maskApiKey, prepareModelsForDisplay, mergeWithDefaults } from '@prompt-booster/core/model/services/modelService';
-import { ModelConfig, CustomInterface } from '@prompt-booster/core/model/models/config';
+import { useModelStore, type StandardModelType } from '~/core';
+import { testModelConnection, maskApiKey, prepareModelsForDisplay, mergeWithDefaults } from '~/core/model/services/modelService';
+import { ModelConfig, CustomInterface } from '~/core/model/models/config';
 import { useTranslation } from 'react-i18next';
 import { formatModelDisplayName } from '../utils/displayUtils';
 import { isRTL } from '../rtl';

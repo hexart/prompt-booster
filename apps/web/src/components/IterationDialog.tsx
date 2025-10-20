@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, AnimatedButton } from './ui/components';
 import { EnhancedDropdown } from './ui/components/EnhancedDropdown';
-import { useTemplates } from '@prompt-booster/core/prompt/hooks/useTemplates';
+import { useTemplates } from '~/core/prompt/hooks/useTemplates';
 import { useTranslation } from 'react-i18next';
 
 interface IterationDialogProps {

@@ -15,12 +15,15 @@ Prompt Booster是一款专为帮助用户优化大型语言模型提示词而设
 
 ```markdown
 prompt-booster/
-├── packages/                  # 跨平台共享代码
-│   ├── core/                  # 核心业务逻辑和状态管理
-│   └── api/                   # 针对LLM提供商的API客户端实现
 ├── apps/                      # 特定平台实现
-│   ├── web/                   # Web应用（包含UI组件）
+│   ├── web/                   # Web应用（包含核心业务逻辑和UI组件）
+│   │   └── src/
+│   │       ├── core/          # 核心业务逻辑（提示词管理、模型配置、状态管理）
+│   │       ├── components/    # UI组件
+│   │       └── hooks/         # 自定义React Hooks
 │   └── desktop/               # Electron桌面应用
+├── packages/                  # 共享包
+│   └── api/                   # 针对LLM提供商的API客户端实现
 ├── backend/                   # FastAPI后端服务（计划中）
 ├── docs/                      # 项目文档
 ├── docker/                    # Docker配置文件
@@ -29,11 +32,11 @@ prompt-booster/
 └── docker-compose.yml         # Docker compose配置
 ```
 
-## 核心包
+## 核心功能
 
-### @prompt-booster/core
+### Web应用核心模块
 
-核心包作为基础，提供：
+Web应用包含完整的核心业务逻辑（位于`apps/web/src/core`），提供：
 
 - 模型配置管理
 - 带版本控制的提示词管理
@@ -41,7 +44,7 @@ prompt-booster/
 - 使用Zustand进行状态管理
 - 存储实用工具
 
-[查看核心包文档](packages/core/README-zh.md)
+[查看Web应用文档](apps/web/README-zh.md)
 
 ### @prompt-booster/api
 

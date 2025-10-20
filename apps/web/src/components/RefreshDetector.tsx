@@ -1,7 +1,7 @@
 // apps/web/src/components/RefreshDetector.tsx
 import React, { useEffect } from 'react';
-import { useMemoryStore } from '@prompt-booster/core/storage/memoryStorage';
-import { usePrompt } from '@prompt-booster/core/prompt/hooks/usePrompt';
+import { useMemoryStore } from '~/core/storage/memoryStorage';
+import { usePrompt } from '~/core/prompt/hooks/usePrompt';
 // import { toast } from '~/components/ui';
 export const RefreshDetector: React.FC = () => {
   const { resetSession } = usePrompt();

@@ -1,8 +1,8 @@
 // apps/web/src/components/ModelSettings.tsx
 import React from 'react';
 import { motion } from 'framer-motion';
-import { type StandardModelType } from '@prompt-booster/core/model/models/config';
-import { useModelStore } from '@prompt-booster/core/model/store/modelStore';
+import { type StandardModelType } from '~/core/model/models/config';
+import { useModelStore } from '~/core/model/store/modelStore';
 import { Dialog, ListCard, toast, AnimatedButton } from '~/components/ui';
 import LoadingIcon from '~/components/ui/components/LoadingIcon';
 import { useModal } from '~/components/ui/hooks/useModal';

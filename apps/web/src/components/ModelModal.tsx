@@ -1,6 +1,6 @@
 // apps/web/src/components/ModelModal.tsx
 import React, { useEffect } from 'react';
-import { type StandardModelType, type ModelConfig, type CustomInterface } from '@prompt-booster/core/model/models/config';
+import { type StandardModelType, type ModelConfig, type CustomInterface } from '~/core/model/models/config';
 import {
   validateModelConfig,
   formatBaseUrl,
@@ -9,13 +9,13 @@ import {
   fetchModelList,
   mergeWithDefaults,
   formatModelServiceError
-} from '@prompt-booster/core/model/services/modelService';
+} from '~/core/model/services/modelService';
 import { Dialog, ModelSelector, toast, AnimatedButton } from './ui';
 import { useModelForm } from '../hooks/model-hooks';
 import { EyeIcon, EyeClosedIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { formatModelDisplayName } from '../utils/displayUtils';
-import { getDefaultModelConfig } from '@prompt-booster/core/model/unifiedModelConfig';
+import { getDefaultModelConfig } from '~/core/model/unifiedModelConfig';
 
 // 模型编辑弹窗组件
 interface ModelModalProps {

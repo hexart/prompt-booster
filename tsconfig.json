@@ -22,29 +22,11 @@
         "forceConsistentCasingInFileNames": true,
         "baseUrl": ".",
         "paths": {
-            "@prompt-booster/core/*": [
-                "packages/core/src/*"
-            ],
-            "@prompt-booster/core": [
-                "packages/core/src"
-            ],
             "@prompt-booster/api/*": [
                 "packages/api/src/*"
             ],
             "@prompt-booster/api": [
                 "packages/api/src"
-            ],
-            "@prompt-booster/ui/*": [
-                "packages/ui/src/*"
-            ],
-            "@prompt-booster/ui": [
-                "packages/ui/src"
-            ],
-            "@prompt-booster/web/*": [
-                "packages/web/src/*"
-            ],
-            "@prompt-booster/web": [
-                "packages/web/src"
             ]
         },
         "types": []

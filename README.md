@@ -26,12 +26,15 @@ https://github.com/user-attachments/assets/d4ab19f8-9f23-4c95-97f1-7dba5fb6b5b9
 
 ```markdown
 prompt-booster/
-├── packages/                  # Shared cross-platform code
-│   ├── core/                  # Core business logic and state management
-│   └── api/                   # API client implementations for LLM providers
 ├── apps/                      # Platform-specific implementations
-│   ├── web/                   # Web application (includes UI components)
+│   ├── web/                   # Web application (includes core business logic and UI components)
+│   │   └── src/
+│   │       ├── core/          # Core business logic (prompt management, model config, state management)
+│   │       ├── components/    # UI components
+│   │       └── hooks/         # Custom React hooks
 │   └── desktop/               # Electron desktop application
+├── packages/                  # Shared packages
+│   └── api/                   # API client implementations for LLM providers
 ├── backend/                   # FastAPI backend service (planned)
 ├── docs/                      # Project documentation
 ├── docker/                    # Docker configuration files
@@ -40,11 +43,11 @@ prompt-booster/
 └── docker-compose.yml         # Docker compose configuration
 ```
 
-## Core Packages
+## Core Features
 
-### @prompt-booster/core
+### Web Application Core Modules
 
-The core package serves as the foundation, providing:
+The web application contains complete core business logic (located in `apps/web/src/core`), providing:
 
 - Model configuration management
 - Prompt management with version control
@@ -52,7 +55,7 @@ The core package serves as the foundation, providing:
 - State management with Zustand
 - Storage utilities
 
-[View Core Package Documentation](packages/core/README.md)
+[View Web Application Documentation](apps/web/README.md)
 
 ### @prompt-booster/api
 
