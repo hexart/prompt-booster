@@ -1,7 +1,7 @@
 // src/components/IterationDialog.tsx
 import React, { useState, useEffect } from 'react';
-import { Dialog, AnimatedButton } from '@prompt-booster/ui/components';
-import { EnhancedDropdown } from '@prompt-booster/ui/components/EnhancedDropdown';
+import { Dialog, AnimatedButton } from '~/components/ui/components';
+import { EnhancedDropdown } from '~/components/ui/components/EnhancedDropdown';
 import { useTemplates } from '@prompt-booster/core/prompt/hooks/useTemplates';
 import { useTranslation } from 'react-i18next';
 
@@ -80,7 +80,6 @@ export const IterationDialog: React.FC<IterationDialogProps> = ({
             value={selectedTemplateId}
             onChange={setSelectedTemplateId}
             placeholder={t("promptBooster.templatePlaceholder")}
-            emptyText={t('common.dropdownNull')}
           />
         </div>
         <div>

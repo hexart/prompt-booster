@@ -1,9 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Dialog } from '@prompt-booster/ui/components/Dialog';
+import { Dialog } from '~/components/ui/components/Dialog';
 import { usePrompt } from '@prompt-booster/core/prompt/hooks/usePrompt';
 import { PromptGroup } from '@prompt-booster/core/prompt/models/prompt';
-import { Tooltip, ActionButtons, AnimatedButton } from '@prompt-booster/ui/components';
+import { Tooltip, ActionButtons, AnimatedButton } from '~/components/ui/components';
 import { GalleryVerticalEndIcon, Trash2Icon, ChevronsDownIcon, ChevronsUpIcon, ZapIcon, ClockIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { PROVIDER_USER_EDIT } from '@prompt-booster/core/prompt/services/promptService';
@@ -305,14 +305,6 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                               isHovered={hoveredContainer === `${group.id}-original`}
                               showOnHover={true}
                               showDownloadDocx={false}
-                              labels={{
-                                copy: t('common.buttons.copy'),
-                                downloadMd: t('common.buttons.downloadMd'),
-                                copySuccess: t('toast.copySuccess'),
-                                copyFailed: t('toast.copyFailed'),
-                                downloadSuccess: t('toast.downloadSuccess'),
-                                downloadFailed: t('toast.downloadFailed'),
-                              }}
                             />
                           </div>
 
@@ -355,14 +347,6 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                               isHovered={hoveredContainer === `${group.id}-iteration`}
                               showOnHover={true}
                               showDownloadDocx={false}
-                              labels={{
-                                copy: t('common.buttons.copy'),
-                                downloadMd: t('common.buttons.downloadMd'),
-                                copySuccess: t('toast.copySuccess'),
-                                copyFailed: t('toast.copyFailed'),
-                                downloadSuccess: t('toast.downloadSuccess'),
-                                downloadFailed: t('toast.downloadFailed'),
-                              }}
                             />
                           </div>
 
@@ -380,14 +364,6 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                               isHovered={hoveredContainer === `${group.id}-optimized`}
                               showOnHover={true}
                               showDownloadDocx={false}
-                              labels={{
-                                copy: t('common.buttons.copy'),
-                                downloadMd: t('common.buttons.downloadMd'),
-                                copySuccess: t('toast.copySuccess'),
-                                copyFailed: t('toast.copyFailed'),
-                                downloadSuccess: t('toast.downloadSuccess'),
-                                downloadFailed: t('toast.downloadFailed'),
-                              }}
                             />
                           </div>
 

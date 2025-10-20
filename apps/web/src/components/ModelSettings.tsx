@@ -3,13 +3,13 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { type StandardModelType } from '@prompt-booster/core/model/models/config';
 import { useModelStore } from '@prompt-booster/core/model/store/modelStore';
-import { Dialog, ListCard, toast, AnimatedButton } from '@prompt-booster/ui';
-import LoadingIcon from '@prompt-booster/ui/components/LoadingIcon';
-import { useModal } from '@prompt-booster/ui/hooks/useModal';
+import { Dialog, ListCard, toast, AnimatedButton } from '~/components/ui';
+import LoadingIcon from '~/components/ui/components/LoadingIcon';
+import { useModal } from '~/components/ui/hooks/useModal';
 import { CogIcon, Grid2X2PlusIcon, Power, CableIcon, FileCog, Trash2 } from 'lucide-react';
 import { useModelConnection, useModelData, useModelEdit } from '../hooks/model-hooks';
 import { ModelModal } from './ModelModal';
-import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
+import { Tooltip } from '~/components/ui/components/Tooltip';
 import { useTranslation } from 'react-i18next';
 
 // 确认删除对话框组件

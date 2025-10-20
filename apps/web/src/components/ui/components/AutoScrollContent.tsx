@@ -64,20 +64,6 @@ interface AutoScrollContentProps {
 
   /** 是否已被用户取消 */
   isCancelled?: boolean;
-
-  /** 翻译函数 */
-  t?: (key: string) => string;
-
-  /** ActionButtons的labels */
-  labels?: {
-    copy?: string;
-    downloadMd?: string;
-    downloadDocx?: string;
-    copySuccess?: string;
-    copyFailed?: string;
-    downloadSuccess?: string;
-    downloadFailed?: string;
-  };
 }
 
 export const AutoScrollContent: React.FC<AutoScrollContentProps> = ({
@@ -97,8 +83,6 @@ export const AutoScrollContent: React.FC<AutoScrollContentProps> = ({
   buttonPosition = 'top-right',
   isRTL = false,
   isCancelled = false,
-  t = (key: string) => key.split('.').pop() || key,
-  labels = {},
 }) => {
   const {
     elementRef,
@@ -199,7 +183,6 @@ export const AutoScrollContent: React.FC<AutoScrollContentProps> = ({
             streaming={streaming}
             isRTL={isRTL}
             isCancelled={isCancelled}
-            t={t}
           />
         ) : (
           // 纯文本模式 - 只处理换行
@@ -234,7 +217,6 @@ export const AutoScrollContent: React.FC<AutoScrollContentProps> = ({
         position={buttonPosition}
         isHovered={isHovered}  // 传递悬停状态
         streaming={streaming}
-        labels={labels}
       />
     </div>
   );

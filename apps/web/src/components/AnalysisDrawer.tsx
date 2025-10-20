@@ -7,8 +7,8 @@ import {
   SquareCheckBigIcon,
   TriangleAlertIcon,
 } from "lucide-react";
-import { toast, Tooltip, AnimatedButton } from "@prompt-booster/ui";
-import LoadingIcon from "@prompt-booster/ui/components/LoadingIcon";
+import { toast, Tooltip, AnimatedButton } from "~/components/ui";
+import LoadingIcon from "~/components/ui/components/LoadingIcon";
 import medalImage from "../assets/medal.png";
 import {
   PromptAnalysisResult,

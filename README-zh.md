@@ -17,10 +17,9 @@ Prompt Booster是一款专为帮助用户优化大型语言模型提示词而设
 prompt-booster/
 ├── packages/                  # 跨平台共享代码
 │   ├── core/                  # 核心业务逻辑和状态管理
-│   ├── api/                   # 针对LLM提供商的API客户端实现
-│   └── ui/                    # 共享UI组件
+│   └── api/                   # 针对LLM提供商的API客户端实现
 ├── apps/                      # 特定平台实现
-│   ├── web/                   # Web应用
+│   ├── web/                   # Web应用（包含UI组件）
 │   └── desktop/               # Electron桌面应用
 ├── backend/                   # FastAPI后端服务（计划中）
 ├── docs/                      # 项目文档
@@ -55,18 +54,6 @@ prompt-booster/
 - 认证策略
 
 [查看API包文档](packages/api/README-zh.md)
-
-### @prompt-booster/ui
-
-一个综合性UI组件库：
-
-- 专业的提示词编辑组件
-- 带有明/暗模式的主题系统
-- 对话框和模态组件
-- 带有语法高亮的Markdown渲染
-- 用于流式内容的自动滚动组件
-
-[查看UI包文档](packages/ui/README-zh.md)
 
 ## 应用
 

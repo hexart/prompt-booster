@@ -14,8 +14,8 @@ import {
   EnhancedDropdown,
   Dialog,
   AnimatedButton,
-} from "@prompt-booster/ui";
-import LoadingIcon from "@prompt-booster/ui/components/LoadingIcon";
+} from "~/components/ui";
+import LoadingIcon from "~/components/ui/components/LoadingIcon";
 import {
   RocketIcon,
   ListRestartIcon,
@@ -28,7 +28,7 @@ import {
   BookOpenTextIcon
 } from "lucide-react";
 import { AnalysisDrawer } from "./AnalysisDrawer";
-import { Tooltip } from "@prompt-booster/ui/components/Tooltip";
+import { Tooltip } from "~/components/ui/components/Tooltip";
 import { IterationDialog } from "./IterationDialog";
 import { usePrompt } from "@prompt-booster/core/prompt/hooks/usePrompt";
 import { useModelData } from '../hooks/model-hooks';
@@ -491,16 +491,6 @@ export const PromptBooster: React.FC = () => {
             buttonPosition={getButtonPosition('top-right')}
             filename={t("promptBooster.originalPrompt")}
             showDownloadDocx={false}
-            labels={{
-              characterCount: t('promptBooster.characterCount', { count: 0 }).replace('0', '{{count}}'),
-              copy: t('common.buttons.copy'),
-              downloadMd: t('common.buttons.downloadMd'),
-              downloadDocx: t('common.buttons.downloadDocx'),
-              copySuccess: t('toast.copySuccess'),
-              copyFailed: t('toast.copyFailed'),
-              downloadSuccess: t('toast.downloadSuccess'),
-              downloadFailed: t('toast.downloadFailed'),
-            }}
           />
         </div>
       </motion.div>
@@ -520,7 +510,6 @@ export const PromptBooster: React.FC = () => {
               placeholder={t("promptBooster.templatePlaceholder")}
               disabled={isProcessing || isTemplatesLoading}
               className=""
-              emptyText={t('common.dropdownNull')}
             />
             {isTemplatesLoading && (
               <div className="absolute right-10 top-1/2 transform -translate-y-1/2">
@@ -550,7 +539,6 @@ export const PromptBooster: React.FC = () => {
             placeholder={t("promptBooster.modelPlaceholder")}
             disabled={isProcessing}
             className=""
-            emptyText={t('common.dropdownNull')}
           />
         </div>
 

@@ -29,10 +29,10 @@ export default defineConfig({
   },
   resolve: {
     alias: {
+      '~': resolve(__dirname, './src'),
       '@': resolve(__dirname, './src'),
       '@prompt-booster/core': path.resolve(__dirname, '../../packages/core/src'),
-      '@prompt-booster/api': path.resolve(__dirname, '../../packages/api/src'),
-      '@prompt-booster/ui': path.resolve(__dirname, '../../packages/ui/src')
+      '@prompt-booster/api': path.resolve(__dirname, '../../packages/api/src')
     }
   },
   optimizeDeps: {
@@ -50,15 +50,14 @@ export default defineConfig({
             'react',
             'react-dom'
           ],
-          // 将i18n、core、api、ui打包在一起，确保i18n先初始化
+          // 将i18n、core、api打包在一起，确保i18n先初始化
           'app-core': [
             'i18next',
             'react-i18next',
             'i18next-browser-languagedetector',
             'i18next-http-backend',
             '@prompt-booster/core',
-            '@prompt-booster/api',
-            '@prompt-booster/ui'
+            '@prompt-booster/api'
           ]
         },
         globals: {

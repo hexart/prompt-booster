@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { useMemoryStore } from '@prompt-booster/core/storage/memoryStorage';
 import { usePrompt } from '@prompt-booster/core/prompt/hooks/usePrompt';
-// import { toast } from '@prompt-booster/ui';
+// import { toast } from '~/components/ui';
 export const RefreshDetector: React.FC = () => {
   const { resetSession } = usePrompt();
 

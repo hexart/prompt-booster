@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { ActionButtons } from './ActionButtons';
+import { useTranslation } from 'react-i18next';
 
 interface EnhancedTextareaProps {
   id?: string;
@@ -20,17 +21,6 @@ interface EnhancedTextareaProps {
   showDownloadMd?: boolean;
   showDownloadDocx?: boolean;
   buttonPosition?: 'top-right' | 'bottom-right' | 'top-left' | 'bottom-left';
-  // 翻译文本
-  labels?: {
-    characterCount?: string; // e.g. "{{count}} characters"
-    copy?: string;
-    downloadMd?: string;
-    downloadDocx?: string;
-    copySuccess?: string;
-    copyFailed?: string;
-    downloadSuccess?: string;
-    downloadFailed?: string;
-  };
 }
 
 export const EnhancedTextarea: React.FC<EnhancedTextareaProps> = ({
@@ -52,8 +42,8 @@ export const EnhancedTextarea: React.FC<EnhancedTextareaProps> = ({
   showDownloadMd = true,
   showDownloadDocx = true,
   buttonPosition = 'top-right',
-  labels = {},
 }) => {
+  const { t } = useTranslation();
   const [isHovered, setIsHovered] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -106,7 +96,6 @@ export const EnhancedTextarea: React.FC<EnhancedTextareaProps> = ({
           position={buttonPosition}
           isHovered={isHovered}
           showOnHover={true}
-          labels={labels}
         />
       </div>
 
@@ -116,9 +105,7 @@ export const EnhancedTextarea: React.FC<EnhancedTextareaProps> = ({
           <span className="text-sm input-charactor-counter">
             {maxLength
               ? `${value.length}/${maxLength}`
-              : labels.characterCount
-                ? labels.characterCount.replace('{{count}}', String(value.length))
-                : `${value.length} characters`
+              : t('promptBooster.characterCount', { count: Number(value.length) })
             }
           </span>
         </div>

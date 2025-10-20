@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ClipboardIcon, ClipboardCheckIcon, FileTypeIcon, FileTextIcon, FileCheck2Icon } from 'lucide-react';
 import { Tooltip } from './Tooltip';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 import { convertMarkdownToDocx } from '@mohtasham/md-to-docx';
 
 /**
@@ -47,17 +48,6 @@ interface ActionButtonsProps {
 
   // 下载成功回调
   onDownload?: (type: 'md' | 'docx', filename: string) => void;
-
-  // 翻译文本
-  labels?: {
-    copy?: string;
-    downloadMd?: string;
-    downloadDocx?: string;
-    copySuccess?: string;
-    copyFailed?: string;
-    downloadSuccess?: string;
-    downloadFailed?: string;
-  };
 }
 
 // 单个按钮的动画配置 - 移除了 visible 状态的 transition
@@ -104,18 +94,8 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
   className = '',
   onCopy,
   onDownload,
-  labels = {},
 }) => {
-  // 使用提供的labels或默认值
-  const {
-    copy = 'Copy',
-    downloadMd = 'Download MD',
-    downloadDocx = 'Download DOCX',
-    copySuccess = 'Copy Success',
-    copyFailed = 'Copy Failed',
-    downloadSuccess = 'Download Success',
-    downloadFailed = 'Download Failed',
-  } = labels;
+  const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
   const [downloadedMd, setDownloadedMd] = useState(false);
   const [downloadedDocx, setDownloadedDocx] = useState(false);
@@ -142,14 +122,14 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
       const cleanedContent = removeThinkTags(content);
       await navigator.clipboard.writeText(cleanedContent);
       setCopied(true);
-      toast.success(copySuccess);
+      toast.success(t('toast.copySuccess'));
       onCopy?.();
 
       // 2秒后重置状态
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error(copyFailed, err);
-      toast.error(copyFailed);
+      console.error(t('toast.copyFailed'), err);
+      toast.error(t('toast.copyFailed'));
     }
   };
 
@@ -182,14 +162,14 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 
       // 显示成功状态
       setDownloadedMd(true);
-      toast.success(downloadSuccess);
+      toast.success(t('toast.downloadSuccess'));
       onDownload?.('md', finalFilename);
 
       // 2秒后重置状态
       setTimeout(() => setDownloadedMd(false), 2000);
     } catch (err) {
       console.error('Download MD failed:', err);
-      toast.error(downloadFailed);
+      toast.error(t('toast.downloadFailed'));
     } finally {
       setDownloading(null);
     }
@@ -241,14 +221,14 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
 
       // 显示成功状态
       setDownloadedDocx(true);
-      toast.success(downloadSuccess);
+      toast.success(t('toast.downloadSuccess'));
       onDownload?.('docx', finalFilename);
 
       // 2秒后重置状态
       setTimeout(() => setDownloadedDocx(false), 2000);
     } catch (err) {
       console.error('Download DOCX failed:', err);
-      toast.error(downloadFailed);
+      toast.error(t('toast.downloadFailed'));
     } finally {
       setDownloading(null);
     }
@@ -279,7 +259,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
     buttons.push({
       key: 'copy',
       component: (
-        <Tooltip text={copy} position="bottom">
+        <Tooltip text={t('common.buttons.copy')} position="bottom">
           <motion.button
             className="p-2 rounded-md input-copy-button"
             onClick={handleCopy}
@@ -299,7 +279,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
     buttons.push({
       key: 'downloadMd',
       component: (
-        <Tooltip text={downloadMd} position="bottom">
+        <Tooltip text={t('common.buttons.downloadMd', { defaultValue: 'Download MD' })} position="bottom">
           <motion.button
             className="p-2 rounded-md input-copy-button"
             onClick={handleDownloadMd}
@@ -325,7 +305,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
     buttons.push({
       key: 'downloadDocx',
       component: (
-        <Tooltip text={downloadDocx} position="bottom">
+        <Tooltip text={t('common.buttons.downloadDocx', { defaultValue: 'Download DOCX' })} position="bottom">
           <motion.button
             className="p-2 rounded-md input-copy-button"
             onClick={handleDownloadDocx}

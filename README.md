@@ -28,10 +28,9 @@ https://github.com/user-attachments/assets/d4ab19f8-9f23-4c95-97f1-7dba5fb6b5b9
 prompt-booster/
 ├── packages/                  # Shared cross-platform code
 │   ├── core/                  # Core business logic and state management
-│   ├── api/                   # API client implementations for LLM providers
-│   └── ui/                    # Shared UI components
+│   └── api/                   # API client implementations for LLM providers
 ├── apps/                      # Platform-specific implementations
-│   ├── web/                   # Web application
+│   ├── web/                   # Web application (includes UI components)
 │   └── desktop/               # Electron desktop application
 ├── backend/                   # FastAPI backend service (planned)
 ├── docs/                      # Project documentation
@@ -66,18 +65,6 @@ A flexible client library for interacting with various LLM services:
 - Authentication strategies
 
 [View API Package Documentation](packages/api/README.md)
-
-### @prompt-booster/ui
-
-A comprehensive UI component library:
-
-- Specialized prompt editing components
-- Theme system with light/dark modes
-- Dialog and modal components
-- Markdown rendering with syntax highlighting
-- Auto-scrolling components for streaming content
-
-[View UI Package Documentation](packages/ui/README.md)
 
 ## Applications
 

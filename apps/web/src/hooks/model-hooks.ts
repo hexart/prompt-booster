@@ -1,6 +1,6 @@
 // apps/web/src/hooks/model-hooks.ts
 import { useState, useMemo, useEffect } from 'react';
-import { toast } from '@prompt-booster/ui';
+import { toast } from '~/components/ui';
 import { useModelStore, type StandardModelType } from '@prompt-booster/core';
 import { testModelConnection, maskApiKey, prepareModelsForDisplay, mergeWithDefaults } from '@prompt-booster/core/model/services/modelService';
 import { ModelConfig, CustomInterface } from '@prompt-booster/core/model/models/config';

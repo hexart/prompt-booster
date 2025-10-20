@@ -83,15 +83,15 @@ importers:
 
   apps/web:
     dependencies:
+      '@mohtasham/md-to-docx':
+        specifier: ^2.4.0
+        version: 2.4.0
       '@prompt-booster/api':
         specifier: workspace:*
         version: link:../../packages/api
       '@prompt-booster/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@prompt-booster/ui':
-        specifier: workspace:*
-        version: link:../../packages/ui
       crypto-js:
         specifier: ^4.2.0
         version: 4.2.0
@@ -125,16 +125,40 @@ importers:
       react-i18next:
         specifier: ^16.1.0
         version: 16.1.0(i18next@25.6.0(typescript@5.9.3))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
+      react-markdown:
+        specifier: ^10.1.0
+        version: 10.1.0(@types/react@19.2.2)(react@19.2.0)
+      react-syntax-highlighter:
+        specifier: ^15.6.6
+        version: 15.6.6(react@19.2.0)
+      rehype-raw:
+        specifier: ^7.0.0
+        version: 7.0.0
+      remark-gfm:
+        specifier: ^4.0.1
+        version: 4.0.1
+      sonner:
+        specifier: ^2.0.7
+        version: 2.0.7(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@4.1.14)
+      unist-util-visit:
+        specifier: ^5.0.0
+        version: 5.0.0
       vaul:
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      zustand:
+        specifier: ^5.0.2
+        version: 5.0.8(@types/react@19.2.2)(react@19.2.0)
     devDependencies:
       '@tailwindcss/vite':
         specifier: ^4.1.14
         version: 4.1.14(vite@7.1.10(@types/node@24.8.1)(jiti@2.6.1)(lightningcss@1.30.1))
+      '@types/react-syntax-highlighter':
+        specifier: ^15.5.13
+        version: 15.5.13
       buffer:
         specifier: ^6.0.3
         version: 6.0.3

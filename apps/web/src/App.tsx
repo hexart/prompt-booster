@@ -6,11 +6,11 @@ import { TestResult } from './components/TestResult';
 import { ModelSettings } from './components/ModelSettings';
 import { PromptHistory } from './components/PromptHistory';
 import Header, { TabType } from './components/Header';
-import { ThemeProvider } from '@prompt-booster/ui/components/ThemeContext';
-import { Toaster } from '@prompt-booster/ui';
+import { ThemeProvider } from '~/components/ui/components/ThemeContext';
+import { Toaster } from '~/components/ui';
 import { useTranslation } from 'react-i18next';
 import { setDirectionByLanguage, getButtonPosition } from './rtl';
-import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
+import { Tooltip } from '~/components/ui/components/Tooltip';
 import { motion, AnimatePresence } from 'framer-motion';
 import { setApiLogging } from '@prompt-booster/api/utils/apiLogging';
 

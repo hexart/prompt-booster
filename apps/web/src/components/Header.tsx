@@ -3,11 +3,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { RocketIcon, BookOpenCheckIcon, GalleryVerticalEndIcon, CogIcon } from 'lucide-react';
-import ThemeSwitcher from '@prompt-booster/ui/components/ThemeSwitcher';
+import ThemeSwitcher from '~/components/ui/components/ThemeSwitcher';
 import MobileMenu, { TabItem } from './MobileMenu';
 import logo from '../assets/logo.svg';
-import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
-import { LanguageSwitcher } from '@prompt-booster/ui/components/LanguageSwitcher';
+import { Tooltip } from '~/components/ui/components/Tooltip';
+import { LanguageSwitcher } from '~/components/ui/components/LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
 import { getTooltipPosition, isRTL } from '../rtl';
 
@@ -209,11 +209,6 @@ const Header: React.FC<HeaderProps> = ({
                 mobileTooltipPosition={tooltipPositions.mobile}
                 mobileMenuTooltipPosition={tooltipPositions.mobileMenu}
                 desktopTooltipPosition="bottom"
-                labels={{
-                  light: t('common.theme.light'),
-                  dark: t('common.theme.dark'),
-                  system: t('common.theme.system'),
-                }}
               />
 
               {/* 语言切换器 */}

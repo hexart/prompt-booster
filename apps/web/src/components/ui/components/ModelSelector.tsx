@@ -5,6 +5,7 @@ import { toast } from '../index';
 import { DialogContext } from './Dialog';
 import LoadingIcon from './LoadingIcon';
 import { ChevronDown } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export interface ModelOption {
   id: string;
@@ -20,15 +21,6 @@ interface ModelSelectorProps {
   className?: string;
   disabled?: boolean;
   onFetch?: (options: ModelOption[]) => void;
-  // 翻译文本
-  labels?: {
-    loading?: string;
-    noModelAvailable?: string;
-    noMatchingModel?: string;
-    getModelListSuccess?: string; // e.g. "Successfully retrieved {{count}} models"
-    getModelListFailed?: string;
-    noModelAvailableToast?: string;
-  };
 }
 
 // 滚动状态管理类型
@@ -171,9 +163,9 @@ const useMenuPositioning = (isOpen: boolean, optionsContainerRef: React.RefObjec
 // 自定义 Hook：模型数据管理
 const useModelData = (
   fetchModels: () => Promise<ModelOption[]>, 
-  onFetch?: (options: ModelOption[]) => void,
-  labels?: ModelSelectorProps['labels']
+  onFetch?: (options: ModelOption[]) => void
 ) => {
+  const { t } = useTranslation();
   const [options, setOptions] = useState<ModelOption[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -191,18 +183,17 @@ const useModelData = (
       }
 
       if (models.length > 0) {
-        const successMsg = labels?.getModelListSuccess || 'Successfully retrieved models';
-        toast.success(successMsg.replace('{{count}}', String(models.length)));
+        toast.success(t('toast.getModelListSuccess', { count: models.length }));
       } else {
-        toast.info(labels?.noModelAvailableToast || 'No models available');
+        toast.info(t('toast.noModelAvailable'));
       }
     } catch (error) {
       console.error('获取模型列表失败:', error);
-      toast.error(labels?.getModelListFailed || 'Failed to fetch model list');
+      toast.error(t('toast.getModelListFailed'));
     } finally {
       setIsLoading(false);
     }
-  }, [fetchModels, onFetch, isLoading, options.length, labels]);
+  }, [fetchModels, onFetch, isLoading, options.length, t]);
 
   return { options, isLoading, loadModels };
 };
@@ -299,14 +290,14 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
   placeholder = '选择或输入模型名称',
   className = '',
   disabled = false,
-  onFetch,
-  labels = {},
+  onFetch
 }) => {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // 使用自定义 Hooks
-  const { options, isLoading, loadModels } = useModelData(fetchModels, onFetch, labels);
+  const { options, isLoading, loadModels } = useModelData(fetchModels, onFetch);
   const { inputValue, filteredOptions, handleInputChange, handleInputBlur } = useFilteringAndInput(options, value, onChange);
   const { selectedOptionRef, optionsContainerRef } = useScrollManagement(isOpen, value, inputValue, filteredOptions);
   useMenuPositioning(isOpen, optionsContainerRef);
@@ -414,7 +405,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                 className="p-2 text-center flex items-center justify-center dropdown-null space-x-2"
               >
                 <LoadingIcon />
-                <span>{labels.loading || 'Loading...'}</span>
+                <span>{t('settings.loading')}</span>
               </motion.div>
             ) : filteredOptions.length === 0 ? (
               <motion.div
@@ -426,8 +417,8 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                 className="p-2 text-center dropdown-null"
               >
                 {options.length === 0 
-                  ? labels.noModelAvailable || 'No models available'
-                  : labels.noMatchingModel || 'No matching models'}
+                  ? t('settings.noModelAvailable') 
+                  : t('settings.noMatchingModel')}
               </motion.div>
             ) : (
               <motion.div

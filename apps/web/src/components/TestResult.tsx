@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { toast, AutoScrollContent, EnhancedDropdown, DraggableNotice, EnhancedTextarea, AnimatedButton } from '@prompt-booster/ui';
+import { toast, AutoScrollContent, EnhancedDropdown, DraggableNotice, EnhancedTextarea, AnimatedButton } from '~/components/ui';
 import { useModelData } from '../hooks/model-hooks';
 import { cleanOptimizedPrompt, getLanguageInstruction } from '@prompt-booster/core/prompt/utils/promptUtils';
 import { usePrompt } from '@prompt-booster/core/prompt/hooks/usePrompt';
 import { useMemoryStore } from '@prompt-booster/core/storage/memoryStorage';
 import { llmService } from '@prompt-booster/core/prompt/services/llmService';
-import { Tooltip } from '@prompt-booster/ui/components/Tooltip';
+import { Tooltip } from '~/components/ui/components/Tooltip';
 import { BookOpenCheckIcon, RocketIcon, MinimizeIcon, MaximizeIcon, ArrowLeftFromLineIcon, ArrowRightFromLineIcon, ArrowDownFromLineIcon, ArrowUpFromLineIcon } from 'lucide-react';
-import LoadingIcon from '@prompt-booster/ui/components/LoadingIcon';
+import LoadingIcon from '~/components/ui/components/LoadingIcon';
 import { useTranslation } from 'react-i18next';
 import { isRTL, getButtonPosition } from '../rtl';
 
@@ -322,16 +322,6 @@ export const TestResult: React.FC = () => {
             buttonPosition={getButtonPosition('top-right')}
             isRTL={isRTL()}
             isCancelled={isUserCancelled}
-            t={t}
-            labels={{
-              copy: t('common.buttons.copy'),
-              downloadMd: t('common.buttons.downloadMd'),
-              downloadDocx: t('common.buttons.downloadDocx'),
-              copySuccess: t('toast.copySuccess'),
-              copyFailed: t('toast.copyFailed'),
-              downloadSuccess: t('toast.downloadSuccess'),
-              downloadFailed: t('toast.downloadFailed'),
-            }}
           />
         </div>
 
@@ -400,16 +390,6 @@ export const TestResult: React.FC = () => {
             buttonPosition={getButtonPosition('top-right')}
             filename={t('testResult.title')}
             showDownloadDocx={false}
-            labels={{
-              characterCount: t('promptBooster.characterCount', { count: 0 }).replace('0', '{{count}}'),
-              copy: t('common.buttons.copy'),
-              downloadMd: t('common.buttons.downloadMd'),
-              downloadDocx: t('common.buttons.downloadDocx'),
-              copySuccess: t('toast.copySuccess'),
-              copyFailed: t('toast.copyFailed'),
-              downloadSuccess: t('toast.downloadSuccess'),
-              downloadFailed: t('toast.downloadFailed'),
-            }}
           />
         </div>
       </motion.div>
@@ -431,7 +411,6 @@ export const TestResult: React.FC = () => {
             placeholder={t('promptBooster.modelPlaceholder')}
             disabled={isTestingOriginal || isTestingOptimized}
             className=""
-            emptyText={t('common.dropdownNull')}
           />
         </div>
         {/* 按钮区域 */}
