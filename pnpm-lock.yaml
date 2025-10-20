@@ -208,64 +208,6 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8(@types/react@19.2.2)(react@19.2.0)
 
-  packages/ui:
-    dependencies:
-      '@mohtasham/md-to-docx':
-        specifier: ^2.4.0
-        version: 2.4.0
-      '@prompt-booster/api':
-        specifier: workspace:*
-        version: link:../api
-      '@prompt-booster/core':
-        specifier: workspace:*
-        version: link:../core
-      '@tailwindcss/vite':
-        specifier: '*'
-        version: 4.1.14(vite@7.1.10(@types/node@24.8.1)(jiti@2.6.1)(lightningcss@1.30.1))
-      framer-motion:
-        specifier: '*'
-        version: 12.23.24(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      lucide-react:
-        specifier: '*'
-        version: 0.546.0(react@19.2.0)
-      react-i18next:
-        specifier: '*'
-        version: 16.1.0(i18next@25.6.0(typescript@5.9.3))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3)
-      react-markdown:
-        specifier: ^10.1.0
-        version: 10.1.0(@types/react@19.2.2)(react@19.2.0)
-      react-syntax-highlighter:
-        specifier: ^15.6.6
-        version: 15.6.6(react@19.2.0)
-      rehype-raw:
-        specifier: ^7.0.0
-        version: 7.0.0
-      remark-gfm:
-        specifier: ^4.0.1
-        version: 4.0.1
-      sonner:
-        specifier: '*'
-        version: 2.0.7(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      tailwindcss:
-        specifier: '*'
-        version: 4.1.14
-      tailwindcss-animate:
-        specifier: '*'
-        version: 1.0.7(tailwindcss@4.1.14)
-      unist-util-visit:
-        specifier: ^5.0.0
-        version: 5.0.0
-    devDependencies:
-      '@types/react-syntax-highlighter':
-        specifier: ^15.5.13
-        version: 15.5.13
-      i18next:
-        specifier: ^25.6.0
-        version: 25.6.0(typescript@5.9.3)
-      react-hotkeys-hook:
-        specifier: ^5.2.1
-        version: 5.2.1(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-
 packages:
 
   '@babel/code-frame@7.27.1':

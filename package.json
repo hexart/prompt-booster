@@ -9,7 +9,6 @@
   "scripts": {
     "clean": "turbo run clean",
     "clean:all": "rm -rf node_modules packages/*/node_modules apps/*/node_modules packages/*/dist apps/*/dist .turbo packages/*/.turbo apps/*/.turbo",
-    "install:all": "pnpm install",
     "build": "pnpm build:packages && pnpm build:apps",
     "build:packages": "turbo run build --filter=@prompt-booster/api --filter=@prompt-booster/core",
     "build:apps": "turbo run build --filter=web",

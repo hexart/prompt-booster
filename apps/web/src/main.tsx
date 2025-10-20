@@ -1,4 +1,10 @@
 import './env';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { I18nextProvider } from 'react-i18next';
+import App from './App';
+import './index.css';
+import './scrollbar.css';
 
 // 关键：先导入i18n配置和Promise
 import i18n, { i18nPromise } from './i18n';
@@ -17,28 +23,21 @@ const init = async () => {
     }
     
     console.log('✅ i18n初始化完成，当前语言:', i18n.language);
-    console.log('⏳ 开始加载React应用...');
-  } catch (error) {
-    console.error('❌ i18n初始化失败:', error);
-  }
-  
-  // 现在才开始加载React和组件
-  const React = await import('react');
-  const ReactDOM = await import('react-dom/client');
-  const { I18nextProvider } = await import('react-i18next');
-  const { default: App } = await import('./App');
-  
-  // 导入样式
-  await import('./index.css');
-  await import('./scrollbar.css');
+    console.log('⏳ 开始渲染React应用...');
 
-  ReactDOM.createRoot(document.getElementById('root')!).render(
-    <React.StrictMode>
-      <I18nextProvider i18n={i18n}>
-        <App />
-      </I18nextProvider>
-    </React.StrictMode>
-  );
+    // 直接渲染，不再动态import
+    ReactDOM.createRoot(document.getElementById('root')!).render(
+      <React.StrictMode>
+        <I18nextProvider i18n={i18n}>
+          <App />
+        </I18nextProvider>
+      </React.StrictMode>
+    );
+    
+    console.log('✅ React应用渲染完成');
+  } catch (error) {
+    console.error('❌ 初始化失败:', error);
+  }
 };
 
 init();
