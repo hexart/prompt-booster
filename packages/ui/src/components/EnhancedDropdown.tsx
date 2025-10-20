@@ -2,7 +2,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
 
 export interface DropdownOption {
   value: string;
@@ -17,6 +16,7 @@ interface EnhancedDropdownProps {
   placeholder?: string;
   disabled?: boolean;
   className?: string;
+  emptyText?: string; // 新增：用于显示空列表时的文本
 }
 
 export const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
@@ -26,9 +26,9 @@ export const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
   onChange,
   placeholder = "Select an option...",
   disabled = false,
-  className = ""
+  className = "",
+  emptyText = "No options available" // 默认英文文本
 }) => {
-  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const optionsContainerRef = useRef<HTMLDivElement>(null);
@@ -199,7 +199,7 @@ export const EnhancedDropdown: React.FC<EnhancedDropdownProps> = ({
                     animate={{ opacity: 1 }}
                     className="px-3 py-2 text-sm italic dropdown-null"
                   >
-                    {t('common.dropdownNull')}
+                    {emptyText}
                   </motion.li>
                 )}
               </AnimatePresence>

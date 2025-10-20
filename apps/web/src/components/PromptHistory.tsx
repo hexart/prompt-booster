@@ -305,6 +305,14 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                               isHovered={hoveredContainer === `${group.id}-original`}
                               showOnHover={true}
                               showDownloadDocx={false}
+                              labels={{
+                                copy: t('common.buttons.copy'),
+                                downloadMd: t('common.buttons.downloadMd'),
+                                copySuccess: t('toast.copySuccess'),
+                                copyFailed: t('toast.copyFailed'),
+                                downloadSuccess: t('toast.downloadSuccess'),
+                                downloadFailed: t('toast.downloadFailed'),
+                              }}
                             />
                           </div>
 
@@ -347,6 +355,14 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                               isHovered={hoveredContainer === `${group.id}-iteration`}
                               showOnHover={true}
                               showDownloadDocx={false}
+                              labels={{
+                                copy: t('common.buttons.copy'),
+                                downloadMd: t('common.buttons.downloadMd'),
+                                copySuccess: t('toast.copySuccess'),
+                                copyFailed: t('toast.copyFailed'),
+                                downloadSuccess: t('toast.downloadSuccess'),
+                                downloadFailed: t('toast.downloadFailed'),
+                              }}
                             />
                           </div>
 
@@ -364,6 +380,14 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
                               isHovered={hoveredContainer === `${group.id}-optimized`}
                               showOnHover={true}
                               showDownloadDocx={false}
+                              labels={{
+                                copy: t('common.buttons.copy'),
+                                downloadMd: t('common.buttons.downloadMd'),
+                                copySuccess: t('toast.copySuccess'),
+                                copyFailed: t('toast.copyFailed'),
+                                downloadSuccess: t('toast.downloadSuccess'),
+                                downloadFailed: t('toast.downloadFailed'),
+                              }}
                             />
                           </div>
 

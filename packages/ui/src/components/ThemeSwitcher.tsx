@@ -8,7 +8,6 @@ import { Tooltip } from './Tooltip';
 
 // 支持的提示框位置类型
 type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
-import { useTranslation } from 'react-i18next';
 
 // 主题类型
 type ThemeType = 'light' | 'dark' | 'system';
@@ -58,6 +57,15 @@ interface ThemeSwitcherProps {
    * @default 'bottom'
    */
   desktopTooltipPosition?: TooltipPosition;
+
+  /**
+   * 翻译文本
+   */
+  labels?: {
+    light?: string;
+    dark?: string;
+    system?: string;
+  };
 }
 
 const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
@@ -65,12 +73,19 @@ const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
   enableHotkeys = true,
   mobileTooltipPosition = 'left',
   mobileMenuTooltipPosition = 'left',
-  desktopTooltipPosition = 'bottom'
+  desktopTooltipPosition = 'bottom',
+  labels = {},
 }) => {
-  const { t } = useTranslation();
   const { theme, setTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // 使用提供的labels或默认值
+  const {
+    light = 'Light',
+    dark = 'Dark',
+    system = 'System',
+  } = labels;
 
   // 主题配置
   const themeConfig: Record<ThemeType, {
@@ -82,21 +97,21 @@ const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
   }> = {
     light: {
       icon: Sun,
-      label: t('common.theme.light'),
+      label: light,
       getStyleType: () => 'light',
       shortcut: '⇧+L',
       hotkey: 'shift+l'
     },
     dark: {
       icon: Moon,
-      label: t('common.theme.dark'),
+      label: dark,
       getStyleType: () => 'dark',
       shortcut: '⇧+D',
       hotkey: 'shift+d'
     },
     system: {
       icon: MonitorCog,
-      label: t('common.theme.system'),
+      label: system,
       getStyleType: (isDarkMode) => isDarkMode ? 'dark' : 'light',
       shortcut: '⇧+S',
       hotkey: 'shift+s'

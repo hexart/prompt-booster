@@ -295,6 +295,14 @@ export const ModelModal: React.FC<ModelModalProps> = ({
             placeholder={t('settings.modelListPlaceholder')}
             className="text-sm w-full"
             disabled={!formData.apiKey || !formData.baseUrl}
+            labels={{
+              loading: t('settings.loading'),
+              noModelAvailable: t('settings.noModelAvailable'),
+              noMatchingModel: t('settings.noMatchingModel'),
+              getModelListSuccess: t('toast.getModelListSuccess', { count: 0 }).replace('0', '{{count}}'),
+              getModelListFailed: t('toast.getModelListFailed'),
+              noModelAvailableToast: t('toast.noModelAvailable'),
+            }}
           />
         </div>
 

@@ -491,6 +491,16 @@ export const PromptBooster: React.FC = () => {
             buttonPosition={getButtonPosition('top-right')}
             filename={t("promptBooster.originalPrompt")}
             showDownloadDocx={false}
+            labels={{
+              characterCount: t('promptBooster.characterCount', { count: 0 }).replace('0', '{{count}}'),
+              copy: t('common.buttons.copy'),
+              downloadMd: t('common.buttons.downloadMd'),
+              downloadDocx: t('common.buttons.downloadDocx'),
+              copySuccess: t('toast.copySuccess'),
+              copyFailed: t('toast.copyFailed'),
+              downloadSuccess: t('toast.downloadSuccess'),
+              downloadFailed: t('toast.downloadFailed'),
+            }}
           />
         </div>
       </motion.div>
@@ -510,6 +520,7 @@ export const PromptBooster: React.FC = () => {
               placeholder={t("promptBooster.templatePlaceholder")}
               disabled={isProcessing || isTemplatesLoading}
               className=""
+              emptyText={t('common.dropdownNull')}
             />
             {isTemplatesLoading && (
               <div className="absolute right-10 top-1/2 transform -translate-y-1/2">
@@ -539,6 +550,7 @@ export const PromptBooster: React.FC = () => {
             placeholder={t("promptBooster.modelPlaceholder")}
             disabled={isProcessing}
             className=""
+            emptyText={t('common.dropdownNull')}
           />
         </div>
 

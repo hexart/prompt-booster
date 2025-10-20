@@ -80,6 +80,7 @@ export const IterationDialog: React.FC<IterationDialogProps> = ({
             value={selectedTemplateId}
             onChange={setSelectedTemplateId}
             placeholder={t("promptBooster.templatePlaceholder")}
+            emptyText={t('common.dropdownNull')}
           />
         </div>
         <div>

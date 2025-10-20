@@ -322,6 +322,16 @@ export const TestResult: React.FC = () => {
             buttonPosition={getButtonPosition('top-right')}
             isRTL={isRTL()}
             isCancelled={isUserCancelled}
+            t={t}
+            labels={{
+              copy: t('common.buttons.copy'),
+              downloadMd: t('common.buttons.downloadMd'),
+              downloadDocx: t('common.buttons.downloadDocx'),
+              copySuccess: t('toast.copySuccess'),
+              copyFailed: t('toast.copyFailed'),
+              downloadSuccess: t('toast.downloadSuccess'),
+              downloadFailed: t('toast.downloadFailed'),
+            }}
           />
         </div>
 
@@ -390,6 +400,16 @@ export const TestResult: React.FC = () => {
             buttonPosition={getButtonPosition('top-right')}
             filename={t('testResult.title')}
             showDownloadDocx={false}
+            labels={{
+              characterCount: t('promptBooster.characterCount', { count: 0 }).replace('0', '{{count}}'),
+              copy: t('common.buttons.copy'),
+              downloadMd: t('common.buttons.downloadMd'),
+              downloadDocx: t('common.buttons.downloadDocx'),
+              copySuccess: t('toast.copySuccess'),
+              copyFailed: t('toast.copyFailed'),
+              downloadSuccess: t('toast.downloadSuccess'),
+              downloadFailed: t('toast.downloadFailed'),
+            }}
           />
         </div>
       </motion.div>
@@ -411,6 +431,7 @@ export const TestResult: React.FC = () => {
             placeholder={t('promptBooster.modelPlaceholder')}
             disabled={isTestingOriginal || isTestingOptimized}
             className=""
+            emptyText={t('common.dropdownNull')}
           />
         </div>
         {/* 按钮区域 */}

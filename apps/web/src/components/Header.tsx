@@ -209,6 +209,11 @@ const Header: React.FC<HeaderProps> = ({
                 mobileTooltipPosition={tooltipPositions.mobile}
                 mobileMenuTooltipPosition={tooltipPositions.mobileMenu}
                 desktopTooltipPosition="bottom"
+                labels={{
+                  light: t('common.theme.light'),
+                  dark: t('common.theme.dark'),
+                  system: t('common.theme.system'),
+                }}
               />
 
               {/* 语言切换器 */}

@@ -1,5 +1,4 @@
 // packages/ui/src/components/MarkdownThink.tsx
-import { useTranslation } from 'react-i18next';
 
 /**
  * 预处理Markdown内容中的思考标签(<think>)
@@ -138,26 +137,4 @@ export const addThinkBlocksEventHandlers = (containerElement: HTMLElement | null
       (detail as any)._hasClickListener = true;
     }
   });
-};
-
-/**
- * React Hook组件，用于在React组件中使用带有i18next的思考块功能
- * 这个hook封装了i18next的使用，提供便于使用的函数
- */
-export const useMarkdownThink = () => {
-  const { t } = useTranslation();
-
-  const preprocessThinkTagsWithTranslation = (rawContent: string, isRTL: boolean = false, isCancelled: boolean = false) => {
-    return preprocessThinkTags(rawContent, isRTL, t, isCancelled);
-  };
-
-  const handleThinkBlocksWithTranslation = (containerElement: HTMLElement | null, content: string) => {
-    return handleThinkBlocks(containerElement, content, t);
-  };
-
-  return {
-    preprocessThinkTags: preprocessThinkTagsWithTranslation,
-    handleThinkBlocks: handleThinkBlocksWithTranslation,
-    addThinkBlocksEventHandlers
-  };
 };
