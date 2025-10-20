@@ -1,12 +1,16 @@
-//packages/api/src/config/constants.ts
+// packages/api/src/config.ts
 /**
- * 常量配置文件
- * 定义API客户端所需的各种常量
+ * 配置文件
+ * 定义 API 包所需的所有常量和提供商配置
  */
 
+// ============================================================================
+// 枚举定义
+// ============================================================================
+
 /**
- * LLM提供商枚举
- * 支持的LLM服务提供商列表
+ * LLM 提供商枚举
+ * 支持的 LLM 服务提供商列表
  */
 export enum LLMProvider {
   OPENAI = 'openai',
@@ -51,11 +55,97 @@ export enum ResponseParseType {
   CUSTOM = 'custom'
 }
 
+// ============================================================================
+// 常量定义
+// ============================================================================
+
+/**
+ * 默认超时设置（毫秒）
+ */
+export const DEFAULT_TIMEOUT = 120000;
+
+/**
+ * 默认温度参数
+ */
+export const DEFAULT_TEMPERATURE = 0.7;
+
+/**
+ * 重试配置
+ */
+export const RETRY_CONFIG = {
+  MAX_RETRIES: 3,
+  RETRY_DELAY: 1000,
+  RETRY_MULTIPLIER: 1.5
+};
+
+/**
+ * 内容类型常量
+ */
+export const CONTENT_TYPES = {
+  JSON: 'application/json',
+  SSE: 'text/event-stream',
+  TEXT: 'text/plain'
+};
+
+/**
+ * CORS 相关常量
+ */
+export const CORS_CONFIG = {
+  /** 默认 CORS 代理服务器列表 */
+  DEFAULT_PROXIES: [
+    'https://cors-anywhere.herokuapp.com',
+    'https://api.allorigins.win/raw?url=',
+    'https://cors-proxy.htmldriven.com/?url='
+  ],
+  /** 需要 CORS 代理的域名模式 */
+  CORS_REQUIRED_PATTERNS: [
+    /^http:\/\/localhost(?::\d+)?/,  // 本地服务
+    /^http:\/\/127\.0\.0\.1(?::\d+)?/,  // 本地 IP
+  ]
+};
+
+// ============================================================================
+// 提供商配置
+// ============================================================================
+
+/**
+ * 提供商配置接口
+ */
+export interface ProviderConfig {
+  providerName: string;
+  baseUrl: string;
+  endpoints: {
+    chat: string;
+    models: string;
+  };
+  defaultModel: string;
+  timeout: number;
+  auth: {
+    type: string;
+    [key: string]: any;
+  };
+  request: {
+    type: string;
+    [key: string]: any;
+  };
+  response: {
+    type: string;
+    [key: string]: any;
+  };
+}
+
 /**
  * 提供商配置映射
  * 为每个支持的提供商提供默认配置
+ * 
+ * @description
+ * 包含所有内置提供商的默认配置，包括：
+ * - API 基础 URL
+ * - 默认模型
+ * - 认证方式
+ * - 请求/响应格式
  */
-export const PROVIDER_CONFIG: Record<string, any> = {
+export const PROVIDER_CONFIG: Record<string, ProviderConfig> = {
   [LLMProvider.OPENAI]: {
     providerName: 'OpenAI',
     baseUrl: 'https://api.openai.com/v1',
@@ -98,9 +188,7 @@ export const PROVIDER_CONFIG: Record<string, any> = {
     providerName: 'Gemini',
     baseUrl: 'https://generativelanguage.googleapis.com/v1beta',
     endpoints: {
-      // Gemini 端点会在client.ts中的streamChat中进行转化，把:generateContent替换为:streamGenerateContent
       chat: '/models/{model}:generateContent',
-      // streamChat: '/models/{model}:streamGenerateContent',
       models: '/models'
     },
     defaultModel: 'gemini-2.0-flash',
@@ -198,49 +286,4 @@ export const PROVIDER_CONFIG: Record<string, any> = {
       type: ResponseParseType.OLLAMA
     }
   }
-};
-
-/**
- * 默认超时设置(毫秒)
- */
-export const DEFAULT_TIMEOUT = 120000;
-
-/**
- * 默认温度参数
- */
-export const DEFAULT_TEMPERATURE = 0.7;
-
-/**
- * 重试配置
- */
-export const RETRY_CONFIG = {
-  MAX_RETRIES: 3,
-  RETRY_DELAY: 1000,
-  RETRY_MULTIPLIER: 1.5
-};
-
-/**
- * 内容类型常量
- */
-export const CONTENT_TYPES = {
-  JSON: 'application/json',
-  SSE: 'text/event-stream',
-  TEXT: 'text/plain'
-};
-
-// 添加 CORS 相关常量
-export const CORS_CONFIG = {
-  /** 默认 CORS 代理服务器列表 */
-  DEFAULT_PROXIES: [
-    'https://cors-anywhere.herokuapp.com',
-    'https://api.allorigins.win/raw?url=',
-    'https://cors-proxy.htmldriven.com/?url='
-  ],
-  /** 需要 CORS 代理的域名模式 */
-  CORS_REQUIRED_PATTERNS: [
-    // 添加已知需要 CORS 的域名模式
-    /^http:\/\/localhost(?::\d+)?/,  // 本地服务
-    /^http:\/\/127\.0\.0\.1(?::\d+)?/,  // 本地 IP
-    // 可以添加更多模式
-  ]
 };

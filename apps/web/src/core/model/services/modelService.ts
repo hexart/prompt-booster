@@ -1,6 +1,6 @@
 // apps/web/src/core/model/services/modelService.ts
-import { createClient } from '@prompt-booster/api';
-import {
+import { 
+  createClient,
   ConnectionError,
   AuthenticationError
 } from '@prompt-booster/api';

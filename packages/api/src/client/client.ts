@@ -20,18 +20,22 @@ import {
   CONTENT_TYPES
 } from '../config';
 import {
-  createAuthStrategy,
-  createRequestFormatter,
+  createAuthStrategy
+} from '../strategies/auth';
+import {
+  createRequestFormatter
+} from '../strategies/request';
+import {
   createResponseParser
-} from '../strategies';
+} from '../strategies/response';
 import {
   ConnectionError,
   RequestFormatError,
   ResponseParseError,
   formatError
-} from './errors';
+} from '../errors';
 import { logDebug } from '../utils/apiLogging';
-import { StreamFormat, splitStreamBuffer } from '../utils';
+import { StreamFormat, splitStreamBuffer } from '../utils/stream';
 import { needsCorsProxy, buildProxyUrl, buildCorsHeaders } from '../utils/cors';
 
 /**

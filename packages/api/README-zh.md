@@ -4,7 +4,7 @@
 
 ## 概述
 
-`@prompt-booster/api` 是一个灵活的 TypeScript 客户端库，用于与各种大型语言模型（LLM）服务进行交互。它提供了统一的接口来访问多个 AI 提供商，包括 OpenAI、Google Gemini、DeepSeek、腾讯混元、SiliconFlow 和 Ollama。
+`@prompt-booster/api` 是一个灵活的 TypeScript 客户端库，用于与各种大型语言模型（LLM）服务进行交互。它提供了统一的接口来访问多个 AI 提供商，包括 OpenAI、Google Gemini、Claude、DeepSeek、腾讯混元、SiliconFlow 和 Ollama。
 
 ### 核心特性
 
@@ -12,9 +12,10 @@
 - 📡 **流式响应**：支持实时流式文本生成
 - 🔌 **可扩展设计**：基于策略模式，易于添加新的提供商
 - 🛡️ **完整的错误处理**：分层的错误类型系统
-- 🎯 **TypeScript 支持**：完整的类型定义
+- 🎯 **TypeScript 支持**：完整的类型定义和 JSDoc 注释
 - 🔧 **灵活配置**：支持自定义端点和认证方式
 - 🌐 **CORS 支持**：内置代理支持，适用于浏览器环境
+- 📦 **插件系统**：支持动态注册自定义提供商
 
 ## 安装
 
@@ -108,7 +109,147 @@ const clientWithHeaders = createClient({
 
 详细配置选项和示例请参见 [CORS 配置指南](./docs/CORS-zh.md)。
 
+## 🔌 扩展性功能（新增）
+
+### 提供商注册机制
+
+支持动态注册自定义 LLM 提供商，无需修改包代码：
+
+```typescript
+import { ProviderRegistry, createClient } from '@prompt-booster/api';
+
+// 注册自定义提供商
+ProviderRegistry.register('my-custom-llm', {
+  providerName: 'My Custom LLM',
+  baseUrl: 'https://api.my-llm.com/v1',
+  endpoints: {
+    chat: '/chat/completions',
+    models: '/models'
+  },
+  defaultModel: 'my-model-v1',
+  timeout: 60000,
+  auth: { type: 'bearer' },
+  request: { type: 'openai_compatible' },
+  response: { type: 'openai_compatible' }
+});
+
+// 直接使用
+  const client = createClient({
+  provider: 'my-custom-llm',
+  apiKey: 'your-api-key'
+});
+
+// 覆盖内置提供商配置
+ProviderRegistry.override('openai', {
+  ...ProviderRegistry.get('openai'),
+  baseUrl: 'https://my-proxy.com/openai/v1'
+});
+
+// 列出所有提供商
+const providers = ProviderRegistry.list();
+console.log(providers); // ['openai', 'gemini', 'my-custom-llm', ...]
+```
+
+### 配置验证
+
+提供运行时配置验证，提前发现配置错误：
+
+```typescript
+import { validateClientConfig, validateChatRequest, createClient } from '@prompt-booster/api';
+
+// 验证客户端配置
+try {
+  validateClientConfig(config);
+  const client = createClient(config);
+} catch (error) {
+  console.error('配置无效:', error.message);
+}
+
+// 验证聊天请求
+try {
+  validateChatRequest(request);
+  await client.chat(request);
+} catch (error) {
+  console.error('请求无效:', error.message);
+}
+```
+
+### 自定义策略
+
+所有策略类已导出，支持高级自定义：
+
+```typescript
+import { 
+  CustomAuthStrategy,
+  CustomRequestFormatter,
+  CustomResponseParser,
+  createClient 
+} from '@prompt-booster/api';
+
+// 自定义认证策略
+const client = createClient({
+  provider: 'custom',
+  apiKey: 'xxx',
+  auth: {
+    type: 'custom',
+    applyAuthFn: (config) => {
+      config.headers['X-Custom-Auth'] = `MyScheme ${apiKey}`;
+      return config;
+    }
+  },
+  // 自定义请求格式
+  request: {
+    type: 'custom',
+    formatFn: (request) => ({
+      prompt: request.userMessage,
+      system: request.systemMessage,
+      // 自定义格式...
+    })
+  },
+  // 自定义响应解析
+  response: {
+    type: 'custom',
+    parseStreamFn: (chunk) => chunk.text,
+    parseFullFn: (response) => ({
+      content: response.result,
+      usage: response.tokens
+    })
+  }
+});
+```
+
 ## 架构设计
+
+### 文件结构
+
+```
+packages/api/src/
+├── index.ts          # 统一导出入口
+├── types.ts          # 所有类型定义
+├── config.ts         # 配置常量和提供商配置
+├── errors.ts         # 错误类定义
+├── factory.ts        # 客户端工厂函数
+├── registry.ts       # 提供商注册中心
+├── validators.ts     # 配置验证工具
+├── client/
+│   └── client.ts     # 客户端实现
+├── strategies/       # 策略模式实现
+│   ├── auth.ts       # 认证策略
+│   ├── request.ts    # 请求格式化
+│   └── response.ts   # 响应解析
+└── utils/            # 工具函数
+    ├── cors.ts       # CORS 处理
+    ├── stream.ts     # 流数据处理
+    └── apiLogging.ts # 日志控制
+```
+
+### 设计原则
+
+1. **单一职责**：每个文件只负责一个功能领域
+2. **策略模式**：认证、请求、响应使用可插拔策略
+3. **类型安全**：完整的 TypeScript 类型定义
+4. **可扩展性**：通过 ProviderRegistry 动态注册提供商
+5. **开发友好**：详细的 JSDoc 注释和使用示例
 
 ### 策略模式
 
@@ -131,6 +272,82 @@ API 包采用策略模式设计，将认证、请求格式化和响应解析分�
 3. **RequestFormatter**：格式化请求数据
 4. **ResponseParser**：解析响应数据
 5. **错误处理**：分层的错误类型系统
+
+##  API 导出
+
+### 核心导出
+
+```typescript
+// 客户端
+import { createClient, LLMClient } from '@prompt-booster/api';
+
+// 类型
+import type {
+  ClientConfig,
+  ChatRequest,
+  ChatResponse,
+  StreamHandler
+} from '@prompt-booster/api';
+
+// 配置
+import {
+  LLMProvider,
+  PROVIDER_CONFIG,
+  DEFAULT_TIMEOUT
+} from '@prompt-booster/api';
+
+// 错误处理
+import {
+  LLMClientError,
+  AuthenticationError,
+  ConnectionError,
+  formatError
+} from '@prompt-booster/api';
+```
+
+### 策略导出（自定义使用）
+
+```typescript
+// 认证策略
+import {
+  BearerAuthStrategy,
+  QueryParamAuthStrategy,
+  CustomAuthStrategy
+} from '@prompt-booster/api';
+
+// 请求格式化
+import {
+  OpenAIRequestFormatter,
+  GeminiRequestFormatter,
+  CustomRequestFormatter
+} from '@prompt-booster/api';
+
+// 响应解析
+import {
+  OpenAIResponseParser,
+  GeminiResponseParser,
+  CustomResponseParser
+} from '@prompt-booster/api';
+```
+
+### 工具导出
+
+```typescript
+// 流处理
+import { StreamFormat, splitStreamBuffer } from '@prompt-booster/api';
+
+// CORS 工具
+import { needsCorsProxy, buildProxyUrl } from '@prompt-booster/api';
+
+// 日志控制
+import { enableLogging, disableLogging } from '@prompt-booster/api';
+
+// 提供商注册
+import { ProviderRegistry } from '@prompt-booster/api';
+
+// 配置验证
+import { validateClientConfig, validateChatRequest } from '@prompt-booster/api';
+```
 
 ## 支持的提供商
 
@@ -366,11 +583,16 @@ async testConnection(config: ModelConfig): Promise<boolean> {
 1. **启用日志**
 
 ```typescript
-import { enableApiClientLogs } from '@prompt-booster/api';
+import { enableLogging, disableLogging } from '@prompt-booster/api';
 
-// 开发环境启用日志
+// 在开发环境启用日志
 if (process.env.NODE_ENV === 'development') {
-  enableApiClientLogs();
+  enableLogging();
+}
+
+// 生产环境禁用日志
+if (process.env.NODE_ENV === 'production') {
+  disableLogging();
 }
 ```
 
@@ -390,30 +612,41 @@ if (process.env.NODE_ENV === 'development') {
 
 ## 扩展开发
 
-### 添加新的提供商
+### 注册新提供商（推荐）
 
-1. **在 constants.ts 添加配置**
+使用 `ProviderRegistry` 动态注册，无需修改源码：
 
 ```typescript
-export const PROVIDER_CONFIG = {
-  myProvider: {
-    providerName: 'My Provider',
-    baseUrl: 'https://api.myprovider.com',
-    endpoints: {
-      chat: '/v1/chat',
-      models: '/v1/models'
-    },
-    defaultModel: 'my-model',
-    auth: { type: AuthType.BEARER },
-    request: { type: RequestFormatType.OPENAI_COMPATIBLE },
-    response: { type: ResponseParseType.OPENAI_COMPATIBLE }
-  }
-};
+import { ProviderRegistry, createClient } from '@prompt-booster/api';
+
+ProviderRegistry.register('my-llm', {
+  providerName: 'My LLM',
+  baseUrl: 'https://api.my-llm.com/v1',
+  endpoints: {
+    chat: '/chat/completions',
+    models: '/models'
+  },
+  defaultModel: 'my-model',
+  timeout: 60000,
+  auth: { type: 'bearer' },
+  request: { type: 'openai_compatible' },
+  response: { type: 'openai_compatible' }
+});
+
+// 直接使用
+const client = createClient({
+  provider: 'my-llm',
+  apiKey: 'xxx'
+});
 ```
 
-2. **自定义策略**
+### 自定义策略（高级）
+
+如果需要完全自定义的格式，可以实现策略接口：
 
 ```typescript
+import { RequestFormatter, ResponseParser, ChatRequest, ChatResponse } from '@prompt-booster/api';
+
 // 自定义请求格式化
 class MyProviderRequestFormatter implements RequestFormatter {
   formatRequest(request: ChatRequest): any {
@@ -451,9 +684,64 @@ class MyProviderResponseParser implements ResponseParser {
 
 ## 版本历史
 
-- **1.0.0**：初始版本，支持基础功能
-- **1.1.0**：添加流式响应支持
-- **1.2.0**：优化 URL 构建机制，修复 Gemini 认证问题
+### v2.0.0（重构版本）
+
+**重大改进**：
+
+- 📦 **精简文件结构**
+  - 文件数量从 22 个减少到 13 个（减少 40%）
+  - 删除所有纯导出的 index.ts 文件
+  - 合并 config 和 types 目录为单文件
+  - 目录层级更扁平，导入路径更简洁
+
+- 🔌 **新增扩展功能**
+  - `ProviderRegistry` - 动态注册自定义提供商
+  - `Validators` - 配置和请求验证工具
+  - 导出所有策略类，支持高级自定义
+  - 导出工具函数（CORS、流处理、日志等）
+
+- 📝 **完善文档**
+  - 所有公共 API 都有完整的 JSDoc 注释
+  - 添加详细的使用示例和参数说明
+  - 更新架构设计文档
+
+- ✅ **API 优化**
+  - `setApiLogging(boolean)` → `enableLogging()` / `disableLogging()`
+  - 移除内部调试函数导出（`logDebug`、`isLoggingEnabled`）
+  - 更专业的命名约定
+
+**向后兼容性**：
+- ✅ 完全向后兼容，现有代码无需修改
+- ✅ 所有现有导入都正常工作
+- ⚠️ 建议更新：`setApiLogging(false)` → `disableLogging()`
+
+**迁移指南**：
+
+如果你使用了旧的日志 API，建议更新为：
+
+```typescript
+// v1.x 方式（仍然有效，但不推荐）
+import { setApiLogging } from '@prompt-booster/api';
+setApiLogging(false);
+
+// v2.0 推荐方式
+import { enableLogging, disableLogging } from '@prompt-booster/api';
+disableLogging();
+```
+
+其他所有 API 保持不变，无需修改。
+
+---
+
+### v1.2.0
+- 优化 URL 构建机制
+- 修复 Gemini 认证问题
+
+### v1.1.0
+- 添加流式响应支持
+
+### v1.0.0
+- 初始版本，支持基础功能
 
 ## 许可证
 

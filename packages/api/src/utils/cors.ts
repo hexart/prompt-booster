@@ -1,7 +1,7 @@
 // packages/api/src/utils/cors.ts
-// 新建 CORS 工具文件
+// CORS 工具文件
 import { ClientConfig } from '../types';
-import { CORS_CONFIG } from '../config/constants';
+import { CORS_CONFIG } from '../config';
 
 /**
  * 检查 URL 是否需要 CORS 代理

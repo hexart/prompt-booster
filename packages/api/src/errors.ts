@@ -1,22 +1,38 @@
-// packages/api/src/client/errors.ts
+// packages/api/src/errors.ts
 /**
  * 错误类定义
- * 定义API客户端可能遇到的错误
+ * 定义 API 客户端可能遇到的所有错误类型
  */
 
+// ============================================================================
+// 错误类定义
+// ============================================================================
+
 /**
- * LLM客户端错误基类
+ * LLM 客户端错误基类
  * 所有客户端错误的基类
+ * 
+ * @description
+ * 提供统一的错误接口，包含错误代码和上下文信息。
+ * 所有特定的错误类型都继承自这个基类。
+ * 
+ * @example
+ * try {
+ *   await client.chat({ userMessage: 'Hello' });
+ * } catch (error) {
+ *   if (error instanceof LLMClientError) {
+ *     console.log(error.code);
+ *     console.log(error.context);
+ *   }
+ * }
  */
 export class LLMClientError extends Error {
   /**
-   * @param message 错误消息
-   * @param code 错误代码
-   * @param context 错误上下文信息
-   * @param provider 大模型提供商名称
-   * @param model 模型名称
-   * @param baseUrl 基础URL
-   * @param endpoint 聊天端点
+   * 创建一个 LLM 客户端错误
+   * 
+   * @param message - 错误消息
+   * @param code - 错误代码（可选）
+   * @param context - 错误上下文信息（可选）
    */
   constructor(
     message: string,
@@ -29,17 +45,30 @@ export class LLMClientError extends Error {
     }
   ) {
     super(message);
+    this.name = 'LLMClientError';
   }
 }
 
 /**
  * 连接错误
  * 表示网络连接相关错误
+ * 
+ * @description
+ * 当无法连接到 API 服务器时抛出，可能的原因包括：
+ * - 网络不可达
+ * - DNS 解析失败
+ * - 连接超时
+ * - 服务器无响应
+ * 
+ * @example
+ * throw new ConnectionError('Failed to connect to API server');
  */
 export class ConnectionError extends LLMClientError {
   /**
-   * @param message 错误消息
-   * @param cause 错误原因
+   * 创建一个连接错误
+   * 
+   * @param message - 错误消息
+   * @param cause - 错误原因（可选）
    */
   constructor(message: string, cause?: any) {
     super(message, cause);
@@ -49,12 +78,24 @@ export class ConnectionError extends LLMClientError {
 
 /**
  * 认证错误
- * 表示API认证相关错误
+ * 表示 API 认证相关错误
+ * 
+ * @description
+ * 当 API 认证失败时抛出，可能的原因包括：
+ * - API 密钥无效
+ * - API 密钥已过期
+ * - 没有访问权限
+ * - 认证头格式不正确
+ * 
+ * @example
+ * throw new AuthenticationError('Invalid API key');
  */
 export class AuthenticationError extends LLMClientError {
   /**
-   * @param message 错误消息
-   * @param cause 错误原因
+   * 创建一个认证错误
+   * 
+   * @param message - 错误消息
+   * @param cause - 错误原因（可选）
    */
   constructor(message: string, cause?: any) {
     super(message, cause);
@@ -64,13 +105,24 @@ export class AuthenticationError extends LLMClientError {
 
 /**
  * 配额超限错误
- * 表示API配额或限制相关错误
+ * 表示 API 配额或限制相关错误
+ * 
+ * @description
+ * 当超过 API 使用限制时抛出，可能的原因包括：
+ * - 配额用尽
+ * - 请求速率过快
+ * - 账户余额不足
+ * - 超过并发限制
+ * 
+ * @example
+ * throw new QuotaExceededError('API quota exceeded');
  */
 export class QuotaExceededError extends LLMClientError {
   /**
-   * @param message 错误消息
-   * @param cause 错误原因
-   * @param retryAfter 建议重试时间(秒)
+   * 创建一个配额超限错误
+   * 
+   * @param message - 错误消息
+   * @param cause - 错误原因（可选）
    */
   constructor(message: string, cause?: any) {
     super(message, cause);
@@ -81,11 +133,23 @@ export class QuotaExceededError extends LLMClientError {
 /**
  * 请求格式错误
  * 表示请求格式化相关错误
+ * 
+ * @description
+ * 当请求参数不正确时抛出，可能的原因包括：
+ * - 缺少必需参数
+ * - 参数类型不正确
+ * - 参数值超出范围
+ * - 请求体格式不正确
+ * 
+ * @example
+ * throw new RequestFormatError('Invalid temperature value');
  */
 export class RequestFormatError extends LLMClientError {
   /**
-   * @param message 错误消息
-   * @param cause 错误原因
+   * 创建一个请求格式错误
+   * 
+   * @param message - 错误消息
+   * @param cause - 错误原因（可选）
    */
   constructor(message: string, cause?: any) {
     super(message, cause);
@@ -96,11 +160,23 @@ export class RequestFormatError extends LLMClientError {
 /**
  * 响应解析错误
  * 表示响应解析相关错误
+ * 
+ * @description
+ * 当无法解析 API 响应时抛出，可能的原因包括：
+ * - 响应格式不符合预期
+ * - JSON 解析失败
+ * - 缺少必需字段
+ * - 数据类型不匹配
+ * 
+ * @example
+ * throw new ResponseParseError('Failed to parse response data');
  */
 export class ResponseParseError extends LLMClientError {
   /**
-   * @param message 错误消息
-   * @param cause 错误原因
+   * 创建一个响应解析错误
+   * 
+   * @param message - 错误消息
+   * @param cause - 错误原因（可选）
    */
   constructor(message: string, cause?: any) {
     super(message, cause);
@@ -108,11 +184,26 @@ export class ResponseParseError extends LLMClientError {
   }
 }
 
+// ============================================================================
+// 错误处理工具
+// ============================================================================
 
 /**
  * 格式化错误信息
- * @param error 错误对象
- * @returns 格式化后的错误信息
+ * 
+ * @description
+ * 将各种错误转换为统一的 LLMClientError 类型。
+ * 根据 HTTP 状态码和错误消息内容自动判断错误类型。
+ * 
+ * @param error - 原始错误对象
+ * @returns 格式化后的 LLMClientError
+ * 
+ * @example
+ * try {
+ *   await fetch(url);
+ * } catch (err) {
+ *   throw formatError(err);
+ * }
  */
 export function formatError(error: any): LLMClientError {
   // 1. 如果已经是 LLMClientError，直接返回
@@ -172,6 +263,7 @@ export function formatError(error: any): LLMClientError {
 
     case 404:
       return new ConnectionError(originalMessage, error);
+    
     case 429:
       return new QuotaExceededError(originalMessage, error);
 

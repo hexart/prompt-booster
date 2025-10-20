@@ -4,8 +4,10 @@
  * 用于创建LLM客户端实例
  */
 import { LLMClient, ClientConfig } from './types';
-import { LLMClientImpl } from './client';
-import { DEFAULT_TIMEOUT, PROVIDER_CONFIG } from './config';
+import { LLMClientImpl } from './client/client';
+import { DEFAULT_TIMEOUT } from './config';
+import { ProviderRegistry } from './registry';
+import { validateClientConfig } from './validators';
 
 /**
  * 创建LLM客户端
@@ -22,18 +24,21 @@ export function createClient(config: ClientConfig | {
   timeout?: number;
   endpoints?: Partial<ClientConfig['endpoints']>;
 }): LLMClient {
+  // 验证配置
+  validateClientConfig(config);
+
   // 标准化 provider
   const provider = config.provider.toLowerCase();
 
-  // 获取提供商默认配置
-  const providerConfig = PROVIDER_CONFIG[provider] || {};
+  // 获取提供商默认配置（支持自定义提供商）
+  const providerConfig = ProviderRegistry.get(provider);
 
   // 确定最终的模型名称
-  const finalModel = config.model || providerConfig.defaultModel;
+  const finalModel = config.model || providerConfig?.defaultModel || '';
 
   // 处理端点占位符替换
   const chatEndpoint = replaceEndpointPlaceholders(
-    config.endpoints?.chat || providerConfig.endpoints?.chat,
+    config.endpoints?.chat || providerConfig?.endpoints?.chat || '/chat/completions',
     finalModel,
     provider
   );
@@ -42,17 +47,18 @@ export function createClient(config: ClientConfig | {
   const finalConfig: ClientConfig = {
     provider,
     apiKey: config.apiKey,
-    baseUrl: config.baseUrl || providerConfig.baseUrl,
+    baseUrl: config.baseUrl || providerConfig?.baseUrl || '',
     model: finalModel,
-    timeout: config.timeout || providerConfig.timeout || DEFAULT_TIMEOUT,
+    timeout: config.timeout || providerConfig?.timeout || DEFAULT_TIMEOUT,
     endpoints: {
       chat: chatEndpoint,
-      models: config.endpoints?.models || providerConfig.endpoints?.models
+      models: config.endpoints?.models || providerConfig?.endpoints?.models || '/models'
     },
     // 如果config中没有这些字段，使用providerConfig中的
-    auth: (config as ClientConfig).auth || providerConfig.auth,
-    request: (config as ClientConfig).request || providerConfig.request,
-    response: (config as ClientConfig).response || providerConfig.response
+    auth: (config as ClientConfig).auth || providerConfig?.auth,
+    request: (config as ClientConfig).request || providerConfig?.request,
+    response: (config as ClientConfig).response || providerConfig?.response,
+    cors: (config as ClientConfig).cors
   };
 
   return new LLMClientImpl(finalConfig);

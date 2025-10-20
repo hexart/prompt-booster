@@ -12,10 +12,10 @@ import { useTranslation } from 'react-i18next';
 import { setDirectionByLanguage, getButtonPosition } from './rtl';
 import { Tooltip } from '~/components/ui/components/Tooltip';
 import { motion, AnimatePresence } from 'framer-motion';
-import { setApiLogging } from '@prompt-booster/api/utils/apiLogging';
+import { disableLogging } from '@prompt-booster/api';
 
 // 在应用初始化时禁用 API 客户端日志
-setApiLogging(false);
+disableLogging();
 
 // 声明全局变量类型
 declare global {
