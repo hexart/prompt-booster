@@ -13,12 +13,11 @@
 
 ## 安装
 
-该组件包含在 `@prompt-booster/ui` 包中，确保项目中已安装该依赖：
+该组件位于 `apps/web/src/components/ui` 目录中：
 
 ```bash
-npm install @prompt-booster/ui
-# 或
-yarn add @prompt-booster/ui
+# 项目内部直接使用，无需单独安装
+import { Dialog } from '~/components/ui';
 ```
 
 ## 基本用法
@@ -26,14 +25,14 @@ yarn add @prompt-booster/ui
 ### 导入
 
 ```typescript
-import { Dialog } from '@prompt-booster/ui';
+import { Dialog } from '~/components/ui';
 ```
 
 ### 最简单的示例
 
 ```tsx
 import React, { useState } from 'react';
-import { Dialog } from '@prompt-booster/ui';
+import { Dialog } from '~/components/ui';
 
 const SimpleDialog: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -58,7 +57,7 @@ const SimpleDialog: React.FC = () => {
 
 ```tsx
 import React, { useState } from 'react';
-import { Dialog } from '@prompt-booster/ui';
+import { Dialog } from '~/components/ui';
 
 const DialogWithFooter: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -136,7 +135,7 @@ const DialogWithFooter: React.FC = () => {
 
 ```tsx
 import React, { useContext } from 'react';
-import { Dialog, DialogContext } from '@prompt-booster/ui';
+import { Dialog, DialogContext } from '~/components/ui';
 
 const DialogWithScrollToElement: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -186,7 +185,7 @@ const DialogContent: React.FC = () => {
 
 ```tsx
 import React, { useState } from 'react';
-import { Dialog } from '@prompt-booster/ui';
+import { Dialog } from '~/components/ui';
 
 interface FormData {
   name: string;
@@ -261,7 +260,8 @@ const FormDialog: React.FC = () => {
 
 ```tsx
 import React from 'react';
-import { Dialog, useModal } from '@prompt-booster/ui';
+import { Dialog } from '~/components/ui';
+import { useModal } from '~/hooks';
 
 interface UserData {
   id: string;

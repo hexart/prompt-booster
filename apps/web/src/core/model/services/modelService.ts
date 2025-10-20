@@ -1,4 +1,4 @@
-// packages/core/src/model/services/modelService.ts
+// apps/web/src/core/model/services/modelService.ts
 import { createClient } from '@prompt-booster/api';
 import {
   ConnectionError,

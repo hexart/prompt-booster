@@ -11,7 +11,7 @@ import {
   formatModelServiceError
 } from '~/core/model/services/modelService';
 import { Dialog, ModelSelector, toast, AnimatedButton } from './ui';
-import { useModelForm } from '../hooks/model-hooks';
+import { useModelForm } from '~/hooks';
 import { EyeIcon, EyeClosedIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { formatModelDisplayName } from '../utils/displayUtils';

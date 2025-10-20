@@ -1,4 +1,4 @@
-// packages/ui/src/components/Toaster.tsx
+// apps/web/src/components/ui/components/Toaster.tsx
 import { Toaster as SonnerToaster } from 'sonner';
 import { useTheme } from './ThemeContext';
 

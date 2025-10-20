@@ -32,12 +32,13 @@ Prompt Booster is a React-based web application specifically designed to optimiz
 
 ### 2.2 Project Structure
 
-The project adopts a Monorepo architecture, mainly consisting of the following modules:
+The project adopts a streamlined Monorepo architecture, mainly consisting of the following modules:
 
-- **apps/web**: Web client application
-- **packages/core**: Core business logic
+- **apps/web**: Web client application (includes core business logic and UI components)
+  - `src/core/`: Core business logic (prompt management, model configuration, state management)
+  - `src/components/ui/`: Reusable UI components
+  - `src/hooks/`: Application-level React Hooks
 - **packages/api**: API client and connection logic
-- **packages/ui**: Reusable UI component library
 
 ## 3. Application Features in Detail
 

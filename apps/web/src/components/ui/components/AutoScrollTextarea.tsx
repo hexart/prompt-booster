@@ -1,4 +1,4 @@
-// packages/ui/src/components/AutoScrollTextarea.tsx
+// apps/web/src/components/ui/components/AutoScrollTextarea.tsx
 import React, { TextareaHTMLAttributes, useState, useEffect, useRef } from 'react';
 import { useAutoScroll } from '../hooks/useAutoscroll';
 import { ArrowDownIcon } from 'lucide-react';

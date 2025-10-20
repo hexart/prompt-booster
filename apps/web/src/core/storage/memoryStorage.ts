@@ -1,4 +1,4 @@
-// packages/core/src/storage/memoryStorage.ts
+// apps/web/src/core/storage/memoryStorage.ts
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { createStorage, StorageType } from './storageService';

@@ -1,7 +1,7 @@
 /**
  * 7. utils/id-generator.ts - ID生成工具
  */
-// packages/core/src/utils/id-generator.ts
+// apps/web/src/core/utils/idGenerator.ts
 import { v4 as uuidv4 } from 'uuid';
 
 /**

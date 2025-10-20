@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { toast, AutoScrollContent, EnhancedDropdown, DraggableNotice, EnhancedTextarea, AnimatedButton } from './ui';
-import { useModelData } from '../hooks/model-hooks';
+import { useModelData } from '~/hooks';
 import { cleanOptimizedPrompt, getLanguageInstruction } from '~/core/prompt/utils/promptUtils';
-import { usePrompt } from '~/core/prompt/hooks/usePrompt';
+import { usePromptManager } from '~/hooks';
 import { useMemoryStore } from '~/core/storage/memoryStorage';
 import { llmService } from '~/core/prompt/services/llmService';
 import { Tooltip } from './ui/components/Tooltip';
@@ -14,7 +14,7 @@ import { isRTL, getButtonPosition } from '../rtl';
 
 export const TestResult: React.FC = () => {
   const { t, i18n } = useTranslation();
-  const { originalPrompt, optimizedPrompt, isProcessing } = usePrompt();
+  const { originalPrompt, optimizedPrompt, isProcessing } = usePromptManager();
   // 使用memoryStore获取所有需要的状态
   const {
     userTestPrompt,

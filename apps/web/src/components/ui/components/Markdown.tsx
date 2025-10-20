@@ -1,4 +1,4 @@
-// packages/ui/src/components/Markdown.tsx
+// apps/web/src/components/ui/components/Markdown.tsx
 import React, { useMemo, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';

@@ -5,9 +5,9 @@ import { type StandardModelType } from '~/core/model/models/config';
 import { useModelStore } from '~/core/model/store/modelStore';
 import { Dialog, ListCard, toast, AnimatedButton } from '~/components/ui';
 import LoadingIcon from '~/components/ui/components/LoadingIcon';
-import { useModal } from '~/components/ui/hooks/useModal';
+import { useModal } from '~/hooks';
 import { CogIcon, Grid2X2PlusIcon, Power, CableIcon, FileCog, Trash2 } from 'lucide-react';
-import { useModelConnection, useModelData, useModelEdit } from '../hooks/model-hooks';
+import { useModelConnection, useModelData, useModelEditor } from '~/hooks';
 import { ModelModal } from './ModelModal';
 import { Tooltip } from '~/components/ui/components/Tooltip';
 import { useTranslation } from 'react-i18next';
@@ -75,7 +75,7 @@ export const ModelSettings: React.FC = () => {
   // 使用自定义钩子
   const { testConnection, isTestingConnection } = useModelConnection();
   const { allModels, toggleModelStatus, deleteModel, setActiveModel } = useModelData();
-  const { saveModel } = useModelEdit();
+  const { saveModel } = useModelEditor();
 
   // 模态窗口状态
   const modalState = useModal<{

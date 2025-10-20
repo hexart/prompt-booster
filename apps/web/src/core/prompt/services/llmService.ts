@@ -1,4 +1,4 @@
-// packages/core/src/prompt/services/llmService.ts
+// apps/web/src/core/prompt/services/llmService.ts
 /**
  * LLM服务
  * 统一处理所有LLM调用

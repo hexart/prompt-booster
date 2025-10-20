@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, AnimatedButton } from './ui/components';
 import { EnhancedDropdown } from './ui/components/EnhancedDropdown';
-import { useTemplates } from '~/core/prompt/hooks/useTemplates';
+import { usePromptTemplates } from '~/hooks';
 import { useTranslation } from 'react-i18next';
 
 interface IterationDialogProps {
@@ -17,7 +17,7 @@ export const IterationDialog: React.FC<IterationDialogProps> = ({
   onSubmit,
 }) => {
   const { t } = useTranslation();
-  const { getTemplateOptionsByType } = useTemplates();
+  const { getTemplateOptionsByType } = usePromptTemplates();
 
   const [selectedTemplateId, setSelectedTemplateId] = useState('');
   const [iterationDirection, setIterationDirection] = useState('');

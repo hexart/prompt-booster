@@ -1,4 +1,4 @@
-// packages/ui/src/components/Dialog.tsx
+// apps/web/src/components/ui/components/Dialog.tsx
 import React, { useEffect, useRef, useState } from 'react';
 import { XIcon } from 'lucide-react';
 import { createPortal } from 'react-dom';

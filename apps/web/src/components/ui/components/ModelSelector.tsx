@@ -1,4 +1,4 @@
-// packages/ui/src/components/ModelSelectorNew.tsx
+// apps/web/src/components/ui/components/ModelSelector.tsx
 import React, { useState, useEffect, useRef, useContext, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from '../index';

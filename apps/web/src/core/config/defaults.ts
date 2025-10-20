@@ -1,4 +1,4 @@
-// packages/core/src/config/defaults.ts
+// apps/web/src/core/config/defaults.ts
 /**
  * 默认配置
  */

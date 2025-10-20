@@ -1,11 +1,11 @@
-// packages/core/src/prompt/hooks/useTemplates.ts
+// apps/web/src/hooks/usePromptTemplates.ts
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getAllTemplatesAsRecord } from '../services/templateService';
-import { Template } from '../models/template';
-import { handleTemplateLocalization } from '../utils/promptUtils';
+import { getAllTemplatesAsRecord } from '~/core/prompt/services/templateService';
+import { Template } from '~/core/prompt/models/template';
+import { handleTemplateLocalization } from '~/core/prompt/utils/promptUtils';
 
-export const useTemplates = () => {
+export const usePromptTemplates = () => {
   const { t, i18n } = useTranslation();
   
   // 基础状态
@@ -68,7 +68,7 @@ export const useTemplates = () => {
     };
 
     loadTemplates();
-  }, [i18n.language, isI18nReady, t]); // 添加isI18nReady到依赖
+  }, [i18n.language, isI18nReady, t]);
 
   // 获取实际模板ID的函数（现在是纯函数，不存储在状态中）
   const getActualTemplateId = useCallback((displayId: string): string => {

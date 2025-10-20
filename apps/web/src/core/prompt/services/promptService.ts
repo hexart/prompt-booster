@@ -1,4 +1,4 @@
-// packages/core/src/prompt/services/promptService.ts
+// apps/web/src/core/prompt/services/promptService.ts
 /**
  * 提示词服务
  * 管理提示词组的创建、版本控制和优化操作
@@ -293,7 +293,12 @@ export class PromptService {
       const currentCleanedPrompt = removeThinkTags(currentVersion.optimizedPrompt);
 
       // 构建迭代消息
-      const iterationMessage = `当前优化后的提示词:\n\n${currentCleanedPrompt}\n\n迭代方向:\n${direction}`;
+      const iterationMessage = `当前优化后的提示词:
+
+${currentCleanedPrompt}
+
+迭代方向:
+${direction}`;
 
       // 添加语言指令
       const languageInstruction = getLanguageInstruction(language);

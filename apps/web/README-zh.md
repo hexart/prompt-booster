@@ -40,12 +40,13 @@
 
 ### 2.2 项目结构
 
-项目采用Monorepo架构，主要包含以下几个模块：
+项目采用精简的 Monorepo 架构，主要包含以下几个模块：
 
-- **apps/web**：Web客户端应用
-- **packages/core**：核心业务逻辑
-- **packages/api**：API客户端和连接逻辑
-- **packages/ui**：可复用UI组件库
+- **apps/web**：Web 客户端应用（包含核心业务逻辑和 UI 组件）
+  - `src/core/`：核心业务逻辑（提示词管理、模型配置、状态管理）
+  - `src/components/ui/`：可复用 UI 组件
+  - `src/hooks/`：应用层 React Hooks
+- **packages/api**：API 客户端和连接逻辑
 
 ## 3. 应用功能详解
 

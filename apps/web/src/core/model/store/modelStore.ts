@@ -1,4 +1,4 @@
-// packages/core/src/model/store/modelStore.ts - 模型配置存储
+// apps/web/src/core/model/store/modelStore.ts - 模型配置存储
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { StandardModelType, ModelConfig, CustomInterface } from '../models/config';

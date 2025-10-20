@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion } from 'framer-motion';
 import { promptService } from "~/core/prompt/services/promptService";
-import { useTemplates } from "~/core/prompt/hooks/useTemplates";
+import { usePromptTemplates } from "~/hooks";
 import {
   analyzePromptWithLLM,
   PromptAnalysisResult,
@@ -30,8 +30,8 @@ import {
 import { AnalysisDrawer } from "./AnalysisDrawer";
 import { Tooltip } from "./ui/components/Tooltip";
 import { IterationDialog } from "./IterationDialog";
-import { usePrompt } from "~/core/prompt/hooks/usePrompt";
-import { useModelData } from '../hooks/model-hooks';
+import { usePromptManager } from "~/hooks";
+import { useModelData } from '~/hooks';
 import { PromptVersion } from "~/core/prompt/models/prompt";
 import { useTranslation } from "react-i18next";
 import { PROMPT_PENDING_MARKER } from '~/core/prompt/services/promptGroupManager';
@@ -47,7 +47,7 @@ export const PromptBooster: React.FC = () => {
     getActualTemplateId,
     getOptimizeTemplateOptions,
     hasTemplates
-  } = useTemplates();
+  } = usePromptTemplates();
 
   // 使用提示词组钩子
   const {
@@ -61,7 +61,7 @@ export const PromptBooster: React.FC = () => {
     resetSession,
     originalPrompt,
     optimizedPrompt,
-  } = usePrompt();
+  } = usePromptManager();
 
   // 只保留用于编辑的本地状态
   const [localOriginalPrompt, setLocalOriginalPrompt] = useState("");

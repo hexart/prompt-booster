@@ -1,4 +1,4 @@
-// packages/core/src/prompt/services/promptGroupManager.ts
+// apps/web/src/core/prompt/services/promptGroupManager.ts
 /**
  * 提示词组管理器
  * 专门负责提示词组的CRUD操作

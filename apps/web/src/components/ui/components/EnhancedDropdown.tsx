@@ -1,4 +1,4 @@
-//packages/ui/src/components/EnhancedDropdown.tsx
+// apps/web/src/components/ui/components/EnhancedDropdown.tsx
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';

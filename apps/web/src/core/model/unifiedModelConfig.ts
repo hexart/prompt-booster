@@ -1,4 +1,4 @@
-// packages/core/src/model/unifiedModelConfig.ts
+// apps/web/src/core/model/unifiedModelConfig.ts
 import { PROVIDER_CONFIG, LLMProvider } from '@prompt-booster/api';
 import { StandardModelType } from './models/config';
 

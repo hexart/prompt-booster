@@ -1,4 +1,4 @@
-// packages/ui/src/components/MarkdownThink.tsx
+// apps/web/src/components/ui/components/MarkdownThink.tsx
 import { useTranslation } from 'react-i18next';
 
 /**

@@ -1,7 +1,4 @@
-// packages/core/src/prompt/index.ts
-// 导出提示词相关hooks
-export * from './hooks'
-
+// apps/web/src/core/prompt/index.ts
 // 导出提示词相关服务
 export * from './services'
 

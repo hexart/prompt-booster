@@ -7,7 +7,6 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/web/package.json ./apps/web/
 COPY packages/api/package.json ./packages/api/
-COPY packages/core/package.json ./packages/core/
 
 # Install pnpm using corepack (more secure than npm global install)
 RUN corepack enable && corepack prepare pnpm@latest --activate

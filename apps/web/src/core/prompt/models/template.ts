@@ -1,4 +1,4 @@
-// packages/core/src/models/template.ts
+// apps/web/src/core/prompt/models/template.ts
 /**
  * 模板类型枚举
  */

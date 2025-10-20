@@ -1,4 +1,4 @@
-// packages/core/src/config/constants.ts
+// apps/web/src/core/config/constants.ts
 
 /**
  * 本地存储键名常量

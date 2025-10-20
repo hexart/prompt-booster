@@ -1,4 +1,4 @@
-// packages/core/src/prompt/utils/promptUtils.ts
+// apps/web/src/core/prompt/utils/promptUtils.ts
 import { llmService } from '../services/llmService';
 import { getAllTemplatesAsRecord } from '../services/templateService';
 import { Template } from '../models/template';

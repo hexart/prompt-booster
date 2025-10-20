@@ -1,4 +1,4 @@
-// packages/ui/src/components/index.ts
+// apps/web/src/components/ui/components/index.ts
 export * from './ActionButtons';
 export * from './AnimatedButton';
 export * from './AutoScrollContent';

@@ -1,4 +1,4 @@
-// packages/ui/src/components/LanguageSwitcher.tsx
+// apps/web/src/components/ui/components/LanguageSwitcher.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';

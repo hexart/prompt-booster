@@ -1,4 +1,4 @@
-// packages/ui/src/components/AutoScrollContent.tsx
+// apps/web/src/components/ui/components/AutoScrollContent.tsx
 import React, { useEffect, useState, useRef, CSSProperties } from 'react';
 import { useAutoScroll } from '../hooks/useAutoscroll';
 import { ArrowDownIcon } from 'lucide-react';

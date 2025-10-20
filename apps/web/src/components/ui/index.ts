@@ -1,4 +1,4 @@
-// packages/ui/src/index.ts
+// apps/web/src/components/ui/index.ts
 export * from './hooks'
 export * from './components'
 export { Toaster } from './components/Toaster';

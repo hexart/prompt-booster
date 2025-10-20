@@ -1,4 +1,4 @@
-// packages/ui/src/hooks/useModal.ts
+// apps/web/src/components/ui/hooks/useModal.ts
 import { useState, useCallback } from 'react';
 
 /**

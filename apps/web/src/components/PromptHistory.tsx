@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Dialog } from './ui/components/Dialog';
-import { usePrompt } from '~/core/prompt/hooks/usePrompt';
+import { usePromptManager } from '~/hooks';
 import { PromptGroup } from '~/core/prompt/models/prompt';
 import { Tooltip, ActionButtons, AnimatedButton } from './ui/components';
 import { GalleryVerticalEndIcon, Trash2Icon, ChevronsDownIcon, ChevronsUpIcon, ZapIcon, ClockIcon } from 'lucide-react';
@@ -32,7 +32,7 @@ export const PromptHistory: React.FC<PromptHistoryProps> = ({ onNavigateToEditor
     getGroupVersions,
     deleteGroup,
     loadFromHistory
-  } = usePrompt();
+  } = usePromptManager();
 
   // 状态管理
   const [expandedGroupId, setExpandedGroupId] = useState<string | null>(null);

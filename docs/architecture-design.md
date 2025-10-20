@@ -13,17 +13,13 @@ The Prompt Booster application follows a monorepo architecture to maximize code 
 ```
 prompt-booster/
 ├── packages/                # Shared cross-platform code
-│   ├── core/                # Core business logic and state management
-│   ├── api/                 # API client implementations for LLM providers
-│   ├── ui/                  # Shared UI components
-│   └── utils/               # Common utilities
+│   └── api/                 # API client implementations for LLM providers
 ├── apps/                    # Platform-specific implementations
-│   ├── web/                 # Web application
-│   ├── desktop/             # Electron desktop application
-│   ├── mobile/              # React Native mobile app (planned)
-│   └── wechat/              # WeChat mini-program (planned)
-├── configs/                 # Shared configuration
-└── tools/                   # Development tools
+│   ├── web/                 # Web application (includes core business logic)
+│   │   └── src/core/        # Core business logic and state management
+│   └── desktop/             # Electron desktop application
+├── backend/                 # FastAPI backend service (planned)
+└── docker/                  # Docker configuration
 ```
 
 ### 2.2 Core Technology Stack
@@ -38,9 +34,9 @@ prompt-booster/
 
 ## 3. Package Structure and Responsibilities
 
-### 3.1 Core Package (`packages/core`)
+### 3.1 Core Module (`apps/web/src/core`)
 
-The Core package serves as the foundation of the application, containing business logic, state management, and data models that are platform-agnostic.
+The Core module is integrated directly into the web application, containing business logic, state management, and data models. This architecture simplifies dependencies and resolves i18n instance sharing issues in production builds.
 
 #### Key Components:
 
@@ -52,29 +48,29 @@ The Core package serves as the foundation of the application, containing busines
 #### Directory Structure:
 
 ```
-packages/core/
-├── src/
-│   ├── config/                # Configuration
-│   │   ├── constants.ts       # Application constants
-│   │   └── defaults.ts        # Default configurations
-│   ├── model/                 # Model definitions and services
-│   │   ├── models/            # Type definitions
-│   │   ├── services/          # Model-related services
-│   │   └── store/             # Model state management
-│   ├── prompt/                # Prompt management
-│   │   ├── hooks/             # React hooks for prompt functionality
-│   │   ├── models/            # Prompt data structures
-│   │   ├── services/          # Prompt-related services
-│   │   ├── provider/          # Template providers
-│   │   ├── templates/         # Built-in templates
-│   │   └── utils/             # Prompt utilities
-│   ├── storage/               # Storage abstractions
-│   │   ├── memoryStorage.ts   # In-memory storage
-│   │   └── storageService.ts  # Storage service interfaces
-│   └── utils/                 # Utility functions
-│       └── idGenerator.ts     # ID generation utilities
-└── index.ts                   # Package exports
+apps/web/src/core/
+├── config/                    # Configuration
+│   ├── constants.ts           # Application constants
+│   └── defaults.ts            # Default configurations
+├── model/                     # Model definitions and services
+│   ├── models/                # Type definitions
+│   ├── services/              # Model-related services
+│   └── store/                 # Model state management
+├── prompt/                    # Prompt management
+│   ├── models/                # Prompt data structures
+│   ├── services/              # Prompt-related services
+│   ├── provider/              # Template providers
+│   ├── templates/             # Built-in templates
+│   └── utils/                 # Prompt utilities
+├── storage/                   # Storage abstractions
+│   ├── memoryStorage.ts       # In-memory storage
+│   └── storageService.ts      # Storage service interfaces
+├── utils/                     # Utility functions
+│   └── idGenerator.ts         # ID generation utilities
+└── index.ts                   # Module exports
 ```
+
+**Note**: React Hooks have been moved to `apps/web/src/hooks/` to separate UI concerns from pure business logic. See [Hooks Architecture](./hooks-architecture.md) for details.
 
 ### 3.2 API Package (`packages/api`)
 
@@ -115,57 +111,9 @@ packages/api/
 └── package.json              # Package dependencies
 ```
 
-### 3.3 UI Package (`packages/ui`)
 
-The UI package contains shared components that can be used across different platforms, providing a consistent user experience.
 
-#### Key Components:
 
-- **Components**: Reusable UI elements
-- **Themes**: Design system
-- **Hooks**: UI-related React hooks
-
-#### Directory Structure:
-
-```
-packages/ui/
-├── src/
-│   ├── components/           # Shared UI components
-│   │   ├── buttons/          # Button components
-│   │   ├── layout/           # Layout components
-│   │   ├── editor/           # Editor components
-│   │   └── comparison/       # Comparison components
-│   ├── hooks/                # React hooks
-│   ├── themes/               # Theme definitions
-│   ├── types/                # UI type definitions
-│   └── index.ts              # Package exports
-├── tailwind.config.js        # Tailwind configuration
-└── package.json              # Package dependencies
-```
-
-### 3.4 Utils Package (`packages/utils`)
-
-The Utils package provides common utility functions used across all packages and applications.
-
-#### Key Components:
-
-- **Formatting**: Text and data formatting
-- **Validation**: Input validation
-- **Platform**: Platform detection
-- **Encryption**: Data security
-
-#### Directory Structure:
-
-```
-packages/utils/
-├── src/
-│   ├── formatting/           # Text formatting utilities
-│   ├── validation/           # Validation utilities
-│   ├── platform/             # Platform utilities
-│   ├── encryption/           # Encryption utilities
-│   └── index.ts              # Package exports
-└── package.json              # Package dependencies
-```
 
 ## 4. Application Architecture
 
@@ -185,17 +133,31 @@ The web application provides a browser-based interface to the Prompt Booster fun
 ```
 apps/web/
 ├── src/
-│   ├── pages/                # Application pages
-│   ├── components/           # Web-specific components
-│   ├── hooks/                # Web-specific hooks
-│   ├── context/              # Context providers
-│   ├── routes/               # Routing configuration
-│   ├── config/               # Web-specific configuration
+│   ├── core/                 # Core business logic (integrated)
+│   ├── components/           # UI components
+│   │   └── ui/               # Reusable UI components
+│   │       ├── components/   # UI component implementations
+│   │       ├── hooks/        # UI utility hooks (useAutoScroll, useModal)
+│   │       └── docs/         # Component documentation
+│   ├── hooks/                # Application-level hooks
+│   │   ├── usePromptManager.ts      # Prompt management
+│   │   ├── usePromptTemplates.ts    # Template management
+│   │   ├── useModelConnection.ts    # Model connection testing
+│   │   ├── useModelEditor.ts        # Model editing
+│   │   ├── useModelData.ts          # Model data management
+│   │   ├── useModelForm.ts          # Model form state
+│   │   └── index.ts                 # Unified exports
+│   ├── utils/                # Utility functions
 │   ├── App.tsx               # Main application component
-│   └── index.tsx             # Entry point
+│   ├── main.tsx              # Entry point
+│   └── i18n.ts               # Internationalization setup
+├── public/
+│   └── locales/              # Translation files
 ├── vite.config.ts            # Vite configuration
 └── package.json              # Package dependencies
 ```
+
+For detailed information about the hooks architecture, see [Hooks Architecture](./hooks-architecture.md).
 
 ### 4.2 Desktop Application (`apps/desktop`)
 
@@ -342,7 +304,7 @@ The system provides a flexible storage mechanism that can adapt to different pla
 
 ### 7.1 Phase 1: Core Foundation (1-2 weeks)
 
-- Implement the core package
+- Implement the core module in web application
 - Develop the basic API client framework
 - Create essential UI components
 - Set up the state management system

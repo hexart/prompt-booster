@@ -4,7 +4,6 @@ export default {
     content: [
         "./index.html",
         "./src/**/*.{js,ts,jsx,tsx}",
-        "../../packages/ui/src/**/*.{js,ts,jsx,tsx}",
     ],
     // 同时支持dark类和data-theme属性
     darkMode: 'class',

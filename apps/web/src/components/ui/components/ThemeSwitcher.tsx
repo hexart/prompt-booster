@@ -1,4 +1,4 @@
-// packages/ui/src/components/ThemeSwitcher.tsx
+// apps/web/src/components/ui/components/ThemeSwitcher.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from './ThemeContext';

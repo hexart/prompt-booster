@@ -1,10 +1,10 @@
 // apps/web/src/components/RefreshDetector.tsx
 import React, { useEffect } from 'react';
 import { useMemoryStore } from '~/core/storage/memoryStorage';
-import { usePrompt } from '~/core/prompt/hooks/usePrompt';
+import { usePromptManager } from '~/hooks';
 // import { toast } from '~/components/ui';
 export const RefreshDetector: React.FC = () => {
-  const { resetSession } = usePrompt();
+  const { resetSession } = usePromptManager();
 
   useEffect(() => {
     // 使用sessionStorage实现更可靠的刷新检测

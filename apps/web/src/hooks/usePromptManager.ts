@@ -1,21 +1,21 @@
-// packages/core/src/prompt/hooks/usePrompt.ts
+// apps/web/src/hooks/usePromptManager.ts
 
 /**
  * 提示词管理Hook
  * 提供对提示词服务的React集成
  */
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { promptService } from '../services/promptService';
-import { useMemoryStore } from '../../storage/memoryStorage';
+import { promptService } from '~/core/prompt/services/promptService';
+import { useMemoryStore } from '~/core/storage/memoryStorage';
 import { 
   PromptGroup, 
   PromptVersion,
   EnhancePromptParams,
   IteratePromptParams 
-} from '../models/prompt';
-import { ErrorType } from '../../model/models/config';
+} from '~/core/prompt/models/prompt';
+import { ErrorType } from '~/core/model/models/config';
 
-export interface UsePromptResult {
+export interface UsePromptManagerResult {
   // 状态
   activeGroup: PromptGroup | null;
   activeVersion: PromptVersion | null;
@@ -26,12 +26,12 @@ export interface UsePromptResult {
   // 组操作
   groups: PromptGroup[];
   deleteGroup: (groupId: string) => void;
-  selectGroup: (groupId: string) => void;  // 添加这个方法
+  selectGroup: (groupId: string) => void;
   
   // 版本操作
   versions: PromptVersion[];
   switchVersion: (groupId: string, versionNumber: number) => void;
-  selectVersion: (versionNumber: number) => void;  // 添加这个方法
+  selectVersion: (versionNumber: number) => void;
   
   // 增强操作
   enhancePrompt: (params: EnhancePromptParams) => Promise<void>;
@@ -52,7 +52,7 @@ export interface UsePromptResult {
   getGroupVersions: (groupId: string) => PromptVersion[];
 }
 
-export function usePrompt(): UsePromptResult {
+export function usePromptManager(): UsePromptManagerResult {
   const [state, setState] = useState(promptService.getState());
 
   // 订阅状态变化
@@ -101,7 +101,6 @@ export function usePrompt(): UsePromptResult {
       await promptService.enhancePrompt(params);
     } catch (error) {
       console.error('Enhance prompt failed:', error);
-      // throw error;
     }
   }, []);
 
@@ -111,7 +110,6 @@ export function usePrompt(): UsePromptResult {
       await promptService.iteratePrompt(params);
     } catch (error) {
       console.error('Iterate prompt failed:', error);
-      // throw error;
     }
   }, []);
 
@@ -142,12 +140,12 @@ export function usePrompt(): UsePromptResult {
     }
   }, []);
 
-  // 选择组 - 添加这个方法
+  // 选择组
   const selectGroup = useCallback((groupId: string) => {
     loadFromHistory(groupId);
   }, [loadFromHistory]);
 
-  // 选择版本 - 添加这个方法
+  // 选择版本
   const selectVersion = useCallback((versionNumber: number) => {
     if (state.activeGroupId) {
       loadFromHistory(state.activeGroupId, versionNumber);
@@ -182,12 +180,12 @@ export function usePrompt(): UsePromptResult {
     // 组操作
     groups,
     deleteGroup,
-    selectGroup,  // 添加导出
+    selectGroup,
     
     // 版本操作  
     versions,
     switchVersion,
-    selectVersion,  // 添加导出
+    selectVersion,
     
     // 增强操作
     enhancePrompt,
@@ -208,6 +206,3 @@ export function usePrompt(): UsePromptResult {
     getGroupVersions
   };
 }
-
-// 导出服务实例，以便在非React环境中使用
-export { promptService };

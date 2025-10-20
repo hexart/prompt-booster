@@ -11,12 +11,10 @@
 
 ## 安装
 
-该钩子包含在 `@prompt-booster/ui` 包中，确保项目中已安装该依赖：
+该钩子位于 `apps/web/src/hooks` 目录中，可以直接使用：
 
 ```bash
-npm install @prompt-booster/ui
-# 或
-yarn add @prompt-booster/ui
+import { useModal } from '~/hooks';
 ```
 
 ## 基本用法
@@ -24,15 +22,15 @@ yarn add @prompt-booster/ui
 ### 导入
 
 ```typescript
-import { useModal } from '@prompt-booster/ui';
+import { useModal } from '~/hooks';
 ```
 
 ### 基础示例
 
 ```typescript
 import React from 'react';
-import { useModal } from '@prompt-booster/ui';
-import { Dialog } from '@prompt-booster/ui';
+import { useModal } from '~/hooks';
+import { Dialog } from '~/components/ui';
 
 interface User {
   id: string;
@@ -164,6 +162,9 @@ const updateModalData = (newName: string) => {
 `useModal` 钩子设计为与 `Dialog` 组件无缝配合：
 
 ```typescript
+import { useModal } from '~/hooks';
+import { Dialog } from '~/components/ui';
+
 const modal = useModal<{ title: string; content: string }>();
 
 // 在组件中

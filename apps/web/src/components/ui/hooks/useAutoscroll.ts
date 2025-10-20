@@ -1,4 +1,4 @@
-// packages/ui/src/hooks/useAutoScroll.ts
+// apps/web/src/components/ui/hooks/useAutoscroll.ts
 import { useEffect, useRef, useState } from 'react';
 
 interface UseAutoScrollOptions {

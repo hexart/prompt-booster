@@ -1,4 +1,4 @@
-// packages/core/src/services/storageService.ts
+// apps/web/src/core/storage/storageService.ts
 import { createJSONStorage } from 'zustand/middleware';
 import { STORAGE_KEYS } from '../config/constants';
 

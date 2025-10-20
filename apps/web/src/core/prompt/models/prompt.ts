@@ -1,4 +1,4 @@
-// packages/core/src/models/promptGroup.ts
+// apps/web/src/core/prompt/models/prompt.ts
 import { ErrorType } from './../../model/models/config';
 /**
  * 提示词组和版本的数据模型定义

@@ -1,4 +1,4 @@
-// packages/core/src/model/models/config.ts
+// apps/web/src/core/model/models/config.ts
 /**
  * 标准模型类型
  */

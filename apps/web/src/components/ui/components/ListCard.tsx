@@ -1,4 +1,4 @@
-// packages/ui/src/components/ListCard/ListCard.tsx
+// apps/web/src/components/ui/components/ListCard.tsx
 import React, { ReactNode } from 'react';
 
 export type ListCardInfoItem = {
