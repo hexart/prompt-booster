@@ -5,7 +5,8 @@ import { ClipboardIcon, ClipboardCheckIcon, FileTypeIcon, FileTextIcon, FileChec
 import { Tooltip } from './Tooltip';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
-import { convertMarkdownToDocx } from '@mohtasham/md-to-docx';
+// 动态导入 docx 库，只在需要时加载
+// import { convertMarkdownToDocx } from '@mohtasham/md-to-docx';
 
 /**
  * 统一的操作按钮组件
@@ -185,6 +186,10 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
       setDownloading('docx');
 
       const cleanedContent = removeThinkTags(content);
+      
+      // 动态导入 docx 库，只在需要时加载（减少首屏打包体积）
+      const { convertMarkdownToDocx } = await import('@mohtasham/md-to-docx');
+      
       // 使用 @mohtasham/md-to-docx 转换
       const blob = await convertMarkdownToDocx(cleanedContent, {
         documentType: 'document',

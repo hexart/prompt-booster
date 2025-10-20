@@ -37,7 +37,7 @@ export default defineConfig({
   optimizeDeps: {
     include: [
       'crypto-js',
-      '@mohtasham/md-to-docx',
+      // '@mohtasham/md-to-docx' 已改为动态导入，不需要预优化
     ],
   },
   build: {
@@ -59,6 +59,16 @@ export default defineConfig({
           // API客户端单独打包
           'api-client': [
             '@prompt-booster/api'
+          ],
+          // Markdown 渲染相关库（通常很大）
+          'markdown': [
+            'react-markdown',
+            'remark-gfm',
+            'rehype-raw'
+          ],
+          // UI动画库
+          'animation': [
+            'framer-motion'
           ]
         },
         globals: {

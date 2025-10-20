@@ -47,14 +47,6 @@
   },
   "packageManager": "pnpm@10.18.2",
   "pnpm": {
-    "overrides": {
-      "@humanwhocodes/config-array": "^0.14.0",
-      "@humanwhocodes/object-schema": "^2.0.4",
-      "prismjs": ">=1.30.0",
-      "refractor>prismjs": ">=1.30.0",
-      "react": "^19.2.0",
-      "react-dom": "^19.2.0"
-    },
     "onlyBuiltDependencies": [
       "@tailwindcss/oxide",
       "esbuild"
