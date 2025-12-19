@@ -24,16 +24,16 @@
   "author": "Hexart Studio <hexart@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^39.2.4",
+    "electron": "^39.2.7",
     "electron-builder": "^26.0.12",
     "fs": "^0.0.1-security",
     "node-gyp": "^12.1.0",
     "path": "^0.12.7",
-    "vite": "^7.2.4"
+    "vite": "^7.3.0"
   },
   "dependencies": {
     "electron-log": "^5.4.3",
     "electron-updater": "^6.6.2",
-    "update-electron-app": "^3.1.1"
+    "update-electron-app": "^3.1.2"
   }
 }
