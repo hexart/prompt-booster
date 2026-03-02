@@ -10,12 +10,13 @@ import {
   mergeWithDefaults,
   formatModelServiceError
 } from '~/core/model/services/modelService';
-import { Dialog, ModelSelector, toast, AnimatedButton } from './ui';
+import { Dialog, ModelSelector, toast } from './ui';
 import { useModelForm } from '~/hooks';
 import { EyeIcon, EyeClosedIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { formatModelDisplayName } from '../utils/displayUtils';
 import { getDefaultModelConfig } from '~/core/model/unifiedModelConfig';
+import { AnimatedButton } from './ui/components/AnimatedButton';
 
 // 模型编辑弹窗组件
 interface ModelModalProps {
@@ -121,23 +122,11 @@ export const ModelModal: React.FC<ModelModalProps> = ({
       clickOutside={false}
       maxWidth="max-w-md"
       title={isCustom ? (isNewInterface ? t('settings.newInterface') : t('settings.editInterface')) : t('settings.editModel', { type: providerName })}
-      footer={
-        <div className="flex justify-end gap-3">
-          <AnimatedButton
-            onClick={onClose}
-            className="px-4 py-2 transition-colors button-cancel"
-          >
-            {t('common.buttons.cancel')}
-          </AnimatedButton>
-          <AnimatedButton
-            onClick={handleSubmit}
-            disabled={isSaving || !formData.apiKey}
-            className="px-4 py-2 transition-colors button-confirm"
-          >
-            {isSaving ? t('common.buttons.saving') : t('common.buttons.save')}
-          </AnimatedButton>
-        </div>
-      }
+      onCancel={onClose}
+      onConfirm={handleSubmit}
+      cancelText={t('common.buttons.cancel')}
+      confirmText={isSaving ? t('common.buttons.saving') : t('common.buttons.save')}
+      confirmDisabled={isSaving || !formData.apiKey}
     >
       <div className="space-y-4">
         {isCustom && (
@@ -177,7 +166,7 @@ export const ModelModal: React.FC<ModelModalProps> = ({
                 onPointerUp={() => hideApiKey()}
                 onPointerLeave={() => hideApiKey()}
                 onPointerCancel={() => hideApiKey()}
-                className="absolute inset-y-0 end-0 px-3 flex items-center text-sm input-display-button"
+                className="absolute inset-y-0 inset-e-0 px-3 flex items-center text-sm input-display-button"
                 style={{ touchAction: 'none' }} // 防止触摸时的滚动等默认行为
                 aria-label={isMaskedApiKey ? t('settings.apiKeyShow') : t('settings.apiKeyHide')}
               >

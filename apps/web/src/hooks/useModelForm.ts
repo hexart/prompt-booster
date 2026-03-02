@@ -1,7 +1,8 @@
 // apps/web/src/hooks/useModelForm.ts
 import { useState } from 'react';
-import { maskApiKey, mergeWithDefaults } from '~/core/model/services/modelService';
+import { mergeWithDefaults } from '~/core/model/services/modelService';
 import { ModelConfig, CustomInterface } from '~/core/model/models/config';
+import { maskApiKey } from '~/utils/apiKeyUtils';
 
 /**
  * 模型表单钩子

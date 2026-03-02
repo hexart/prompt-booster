@@ -12,7 +12,12 @@
         },
         "main.js",
         "preload.js",
-        "package.json"
+        "package.json",
+        {
+            "from": "node_modules",
+            "to": "node_modules",
+            "filter": ["**/*"]
+        }
     ],
     "mac": {
         "target": [

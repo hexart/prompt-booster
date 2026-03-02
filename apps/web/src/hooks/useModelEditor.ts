@@ -3,6 +3,7 @@ import { toast } from '~/components/ui';
 import { useModelStore, type StandardModelType } from '~/core';
 import { ModelConfig, CustomInterface } from '~/core/model/models/config';
 import { useTranslation } from 'react-i18next';
+import { handleUnexpectedError } from '~/utils/errorHandler';
 
 /**
  * 模型编辑钩子
@@ -53,7 +54,15 @@ export function useModelEditor() {
       }
     } catch (error) {
       console.error('保存模型配置失败:', error);
-      toast.error(t('toast.saveFailed', { errorMessage: error instanceof Error ? error.message : String(error) }));
+      handleUnexpectedError(
+        error,
+        t,
+        undefined
+      );
+      // Provide a more specific error message
+      toast.error(t('toast.saveFailed', {
+        errorMessage: error instanceof Error ? error.message : String(error)
+      }));
       throw error;
     }
   };

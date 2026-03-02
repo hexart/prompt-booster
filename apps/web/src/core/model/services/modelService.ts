@@ -1,5 +1,5 @@
 // apps/web/src/core/model/services/modelService.ts
-import { 
+import {
   createClient,
   ConnectionError,
   AuthenticationError
@@ -7,8 +7,11 @@ import {
 import { ErrorType } from '../models/config';
 import { ModelConfig, CustomInterface, StandardModelType } from '../models/config';
 import { getDefaultModelConfig } from '../unifiedModelConfig';
+import { validateBaseConfig } from '../validation/modelValidation';
 
-type TranslationFunction = (key: string, options?: any) => string;
+// Re-export for backward compatibility
+export { maskApiKey } from '~/utils/apiKeyUtils';
+export { validateModelConfig, validateBaseConfig } from '../validation/modelValidation';
 /**
  * 测试模型连接
  * @param provider 提供商
@@ -124,76 +127,6 @@ export async function testModelConnection(
       originalError: errorMessage
     };
   }
-}
-
-/**
- * API Key 掩码函数
- */
-export function maskApiKey(key: string): string {
-  if (!key) return '';
-  if (key.length <= 8) return '*'.repeat(key.length);
-
-  const visiblePart = 3;
-  const prefix = key.substring(0, visiblePart);
-  const suffix = key.substring(key.length - visiblePart);
-  const maskedLength = key.length - (visiblePart * 2);
-
-  return `${prefix}${'*'.repeat(maskedLength)}${suffix}`;
-}
-
-/**
- * 验证基础配置字段（不包括model字段）
- */
-function validateBaseConfig(config: ModelConfig | CustomInterface, t?: TranslationFunction): {
-  valid: boolean;
-  message?: string
-} {
-  if (!config.apiKey) {
-    return {
-      valid: false,
-      message: t?.('toast.validation.apiKeyRequired') || 'API Key required'
-    };
-  }
-
-  if ('providerName' in config && !config.providerName) {
-    return {
-      valid: false,
-      message: t?.('toast.validation.providerNameRequired') || 'Provider name required'
-    };
-  }
-
-  if (!config.baseUrl || config.baseUrl.trim() === '') {
-    return {
-      valid: false,
-      message: t?.('toast.validation.baseUrlRequired') || 'Base URL required'
-    };
-  }
-
-  return { valid: true };
-}
-
-/**
- * 检查用户的模型配置是否有效
- */
-export function validateModelConfig(config: ModelConfig | CustomInterface, t?: TranslationFunction): {
-  valid: boolean;
-  message?: string
-} {
-  // 1. 先验证基础字段
-  const baseValidation = validateBaseConfig(config, t);
-  if (!baseValidation.valid) {
-    return baseValidation;
-  }
-
-  // 2. 再验证model字段
-  if (!config.model) {
-    return {
-      valid: false,
-      message: t?.('toast.validation.modelNameRequired') || 'Model name required'
-    };
-  }
-
-  return { valid: true };
 }
 
 /**

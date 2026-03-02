@@ -3,7 +3,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { type StandardModelType } from '~/core/model/models/config';
 import { useModelStore } from '~/core/model/store/modelStore';
-import { Dialog, ListCard, toast, AnimatedButton } from '~/components/ui';
+import { ListCard, toast, AnimatedButton, Dialog } from '~/components/ui';
 import LoadingIcon from '~/components/ui/components/LoadingIcon';
 import { useModal } from '~/hooks';
 import { CogIcon, Grid2X2PlusIcon, Power, CableIcon, FileCog, Trash2 } from 'lucide-react';
@@ -11,59 +11,6 @@ import { useModelConnection, useModelData, useModelEditor } from '~/hooks';
 import { ModelModal } from './ModelModal';
 import { Tooltip } from '~/components/ui/components/Tooltip';
 import { useTranslation } from 'react-i18next';
-
-// 确认删除对话框组件
-const ConfirmDialog: React.FC<{
-  isOpen: boolean;
-  onClose: () => void;
-  title: string;
-  message: string;
-  confirmText?: string;
-  cancelText?: string;
-  onConfirm: () => void;
-  danger?: boolean;
-}> = ({
-  isOpen,
-  onClose,
-  title,
-  message,
-  confirmText = '确认',
-  cancelText = '取消',
-  onConfirm,
-  danger = false
-}) => {
-    return (
-      <Dialog
-        isOpen={isOpen}
-        onClose={onClose}
-        maxWidth="max-w-md"
-        title={title}
-        footer={
-          <div className="flex justify-end gap-3">
-            <AnimatedButton
-              onClick={onClose}
-              className="px-4 py-2 button-cancel"
-            >
-              {cancelText}
-            </AnimatedButton>
-            <AnimatedButton
-              onClick={onConfirm}
-              className={`px-4 py-2 text-white ${danger
-                ? "button-danger"
-                : "button-confirm"
-                }`}
-            >
-              {confirmText}
-            </AnimatedButton>
-          </div>
-        }
-      >
-        <div>
-          {message}
-        </div>
-      </Dialog>
-    );
-  };
 
 // 主组件
 export const ModelSettings: React.FC = () => {
@@ -313,16 +260,21 @@ export const ModelSettings: React.FC = () => {
 
       {/* 删除确认弹窗 */}
       {(confirmDeleteModal.isOpen || confirmDeleteModal.isClosing) && confirmDeleteModal.data && (
-        <ConfirmDialog
+        <Dialog
           isOpen={confirmDeleteModal.isOpen}
           onClose={confirmDeleteModal.closeModal}
+          maxWidth="max-w-md"
           title={t('settings.confirmDeleteTitle')}
-          message={t('settings.confirmDeleteMsg', { name: confirmDeleteModal.data.interfaceName })}
-          confirmText={t('common.buttons.delete')}
-          cancelText={t('common.buttons.cancel')}
+          onCancel={confirmDeleteModal.closeModal}
           onConfirm={handleConfirmDelete}
-          danger={true}
-        />
+          cancelText={t('common.buttons.cancel')}
+          confirmText={t('common.buttons.delete')}
+          confirmDanger={true}
+        >
+          <div>
+            {t('settings.confirmDeleteMsg', { name: confirmDeleteModal.data.interfaceName })}
+          </div>
+        </Dialog>
       )}
     </div>
   );

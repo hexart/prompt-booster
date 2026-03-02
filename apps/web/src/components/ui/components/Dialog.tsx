@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { XIcon } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { AnimatedButton } from './AnimatedButton';
 
 export interface DialogProps {
   isOpen: boolean;
@@ -15,7 +16,58 @@ export interface DialogProps {
   showCloseButton?: boolean;
   clickOutside?: boolean;
   enableMouseTilt?: boolean;
+  // Footer 简化属性
+  onCancel?: () => void;
+  onConfirm?: () => void;
+  cancelText?: string;
+  confirmText?: string;
+  confirmDisabled?: boolean;
+  confirmDanger?: boolean;
 }
+
+// DialogFooter 组件（内部使用）
+interface DialogFooterProps {
+  onCancel?: () => void;
+  onConfirm?: () => void;
+  cancelText?: string;
+  confirmText?: string;
+  confirmDisabled?: boolean;
+  confirmDanger?: boolean;
+}
+
+const DialogFooter: React.FC<DialogFooterProps> = ({
+  onCancel,
+  onConfirm,
+  cancelText = '取消',
+  confirmText = '确认',
+  confirmDisabled = false,
+  confirmDanger = false
+}) => {
+  // 如果没有传入任何回调，不渲染 footer
+  if (!onCancel && !onConfirm) return null;
+
+  return (
+    <div className="flex justify-end gap-3">
+      {onCancel && (
+        <AnimatedButton
+          onClick={onCancel}
+          className="px-4 py-2 transition-colors button-cancel"
+        >
+          {cancelText}
+        </AnimatedButton>
+      )}
+      {onConfirm && (
+        <AnimatedButton
+          onClick={onConfirm}
+          disabled={confirmDisabled}
+          className={`px-4 py-2 transition-colors ${confirmDanger ? 'button-danger' : 'button-confirm'}`}
+        >
+          {confirmText}
+        </AnimatedButton>
+      )}
+    </div>
+  );
+};
 
 // 创建一个上下文以便子组件可以访问对话框的容器引用
 export const DialogContext = React.createContext<{
@@ -54,6 +106,12 @@ export const Dialog: React.FC<DialogProps> = ({
   showCloseButton = true,
   clickOutside = true,
   enableMouseTilt = true,
+  onCancel,
+  onConfirm,
+  cancelText = '取消',
+  confirmText = '确认',
+  confirmDisabled = false,
+  confirmDanger = false,
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const dialogRef = useRef<HTMLDivElement | null>(null);
@@ -224,9 +282,18 @@ export const Dialog: React.FC<DialogProps> = ({
               </div>
 
               {/* 对话框 footer 区域 */}
-              {footer && (
+              {(footer || onCancel || onConfirm) && (
                 <div className="mt-4">
-                  {footer}
+                  {footer || (
+                    <DialogFooter
+                      onCancel={onCancel}
+                      onConfirm={onConfirm}
+                      cancelText={cancelText}
+                      confirmText={confirmText}
+                      confirmDisabled={confirmDisabled}
+                      confirmDanger={confirmDanger}
+                    />
+                  )}
                 </div>
               )}
             </motion.div>

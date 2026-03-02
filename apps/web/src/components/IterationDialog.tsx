@@ -1,6 +1,6 @@
 // src/components/IterationDialog.tsx
 import React, { useState, useEffect } from 'react';
-import { Dialog, AnimatedButton } from './ui/components';
+import { Dialog } from './ui/components';
 import { EnhancedDropdown } from './ui/components/EnhancedDropdown';
 import { usePromptTemplates } from '~/hooks';
 import { useTranslation } from 'react-i18next';
@@ -51,23 +51,11 @@ export const IterationDialog: React.FC<IterationDialogProps> = ({
       clickOutside={false}
       title={t('promptBooster.iterationDialog.title')}
       maxWidth="max-w-xl"
-      footer={
-        <div className="flex justify-end gap-3">
-          <AnimatedButton
-            onClick={onClose}
-            className="px-4 py-2 button-cancel"
-          >
-            {t('common.buttons.cancel')}
-          </AnimatedButton>
-          <AnimatedButton
-            onClick={handleSubmit}
-            className="px-4 py-2 button-confirm"
-            disabled={!selectedTemplateId || !iterationDirection.trim()}
-          >
-            {t('common.buttons.confirm')}
-          </AnimatedButton>
-        </div>
-      }
+      onCancel={onClose}
+      onConfirm={handleSubmit}
+      cancelText={t('common.buttons.cancel')}
+      confirmText={t('common.buttons.confirm')}
+      confirmDisabled={!selectedTemplateId || !iterationDirection.trim()}
     >
       <div className="space-y-4">
         <div>
