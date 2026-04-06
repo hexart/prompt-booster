@@ -3,21 +3,21 @@
   "version": "0.8.0",
   "description": "Prompt Booster Desktop App",
   "private": true,
+  "workspaces": [],
   "main": "main.js",
-  "packageManager": "pnpm@10.30.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/hexart/prompt-booster.git"
   },
   "scripts": {
     "dev": "npm run build:web && electron .",
-    "build": "npm run build:web && electron-builder",
-    "build:web": "cd ../web && pnpm build",
-    "build:mac": "npm run build:web && electron-builder --mac",
-    "build:win": "npm run build:web && electron-builder --win",
-    "build:linux": "npm run build:web && electron-builder --linux",
-    "build:win-ci": "electron-builder --win",
-    "build:linux-ci": "electron-builder --linux"
+    "build": "npm run build:web && node build.mjs",
+    "build:web": "cd ../web && pnpm build && rm -rf ../desktop/web && cp -r dist ../desktop/web",
+    "build:mac": "npm run build:web && node build.mjs --mac",
+    "build:win": "npm run build:web && node build.mjs --win",
+    "build:linux": "npm run build:web && node build.mjs --linux",
+    "build:win-ci": "node build.mjs --win",
+    "build:linux-ci": "node build.mjs --linux"
   },
   "keywords": [
     "Prompt Booster"
@@ -25,9 +25,9 @@
   "author": "Hexart Studio <hexart@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^40.6.1",
-    "electron-builder": "^26.8.1",
-    "vite": "^7.3.1"
-  },
-  "dependencies": {}
+    "@electron/packager": "^19.1.0",
+    "archiver": "^7.0.1",
+    "electron": "^41.1.1",
+    "vite": "^8.0.3"
+  }
 }
