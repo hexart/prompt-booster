@@ -75,7 +75,7 @@ function createWindow() {
             dialog.showMessageBox({
               type: 'info',
               title: '关于 Prompt Booster',
-              message: `Prompt Booster\n版本：${packageInfo.version}\n版权所有 © 2025 Hexart Studio\n保留所有权利。`,
+              message: `Prompt Booster\n版本：${packageInfo.version}\n版权所有 © 2026 Hexart Studio\n保留所有权利。`,
               buttons: ['确定']
             });
           }

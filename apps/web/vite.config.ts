@@ -2,7 +2,6 @@
 import { defineConfig } from 'vite';
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react';
-import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import { readFileSync } from 'fs'
 import path from 'path';
 import { resolve } from 'path';
@@ -14,14 +13,6 @@ export default defineConfig({
   plugins: [
     tailwindcss(),
     react(),
-    nodePolyfills({
-      globals: {
-        Buffer: true,
-        global: true,
-        process: true,
-      },
-      protocolImports: false,
-    })
   ],
   define: {
     'process.env': '{}',
@@ -44,32 +35,14 @@ export default defineConfig({
     rollupOptions: {
       external: ['fs', 'path'],
       output: {
-        manualChunks: {
-          'react-vendor': [
-            'react',
-            'react-dom'
-          ],
-          // i18n相关库统一打包，确保初始化顺序
-          'i18n': [
-            'i18next',
-            'react-i18next',
-            'i18next-browser-languagedetector',
-            'i18next-http-backend'
-          ],
-          // API客户端单独打包
-          'api-client': [
-            '@prompt-booster/api'
-          ],
-          // Markdown 渲染相关库（通常很大）
-          'markdown': [
-            'react-markdown',
-            'remark-gfm',
-            'rehype-raw'
-          ],
-          // UI动画库
-          'animation': [
-            'framer-motion'
-          ]
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('react') && !id.includes('@prompt-booster')) return 'react-vendor';
+            if (id.includes('i18next') || id.includes('react-i18next')) return 'i18n';
+            if (id.includes('@prompt-booster/api')) return 'api-client';
+            if (id.includes('react-markdown') || id.includes('remark-gfm') || id.includes('rehype-raw')) return 'markdown';
+            if (id.includes('framer-motion')) return 'animation';
+          }
         },
         globals: {
           fs: '{}',

@@ -264,4 +264,4 @@ The desktop client intentionally uses npm instead of pnpm due to compatibility i
 
 ------
 
-© Hexart Studio 2025
+© Hexart Studio 2026

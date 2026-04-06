@@ -298,4 +298,4 @@ The model settings feature allows users to configure and manage AI model connect
 
 ------
 
-© Hexart Studio 2025
+© Hexart Studio 2026

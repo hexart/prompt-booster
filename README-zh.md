@@ -277,4 +277,4 @@ docker pull ghcr.io/hexart/prompt-booster:latest \
 - MIT许可证 ([LICENSE-MIT](LICENSE-MIT) 或 http://opensource.org/licenses/MIT)
 - Apache许可证2.0 ([LICENSE-APACHE](LICENSE-APACHE) 或 http://www.apache.org/licenses/LICENSE-2.0)
 
-© Hexart Studio 2025
+© Hexart Studio 2026

@@ -1,8 +1,7 @@
 // apps/web/src/env.js
+import { Buffer } from 'buffer';
+import process from 'process';
 
-// Make Buffer available globally
-window.Buffer = Buffer || {};
-global.Buffer = Buffer;
-
-// Add process for libraries that expect it
-window.process = window.process || { env: {} };
+globalThis.Buffer = globalThis.Buffer || Buffer;
+globalThis.global = globalThis.global || globalThis;
+globalThis.process = globalThis.process || process;

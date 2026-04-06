@@ -79,7 +79,7 @@ function App() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.98 }}
               transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="flex flex-col flex-grow rounded-3xl shadow p-4 md:p-6 w-full h-full main-container"
+              className="flex flex-col grow rounded-3xl shadow p-4 md:p-6 w-full h-full main-container"
               aria-hidden="false"
             >
               {activeTab === 'booster' && <PromptBooster />}
@@ -94,7 +94,7 @@ function App() {
           <div className="w-full max-w-(--breakpoint-2xl) mx-auto px-4 sm:px-6 lg:px-8 py-2 md:py-3">
             <div className="flex text-center text-sm items-center justify-center gap-2">
               <span>
-                Hexart Studio © 2025
+                Hexart Studio © 2026
               </span>
               <Tooltip text={t('common.checkNewVersion')}>
                 <a

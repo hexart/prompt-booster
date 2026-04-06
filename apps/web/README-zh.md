@@ -306,4 +306,4 @@
 
 ------
 
-© Hexart Studio 2025
+© Hexart Studio 2026
