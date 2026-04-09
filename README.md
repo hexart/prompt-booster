@@ -6,10 +6,10 @@
 A comprehensive monorepo project for optimizing and enhancing prompts for large language models (LLMs) across multiple platforms.
 
 ![License: MIT/Apache-2.0](https://img.shields.io/badge/License-MIT%2FApache--2.0-blue.svg)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)](https://www.typescriptlang.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.0-blue)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-19.2-61DAFB?logo=react&logoColor=white)](https://react.dev/)
-[![Electron](https://img.shields.io/badge/Electron-38.2-47848F?logo=electron&logoColor=white)](https://www.electronjs.org/)
-[![TailwindCSS](https://img.shields.io/badge/Tailwind-4.1-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Electron](https://img.shields.io/badge/Electron-41.2-47848F?logo=electron&logoColor=white)](https://www.electronjs.org/)
+[![TailwindCSS](https://img.shields.io/badge/Tailwind-4.2-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Zustand](https://img.shields.io/badge/Zustand-5.0-orange)](https://zustand-demo.pmnd.rs/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 ![Cross Platform](https://img.shields.io/badge/Platform-Web%20%7C%20Desktop-lightgrey)
