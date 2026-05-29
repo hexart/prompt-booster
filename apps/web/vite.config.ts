@@ -33,7 +33,7 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      external: ['fs', 'path'],
+      external: ['fs', 'path', 'undici', 'node:dns/promises', 'node:net'],
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
