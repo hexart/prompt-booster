@@ -2,8 +2,11 @@ import { packager } from '@electron/packager';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createRequire } from 'module';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const require = createRequire(import.meta.url);
+const electronVersion = require('electron/package.json').version;
 
 // 多语言配置
 const languageConfig = {
@@ -64,6 +67,7 @@ const languageConfig = {
 // 解析命令行参数
 const args = process.argv.slice(2);
 const platformArg = args.includes('--mac') ? 'darwin' : args.includes('--win') ? 'win32' : args.includes('--linux') ? 'linux' : null;
+const archArg = args.includes('--arm64') ? 'arm64' : args.includes('--x64') ? 'x64' : null;
 
 // 公共选项
 const commonOpts = {
@@ -74,7 +78,7 @@ const commonOpts = {
   executableName: 'prompt-booster',
   asar: false,
   overwrite: true,
-  electronVersion: '41.1.1',
+  electronVersion,
   dir: __dirname,
   out: path.join(__dirname, 'release'),
   ignore: (file) => {
@@ -124,7 +128,7 @@ const macAfterCopyFull = [async (opts) => {
 // macOS 特定选项
 const macOpts = {
   platform: 'darwin',
-  arch: 'universal',
+  arch: archArg || 'universal',
   icon: path.join(__dirname, 'build/icon.icns'),
   extendInfo: {
     LSHasLocalizedDisplayName: true
