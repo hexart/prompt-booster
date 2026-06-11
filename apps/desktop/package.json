@@ -25,9 +25,9 @@
   "author": "Hexart Studio <hexart@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@electron/packager": "^20.0.0",
+    "@electron/packager": "^20.0.1",
     "archiver": "^8.0.0",
-    "electron": "^42.3.0",
-    "vite": "^8.0.14"
+    "electron": "^42.4.0",
+    "vite": "^8.0.16"
   }
 }
